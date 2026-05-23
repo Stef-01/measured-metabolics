@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import { EscalationCard } from "@/components/patient/escalation-card";
+import { DietitianNotesCard } from "@/components/patient/dietitian-notes-card";
 import {
   useSeedPatientStore,
   useStoredMeals,
@@ -76,6 +77,8 @@ export function PatientHomeScreen() {
             cta="Open thread"
           />
         )}
+
+        <DietitianNotesCard patientId={me.id} />
 
         <motion.div
           initial={{ opacity: 0, y: 8 }}

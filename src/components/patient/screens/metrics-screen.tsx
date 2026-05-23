@@ -2,20 +2,22 @@
 
 import { useMemo, useState } from "react";
 import {
-  AreaChart,
-  Area,
   CartesianGrid,
   XAxis,
   YAxis,
   Tooltip,
-  ReferenceArea,
   ResponsiveContainer,
   LineChart,
   Line,
 } from "recharts";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import { CGM_BY_PATIENT, CURRENT_PATIENT_ID, PATIENTS } from "@/lib/mock";
-import { useStoredSymptoms } from "@/lib/storage/patient-store";
+import {
+  useStoredAnnotations,
+  useStoredMeals,
+  useStoredSymptoms,
+} from "@/lib/storage/patient-store";
+import { CgmMealChart } from "@/components/shared/cgm-meal-chart";
 import { cn } from "@/lib/utils/cn";
 
 type TabId = "glucose" | "weight" | "symptoms";
@@ -37,15 +39,8 @@ export function PatientMetricsScreen() {
   const me = PATIENTS.find((p) => p.id === CURRENT_PATIENT_ID)!;
   const cgm = CGM_BY_PATIENT[me.id];
   const symptoms = useStoredSymptoms(me.id);
-
-  const cgmData = useMemo(
-    () =>
-      cgm?.readings.map((r) => ({
-        time: new Date(r.ts).getTime(),
-        mmolL: r.mmolL,
-      })) ?? [],
-    [cgm],
-  );
+  const meals = useStoredMeals(me.id);
+  const annotations = useStoredAnnotations(me.id);
 
   const weightData = useMemo(
     () =>
@@ -111,77 +106,29 @@ export function PatientMetricsScreen() {
               title="Glucose · last 48h"
               subtitle={`${me.timeInRangePct}% time in range`}
             >
-              <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={cgmData}>
-                  <defs>
-                    <linearGradient id="glu" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="0%"
-                        stopColor="#2d5a3d"
-                        stopOpacity={0.35}
-                      />
-                      <stop
-                        offset="100%"
-                        stopColor="#2d5a3d"
-                        stopOpacity={0.02}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid stroke="rgba(0,0,0,0.06)" vertical={false} />
-                  <XAxis
-                    dataKey="time"
-                    type="number"
-                    domain={["dataMin", "dataMax"]}
-                    tickFormatter={(t: number) =>
-                      new Date(t).toLocaleTimeString([], {
-                        hour: "numeric",
-                        hour12: false,
-                      })
-                    }
-                    stroke="rgba(0,0,0,0.4)"
-                    fontSize={10}
-                  />
-                  <YAxis
-                    domain={[3, 12]}
-                    stroke="rgba(0,0,0,0.4)"
-                    fontSize={10}
-                    label={{
-                      value: "mmol/L",
-                      angle: -90,
-                      position: "insideLeft",
-                      offset: 8,
-                      fontSize: 10,
-                      fill: "rgba(0,0,0,0.4)",
-                    }}
-                  />
-                  <Tooltip
-                    formatter={(v: number) => `${v.toFixed(1)} mmol/L`}
-                    labelFormatter={(t: number) =>
-                      new Date(t).toLocaleString([], {
-                        weekday: "short",
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })
-                    }
-                  />
-                  <ReferenceArea
-                    y1={3.9}
-                    y2={10}
-                    fill="#2d5a3d"
-                    fillOpacity={0.06}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="mmolL"
-                    stroke="#2d5a3d"
-                    strokeWidth={2}
-                    fill="url(#glu)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              {cgm ? (
+                <CgmMealChart
+                  readings={cgm.readings}
+                  meals={meals}
+                  annotations={annotations}
+                  height={220}
+                />
+              ) : (
+                <div className="flex h-[220px] items-center justify-center text-[13px] text-[var(--measured-subtext)]">
+                  Connect your sensor to see glucose patterns.
+                </div>
+              )}
               <p className="mt-3 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
-                Highest spike: {cgm?.highestSpike.deltaMmol.toFixed(1)} mmol/L
-                after {cgm?.highestSpike.mealType}.
+                Tap any spike on the chart to see the meal that caused it
+                {annotations.length > 0
+                  ? ", along with Maya's note."
+                  : "."}{" "}
+                {cgm && (
+                  <>
+                    Highest spike: {cgm.highestSpike.deltaMmol.toFixed(1)}{" "}
+                    mmol/L after {cgm.highestSpike.mealType}.
+                  </>
+                )}
               </p>
             </ChartShell>
           )}

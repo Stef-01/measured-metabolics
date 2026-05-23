@@ -55,7 +55,17 @@ const EVIDENCE_KIND_LABEL: Record<
   report: "Report",
 };
 
-export function GpBillingCard({ patient }: { patient: Patient }) {
+interface GpBillingCardProps {
+  patient: Patient;
+  /**
+   * `gp` (default) shows the full billing-action toolset.
+   * `dietitian` renders the same intelligence read-only — copy + task
+   * actions are hidden because allied health doesn't bill these items.
+   */
+  variant?: "gp" | "dietitian";
+}
+
+export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
   const items = billingSuggestionsForPatient(patient);
   const deepDive = billingDeepDiveForPatient(patient);
   const phases = billingFeaturePhases();
@@ -63,6 +73,7 @@ export function GpBillingCard({ patient }: { patient: Patient }) {
     items[0]?.item ?? null,
   );
   const [aiOpen, setAiOpen] = useState(true);
+  const readOnly = variant === "dietitian";
 
   const copy = (h: BillingIntelligenceSuggestion) => {
     const text = `${h.item} ${h.service}\n\n${h.documentationDraft}`;
@@ -267,28 +278,36 @@ export function GpBillingCard({ patient }: { patient: Patient }) {
                   </div>
 
                   <div className="flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      onClick={() => copy(h)}
-                      className={cn(
-                        "inline-flex items-center gap-1 rounded-lg bg-[var(--measured-green)]/10 px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark-green)]",
-                      )}
-                    >
-                      <Receipt size={12} strokeWidth={2.2} aria-hidden="true" />
-                      Copy justification
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => createTask(h)}
-                      className="inline-flex items-center gap-1 rounded-lg bg-[var(--measured-cream)] px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark)]"
-                    >
-                      <ClipboardList
-                        size={12}
-                        strokeWidth={2.2}
-                        aria-hidden="true"
-                      />
-                      Create verification task
-                    </button>
+                    {!readOnly && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => copy(h)}
+                          className={cn(
+                            "inline-flex items-center gap-1 rounded-lg bg-[var(--measured-green)]/10 px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark-green)]",
+                          )}
+                        >
+                          <Receipt
+                            size={12}
+                            strokeWidth={2.2}
+                            aria-hidden="true"
+                          />
+                          Copy justification
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => createTask(h)}
+                          className="inline-flex items-center gap-1 rounded-lg bg-[var(--measured-cream)] px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark)]"
+                        >
+                          <ClipboardList
+                            size={12}
+                            strokeWidth={2.2}
+                            aria-hidden="true"
+                          />
+                          Create verification task
+                        </button>
+                      </>
+                    )}
                     {h.officialSourceUrl && (
                       <a
                         href={h.officialSourceUrl}

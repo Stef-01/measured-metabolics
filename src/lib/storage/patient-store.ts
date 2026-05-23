@@ -17,14 +17,6 @@ const NS = "measured.patient";
 type Listener = () => void;
 const listeners = new Set<Listener>();
 
-if (typeof window !== "undefined") {
-  window.addEventListener("storage", (e) => {
-    if (e.key && e.key.startsWith(NS)) {
-      for (const l of listeners) l();
-    }
-  });
-}
-
 function subscribe(l: Listener) {
   listeners.add(l);
   return () => {
@@ -32,16 +24,38 @@ function subscribe(l: Listener) {
   };
 }
 
+// Per-key memoised parse cache. `useSyncExternalStore`'s client snapshot must
+// return a stable reference between subscriptions; without caching, every
+// JSON.parse yields a new object identity and React 19 errors out with
+// "The result of getSnapshot should be cached to avoid an infinite loop".
+const snapshotCache = new Map<string, { raw: string | null; value: unknown }>();
+
+function invalidateKey(key: string) {
+  snapshotCache.delete(key);
+}
+
 function notify() {
   for (const l of listeners) l();
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (e) => {
+    if (e.key && e.key.startsWith(NS)) {
+      invalidateKey(e.key);
+      notify();
+    }
+  });
 }
 
 function readJSON<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
   try {
     const raw = window.localStorage.getItem(key);
-    if (!raw) return fallback;
-    return JSON.parse(raw) as T;
+    const cached = snapshotCache.get(key);
+    if (cached && cached.raw === raw) return cached.value as T;
+    const value = raw ? (JSON.parse(raw) as T) : fallback;
+    snapshotCache.set(key, { raw, value });
+    return value;
   } catch {
     return fallback;
   }
@@ -50,7 +64,9 @@ function readJSON<T>(key: string, fallback: T): T {
 function writeJSON<T>(key: string, value: T) {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    const raw = JSON.stringify(value);
+    window.localStorage.setItem(key, raw);
+    snapshotCache.set(key, { raw, value });
     notify();
   } catch {
     // quota exceeded — drop silently in vibe stage
@@ -65,11 +81,30 @@ interface DraftMeal {
   capturedAt: string;
 }
 
+/**
+ * Dietitian-authored note attached to a specific patient meal. Surfaces on the
+ * patient home + metrics screens. Vibe-stage uses localStorage; Stage 6 swaps
+ * for a Supabase `meal_annotations` table with RLS keyed on `patient_id`.
+ */
+interface MealAnnotation {
+  id: string;
+  mealId: string;
+  patientId: string;
+  fromDietitianName: string;
+  body: string;
+  /** Optional concrete swap recommendation. */
+  recommendation?: string;
+  createdAt: string;
+  /** Set by the patient when they tap "Got it" on the dashboard. */
+  acknowledgedAt?: string;
+}
+
 const DRAFT_KEY = (pid: string) => `${NS}.${pid}.meal-draft`;
 const MEALS_KEY = (pid: string) => `${NS}.${pid}.meals`;
 const SYMPTOMS_KEY = (pid: string) => `${NS}.${pid}.symptoms`;
 const THREAD_KEY = (pid: string) => `${NS}.${pid}.thread`;
 const ONBOARD_KEY = (pid: string) => `${NS}.${pid}.onboarded`;
+const ANNOTATIONS_KEY = (pid: string) => `${NS}.${pid}.meal-annotations`;
 
 export const patientStore = {
   // === Meal draft (autosaves while user is on /p/meal) ===
@@ -124,13 +159,53 @@ export const patientStore = {
   setOnboarded(pid: string, value: boolean) {
     writeJSON(ONBOARD_KEY(pid), value);
   },
+
+  // === Dietitian annotations on patient meals ===
+  getAnnotations(pid: string): MealAnnotation[] {
+    return readJSON<MealAnnotation[]>(ANNOTATIONS_KEY(pid), []);
+  },
+  /**
+   * Upsert a single annotation per meal — saving a new note for the same
+   * `mealId` replaces the previous one. Keeps the most recent first.
+   */
+  upsertAnnotation(pid: string, ann: MealAnnotation) {
+    const existing = patientStore.getAnnotations(pid);
+    const filtered = existing.filter((a) => a.mealId !== ann.mealId);
+    writeJSON(ANNOTATIONS_KEY(pid), [ann, ...filtered]);
+  },
+  removeAnnotation(pid: string, id: string) {
+    const all = patientStore.getAnnotations(pid).filter((a) => a.id !== id);
+    writeJSON(ANNOTATIONS_KEY(pid), all);
+  },
+  acknowledgeAnnotation(pid: string, id: string) {
+    const all = patientStore
+      .getAnnotations(pid)
+      .map((a) =>
+        a.id === id ? { ...a, acknowledgedAt: new Date().toISOString() } : a,
+      );
+    writeJSON(ANNOTATIONS_KEY(pid), all);
+  },
 };
+
+// Stable, frozen empty references so `useSyncExternalStore`'s server-snapshot
+// returns the same identity across renders — React 19 throws an infinite-loop
+// error when the snapshot identity churns between renders.
+const EMPTY_MEALS = Object.freeze([]) as readonly MealLog[];
+const EMPTY_SYMPTOMS = Object.freeze([]) as readonly SymptomLog[];
+const EMPTY_MESSAGES = Object.freeze([]) as readonly Message[];
+const EMPTY_ANNOTATIONS = Object.freeze([]) as readonly MealAnnotation[];
+
+const getEmptyMeals = (): MealLog[] => EMPTY_MEALS as MealLog[];
+const getEmptySymptoms = (): SymptomLog[] => EMPTY_SYMPTOMS as SymptomLog[];
+const getEmptyMessages = (): Message[] => EMPTY_MESSAGES as Message[];
+const getEmptyAnnotations = (): MealAnnotation[] =>
+  EMPTY_ANNOTATIONS as MealAnnotation[];
 
 export function useStoredMeals(pid: string): MealLog[] {
   return useSyncExternalStore(
     subscribe,
     () => patientStore.getMeals(pid),
-    () => [] as MealLog[],
+    getEmptyMeals,
   );
 }
 
@@ -138,7 +213,7 @@ export function useStoredSymptoms(pid: string): SymptomLog[] {
   return useSyncExternalStore(
     subscribe,
     () => patientStore.getSymptoms(pid),
-    () => [] as SymptomLog[],
+    getEmptySymptoms,
   );
 }
 
@@ -146,7 +221,15 @@ export function useStoredThread(pid: string): Message[] {
   return useSyncExternalStore(
     subscribe,
     () => patientStore.getThread(pid),
-    () => [] as Message[],
+    getEmptyMessages,
+  );
+}
+
+export function useStoredAnnotations(pid: string): MealAnnotation[] {
+  return useSyncExternalStore(
+    subscribe,
+    () => patientStore.getAnnotations(pid),
+    getEmptyAnnotations,
   );
 }
 
@@ -176,4 +259,4 @@ export function useSeedPatientStore(
   }, [pid, seed.meals, seed.symptoms, seed.thread]);
 }
 
-export type { DraftMeal };
+export type { DraftMeal, MealAnnotation };

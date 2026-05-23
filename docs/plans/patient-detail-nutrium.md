@@ -111,31 +111,37 @@ tests/
 ## Daily breakdown (one calendar week)
 
 ### Mon — Cuisine fit + MBS rule engine (the two pure-logic pieces)
+
 - `cuisine-fit.ts` — set intersection / specialty match score; amber threshold at <50%.
 - `mbs-rule-engine.ts` — input `{ patient, visit_history, gp_management_plan_status }`; output ordered list of `{ item_number, rationale, requirements }`. Stage 1 supports five items: 10954 (initial DAA), 10968 (review DAA), 81120 (group session), 723 (TCA contribution), 10997 (chronic disease GP-team item). Pure-logic; reads `mbs_rules` table when configured, falls back to in-code map.
 - Tests for both before any UI work.
 
 ### Tue — Meal log + ingredient rows + macro panel
+
 - `meal-log.tsx` + `meal-log-row.tsx` + `ingredient-row.tsx` — the three core components. Editing portions live-updates macros (Zustand store scoped to the screen so tabs out / back preserves edits).
 - `macro-panel.tsx` + `macro-donut.tsx` (Recharts).
 - `day-strip.tsx` — anchored Breakfast/Lunch/Dinner/Snack jump links.
 
 ### Wed — GP strip + Billing autopilot + EHR-summary cards
+
 - `gp-strip.tsx` — pinned coordination strip. Reads `dietitian_reports` and `referrals`; "Send draft" button emits `report.requested` event.
 - `billing-banner.tsx` — only renders when `mbs-rule-engine` returns at least one item; one click writes a `billing_suggestions` row.
 - `ehr-summary-card.tsx` — read-only summary cards with explicit "↗ open in clinic system" links. Three cards: medications, allergies, latest labs.
 - `patient-detail.ts` server service — composite fetch returning the entire screen state in one round trip (Supabase or mock).
 
 ### Thu — Loop 1 red-team
+
 - Stopwatch a five-meal portion edit + send GP draft + accept billing suggestion in one sweep. Target **<8 minutes for an 8-meal review week**, including GP report draft (PRD §8 implicit target).
 - Verify cuisine-fit chip turns amber when an out-of-cuisine entry appears.
-- Verify the GP strip is the *only* place the dietitian sees the coordination action — no duplicate buttons in tabs.
+- Verify the GP strip is the _only_ place the dietitian sees the coordination action — no duplicate buttons in tabs.
 - Verify EHR-summary cards have no editable fields (regression — must reject any dev-mode override).
 
 ### Fri — Loop 1 fix
+
 - One commit per finding referencing its loop entry id.
 
 ### Sat — Loop 2 edge sweep
+
 - 50-ingredient meal edit (Recharts donut should not flicker; macro panel should re-render under 16 ms).
 - Cuisine fit at 0% (Asha assigned to Mediterranean specialist) → patient header shows red soft-warning + suggested re-route to a south-Asian-specialty dietitian.
 - MBS rule engine with all five items eligible simultaneously → banner shows top-priority item; "see more" reveals the rest.
@@ -143,6 +149,7 @@ tests/
 - Multi-tab: edit a portion in tab A, watch tab B reflect via Realtime within 2 s (when env is configured) or storage event (vibe).
 
 ### Sun — Loop 2 fix and close
+
 - Final dev-server smoke. Tag this as `v1.1.0-detail-v2`.
 
 ## Exit gate
@@ -157,12 +164,12 @@ tests/
 
 ## What this plan deliberately does NOT do
 
-These are *not* gaps; they are scope guardrails consistent with Measured's positioning:
+These are _not_ gaps; they are scope guardrails consistent with Measured's positioning:
 
 - **No medication editing.** The GP owns medications; we summarise and link out.
 - **No diagnosis entry.** GP-only; surfaced read-only.
 - **No allergen database management.** The dietitian flags an allergy on a meal; the master list is GP-managed.
-- **No multi-day plan editor inside the detail view.** That stays in the existing `Plan Builder` tab — the detail view is for the *daily review*, not multi-week planning.
+- **No multi-day plan editor inside the detail view.** That stays in the existing `Plan Builder` tab — the detail view is for the _daily review_, not multi-week planning.
 - **No PostHog analytics inside this view.** The events are already centralised (Stage 8); call sites are added during the build, not invented per-screen.
 - **No Best Practice / Heidi integration.** PRD §5.4 deferred. The "↗ open in clinic system" link is intentionally a placeholder until that integration lands.
 

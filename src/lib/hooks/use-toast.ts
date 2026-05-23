@@ -47,8 +47,12 @@ function getSnapshot() {
   return queue;
 }
 
+// Frozen empty array so the SSR/initial-render snapshot identity is stable —
+// React 19 throws an infinite-loop error when `getServerSnapshot` returns a
+// fresh array each call.
+const EMPTY_QUEUE = Object.freeze([]) as readonly Toast[];
 function getServerSnapshot(): Toast[] {
-  return [];
+  return EMPTY_QUEUE as Toast[];
 }
 
 export const toast = {

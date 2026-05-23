@@ -1,18 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  AreaChart,
-  Area,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ReferenceArea,
-  ResponsiveContainer,
-} from "recharts";
 import {
   ArrowLeft,
   ClipboardList,
@@ -26,6 +17,9 @@ import {
   Sparkles,
   PlusCircle,
   RotateCcw,
+  Receipt,
+  ShieldCheck,
+  Pencil,
 } from "lucide-react";
 import {
   ASHA_PLAN,
@@ -35,21 +29,34 @@ import {
 } from "@/lib/mock";
 import { mealsForPatient, pendingMeals } from "@/lib/mock/meals";
 import { symptomsForPatient } from "@/lib/mock/symptoms";
-import type { Patient, MealType, MealPlanItem } from "@/lib/mock/types";
+import type {
+  Patient,
+  MealType,
+  MealPlanItem,
+  MealLog,
+} from "@/lib/mock/types";
 import type { DietitianRecipe } from "@/lib/mock/dietitian-recipes";
 import { RecipePicker } from "@/components/dietitian/recipe-picker";
+import { CgmMealChart } from "@/components/shared/cgm-meal-chart";
+import { MealAnnotationDrawer } from "@/components/dietitian/meal-annotation-drawer";
+import { GpBillingCard } from "@/components/gp/cards/billing-card";
+import { useStoredAnnotations } from "@/lib/storage/patient-store";
+import { mealImageBySlug } from "@/lib/images";
 import { cn } from "@/lib/utils/cn";
 import { toast } from "@/lib/hooks/use-toast";
 
-type TabId = "overview" | "cgm" | "plan" | "reports" | "messages";
+type TabId = "overview" | "cgm" | "plan" | "reports" | "billing" | "messages";
 
 const TABS: { id: TabId; label: string; Icon: typeof ClipboardList }[] = [
   { id: "overview", label: "Overview", Icon: ClipboardList },
   { id: "cgm", label: "CGM + Meals", Icon: Activity },
   { id: "plan", label: "Plan", Icon: CalendarDays },
   { id: "reports", label: "Reports", Icon: FileText },
+  { id: "billing", label: "Billing", Icon: Receipt },
   { id: "messages", label: "Messages", Icon: MessageSquare },
 ];
+
+const DIETITIAN_NAME = "Maya Singh, APD";
 
 interface Props {
   patient: Patient;
@@ -62,6 +69,14 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
   const symptoms = symptomsForPatient(patient.id);
   const thread = THREADS.find((t) => t.patientId === patient.id);
   const pending = pendingMeals().filter((m) => m.patientId === patient.id);
+  const annotations = useStoredAnnotations(patient.id);
+  const [annotateMeal, setAnnotateMeal] = useState<MealLog | null>(null);
+
+  const annotationByMealId = useMemo(() => {
+    const map = new Map<string, (typeof annotations)[number]>();
+    for (const a of annotations) map.set(a.mealId, a);
+    return map;
+  }, [annotations]);
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -252,73 +267,20 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
               <div className="grid gap-4">
                 <Card title={`Glucose · ${cgm ? "last 48h" : "no CGM data"}`}>
                   {cgm ? (
-                    <ResponsiveContainer width="100%" height={240}>
-                      <AreaChart
-                        data={cgm.readings.map((r) => ({
-                          time: new Date(r.ts).getTime(),
-                          mmolL: r.mmolL,
-                        }))}
-                      >
-                        <defs>
-                          <linearGradient
-                            id="dpglu"
-                            x1="0"
-                            y1="0"
-                            x2="0"
-                            y2="1"
-                          >
-                            <stop
-                              offset="0%"
-                              stopColor="#2d5a3d"
-                              stopOpacity={0.3}
-                            />
-                            <stop
-                              offset="100%"
-                              stopColor="#2d5a3d"
-                              stopOpacity={0.02}
-                            />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid
-                          stroke="rgba(0,0,0,0.06)"
-                          vertical={false}
-                        />
-                        <XAxis
-                          dataKey="time"
-                          type="number"
-                          domain={["dataMin", "dataMax"]}
-                          tickFormatter={(t: number) =>
-                            new Date(t).toLocaleTimeString([], {
-                              hour: "numeric",
-                              hour12: false,
-                            })
-                          }
-                          stroke="rgba(0,0,0,0.4)"
-                          fontSize={10}
-                        />
-                        <YAxis
-                          domain={[3, 12]}
-                          stroke="rgba(0,0,0,0.4)"
-                          fontSize={10}
-                        />
-                        <Tooltip
-                          formatter={(v: number) => `${v.toFixed(1)} mmol/L`}
-                        />
-                        <ReferenceArea
-                          y1={3.9}
-                          y2={10}
-                          fill="#2d5a3d"
-                          fillOpacity={0.06}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="mmolL"
-                          stroke="#2d5a3d"
-                          strokeWidth={2}
-                          fill="url(#dpglu)"
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
+                    <>
+                      <p className="-mt-1 mb-2 text-[12px] text-[var(--measured-subtext)]">
+                        Hover any spike to see the causal meal photo. Click a
+                        spike to leave a note that lands on {patient.firstName}
+                        &rsquo;s dashboard.
+                      </p>
+                      <CgmMealChart
+                        readings={cgm.readings}
+                        meals={meals}
+                        annotations={annotations}
+                        height={260}
+                        onAnnotateMeal={setAnnotateMeal}
+                      />
+                    </>
                   ) : (
                     <p className="text-[13px] text-[var(--measured-subtext)]">
                       CGM not connected. Stage 6 will provision device pairing
@@ -327,46 +289,97 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
                   )}
                 </Card>
                 <Card title={`Recent meals (${meals.length})`}>
-                  <ul className="space-y-2">
+                  <ul className="grid gap-3 sm:grid-cols-2">
                     {meals.length === 0 && (
                       <li className="text-[13px] text-[var(--measured-subtext)]">
                         No meals logged yet.
                       </li>
                     )}
-                    {meals.slice(0, 5).map((m) => (
-                      <li
-                        key={m.id}
-                        className="grid grid-cols-[40px_1fr_auto] items-start gap-3 rounded-xl bg-[var(--measured-cream)] p-3"
-                      >
-                        <span className="text-[28px]" aria-hidden="true">
-                          {m.photoEmoji}
-                        </span>
-                        <div className="min-w-0">
-                          <div className="text-[13px] font-semibold text-[var(--measured-dark)]">
-                            {m.mealType} ·{" "}
-                            {new Date(m.eatenAt).toLocaleString([], {
-                              weekday: "short",
-                              hour: "numeric",
-                            })}
-                          </div>
-                          <div className="text-[12px] text-[var(--measured-subtext)]">
-                            {m.analysis.dietitianSummary}
-                          </div>
-                        </div>
-                        <span
-                          className={cn(
-                            "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
-                            m.reviewStatus === "approved"
-                              ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
-                              : m.reviewStatus === "flagged"
-                                ? "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]"
-                                : "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
-                          )}
+                    {meals.slice(0, 6).map((m) => {
+                      const slug =
+                        m.analysis.foods[0]?.name?.toLowerCase() ?? "";
+                      const ann = annotationByMealId.get(m.id);
+                      return (
+                        <li
+                          key={m.id}
+                          className="overflow-hidden rounded-2xl border border-[var(--measured-border-soft)] bg-white shadow-[var(--shadow-card)]"
                         >
-                          {m.reviewStatus.replace("_", " ")}
-                        </span>
-                      </li>
-                    ))}
+                          <button
+                            type="button"
+                            onClick={() => setAnnotateMeal(m)}
+                            className="block w-full text-left transition-shadow hover:shadow-[var(--shadow-raised)] focus:outline-none focus:ring-2 focus:ring-[var(--measured-green)]/40"
+                          >
+                            <div className="relative h-44 w-full bg-[var(--measured-cream)]">
+                              <Image
+                                src={mealImageBySlug(slug)}
+                                alt={m.analysis.dietitianSummary}
+                                fill
+                                sizes="(min-width: 640px) 280px, 100vw"
+                                className="object-cover"
+                              />
+                              <span
+                                className={cn(
+                                  "absolute left-3 top-3 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur",
+                                  m.reviewStatus === "approved"
+                                    ? "bg-[var(--measured-green)]/85 text-white"
+                                    : m.reviewStatus === "flagged"
+                                      ? "bg-[var(--measured-evaluate)]/85 text-white"
+                                      : "bg-[var(--measured-clinical-amber)]/85 text-white",
+                                )}
+                              >
+                                {m.reviewStatus.replace("_", " ")}
+                              </span>
+                              {ann && (
+                                <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-[var(--measured-clinical-blue)]/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur">
+                                  <Pencil
+                                    size={10}
+                                    strokeWidth={2.4}
+                                    aria-hidden="true"
+                                  />
+                                  Note sent
+                                </span>
+                              )}
+                              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/65 to-transparent px-3 pt-6 pb-2 text-white">
+                                <div className="text-[10px] font-semibold uppercase tracking-wider opacity-90">
+                                  {m.mealType} ·{" "}
+                                  {new Date(m.eatenAt).toLocaleString([], {
+                                    weekday: "short",
+                                    hour: "numeric",
+                                  })}
+                                </div>
+                                <div className="text-[14px] font-semibold leading-tight">
+                                  {m.analysis.foods
+                                    .slice(0, 2)
+                                    .map((f) => f.name)
+                                    .join(" + ")}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="px-3 py-2 text-[13px] text-[var(--measured-dark)]">
+                              <div className="flex items-center justify-between text-[11px] text-[var(--measured-subtext)]">
+                                <span>
+                                  Peak Δ{" "}
+                                  {m.analysis.cgmPeakDeltaMmol?.toFixed(1) ??
+                                    "?"}{" "}
+                                  mmol/L
+                                </span>
+                                <span className="inline-flex items-center gap-1 text-[var(--measured-dark-green)]">
+                                  <Pencil
+                                    size={11}
+                                    strokeWidth={2.2}
+                                    aria-hidden="true"
+                                  />
+                                  {ann ? "Edit note" : "Add note"}
+                                </span>
+                              </div>
+                              <p className="mt-1 line-clamp-2 leading-snug">
+                                {m.analysis.dietitianSummary}
+                              </p>
+                            </div>
+                          </button>
+                        </li>
+                      );
+                    })}
                   </ul>
                   {pending.length > 0 && (
                     <Link
@@ -388,6 +401,31 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
                 mealCount={meals.length}
                 symptomCount={symptoms.length}
               />
+            )}
+
+            {tab === "billing" && (
+              <div className="grid gap-3">
+                <div className="surface-card flex items-start gap-3 border-l-4 border-[var(--measured-clinical-blue)] p-4">
+                  <ShieldCheck
+                    size={18}
+                    strokeWidth={2.2}
+                    className="mt-0.5 shrink-0 text-[var(--measured-clinical-blue)]"
+                    aria-hidden="true"
+                  />
+                  <div>
+                    <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-clinical-blue)]">
+                      Read-only · shared by GP for context
+                    </div>
+                    <p className="mt-0.5 text-[13px] leading-relaxed text-[var(--measured-dark)]">
+                      Billing intelligence is owned by the GP. This view shows
+                      what they can see so allied health knows which MBS pathway
+                      is funding this episode of care. Items aren&rsquo;t
+                      auto-claimed — the GP verifies and submits.
+                    </p>
+                  </div>
+                </div>
+                <GpBillingCard patient={patient} variant="dietitian" />
+              </div>
             )}
 
             {tab === "messages" && (
@@ -441,6 +479,18 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
           </motion.div>
         </AnimatePresence>
       </div>
+
+      <MealAnnotationDrawer
+        open={annotateMeal !== null}
+        meal={annotateMeal}
+        patientId={patient.id}
+        patientFirstName={patient.firstName}
+        dietitianName={DIETITIAN_NAME}
+        existing={
+          annotateMeal ? annotationByMealId.get(annotateMeal.id) : undefined
+        }
+        onClose={() => setAnnotateMeal(null)}
+      />
     </div>
   );
 }

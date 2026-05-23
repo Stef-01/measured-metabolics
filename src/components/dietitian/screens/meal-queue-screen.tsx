@@ -289,50 +289,57 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
             transition={{ duration: 0.18 }}
             className="surface-raised flex flex-col gap-4 p-5"
           >
-            <header className="flex items-center justify-between gap-3">
-              <div>
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-                  {current.mealType} ·{" "}
-                  {new Date(current.eatenAt).toLocaleString([], {
-                    weekday: "short",
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })}
-                </div>
-                {patient ? (
-                  <Link
-                    href={`/d/patients/${patient.id}`}
-                    className="block font-serif text-[22px] text-[var(--measured-dark)] hover:text-[var(--measured-dark-green)] hover:underline"
-                  >
-                    {patient.firstName} {patient.lastName}
-                  </Link>
-                ) : (
-                  <div className="font-serif text-[22px] text-[var(--measured-dark)]">
-                    {current.patientId}
-                  </div>
+            <div className="relative h-72 w-full overflow-hidden rounded-2xl bg-[var(--measured-cream)]">
+              <Image
+                src={mealImageBySlug(
+                  current.analysis.foods[0]?.name?.toLowerCase() ?? "",
                 )}
-                <div className="text-[12px] text-[var(--measured-subtext)]">
-                  {patient?.conditions.join(" · ")} · {patient?.cuisineLabel}
+                alt={current.analysis.dietitianSummary}
+                fill
+                sizes="(min-width: 1024px) 720px, 100vw"
+                className="object-cover"
+                priority
+              />
+              <span
+                className="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1.5 text-[24px] shadow-[var(--shadow-card)]"
+                aria-hidden="true"
+              >
+                {current.photoEmoji}
+              </span>
+              <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 bg-gradient-to-b from-black/55 to-transparent px-4 pt-4 pb-8 text-white">
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-wider opacity-90">
+                    {current.mealType} ·{" "}
+                    {new Date(current.eatenAt).toLocaleString([], {
+                      weekday: "short",
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </div>
+                  {patient ? (
+                    <Link
+                      href={`/d/patients/${patient.id}`}
+                      className="block font-serif text-[26px] leading-tight tracking-tight hover:underline"
+                    >
+                      {patient.firstName} {patient.lastName}
+                    </Link>
+                  ) : (
+                    <div className="font-serif text-[26px] leading-tight tracking-tight">
+                      {current.patientId}
+                    </div>
+                  )}
+                  {patient && (
+                    <div className="text-[12px] opacity-90">
+                      {patient.conditions.join(" · ")} · {patient.cuisineLabel}
+                    </div>
+                  )}
+                </div>
+                <div className="rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold backdrop-blur">
+                  Peak Δ {current.analysis.cgmPeakDeltaMmol?.toFixed(1) ?? "?"}{" "}
+                  mmol/L
                 </div>
               </div>
-              <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-[var(--measured-cream)]">
-                <Image
-                  src={mealImageBySlug(
-                    current.analysis.foods[0]?.name?.toLowerCase() ?? "",
-                  )}
-                  alt={current.analysis.dietitianSummary}
-                  fill
-                  sizes="96px"
-                  className="object-cover"
-                />
-                <span
-                  className="absolute bottom-1 right-1 rounded-full bg-white/90 px-1.5 py-0.5 text-[12px]"
-                  aria-hidden="true"
-                >
-                  {current.photoEmoji}
-                </span>
-              </div>
-            </header>
+            </div>
 
             <div className="grid gap-3 md:grid-cols-2">
               <div className="rounded-xl bg-[var(--measured-cream)] p-3 text-[13px]">

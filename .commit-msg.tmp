@@ -1,0 +1,22 @@
+feat(dietitian): spike-meal hover, annotations to patient, billing visibility, bigger meal photos
+
+Closes the dietitian feedback loop: dietitians can now hover any CGM spike to see
+the causal meal as a photo, click to annotate it, and the note flows directly to
+the patient dashboard within seconds. Also surfaces billing intelligence on the
+dietitian patient page (read-only) and significantly enlarges meal photos.
+
+- New shared CgmMealChart with hover-to-pop-out causal meal photo
+  + nearestMealForSpike engine helper (5 unit tests, 3h causal window)
+- New MealAnnotationDrawer: hero photo, body, swap suggestion, send-to-patient
+- New DietitianNotesCard on patient home with image, peak delta, recommendation,
+  attribution, and Got-it acknowledge action
+- Dietitian patient page: Billing tab (read-only banner + GpBillingCard variant),
+  recent meals as full-width photo cards with status pills + Add-note CTA
+- Meal queue right pane: 96x96 emoji thumbnail -> 288px hero photo with overlay
+- Patient metrics CGM chart shows the same spike-meal callout with embedded
+  Maya note when one exists
+- patientStore gains MealAnnotation API (upsert/remove/acknowledge) with stable
+  empty-array snapshots and per-key parse cache to satisfy React 19 strict
+  useSyncExternalStore identity rules; useToastQueue snapshot stabilised too
+
+201/201 tests pass, lint + build green.
