@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import { recipeById } from "@/lib/mock";
+import { mealImageBySlug } from "@/lib/images";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -30,6 +32,17 @@ export default async function PatientRecipePage({ params }: Props) {
       />
 
       <div className="mx-auto flex max-w-md flex-col gap-4 px-5 pt-3 pb-8">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-[var(--measured-cream)]">
+          <Image
+            src={mealImageBySlug(slug)}
+            alt={recipe.title}
+            fill
+            sizes="(max-width: 480px) 100vw, 480px"
+            className="object-cover"
+            priority
+          />
+        </div>
+
         <div className="rounded-2xl bg-[var(--measured-green)]/5 p-4">
           <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-dark-green)]">
             Why Maya picked this

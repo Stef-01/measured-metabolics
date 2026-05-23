@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -18,6 +19,7 @@ import { DEMO_QUEUE_MEALS, PATIENTS } from "@/lib/mock";
 import type { MealLog, ReviewStatus } from "@/lib/mock/types";
 import { toast } from "@/lib/hooks/use-toast";
 import { cn } from "@/lib/utils/cn";
+import { mealImageBySlug } from "@/lib/images";
 
 const SHORTCUTS: {
   key: string;
@@ -305,11 +307,22 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                   {patient?.conditions.join(" · ")} · {patient?.cuisineLabel}
                 </div>
               </div>
-              <div
-                className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-[var(--measured-cream)] text-[56px]"
-                aria-hidden="true"
-              >
-                {current.photoEmoji}
+              <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-[var(--measured-cream)]">
+                <Image
+                  src={mealImageBySlug(
+                    current.analysis.foods[0]?.name?.toLowerCase() ?? "",
+                  )}
+                  alt={current.analysis.dietitianSummary}
+                  fill
+                  sizes="96px"
+                  className="object-cover"
+                />
+                <span
+                  className="absolute bottom-1 right-1 rounded-full bg-white/90 px-1.5 py-0.5 text-[12px]"
+                  aria-hidden="true"
+                >
+                  {current.photoEmoji}
+                </span>
               </div>
             </header>
 

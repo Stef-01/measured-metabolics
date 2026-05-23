@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { CheckCheck, ChevronRight } from "lucide-react";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import { ASHA_PLAN, RECIPES } from "@/lib/mock";
+import { mealImageBySlug } from "@/lib/images";
 import type { MealType } from "@/lib/mock/types";
 
 const MEAL_LABEL: Record<MealType, string> = {
@@ -11,13 +13,6 @@ const MEAL_LABEL: Record<MealType, string> = {
   lunch: "Lunch",
   dinner: "Dinner",
   snack: "Snack",
-};
-
-const MEAL_EMOJI: Record<MealType, string> = {
-  breakfast: "🥣",
-  lunch: "🍲",
-  dinner: "🍛",
-  snack: "🥜",
 };
 
 export function PatientPlanScreen() {
@@ -56,11 +51,16 @@ export function PatientPlanScreen() {
               className="group block rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
             >
               <div className="flex items-start gap-3">
-                <div
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--measured-cream)] text-[24px]"
-                  aria-hidden="true"
-                >
-                  {MEAL_EMOJI[item.mealType]}
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[var(--measured-cream)]">
+                  <Image
+                    src={mealImageBySlug(
+                      recipe?.id ?? item.title.toLowerCase(),
+                    )}
+                    alt=""
+                    fill
+                    sizes="64px"
+                    className="object-cover"
+                  />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-3">

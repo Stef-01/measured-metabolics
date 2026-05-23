@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -9,6 +10,7 @@ import {
   PanelRightClose,
   ArrowRight,
 } from "lucide-react";
+import { HERO } from "@/lib/images";
 
 /**
  * Landing — role chooser for the Measured Metabolics demo.
@@ -49,7 +51,21 @@ export function Landing() {
   ];
 
   return (
-    <main className="relative min-h-dvh bg-[var(--measured-cream)] text-[var(--measured-dark)]">
+    <main className="relative min-h-dvh overflow-hidden bg-[var(--measured-cream)] text-[var(--measured-dark)]">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10"
+      >
+        <Image
+          src={HERO.gradient}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover opacity-[0.18]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--measured-cream)]/30 via-[var(--measured-cream)]/70 to-[var(--measured-cream)]" />
+      </div>
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 pt-8">
         <div className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--measured-green)] text-white shadow-[var(--shadow-card)]">
