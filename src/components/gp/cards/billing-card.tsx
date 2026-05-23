@@ -1,76 +1,119 @@
 "use client";
 
 import { useState } from "react";
-import { Receipt, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  BrainCircuit,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  ClipboardList,
+  ExternalLink,
+  FileSearch,
+  Receipt,
+  ShieldAlert,
+  Sparkles,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { toast } from "@/lib/hooks/use-toast";
+import {
+  billingFeaturePhases,
+  billingSuggestionsForPatient,
+  type BillingIntelligenceSuggestion,
+} from "@/lib/mock/billing-suggestions";
 import type { Patient } from "@/lib/mock/types";
 
-interface MbsHint {
-  item: string;
-  description: string;
-  rationale: string;
-  needs: string[];
-  confidence: number;
-  matches: (p: Patient) => boolean;
-}
+const STANCE_LABEL: Record<BillingIntelligenceSuggestion["stance"], string> = {
+  candidate: "Candidate",
+  "needs-review": "Needs review",
+  defer: "Defer",
+};
 
-const HINTS: MbsHint[] = [
-  {
-    item: "MBS 721",
-    description: "GP Management Plan (GPMP)",
-    rationale: "Multi-condition chronic disease; ≥6 months management.",
-    needs: ["Patient consent", "≥1 follow-up scheduled"],
-    confidence: 0.86,
-    matches: (p) => p.conditions.length >= 2,
-  },
-  {
-    item: "MBS 723",
-    description: "Team Care Arrangement (TCA)",
-    rationale: "Coordinates with allied health (dietitian, exercise).",
-    needs: ["GPMP completed (721)", "≥2 contributing providers"],
-    confidence: 0.78,
-    matches: () => true,
-  },
-  {
-    item: "MBS 10954",
-    description: "Allied health visit (dietitian)",
-    rationale: "Patient referred to dietitian under chronic disease plan.",
-    needs: ["TCA in place"],
-    confidence: 0.72,
-    matches: () => true,
-  },
-  {
-    item: "MBS 2700",
-    description: "Mental Health Care Plan (MHCP)",
-    rationale: "Mood / wellbeing review may be relevant for new diabetes Dx.",
-    needs: ["K10 score", "Patient agreement"],
-    confidence: 0.45,
-    matches: (p) => p.weekNumber <= 4,
-  },
-];
+const STANCE_TONE: Record<BillingIntelligenceSuggestion["stance"], string> = {
+  candidate: "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
+  "needs-review":
+    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
+  defer: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
+};
 
 export function GpBillingCard({ patient }: { patient: Patient }) {
-  const items = HINTS.filter((h) => h.matches(patient));
+  const items = billingSuggestionsForPatient(patient);
+  const phases = billingFeaturePhases();
   const [expanded, setExpanded] = useState<string | null>(
     items[0]?.item ?? null,
   );
 
-  const copy = (h: MbsHint) => {
-    const text = `${h.item} ${h.description} — ${h.rationale}`;
-    void navigator.clipboard?.writeText(text);
+  const copy = (h: BillingIntelligenceSuggestion) => {
+    const text = `${h.item} ${h.service}\n\n${h.documentationDraft}`;
+    const clipboard = navigator.clipboard;
+    if (!clipboard) {
+      toast.push({
+        variant: "info",
+        title: "Clipboard unavailable",
+        body: "Open the item and copy the clinic-note draft manually.",
+        duration: 2600,
+      });
+      return;
+    }
+
+    clipboard.writeText(text).then(
+      () => {
+        toast.push({
+          variant: "info",
+          title: `${h.item} copied`,
+          duration: 1400,
+        });
+      },
+      () => {
+        toast.push({
+          variant: "info",
+          title: "Clipboard unavailable",
+          body: "Open the item and copy the clinic-note draft manually.",
+          duration: 2600,
+        });
+      },
+    );
+  };
+
+  const createTask = (h: BillingIntelligenceSuggestion) => {
     toast.push({
-      variant: "info",
-      title: `${h.item} copied`,
-      duration: 1400,
+      variant: "success",
+      title: `Task created: verify ${h.item}`,
+      body: "Demo task only. Phase 5 writes this to the GP task list.",
+      duration: 2200,
     });
   };
 
   return (
-    <div className="space-y-3">
-      <p className="text-[12px] leading-relaxed text-[var(--measured-subtext)]">
-        Eligibility hints. Never auto-claimed; you decide what to bill.
-      </p>
+    <div className="space-y-4">
+      <section className="rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)]">
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]">
+            <BrainCircuit size={18} strokeWidth={2.2} aria-hidden="true" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="font-serif text-[19px] leading-tight text-[var(--measured-dark)]">
+                Billing intelligence scan
+              </h2>
+              <span className="rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                Phase 1 demo
+              </span>
+            </div>
+            <p className="mt-1 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
+              Indicative Australian Medicare candidates from conditions,
+              symptoms, dietitian thread, referral context, and meal patterns.
+              Never auto-claimed; GP verification remains mandatory.
+            </p>
+          </div>
+        </div>
+        <div className="mt-3 grid grid-cols-3 gap-2 text-[11px]">
+          <ScanPill Icon={FileSearch} label="5 data sources" />
+          <ScanPill Icon={ShieldAlert} label="Needs GP verification" />
+          <ScanPill Icon={Sparkles} label={`${items.length} candidates`} />
+        </div>
+      </section>
+
       <ul className="space-y-2">
         {items.map((h) => {
           const isOpen = expanded === h.item;
@@ -86,17 +129,29 @@ export function GpBillingCard({ patient }: { patient: Patient }) {
                 aria-expanded={isOpen}
               >
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="rounded-md bg-[var(--measured-green)]/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--measured-dark-green)]">
                       {h.item}
                     </span>
+                    <span
+                      className={cn(
+                        "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
+                        STANCE_TONE[h.stance],
+                      )}
+                    >
+                      {STANCE_LABEL[h.stance]}
+                    </span>
                     <span className="font-semibold text-[var(--measured-dark)]">
-                      {h.description}
+                      {h.service}
                     </span>
                   </div>
                   <div className="mt-0.5 text-[var(--measured-subtext)]">
-                    {Math.round(h.confidence * 100)}% confidence · {h.rationale}
+                    {Math.round(h.confidence * 100)}% confidence
+                    {h.stance !== "defer" &&
+                      h.estimatedRebateAud > 0 &&
+                      ` · est. rebate $${h.estimatedRebateAud.toFixed(2)}`}
                   </div>
+                  <p className="mt-1 text-[var(--measured-dark)]">{h.whyNow}</p>
                 </div>
                 {isOpen ? (
                   <ChevronUp
@@ -113,36 +168,143 @@ export function GpBillingCard({ patient }: { patient: Patient }) {
                 )}
               </button>
               {isOpen && (
-                <div className="border-t border-[var(--measured-border-soft)] px-3 py-2.5">
+                <div className="space-y-3 border-t border-[var(--measured-border-soft)] px-3 py-2.5">
+                  <div>
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                      Rationale
+                    </div>
+                    <p className="mt-1 leading-relaxed text-[var(--measured-dark)]">
+                      {h.rationale}
+                    </p>
+                  </div>
+
+                  <div>
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                      Evidence found
+                    </div>
+                    <ul className="mt-1 space-y-1.5">
+                      {h.evidence.map((e, idx) => (
+                        <li
+                          key={`${h.item}-${e.kind}-${e.label}-${idx}`}
+                          className="rounded-lg bg-[var(--measured-cream)] px-2.5 py-2"
+                        >
+                          <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                            {e.label}
+                          </div>
+                          <blockquote className="mt-0.5 leading-relaxed text-[var(--measured-dark)]">
+                            &ldquo;{e.quote}&rdquo;
+                          </blockquote>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
                   <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
                     Still needs
                   </div>
                   <ul className="mt-1 space-y-0.5">
-                    {h.needs.map((n) => (
+                    {h.missingPrerequisites.map((n) => (
                       <li key={n} className="text-[var(--measured-dark)]">
                         · {n}
                       </li>
                     ))}
                   </ul>
-                  <button
-                    type="button"
-                    onClick={() => copy(h)}
-                    className={cn(
-                      "mt-2 inline-flex items-center gap-1 rounded-lg bg-[var(--measured-green)]/10 px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark-green)]",
-                    )}
-                  >
-                    <Receipt size={12} strokeWidth={2.2} aria-hidden="true" />
-                    Copy item
-                  </button>
+
+                  <div className="rounded-lg border border-[var(--measured-border-soft)] bg-white px-2.5 py-2">
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                      Clinic-note draft
+                    </div>
+                    <p className="mt-1 leading-relaxed text-[var(--measured-dark)]">
+                      {h.documentationDraft}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => copy(h)}
+                      className={cn(
+                        "inline-flex items-center gap-1 rounded-lg bg-[var(--measured-green)]/10 px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark-green)]",
+                      )}
+                    >
+                      <Receipt size={12} strokeWidth={2.2} aria-hidden="true" />
+                      Copy justification
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => createTask(h)}
+                      className="inline-flex items-center gap-1 rounded-lg bg-[var(--measured-cream)] px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark)]"
+                    >
+                      <ClipboardList
+                        size={12}
+                        strokeWidth={2.2}
+                        aria-hidden="true"
+                      />
+                      Create verification task
+                    </button>
+                    <a
+                      href="https://www.mbsonline.gov.au/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 rounded-lg bg-[var(--measured-cream)] px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark)]"
+                    >
+                      MBS Online
+                      <ExternalLink
+                        size={11}
+                        strokeWidth={2.2}
+                        aria-hidden="true"
+                      />
+                    </a>
+                  </div>
                 </div>
               )}
             </li>
           );
         })}
       </ul>
-      <p className="text-[11px] text-[var(--measured-subtext)]">
-        Stage 8 emits an audit row each time an item is copied.
-      </p>
+      <section className="rounded-2xl border border-[var(--measured-border-soft)] bg-[var(--measured-cream)] p-3">
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+          Billing Intelligence rollout
+        </div>
+        <ol className="mt-2 space-y-1.5">
+          {phases.map((phase) => (
+            <li
+              key={phase.phase}
+              className="flex items-start gap-2 text-[11px] text-[var(--measured-dark)]"
+            >
+              {phase.status === "live" ? (
+                <CheckCircle2
+                  size={13}
+                  strokeWidth={2.2}
+                  className="mt-0.5 shrink-0 text-[var(--measured-dark-green)]"
+                  aria-hidden="true"
+                />
+              ) : (
+                <span
+                  className="mt-[5px] h-2 w-2 shrink-0 rounded-full bg-[var(--measured-border)]"
+                  aria-hidden="true"
+                />
+              )}
+              <span>
+                <span className="font-semibold">{phase.phase}</span> ·{" "}
+                {phase.label}{" "}
+                <span className="text-[var(--measured-subtext)]">
+                  ({phase.week})
+                </span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </div>
+  );
+}
+
+function ScanPill({ Icon, label }: { Icon: LucideIcon; label: string }) {
+  return (
+    <div className="flex items-center gap-1.5 rounded-xl bg-[var(--measured-cream)] px-2.5 py-2 text-[var(--measured-dark)]">
+      <Icon size={12} strokeWidth={2.2} aria-hidden="true" />
+      <span className="truncate">{label}</span>
     </div>
   );
 }

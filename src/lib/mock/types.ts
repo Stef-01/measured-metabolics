@@ -171,14 +171,6 @@ export interface CarePlanDraft {
   reviewDate: string;
 }
 
-export interface BillingSuggestion {
-  patientId: string;
-  item: string;
-  rationale: string;
-  needs: string[];
-  confidence: number;
-}
-
 export interface DietitianReportDraft {
   patientId: string;
   periodFrom: string;

@@ -1,6 +1,6 @@
 # Measured Metabolics — UI Polish 10-Week Plan
 
-> **Status:** Approved 2026-05-22 · execution scheduled · all 10 game-changer features committed
+> **Status:** Approved 2026-05-22 · execution scheduled · all 10 game-changer features committed · Feature #11 Billing Intelligence (phased) added 2026-05-22
 > **Companion to:** `docs/planning.md` (Stages 1–8) · `docs/plans/patient-detail-nutrium.md` (Patient Detail v2)
 > **North star:** Measured should look — and feel — like a product Apple's Health team would ship. Less blocky, more typographic, more photographic, more motion that earns its keep. Nothing on-screen unless it carries weight.
 > **Non-goals:** No new clinical surfaces. No backend reshape. No design system from scratch. We are _polishing_ the existing surfaces, not reinventing them. The 10 AI features layer on top of the existing Stage 6 safety / audit / RLS infrastructure — they do not reshape it.
@@ -775,16 +775,35 @@ All 10 ideas Stefan reviewed are now woven into the 10-week plan. The full per-f
 | 8   | "Why this works" patient nudge      | W4     | `/p/plan`, `/p/home`                                | yes  | [W4 spec](#feature-spec--8-why-this-works-patient-nudge-one-line-lesson-per-meal)                                                                                  |
 | 9   | Pilot calibration mode              | W9     | `/admin/calibration`, `/p/home` banner, queue badge | no\* | [W9 spec](#feature-spec--9-pilot-calibration-mode)                                                                                                                 |
 | 10  | Weekly photograph card              | W2+W10 | scaffold W2; Sunday cron + push delivery W10        | no\* | [W2 scaffold](#feature-spec--10-weekly-photograph-card--pipeline-scaffold) · [W10 delivery](#feature-spec--10-weekly-photograph-card--delivery-scaffold-landed-w2) |
+| 11  | **Billing intelligence (phased)**   | W1→W10 | `/gp/[patientId]/billing` (5 progressive phases)    | yes  | [§ Feature #11 — Billing intelligence (phased rollout)](#feature-11--billing-intelligence-phased-rollout)                                                          |
 
 \* Calibration is no-LLM in itself but raises the threshold for #1, #5, #8. Weekly photograph composes its sentence by reusing the #8 worker — no new LLM call, just a different prompt variant.
 
-**Implementation order ends up:** foundation (W1) → #10 scaffold (W2) → #2, #3 (W3) → #4, #8 (W4) → #7 engine (W5) → #5 (W6) → **#1 flagship (W7)** → #6, #7 UI (W8) → #9 (W9) → #10 delivery (W10). The recommended ship-first three (#1, #6, #8) all land mid-late once the Photo primitive (W1), embedding pipeline (W3), tone gate (W4), and audit hooks are in place — they earn the trust their high visibility requires.
+**Implementation order ends up:** foundation (W1) → #10 scaffold + **#11 P1 indicative** (W2) → #2, #3 + **#11 P2 dynamic state** (W3) → #4, #8 (W4) → #7 engine + **#11 P3 rule engine** (W5) → #5 (W6) → **#1 flagship (W7)** → #6, #7 UI + **#11 P4 AI deep-dive** (W8) → #9 + **#11 P5 MBS RAG** (W9) → #10 delivery + **#11 P5 submission UI** (W10). The recommended ship-first three (#1, #6, #8) all land mid-late once the Photo primitive (W1), embedding pipeline (W3), tone gate (W4), and audit hooks are in place — they earn the trust their high visibility requires.
+
+---
+
+## Feature #11 - Billing Intelligence (phased rollout)
+
+Billing Intelligence is now a dedicated companion plan at `docs/plans/billing-feature-11.md`.
+
+It adds a GP billing copilot for `/gp/[patientId]/billing` that scans patient needs, conversation history, symptoms, meals, referrals, and care-plan context, then suggests Australian Medicare billing candidates with rationale, evidence, missing prerequisites, and GP-verification guardrails. It starts as an indicative static demo and graduates across the 10-week plan into a live MBS-guideline retrieval system.
+
+| Phase | Week   | Capability                                                 | Production stance                             |
+| ----- | ------ | ---------------------------------------------------------- | --------------------------------------------- |
+| P1    | Now/W2 | Static evidence-backed example on the GP billing card      | Demo only; no AI; no guideline retrieval      |
+| P2    | W3     | Deterministic local needs scanner over patient context     | No LLM; rules tested against fixture patients |
+| P3    | W5     | Structured Australian MBS rule engine with source URLs     | Official-source citations required            |
+| P4    | W8     | AI deep-dive over conversation history and patient context | Eval-gated; every suggestion needs evidence   |
+| P5    | W9-W10 | Live MBS retrieval + audit-safe copy/task workflow         | Suppress AI if source cannot be cited         |
+
+**Hard rule:** the feature never says an item is claimable and never auto-submits billing. It suggests candidates, explains why, cites evidence, lists blockers, and leaves the GP accountable.
 
 ---
 
 ## Risks and mitigations · cross-cutting
 
-Six risk classes apply across the whole plan, not just one feature. Each is mitigated by a concrete, testable mechanism.
+Seven risk classes apply across the whole plan, not just one feature. Each is mitigated by a concrete, testable mechanism.
 
 ### R1 — LLM cost spike
 
@@ -852,6 +871,18 @@ Six risk classes apply across the whole plan, not just one feature. Each is miti
 - **W11 buffer** added explicitly if any week overruns by > 1 day twice.
 - **Default plan stays 10 weeks; the buffer is contingency, not committed.**
 
+### R7 - Billing intelligence over-claim
+
+**The risk:** A GP sees an item suggestion and treats it as Medicare authorization, or the model hallucinates an MBS item number.
+
+**Mitigations:**
+
+- Billing copy uses "candidate", "may support", and "needs GP verification" language only.
+- Every suggestion must include evidence and missing prerequisites; no evidence means no suggestion.
+- Phase 3 requires official-source URLs on every structured rule.
+- Phase 5 suppresses AI if the official MBS source cannot be retrieved or cited.
+- Eval gate for Phase 4/5 requires 0 hallucinated item numbers and 0 unsupported evidence chains.
+
 ---
 
 ## Decision log
@@ -860,6 +891,7 @@ Six risk classes apply across the whole plan, not just one feature. Each is miti
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ------------------------------------------------------------------------------- |
 | 2026-05-22 | **Approved.** All 10 game-changer features ship across the 10-week plan, in week order: scaffold #10 → #2, #3 → #4, #8 → #7 engine → #5 → **#1 flagship** → #6, #7 UI → #9 → #10 delivery. | Stefan | Default plan stays 10 weeks; W11 buffer is contingency, not committed.          |
 | 2026-05-22 | Bulletproof framework adopted as the gate every AI feature must pass before flag-flip. 15-point checklist + eval / cost / audit / Sun-overflow / dual-track rules.                         | Stefan | Codified above the W1 section.                                                  |
+| 2026-05-22 | **Added Feature #11 Billing Intelligence.** Phased from static GP billing demo to live MBS guideline retrieval with evidence-backed suggestions and no auto-claiming.                      | Stefan | Detailed companion plan lives in `docs/plans/billing-feature-11.md`.            |
 | _tbd_      | Confirm photography license posture (Unsplash placeholder → photographer-credited at GA, ~ 80 dish shots covering 8 cuisines)                                                              | Stefan | Budget conversation ahead of the v1.2.0 tag at end of W10.                      |
 | _tbd_      | Confirm GP advisor for the W8 briefing eval (need a real GP to score the 30 patient-week scenarios for clinical defensibility).                                                            | Stefan | Maya can stand in for first cut, but a GP advisor is required before flag-flip. |
 | _tbd_      | Confirm Sentry alert thresholds for LLM cost circuit breakers (R1).                                                                                                                        | Stefan | Default: alert at 2× projected daily spend per feature.                         |
@@ -873,3 +905,4 @@ Six risk classes apply across the whole plan, not just one feature. Each is miti
 3. **Cron timezone source for #10 delivery** — uses `patient.timezone` (each patient gets 8pm local). Confirm this column is populated for all existing demo patients before W10 (it should be — added in Stage 5 schema).
 4. **Push notification provider for #10** — Web Push (browser) for the PWA is straightforward. iOS native push requires APNs credentials and an Apple Developer account; this work is out-of-scope for the v1.2.0 tag and the in-app `/p/home` fallback covers iOS users until APNs is wired.
 5. **W11 buffer commitment** — currently contingency. If any of W3, W4, W6, W8, W9 (the dual-track weeks) overrun by > 1 day, do we automatically allocate W11 or check in first?
+6. **Australian Medicare source posture for #11** — Phase 5 should use official MBS Online pages or a curated legal-approved snapshot. Confirm whether live retrieval is acceptable for pilot, or whether a versioned snapshot is mandatory.
