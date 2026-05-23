@@ -1,18 +1,14 @@
-import { User } from "lucide-react";
-import { PersonaStub } from "@/components/shared/persona-stub";
+import { notFound } from "next/navigation";
+import { findPatient } from "@/lib/mock";
+import { GpContextCard } from "@/components/gp/cards/context-card";
 
-export default function GpContextPage() {
-  return (
-    <PersonaStub
-      persona="GP"
-      title="Patient context"
-      blurb="30-second read. Last A1c, weight delta, time-in-range, dietitian's pattern summary."
-      Icon={User}
-      bullets={[
-        "3 numeric tiles: A1c · weight · TIR%",
-        "Pattern summary (3 bullets) from latest dietitian review",
-        "Symptom flags float to the top if severe",
-      ]}
-    />
-  );
+interface Props {
+  params: Promise<{ patientId: string }>;
+}
+
+export default async function GpContextPage({ params }: Props) {
+  const { patientId } = await params;
+  const patient = findPatient(patientId);
+  if (!patient) notFound();
+  return <GpContextCard patient={patient} />;
 }

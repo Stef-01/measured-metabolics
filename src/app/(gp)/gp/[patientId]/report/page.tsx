@@ -1,18 +1,14 @@
-import { FileChartColumn } from "lucide-react";
-import { PersonaStub } from "@/components/shared/persona-stub";
+import { notFound } from "next/navigation";
+import { findPatient } from "@/lib/mock";
+import { GpReportCard } from "@/components/gp/cards/report-card";
 
-export default function GpReportPage() {
-  return (
-    <PersonaStub
-      persona="GP"
-      title="Dietitian report"
-      blurb="The 30-second read. Latest dietitian summary, recommendations, and counts. Open the PDF or jump straight to billing."
-      Icon={FileChartColumn}
-      bullets={[
-        "1 paragraph summary, 3 bullet recommendations",
-        "Inline meal-uploaded / symptom-logged counts",
-        "Buttons: Open PDF · Add to billing",
-      ]}
-    />
-  );
+interface Props {
+  params: Promise<{ patientId: string }>;
+}
+
+export default async function GpReportPage({ params }: Props) {
+  const { patientId } = await params;
+  const patient = findPatient(patientId);
+  if (!patient) notFound();
+  return <GpReportCard patient={patient} />;
 }

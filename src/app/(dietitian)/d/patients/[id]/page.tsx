@@ -1,5 +1,6 @@
-import { User } from "lucide-react";
-import { PersonaStub } from "@/components/shared/persona-stub";
+import { notFound } from "next/navigation";
+import { findPatient } from "@/lib/mock";
+import { DietitianPatientDetailScreen } from "@/components/dietitian/screens/patient-detail-screen";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -7,17 +8,7 @@ interface PageProps {
 
 export default async function PatientDetailPage({ params }: PageProps) {
   const { id } = await params;
-  return (
-    <PersonaStub
-      persona="Dietitian"
-      title={`Patient · ${id}`}
-      blurb="Tabs: Overview · CGM + Meals · Plan · Reports · Messages. Built in Week 4."
-      Icon={User}
-      bullets={[
-        "Header: name · age · conditions · last reviewed",
-        "Tabs persist their scroll position across visits",
-        "Plan tab launches the Plan Builder modal",
-      ]}
-    />
-  );
+  const patient = findPatient(id);
+  if (!patient) notFound();
+  return <DietitianPatientDetailScreen patient={patient} />;
 }

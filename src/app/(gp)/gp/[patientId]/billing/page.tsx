@@ -1,18 +1,14 @@
-import { Receipt } from "lucide-react";
-import { PersonaStub } from "@/components/shared/persona-stub";
+import { notFound } from "next/navigation";
+import { findPatient } from "@/lib/mock";
+import { GpBillingCard } from "@/components/gp/cards/billing-card";
 
-export default function GpBillingPage() {
-  return (
-    <PersonaStub
-      persona="GP"
-      title="Billing"
-      blurb="Eligibility hints (CDM, GPMP, TCA, MHCP). Ranked by likelihood; each item explains the rationale and what's still needed."
-      Icon={Receipt}
-      bullets={[
-        "MBS items as suggestions, never auto-claimed",
-        "Each item: rationale, missing data, confidence",
-        "Audit logged when an item is copied",
-      ]}
-    />
-  );
+interface Props {
+  params: Promise<{ patientId: string }>;
+}
+
+export default async function GpBillingPage({ params }: Props) {
+  const { patientId } = await params;
+  const patient = findPatient(patientId);
+  if (!patient) notFound();
+  return <GpBillingCard patient={patient} />;
 }

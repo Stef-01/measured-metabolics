@@ -1,18 +1,14 @@
-import { FileText } from "lucide-react";
-import { PersonaStub } from "@/components/shared/persona-stub";
+import { notFound } from "next/navigation";
+import { findPatient } from "@/lib/mock";
+import { GpTranscriptCard } from "@/components/gp/cards/transcript-card";
 
-export default function GpTranscriptPage() {
-  return (
-    <PersonaStub
-      persona="GP"
-      title="Transcript"
-      blurb="Paste a consultation transcript. AI returns subjective / objective / assessment / plan ready to drop into MD or BP."
-      Icon={FileText}
-      bullets={[
-        "Textarea + Analyze button",
-        "SOAP draft with confidence pills",
-        "Stage 7 worker turns this real",
-      ]}
-    />
-  );
+interface Props {
+  params: Promise<{ patientId: string }>;
+}
+
+export default async function GpTranscriptPage({ params }: Props) {
+  const { patientId } = await params;
+  const patient = findPatient(patientId);
+  if (!patient) notFound();
+  return <GpTranscriptCard patient={patient} />;
 }

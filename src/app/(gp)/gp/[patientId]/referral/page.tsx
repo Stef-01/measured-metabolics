@@ -1,18 +1,14 @@
-import { Send } from "lucide-react";
-import { PersonaStub } from "@/components/shared/persona-stub";
+import { notFound } from "next/navigation";
+import { findPatient } from "@/lib/mock";
+import { GpReferralCard } from "@/components/gp/cards/referral-card";
 
-export default function GpReferralPage() {
-  return (
-    <PersonaStub
-      persona="GP"
-      title="Refer to dietitian"
-      blurb="2-minute referral. Reason · cuisine · priority. Consent prompt sent to patient as SMS. Auto-routes to dietitian panel."
-      Icon={Send}
-      bullets={[
-        "Pre-filled with conditions and meds from context",
-        "Cuisine + priority chips",
-        "Consent SMS preview before send",
-      ]}
-    />
-  );
+interface Props {
+  params: Promise<{ patientId: string }>;
+}
+
+export default async function GpReferralPage({ params }: Props) {
+  const { patientId } = await params;
+  const patient = findPatient(patientId);
+  if (!patient) notFound();
+  return <GpReferralCard patient={patient} />;
 }
