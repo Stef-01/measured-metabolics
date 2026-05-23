@@ -36,6 +36,10 @@ const STANCE_TONE: Record<BillingIntelligenceSuggestion["stance"], string> = {
   defer: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
 };
 
+function isMbsItem(item: string): boolean {
+  return item.startsWith("MBS ");
+}
+
 export function GpBillingCard({ patient }: { patient: Patient }) {
   const items = billingSuggestionsForPatient(patient);
   const phases = billingFeaturePhases();
@@ -97,11 +101,11 @@ export function GpBillingCard({ patient }: { patient: Patient }) {
                 Billing intelligence scan
               </h2>
               <span className="rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-                Phase 1 demo
+                Phase 2 local scan
               </span>
             </div>
             <p className="mt-1 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
-              Indicative Australian Medicare candidates from conditions,
+              Deterministic Australian Medicare candidates from conditions,
               symptoms, dietitian thread, referral context, and meal patterns.
               Never auto-claimed; GP verification remains mandatory.
             </p>
@@ -130,7 +134,14 @@ export function GpBillingCard({ patient }: { patient: Patient }) {
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-md bg-[var(--measured-green)]/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--measured-dark-green)]">
+                    <span
+                      className={cn(
+                        "rounded-md px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                        isMbsItem(h.item)
+                          ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+                          : "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
+                      )}
+                    >
                       {h.item}
                     </span>
                     <span

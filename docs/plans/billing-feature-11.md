@@ -38,11 +38,13 @@ The feature must avoid becoming a "claim maximizer." It is a **documentation and
 
 **Gate:** Every suggestion must include at least one evidence quote and at least one missing-prerequisite or safety note.
 
-### Phase 2 - Dynamic local scan
+### Phase 2 - Dynamic local scan (implemented)
 
 **Week target:** W3, alongside patient-data flow polish.
 
 **What ships:** Deterministic scanner over local mock data, no LLM.
+
+**Implemented now:** `src/lib/engine/billing-needs-scanner.ts` scans patient conditions, referral status, dietitian thread messages, symptom logs, and meal-risk patterns. `/gp/[patientId]/billing` now uses the scanner output for every demo patient instead of showing only Asha's Phase 1 hand-authored example.
 
 **Implementation:**
 

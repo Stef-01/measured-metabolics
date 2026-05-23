@@ -789,13 +789,13 @@ Billing Intelligence is now a dedicated companion plan at `docs/plans/billing-fe
 
 It adds a GP billing copilot for `/gp/[patientId]/billing` that scans patient needs, conversation history, symptoms, meals, referrals, and care-plan context, then suggests Australian Medicare billing candidates with rationale, evidence, missing prerequisites, and GP-verification guardrails. It starts as an indicative static demo and graduates across the 10-week plan into a live MBS-guideline retrieval system.
 
-| Phase | Week   | Capability                                                 | Production stance                             |
-| ----- | ------ | ---------------------------------------------------------- | --------------------------------------------- |
-| P1    | Now/W2 | Static evidence-backed example on the GP billing card      | Demo only; no AI; no guideline retrieval      |
-| P2    | W3     | Deterministic local needs scanner over patient context     | No LLM; rules tested against fixture patients |
-| P3    | W5     | Structured Australian MBS rule engine with source URLs     | Official-source citations required            |
-| P4    | W8     | AI deep-dive over conversation history and patient context | Eval-gated; every suggestion needs evidence   |
-| P5    | W9-W10 | Live MBS retrieval + audit-safe copy/task workflow         | Suppress AI if source cannot be cited         |
+| Phase | Week   | Capability                                                 | Production stance                           |
+| ----- | ------ | ---------------------------------------------------------- | ------------------------------------------- |
+| P1    | Now/W2 | Static evidence-backed example on the GP billing card      | Demo only; no AI; no guideline retrieval    |
+| P2    | W3     | Deterministic local needs scanner over patient context     | **Implemented**; no LLM; fixture-tested     |
+| P3    | W5     | Structured Australian MBS rule engine with source URLs     | Official-source citations required          |
+| P4    | W8     | AI deep-dive over conversation history and patient context | Eval-gated; every suggestion needs evidence |
+| P5    | W9-W10 | Live MBS retrieval + audit-safe copy/task workflow         | Suppress AI if source cannot be cited       |
 
 **Hard rule:** the feature never says an item is claimable and never auto-submits billing. It suggests candidates, explains why, cites evidence, lists blockers, and leaves the GP accountable.
 
