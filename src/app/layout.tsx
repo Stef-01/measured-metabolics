@@ -3,6 +3,7 @@ import { Inter, DM_Serif_Display } from "next/font/google";
 import { DeviceFrame } from "@/components/shared/device-frame";
 import { ErrorBoundary } from "@/components/shared/error-boundary";
 import { ToastHost } from "@/components/shared/toast-host";
+import { QueryProvider } from "@/lib/query/provider";
 import "./globals.css";
 
 const inter = Inter({
@@ -55,7 +56,9 @@ export default function RootLayout({
         className={`${inter.variable} ${dmSerif.variable} antialiased font-sans min-h-dvh`}
       >
         <ErrorBoundary>
-          <DeviceFrame>{children}</DeviceFrame>
+          <QueryProvider>
+            <DeviceFrame>{children}</DeviceFrame>
+          </QueryProvider>
         </ErrorBoundary>
         <ToastHost />
       </body>
