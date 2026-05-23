@@ -6,6 +6,7 @@ export * from "./referrals";
 export * from "./symptoms";
 export * from "./messages";
 export * from "./plans";
+export * from "./dietitian-recipes";
 export * from "./synth-meals";
 
 import { synthesizeMeals } from "./synth-meals";

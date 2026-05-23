@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -298,11 +299,18 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                     minute: "2-digit",
                   })}
                 </div>
-                <div className="font-serif text-[22px] text-[var(--measured-dark)]">
-                  {patient
-                    ? `${patient.firstName} ${patient.lastName}`
-                    : current.patientId}
-                </div>
+                {patient ? (
+                  <Link
+                    href={`/d/patients/${patient.id}`}
+                    className="block font-serif text-[22px] text-[var(--measured-dark)] hover:text-[var(--measured-dark-green)] hover:underline"
+                  >
+                    {patient.firstName} {patient.lastName}
+                  </Link>
+                ) : (
+                  <div className="font-serif text-[22px] text-[var(--measured-dark)]">
+                    {current.patientId}
+                  </div>
+                )}
                 <div className="text-[12px] text-[var(--measured-subtext)]">
                   {patient?.conditions.join(" · ")} · {patient?.cuisineLabel}
                 </div>

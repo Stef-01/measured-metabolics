@@ -12,6 +12,7 @@ import {
   Stethoscope,
 } from "lucide-react";
 import { gpSidebarTabs, type GpTabId } from "@/lib/hooks/use-navigation";
+import { PersonaSwitcher } from "@/components/shared/persona-switcher";
 import { cn } from "@/lib/utils/cn";
 import type { Patient } from "@/lib/mock/types";
 
@@ -42,10 +43,13 @@ export function GpSidebarShell({ patient, children }: Props) {
 
   return (
     <div className="gp-sidebar mx-auto flex flex-col" data-gp-sidebar>
-      <header className="border-b border-[var(--measured-border-soft)] bg-white px-5 pt-6 pb-4">
-        <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-[var(--measured-subtext)]">
-          <Stethoscope size={14} strokeWidth={2.2} aria-hidden="true" />
-          Measured · GP sidebar
+      <header className="border-b border-[var(--measured-border-soft)] bg-white px-5 pt-4 pb-4">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-[var(--measured-subtext)]">
+            <Stethoscope size={14} strokeWidth={2.2} aria-hidden="true" />
+            Measured · GP sidebar
+          </div>
+          <PersonaSwitcher active="gp" variant="compact" />
         </div>
         <div className="mt-3 font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
           {patient.firstName} {patient.lastName}

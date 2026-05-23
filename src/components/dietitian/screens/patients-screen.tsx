@@ -5,10 +5,11 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Search, AlertTriangle } from "lucide-react";
 import { PATIENTS } from "@/lib/mock";
-import type { Patient, RiskLevel } from "@/lib/mock/types";
+import type { Cuisine, Patient, RiskLevel } from "@/lib/mock/types";
 import { cn } from "@/lib/utils/cn";
 
 type RiskFilter = "all" | RiskLevel;
+type CuisineFilter = "all" | Cuisine;
 
 const RISK_TONE: Record<RiskLevel, string> = {
   high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
@@ -26,18 +27,36 @@ const RISK_FILTERS: { id: RiskFilter; label: string }[] = [
 
 export function DietitianPatientsScreen() {
   const [risk, setRisk] = useState<RiskFilter>("all");
+  const [cuisine, setCuisine] = useState<CuisineFilter>("all");
   const [query, setQuery] = useState("");
 
+  const cuisineOptions = useMemo(() => {
+    const set = new Set<Cuisine>();
+    for (const p of PATIENTS) set.add(p.cuisine);
+    return Array.from(set);
+  }, []);
+
+  const cuisineLabel = useMemo(() => {
+    const map = new Map<Cuisine, string>();
+    for (const p of PATIENTS) map.set(p.cuisine, p.cuisineLabel);
+    return map;
+  }, []);
+
   const list = useMemo(() => {
-    return PATIENTS.filter((p) => risk === "all" || p.risk === risk).filter(
-      (p) =>
-        query === "" ||
-        `${p.firstName} ${p.lastName}`
-          .toLowerCase()
-          .includes(query.toLowerCase()) ||
-        p.conditions.some((c) => c.toLowerCase().includes(query.toLowerCase())),
-    );
-  }, [risk, query]);
+    return PATIENTS.filter((p) => risk === "all" || p.risk === risk)
+      .filter((p) => cuisine === "all" || p.cuisine === cuisine)
+      .filter(
+        (p) =>
+          query === "" ||
+          `${p.firstName} ${p.lastName}`
+            .toLowerCase()
+            .includes(query.toLowerCase()) ||
+          p.conditions.some((c) =>
+            c.toLowerCase().includes(query.toLowerCase()),
+          ) ||
+          p.cuisineLabel.toLowerCase().includes(query.toLowerCase()),
+      );
+  }, [risk, cuisine, query]);
 
   const flagged = list.filter((p) => p.alerts.length > 0);
   const calm = list.filter((p) => p.alerts.length === 0);
@@ -70,7 +89,7 @@ export function DietitianPatientsScreen() {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search name or condition"
+            placeholder="Search name, condition, or cuisine"
             className="w-full rounded-2xl border border-[var(--measured-border)] bg-white py-3 pl-10 pr-4 text-[14px] placeholder:text-[var(--measured-subtext)] focus:border-[var(--measured-green)] focus:outline-none"
           />
         </label>
@@ -92,6 +111,40 @@ export function DietitianPatientsScreen() {
             </button>
           ))}
         </div>
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+          Cuisine
+        </span>
+        <button
+          type="button"
+          onClick={() => setCuisine("all")}
+          aria-pressed={cuisine === "all"}
+          className={cn(
+            "rounded-full px-3 py-1 text-[12px] font-semibold transition-colors",
+            cuisine === "all"
+              ? "bg-[var(--measured-dark)] text-white"
+              : "bg-white text-[var(--measured-subtext)] ring-1 ring-[var(--measured-border)] hover:text-[var(--measured-dark)]",
+          )}
+        >
+          All
+        </button>
+        {cuisineOptions.map((c) => (
+          <button
+            type="button"
+            key={c}
+            onClick={() => setCuisine(c)}
+            aria-pressed={cuisine === c}
+            className={cn(
+              "rounded-full px-3 py-1 text-[12px] font-semibold transition-colors",
+              cuisine === c
+                ? "bg-[var(--measured-dark)] text-white"
+                : "bg-white text-[var(--measured-subtext)] ring-1 ring-[var(--measured-border)] hover:text-[var(--measured-dark)]",
+            )}
+          >
+            {cuisineLabel.get(c) ?? c}
+          </button>
+        ))}
       </div>
 
       <Section

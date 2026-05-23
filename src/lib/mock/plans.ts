@@ -1,4 +1,5 @@
-import type { MealPlan, Recipe } from "./types";
+import type { Cuisine, MealPlan, Recipe } from "./types";
+import { PATIENTS } from "./patients";
 
 export const ASHA_PLAN: MealPlan = {
   patientId: "asha",
@@ -68,4 +69,44 @@ export const RECIPES: Recipe[] = [
 
 export function recipeById(id: string): Recipe | undefined {
   return RECIPES.find((r) => r.id === id);
+}
+
+/**
+ * Pre-existing approved plans, keyed by patientId. The cross-patient
+ * quick-apply flow scans these to suggest "you've already built a plan for a
+ * patient in the same cuisine — copy it as a draft?"
+ */
+export const PLANS_BY_PATIENT: Record<string, MealPlan> = {
+  asha: ASHA_PLAN,
+};
+
+/**
+ * Find a sibling patient (same cuisine, same dietitian) who already has an
+ * approved plan, so the dietitian can clone it as a draft for a new patient.
+ *
+ * Returns null when no precedent exists.
+ */
+export function findSameCuisinePlanFor(patientId: string): {
+  sourcePatientId: string;
+  sourcePatientName: string;
+  cuisine: Cuisine;
+  plan: MealPlan;
+} | null {
+  const target = PATIENTS.find((p) => p.id === patientId);
+  if (!target) return null;
+  const sibling = PATIENTS.find(
+    (p) =>
+      p.id !== target.id &&
+      p.cuisine === target.cuisine &&
+      p.assignedDietitianId === target.assignedDietitianId &&
+      PLANS_BY_PATIENT[p.id],
+  );
+  if (!sibling) return null;
+  const plan = PLANS_BY_PATIENT[sibling.id];
+  return {
+    sourcePatientId: sibling.id,
+    sourcePatientName: `${sibling.firstName} ${sibling.lastName}`,
+    cuisine: sibling.cuisine,
+    plan,
+  };
 }

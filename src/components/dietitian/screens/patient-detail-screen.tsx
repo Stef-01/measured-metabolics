@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -22,17 +22,22 @@ import {
   MessageSquare,
   CheckCircle2,
   Send,
+  Library,
+  Sparkles,
+  PlusCircle,
+  RotateCcw,
 } from "lucide-react";
 import {
   ASHA_PLAN,
   CGM_BY_PATIENT,
   THREADS,
-  recipeById,
-  RECIPES,
+  findSameCuisinePlanFor,
 } from "@/lib/mock";
 import { mealsForPatient, pendingMeals } from "@/lib/mock/meals";
 import { symptomsForPatient } from "@/lib/mock/symptoms";
-import type { Patient, MealType } from "@/lib/mock/types";
+import type { Patient, MealType, MealPlanItem } from "@/lib/mock/types";
+import type { DietitianRecipe } from "@/lib/mock/dietitian-recipes";
+import { RecipePicker } from "@/components/dietitian/recipe-picker";
 import { cn } from "@/lib/utils/cn";
 import { toast } from "@/lib/hooks/use-toast";
 
@@ -81,6 +86,30 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
             {patient.sex.toLowerCase()} · {patient.conditions.join(" · ")} ·{" "}
             {patient.cuisineLabel}
           </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setTab("plan")}
+              className="cta-shadow inline-flex items-center gap-1.5 rounded-2xl bg-[var(--measured-green)] px-4 py-2 text-[13px] font-semibold text-white hover:bg-[var(--measured-dark-green)]"
+            >
+              <CalendarDays size={14} strokeWidth={2.2} aria-hidden="true" />
+              Build plan
+            </button>
+            <Link
+              href={`/d/queue?patient=${patient.id}`}
+              className="inline-flex items-center gap-1.5 rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]"
+            >
+              <ClipboardList size={14} strokeWidth={2.2} aria-hidden="true" />
+              Review meals
+            </Link>
+            <Link
+              href={`/d/messages?patient=${patient.id}`}
+              className="inline-flex items-center gap-1.5 rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]"
+            >
+              <MessageSquare size={14} strokeWidth={2.2} aria-hidden="true" />
+              Message
+            </Link>
+          </div>
         </div>
         <div className="flex flex-col items-end gap-1 text-[12px] text-[var(--measured-subtext)]">
           <div>
@@ -451,15 +480,87 @@ function Item({ k, v }: { k: string; v: string }) {
   );
 }
 
-function PlanBuilder({ patient }: { patient: Patient }) {
-  const [items, setItems] = useState(ASHA_PLAN.items);
-  const [approved, setApproved] = useState(true);
+const MEAL_LABEL: Record<MealType, string> = {
+  breakfast: "Breakfast",
+  lunch: "Lunch",
+  dinner: "Dinner",
+  snack: "Snack",
+};
 
-  const update = (idx: number, patch: Partial<(typeof items)[number]>) => {
+const EMPTY_PLAN_ITEMS: MealPlanItem[] = [
+  {
+    mealType: "breakfast",
+    title: "",
+    description: "",
+    rationale: "",
+  },
+  {
+    mealType: "lunch",
+    title: "",
+    description: "",
+    rationale: "",
+  },
+  {
+    mealType: "dinner",
+    title: "",
+    description: "",
+    rationale: "",
+  },
+  {
+    mealType: "snack",
+    title: "",
+    description: "",
+    rationale: "",
+  },
+];
+
+function PlanBuilder({ patient }: { patient: Patient }) {
+  const isAsha = patient.id === "asha";
+  const [items, setItems] = useState<MealPlanItem[]>(
+    isAsha ? ASHA_PLAN.items : EMPTY_PLAN_ITEMS,
+  );
+  const [approved, setApproved] = useState(isAsha);
+  const [pickerSlot, setPickerSlot] = useState<number | null>(null);
+
+  const sibling = useMemo(
+    () => findSameCuisinePlanFor(patient.id),
+    [patient.id],
+  );
+
+  const update = (idx: number, patch: Partial<MealPlanItem>) => {
     setItems((prev) =>
       prev.map((it, i) => (i === idx ? { ...it, ...patch } : it)),
     );
     setApproved(false);
+  };
+
+  const applyRecipe = (idx: number, recipe: DietitianRecipe) => {
+    update(idx, {
+      title: recipe.title,
+      description: recipe.ingredients.slice(0, 3).join(" · "),
+      rationale: recipe.why,
+    });
+    toast.push({
+      variant: "success",
+      title: `${recipe.title} added to ${MEAL_LABEL[items[idx].mealType]}`,
+      duration: 1800,
+    });
+  };
+
+  const cloneFromSibling = () => {
+    if (!sibling) return;
+    setItems(sibling.plan.items.map((it) => ({ ...it })));
+    setApproved(false);
+    toast.push({
+      variant: "success",
+      title: `Copied ${sibling.sourcePatientName}'s plan as draft`,
+      duration: 2200,
+    });
+  };
+
+  const reset = () => {
+    setItems(isAsha ? ASHA_PLAN.items : EMPTY_PLAN_ITEMS);
+    setApproved(isAsha);
   };
 
   const approve = () => {
@@ -471,42 +572,103 @@ function PlanBuilder({ patient }: { patient: Patient }) {
     });
   };
 
-  const mealLabel: Record<MealType, string> = {
-    breakfast: "Breakfast",
-    lunch: "Lunch",
-    dinner: "Dinner",
-    snack: "Snack",
-  };
+  const isEmpty = items.every((it) => !it.title);
 
   return (
     <div className="grid gap-4">
+      {sibling && isEmpty && (
+        <section className="surface-card relative overflow-hidden border-l-4 border-[var(--measured-green)] p-5">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-dark-green)]">
+                <Sparkles size={12} strokeWidth={2.4} aria-hidden="true" />
+                Same-cuisine precedent
+              </div>
+              <h3 className="mt-1.5 font-serif text-[19px] leading-tight text-[var(--measured-dark)]">
+                You already wrote a {patient.cuisineLabel} plan for{" "}
+                {sibling.sourcePatientName}
+              </h3>
+              <p className="mt-1 text-[13px] text-[var(--measured-subtext)]">
+                Copy it as a draft for {patient.firstName}, then adjust per
+                their conditions ({patient.conditions.join(" · ")}).
+              </p>
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <Link
+                href={`/d/patients/${sibling.sourcePatientId}`}
+                className="inline-flex items-center rounded-xl border border-[var(--measured-border)] bg-white px-3 py-1.5 text-[12px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]"
+              >
+                Open source
+              </Link>
+              <button
+                type="button"
+                onClick={cloneFromSibling}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-3 py-1.5 text-[12px] font-semibold text-white hover:bg-[var(--measured-dark-green)]"
+              >
+                <PlusCircle size={14} strokeWidth={2.2} aria-hidden="true" />
+                Copy as draft
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
       <Card title="Meal plan builder">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-[12px] text-[var(--measured-subtext)]">
+          <span>
+            Cuisine{" "}
+            <span className="font-semibold text-[var(--measured-dark)]">
+              {patient.cuisineLabel}
+            </span>{" "}
+            · 4 meal slots
+          </span>
+          <button
+            type="button"
+            onClick={reset}
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--measured-subtext)] hover:text-[var(--measured-dark)]"
+          >
+            <RotateCcw size={11} strokeWidth={2.2} aria-hidden="true" />
+            Reset
+          </button>
+        </div>
         <div className="space-y-3">
           {items.map((it, idx) => (
             <div
               key={it.mealType}
               className="rounded-xl border border-[var(--measured-border-soft)] bg-[var(--measured-cream)] p-3"
             >
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-                {mealLabel[it.mealType]}
+              <div className="flex items-center justify-between gap-3">
+                <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                  {MEAL_LABEL[it.mealType]}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPickerSlot(idx)}
+                  className="inline-flex items-center gap-1 rounded-lg bg-white px-2 py-1 text-[11px] font-semibold text-[var(--measured-dark-green)] ring-1 ring-[var(--measured-border)] hover:bg-[var(--measured-green)]/5"
+                >
+                  <Library size={11} strokeWidth={2.2} aria-hidden="true" />
+                  Pick from library
+                </button>
               </div>
               <input
                 type="text"
                 value={it.title}
                 onChange={(e) => update(idx, { title: e.target.value })}
-                className="mt-1 w-full bg-transparent text-[15px] font-semibold text-[var(--measured-dark)] focus:outline-none"
+                placeholder={`${MEAL_LABEL[it.mealType]} title`}
+                className="mt-1 w-full bg-transparent text-[15px] font-semibold text-[var(--measured-dark)] placeholder:text-[var(--measured-subtext)]/60 focus:outline-none"
               />
               <textarea
                 rows={1}
                 value={it.description}
                 onChange={(e) => update(idx, { description: e.target.value })}
-                className="mt-1 w-full resize-none bg-transparent text-[13px] leading-relaxed text-[var(--measured-dark)] focus:outline-none"
+                placeholder="Description for the patient"
+                className="mt-1 w-full resize-none bg-transparent text-[13px] leading-relaxed text-[var(--measured-dark)] placeholder:text-[var(--measured-subtext)]/60 focus:outline-none"
               />
               <input
                 type="text"
                 value={it.rationale ?? ""}
                 onChange={(e) => update(idx, { rationale: e.target.value })}
-                placeholder="Rationale (one line for the patient)"
+                placeholder="Rationale (one line)"
                 className="mt-1 w-full bg-transparent text-[12px] italic text-[var(--measured-dark-green)] placeholder:text-[var(--measured-subtext)] focus:outline-none"
               />
             </div>
@@ -515,12 +677,14 @@ function PlanBuilder({ patient }: { patient: Patient }) {
         <button
           type="button"
           onClick={approve}
-          disabled={approved}
+          disabled={approved || isEmpty}
           className={cn(
             "mt-4 inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-[13px] font-semibold",
             approved
               ? "cursor-default bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
-              : "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]",
+              : isEmpty
+                ? "cursor-not-allowed bg-[var(--measured-cream)] text-[var(--measured-subtext)]"
+                : "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]",
           )}
         >
           {approved ? (
@@ -533,30 +697,17 @@ function PlanBuilder({ patient }: { patient: Patient }) {
           )}
         </button>
       </Card>
-      <Card title="Recipe library">
-        <ul className="grid gap-2 md:grid-cols-2">
-          {RECIPES.map((r) => (
-            <li
-              key={r.id}
-              className="rounded-xl border border-[var(--measured-border-soft)] bg-white p-3"
-            >
-              <Link
-                href={`/p/plan/${r.id}`}
-                className="text-[14px] font-semibold text-[var(--measured-dark-green)]"
-              >
-                {r.title}
-              </Link>
-              <p className="mt-1 text-[12px] text-[var(--measured-subtext)]">
-                {r.why}
-              </p>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-3 text-[11px] text-[var(--measured-subtext)]">
-          Stage 6 will let dietitians draft new recipes and approve them into
-          the patient&apos;s plan.
-        </p>
-      </Card>
+
+      <RecipePicker
+        open={pickerSlot !== null}
+        dietitianId={patient.assignedDietitianId}
+        patientCuisine={patient.cuisine}
+        mealTypeFilter={pickerSlot !== null ? items[pickerSlot].mealType : null}
+        onClose={() => setPickerSlot(null)}
+        onPick={(r) => {
+          if (pickerSlot !== null) applyRecipe(pickerSlot, r);
+        }}
+      />
     </div>
   );
 }
@@ -645,6 +796,3 @@ function ReportPreview({
     </Card>
   );
 }
-// Reference recipeById to keep the import live for future expansion of the
-// patient detail recipe picker (Week 6+).
-void recipeById;

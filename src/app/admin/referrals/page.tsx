@@ -18,7 +18,8 @@ export default async function AdminReferralsPage() {
           >
             <span className="font-semibold">{r.patientId}</span>{" "}
             <span className="text-[var(--measured-subtext)]">
-              · {r.status} · {new Date(r.createdAt).toLocaleDateString()} · from {r.referringGpName}
+              · {r.status} · {new Date(r.createdAt).toLocaleDateString()} · from{" "}
+              {r.referringGpName}
             </span>
           </li>
         ))}

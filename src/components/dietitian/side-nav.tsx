@@ -12,6 +12,7 @@ import {
   Stethoscope,
 } from "lucide-react";
 import { useNavigation, type DietitianTabId } from "@/lib/hooks/use-navigation";
+import { PersonaSwitcher } from "@/components/shared/persona-switcher";
 import { cn } from "@/lib/utils/cn";
 
 const ICON_BY_TAB: Record<DietitianTabId, typeof LayoutDashboard> = {
@@ -82,8 +83,8 @@ export function DietitianSideNav() {
         })}
       </ul>
 
-      <div className="mt-auto border-t border-[var(--measured-border-soft)] px-5 py-4 text-[11px] text-[var(--measured-subtext)]">
-        Maya Singh, APD · maya@measured.app
+      <div className="mt-auto border-t border-[var(--measured-border-soft)] p-3">
+        <PersonaSwitcher active="dietitian" variant="rail" />
       </div>
     </nav>
   );

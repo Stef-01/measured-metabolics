@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Inbox,
@@ -8,6 +9,7 @@ import {
   UserCheck,
   ShieldCheck,
   Clock,
+  ArrowRight,
 } from "lucide-react";
 import { REFERRALS, PATIENTS, CURRENT_DIETITIAN_ID } from "@/lib/mock";
 import type { Referral, ReferralPriority } from "@/lib/mock/types";
@@ -134,9 +136,18 @@ function Row({
     >
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <div className="text-[15px] font-semibold text-[var(--measured-dark)]">
-            {p ? `${p.firstName} ${p.lastName}` : r.patientId}
-          </div>
+          {p ? (
+            <Link
+              href={`/d/patients/${p.id}`}
+              className="text-[15px] font-semibold text-[var(--measured-dark)] hover:text-[var(--measured-dark-green)] hover:underline"
+            >
+              {p.firstName} {p.lastName}
+            </Link>
+          ) : (
+            <div className="text-[15px] font-semibold text-[var(--measured-dark)]">
+              {r.patientId}
+            </div>
+          )}
           <span
             className={cn(
               "rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider",
@@ -166,10 +177,21 @@ function Row({
       </div>
 
       {accepted ? (
-        <span className="inline-flex items-center gap-1 rounded-lg bg-[var(--measured-green)]/10 px-3 py-2 text-[12px] font-semibold text-[var(--measured-dark-green)]">
-          <CheckCircle2 size={14} strokeWidth={2.2} aria-hidden="true" />
-          Accepted
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1 rounded-lg bg-[var(--measured-green)]/10 px-3 py-2 text-[12px] font-semibold text-[var(--measured-dark-green)]">
+            <CheckCircle2 size={14} strokeWidth={2.2} aria-hidden="true" />
+            Accepted
+          </span>
+          {p && (
+            <Link
+              href={`/d/patients/${p.id}`}
+              className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-[12px] font-semibold text-[var(--measured-dark-green)] ring-1 ring-[var(--measured-border)] hover:bg-[var(--measured-cream)]"
+            >
+              Open
+              <ArrowRight size={12} strokeWidth={2.2} aria-hidden="true" />
+            </Link>
+          )}
+        </div>
       ) : (
         <button
           type="button"

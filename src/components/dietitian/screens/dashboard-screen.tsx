@@ -96,9 +96,18 @@ export function DietitianDashboardScreen() {
                   className="flex items-center justify-between gap-4 rounded-xl bg-white px-4 py-3 shadow-[var(--shadow-card)]"
                 >
                   <div className="min-w-0">
-                    <div className="text-[14px] font-semibold text-[var(--measured-dark)]">
-                      {p ? `${p.firstName} ${p.lastName}` : s.patientId}
-                    </div>
+                    {p ? (
+                      <Link
+                        href={`/d/patients/${p.id}`}
+                        className="text-[14px] font-semibold text-[var(--measured-dark)] hover:text-[var(--measured-evaluate)] hover:underline"
+                      >
+                        {p.firstName} {p.lastName}
+                      </Link>
+                    ) : (
+                      <div className="text-[14px] font-semibold text-[var(--measured-dark)]">
+                        {s.patientId}
+                      </div>
+                    )}
                     <div className="text-[12px] text-[var(--measured-subtext)]">
                       Nausea: {s.nausea} · Constipation: {s.constipation} ·{" "}
                       {new Date(s.loggedAt).toLocaleString([], {
@@ -141,16 +150,25 @@ export function DietitianDashboardScreen() {
                   className="flex items-center justify-between gap-4"
                 >
                   <div className="min-w-0">
-                    <div className="text-[14px] font-semibold text-[var(--measured-dark)]">
-                      {p ? `${p.firstName} ${p.lastName}` : r.patientId}
-                    </div>
+                    {p ? (
+                      <Link
+                        href={`/d/patients/${p.id}`}
+                        className="text-[14px] font-semibold text-[var(--measured-dark)] hover:text-[var(--measured-dark-green)] hover:underline"
+                      >
+                        {p.firstName} {p.lastName}
+                      </Link>
+                    ) : (
+                      <div className="text-[14px] font-semibold text-[var(--measured-dark)]">
+                        {r.patientId}
+                      </div>
+                    )}
                     <div className="text-[12px] text-[var(--measured-subtext)]">
                       {r.referringGpName} · {r.cuisineLabel} · {r.priority}
                     </div>
                   </div>
                   <Link
                     href="/d/referrals"
-                    className="rounded-lg bg-white px-3 py-1.5 text-[12px] font-semibold text-[var(--measured-dark-green)] ring-1 ring-[var(--measured-border)]"
+                    className="rounded-lg bg-white px-3 py-1.5 text-[12px] font-semibold text-[var(--measured-dark-green)] ring-1 ring-[var(--measured-border)] hover:bg-[var(--measured-cream)]"
                   >
                     Review
                   </Link>
