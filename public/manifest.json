@@ -1,0 +1,12 @@
+{
+  "name": "Banksia",
+  "short_name": "Banksia",
+  "description": "The clinician companion.",
+  "start_url": "/today",
+  "display": "standalone",
+  "background_color": "#fafaf8",
+  "theme_color": "#2d5a3d",
+  "icons": [
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
