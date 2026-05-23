@@ -2,9 +2,13 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 
 const TABS = [
+  { href: "/admin/kpi", label: "KPI" },
   { href: "/admin/audit", label: "Audit" },
   { href: "/admin/organizations", label: "Organizations" },
   { href: "/admin/users", label: "Users" },
+  { href: "/admin/patients", label: "Patients" },
+  { href: "/admin/referrals", label: "Referrals" },
+  { href: "/admin/settings", label: "Settings" },
 ] as const;
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
