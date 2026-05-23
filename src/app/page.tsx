@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Landing } from "@/components/marketing/landing";
 
 export const metadata: Metadata = {
-  title: "Banksia | The clinician companion",
+  title: "Measured Metabolics",
   description:
-    "A calm dashboard for clinicians: today's case queue, patient charts, and outcomes. Built on the Sous design language, separately for clinical work.",
+    "Three minimal interfaces, one clinical brain. Pick a persona to enter the demo.",
 };
 
 export default function HomePage() {

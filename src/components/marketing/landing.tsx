@@ -2,175 +2,150 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Stethoscope, ClipboardList, Activity, ArrowRight } from "lucide-react";
+import {
+  Stethoscope,
+  Smartphone,
+  ClipboardList,
+  PanelRightClose,
+  ArrowRight,
+} from "lucide-react";
 
 /**
- * Landing — marketing surface for Banksia.
+ * Landing — role chooser for the Measured Metabolics demo.
  *
- * Same visual language as Sous: cream backdrop, serif headline, deep green
- * primary CTA, generous whitespace. Repositioned for the clinician audience.
+ * Stage 1 surface: lets demo viewers self-select into the patient / dietitian
+ * / GP shells. Stage 5 replaces this with role-aware redirect after Supabase
+ * Auth signs the user in.
  */
 export function Landing() {
+  const personas: Persona[] = [
+    {
+      id: "patient",
+      title: "Patient PWA",
+      tagline: "Capture meals, log symptoms, see your plan",
+      href: "/p/home",
+      Icon: Smartphone,
+      footnote:
+        "Phone-first surface with a single primary action: snap your next meal.",
+    },
+    {
+      id: "dietitian",
+      title: "Dietitian Web",
+      tagline: "Today's queue, patient panel, plan + report builders",
+      href: "/d/dashboard",
+      Icon: ClipboardList,
+      footnote:
+        "Keyboard-driven workflows. Approve, edit, flag — five meals reviewed in under five minutes.",
+    },
+    {
+      id: "gp",
+      title: "GP Sidebar",
+      tagline: "30-second patient context inside Best Practice / MD",
+      href: "/gp/asha/context",
+      Icon: PanelRightClose,
+      footnote:
+        "360px column. Patient context, transcript paste, billing, care plan, dietitian referral, dietitian report.",
+    },
+  ];
+
   return (
-    <main className="min-h-dvh bg-[var(--banksia-cream)]">
-      <div className="mx-auto max-w-5xl px-6 py-12 md:py-20">
-        {/* Header bar */}
-        <header className="mb-16 flex items-center justify-between md:mb-24">
-          <div className="flex items-center gap-2">
-            <span
-              className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--banksia-green)] text-white shadow-[var(--shadow-cta)]"
-              aria-hidden
-            >
-              <Stethoscope size={18} strokeWidth={2.2} />
-            </span>
-            <span className="font-serif text-xl font-semibold text-[var(--banksia-dark)]">
-              Banksia
-            </span>
+    <main className="relative min-h-dvh bg-[var(--measured-cream)] text-[var(--measured-dark)]">
+      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 pt-8">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--measured-green)] text-white shadow-[var(--shadow-card)]">
+            <Stethoscope size={18} strokeWidth={2.2} aria-hidden="true" />
           </div>
-          <Link
-            href="/today"
-            className="text-sm font-medium text-[var(--banksia-green)] hover:text-[var(--banksia-dark-green)]"
-          >
-            Open dashboard →
-          </Link>
-        </header>
+          <div className="font-serif text-[20px] tracking-tight">Measured</div>
+        </div>
+        <span className="text-[12px] uppercase tracking-wider text-[var(--measured-subtext)]">
+          Demo build · Stage&nbsp;1
+        </span>
+      </header>
 
-        {/* Hero */}
-        <section className="grid items-center gap-12 md:grid-cols-2 md:gap-20">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45 }}
-          >
-            <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-[var(--banksia-subtext)]">
-              The clinician companion
-            </p>
-            <h1 className="font-serif text-4xl leading-[1.1] text-[var(--banksia-dark)] md:text-5xl">
-              A calm dashboard for the work that
-              <span className="text-[var(--banksia-green)]"> actually moves outcomes.</span>
-            </h1>
-            <p className="mt-5 max-w-md text-[15px] leading-relaxed text-[var(--banksia-subtext)]">
-              Banksia is the clinician twin of Sous — same patient-trusted UI,
-              built around case queues, prescriptions, and follow-ups. One
-              screen, one decision, one patient at a time.
-            </p>
+      <section className="mx-auto max-w-3xl px-6 pt-20 pb-12 text-center">
+        <motion.h1
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="font-serif text-[44px] leading-[1.05] tracking-tight md:text-[56px]"
+        >
+          Metabolic chronic care
+          <br />
+          made easier to deliver,
+          <br />
+          easier to follow, and
+          <br />
+          easier to coordinate.
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
+          className="mx-auto mt-6 max-w-xl text-[16px] leading-relaxed text-[var(--measured-subtext)]"
+        >
+          Three minimal interfaces sharing one clinical brain. Pick a persona to
+          step inside the demo.
+        </motion.p>
+      </section>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link
-                href="/today"
-                className="cta-shadow inline-flex items-center gap-2 rounded-2xl bg-[var(--banksia-green)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--banksia-dark-green)]"
-              >
-                Open today&apos;s queue
-                <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/patients"
-                className="inline-flex items-center gap-2 rounded-2xl border border-[var(--banksia-border)] bg-white px-6 py-3 text-sm font-semibold text-[var(--banksia-dark)] transition-colors hover:bg-neutral-50"
-              >
-                See patient list
-              </Link>
-            </div>
-          </motion.div>
+      <section className="mx-auto grid max-w-5xl gap-4 px-6 pb-24 md:grid-cols-3">
+        {personas.map((p, idx) => (
+          <PersonaCard key={p.id} persona={p} delay={idx * 0.06} />
+        ))}
+      </section>
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.1 }}
-            className="surface-raised p-6 md:p-7"
-          >
-            <p className="text-[11px] font-medium uppercase tracking-wider text-[var(--banksia-subtext)]">
-              Today, 22 May
-            </p>
-            <h3 className="mt-1 font-serif text-2xl text-[var(--banksia-dark)]">
-              4 cases, 1 priority
-            </h3>
-
-            <ul className="mt-5 space-y-3">
-              {[
-                {
-                  name: "Aroha M.",
-                  note: "Post-op nutrition review",
-                  tag: "priority",
-                },
-                {
-                  name: "Daniel K.",
-                  note: "Type 2 diabetes — 6 wk follow-up",
-                  tag: "follow-up",
-                },
-                {
-                  name: "Priya S.",
-                  note: "New referral · IBS-D",
-                  tag: "intake",
-                },
-              ].map((row) => (
-                <li
-                  key={row.name}
-                  className="flex items-center justify-between rounded-xl border border-[var(--banksia-border-soft)] bg-[var(--banksia-cream)]/40 px-3.5 py-3"
-                >
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-[var(--banksia-dark)] truncate">
-                      {row.name}
-                    </p>
-                    <p className="text-xs text-[var(--banksia-subtext)] truncate">
-                      {row.note}
-                    </p>
-                  </div>
-                  <span
-                    className={
-                      row.tag === "priority"
-                        ? "rounded-full bg-[var(--banksia-evaluate)]/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--banksia-evaluate)]"
-                        : "rounded-full bg-[var(--banksia-green)]/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--banksia-green)]"
-                    }
-                  >
-                    {row.tag}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        </section>
-
-        {/* Pillars */}
-        <section className="mt-20 grid gap-6 md:mt-28 md:grid-cols-3">
-          {[
-            {
-              icon: ClipboardList,
-              title: "Today's queue",
-              body: "The only screen most clinicians need. One action, one patient, no setup pages.",
-            },
-            {
-              icon: Stethoscope,
-              title: "Patient charts",
-              body: "Searchable, lightweight charts. Long-press to prescribe a Sous plan in one tap.",
-            },
-            {
-              icon: Activity,
-              title: "Outcome insights",
-              body: "Population-level signal — adherence, weight trend, biomarkers — without dashboards-for-dashboards-sake.",
-            },
-          ].map(({ icon: Icon, title, body }) => (
-            <div key={title} className="surface-card p-6">
-              <span
-                className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--banksia-green)]/10 text-[var(--banksia-green)]"
-                aria-hidden
-              >
-                <Icon size={20} strokeWidth={1.8} />
-              </span>
-              <h3 className="font-serif text-lg text-[var(--banksia-dark)]">
-                {title}
-              </h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-[var(--banksia-subtext)]">
-                {body}
-              </p>
-            </div>
-          ))}
-        </section>
-
-        <footer className="mt-20 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--banksia-border-soft)] pt-6 text-xs text-[var(--banksia-subtext)] md:mt-28">
-          <span>© Banksia · Clinician edition</span>
-          <span>Same UI as Sous · separate workspace</span>
-        </footer>
-      </div>
+      <footer className="mx-auto flex max-w-6xl items-center justify-between border-t border-[var(--measured-border-soft)] px-6 py-6 text-[12px] text-[var(--measured-subtext)]">
+        <span>© Measured Metabolics · {new Date().getFullYear()}</span>
+        <span>Stage 1 vibe build · mock data only</span>
+      </footer>
     </main>
+  );
+}
+
+interface Persona {
+  id: "patient" | "dietitian" | "gp";
+  title: string;
+  tagline: string;
+  href: string;
+  Icon: typeof Stethoscope;
+  footnote: string;
+}
+
+function PersonaCard({ persona, delay }: { persona: Persona; delay: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease: "easeOut", delay }}
+    >
+      <Link
+        href={persona.href}
+        className="group relative block h-full overflow-hidden rounded-2xl border border-[var(--measured-border-soft)] bg-white p-6 shadow-[var(--shadow-card)] transition-shadow duration-200 hover:shadow-[var(--shadow-raised)]"
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]">
+            <persona.Icon size={20} strokeWidth={2} aria-hidden="true" />
+          </div>
+          <div className="font-serif text-[20px] tracking-tight">
+            {persona.title}
+          </div>
+        </div>
+        <p className="mt-3 text-[14px] text-[var(--measured-dark)]">
+          {persona.tagline}
+        </p>
+        <p className="mt-2 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
+          {persona.footnote}
+        </p>
+        <div className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-medium text-[var(--measured-dark-green)]">
+          Enter
+          <ArrowRight
+            size={14}
+            strokeWidth={2.2}
+            className="transition-transform duration-200 group-hover:translate-x-0.5"
+            aria-hidden="true"
+          />
+        </div>
+      </Link>
+    </motion.div>
   );
 }

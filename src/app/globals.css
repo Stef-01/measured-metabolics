@@ -6,26 +6,34 @@
 :root {
   --background: #ffffff;
   --foreground: #0d0d0d;
-  --banksia-green: #2d5a3d;
-  --banksia-dark-green: #1a3d25;
-  --banksia-light-green: #4a8c5c;
-  --banksia-gold: #d4a84b;
-  --banksia-warm: #e8833a;
-  --banksia-cream: #fafaf8;
-  --banksia-dark: #0d0d0d;
-  --banksia-input-bg: #f0ede8;
-  --banksia-subtext: #6b6b6b;
-  --banksia-button: #2d5a3d;
-  --banksia-button-hover: #1a3d25;
-  --banksia-evaluate: #8c1515;
-  --banksia-evaluate-hover: #6f1010;
+
+  /* Brand greens — ported from Sous, retuned for clinical trust */
+  --measured-green: #2d5a3d;
+  --measured-dark-green: #1a3d25;
+  --measured-light-green: #4a8c5c;
+  --measured-gold: #d4a84b;
+  --measured-warm: #e8833a;
+  --measured-cream: #fafaf8;
+  --measured-dark: #0d0d0d;
+  --measured-input-bg: #f0ede8;
+  --measured-subtext: #6b6b6b;
+  --measured-button: #2d5a3d;
+  --measured-button-hover: #1a3d25;
+  --measured-evaluate: #8c1515;
+  --measured-evaluate-hover: #6f1010;
+
+  /* Clinical accents — used by dietitian/GP surfaces for status differentiation */
+  --measured-clinical-blue: #2c5e8a;
+  --measured-clinical-blue-soft: #e8f1f8;
+  --measured-clinical-amber: #b8860b;
+  --measured-clinical-amber-soft: #fdf6e3;
 
   /* Borders — three tiers for subtle → emphatic hierarchy */
-  --banksia-border-soft: rgba(0, 0, 0, 0.05);
-  --banksia-border: rgba(0, 0, 0, 0.08);
-  --banksia-border-strong: rgba(0, 0, 0, 0.12);
+  --measured-border-soft: rgba(0, 0, 0, 0.05);
+  --measured-border: rgba(0, 0, 0, 0.08);
+  --measured-border-strong: rgba(0, 0, 0, 0.12);
 
-  /* Shadow system — used across cards, CTAs, and sheets for unified depth */
+  /* Shadow system */
   --shadow-card:
     0 1px 2px rgba(13, 13, 13, 0.04), 0 1px 3px rgba(13, 13, 13, 0.04);
   --shadow-raised:
@@ -36,48 +44,45 @@
   --shadow-cta-hover:
     0 4px 14px -2px rgba(45, 90, 61, 0.32), 0 2px 4px rgba(45, 90, 61, 0.18);
   --shadow-header: 0 1px 0 rgba(0, 0, 0, 0.04);
+  --shadow-sidebar: -1px 0 0 rgba(0, 0, 0, 0.04);
 
-  /* Readability tokens — clinician-friendly baseline.
-     Body is the floor for regular UI text; field is the floor for any text
-     read while a clinician is mid-consult or in a chart review pane. */
-  --banksia-text-body: 15px;
-  --banksia-text-caption: 12px;
-  --banksia-text-field: 19px;
-  --banksia-leading-field: 1.6;
+  /* Readability tokens */
+  --measured-text-body: 15px;
+  --measured-text-caption: 12px;
+  --measured-text-field: 19px;
+  --measured-leading-field: 1.6;
 }
 
-/* Field-prose utility — applied to primary instructions in patient-facing
-   surfaces so the line a clinician reads aloud is comfortable. */
 .field-prose {
-  font-size: var(--banksia-text-field);
-  line-height: var(--banksia-leading-field);
+  font-size: var(--measured-text-field);
+  line-height: var(--measured-leading-field);
 }
 
-/* Big-hands mode — session-scoped toggle. Bumps prose ~1.2× and expands
-   tap targets ~1.25×. Useful for tablet kiosks and bedside use. */
 [data-big-hands="true"] {
-  --banksia-text-field: 22px;
-  --banksia-leading-field: 1.65;
-  --banksia-text-body: 17px;
-  --banksia-text-caption: 14px;
+  --measured-text-field: 22px;
+  --measured-leading-field: 1.65;
+  --measured-text-body: 17px;
+  --measured-text-caption: 14px;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-banksia-green: var(--banksia-green);
-  --color-banksia-dark-green: var(--banksia-dark-green);
-  --color-banksia-light-green: var(--banksia-light-green);
-  --color-banksia-gold: var(--banksia-gold);
-  --color-banksia-warm: var(--banksia-warm);
-  --color-banksia-cream: var(--banksia-cream);
-  --color-banksia-dark: var(--banksia-dark);
-  --color-banksia-input: var(--banksia-input-bg);
-  --color-banksia-subtext: var(--banksia-subtext);
-  --color-banksia-button: var(--banksia-button);
-  --color-banksia-button-hover: var(--banksia-button-hover);
-  --color-banksia-evaluate: var(--banksia-evaluate);
-  --color-banksia-evaluate-hover: var(--banksia-evaluate-hover);
+  --color-measured-green: var(--measured-green);
+  --color-measured-dark-green: var(--measured-dark-green);
+  --color-measured-light-green: var(--measured-light-green);
+  --color-measured-gold: var(--measured-gold);
+  --color-measured-warm: var(--measured-warm);
+  --color-measured-cream: var(--measured-cream);
+  --color-measured-dark: var(--measured-dark);
+  --color-measured-input: var(--measured-input-bg);
+  --color-measured-subtext: var(--measured-subtext);
+  --color-measured-button: var(--measured-button);
+  --color-measured-button-hover: var(--measured-button-hover);
+  --color-measured-evaluate: var(--measured-evaluate);
+  --color-measured-evaluate-hover: var(--measured-evaluate-hover);
+  --color-measured-clinical-blue: var(--measured-clinical-blue);
+  --color-measured-clinical-amber: var(--measured-clinical-amber);
   --font-sans: "Inter", sans-serif;
   --font-serif: "DM Serif Display", Georgia, serif;
 }
@@ -89,7 +94,7 @@
   top: 0;
   z-index: 100;
   background: #ffffff;
-  border-bottom: 1px solid var(--banksia-border-soft);
+  border-bottom: 1px solid var(--measured-border-soft);
   box-shadow: var(--shadow-header);
   isolation: isolate;
   padding-top: env(safe-area-inset-top, 0px);
@@ -97,14 +102,14 @@
 
 .surface-card {
   background: #ffffff;
-  border: 1px solid var(--banksia-border-soft);
+  border: 1px solid var(--measured-border-soft);
   border-radius: 1rem;
   box-shadow: var(--shadow-card);
 }
 
 .surface-raised {
   background: #ffffff;
-  border: 1px solid var(--banksia-border-soft);
+  border: 1px solid var(--measured-border-soft);
   border-radius: 1rem;
   box-shadow: var(--shadow-raised);
 }
@@ -117,6 +122,15 @@
   box-shadow: var(--shadow-cta-hover);
 }
 
+/* GP sidebar — narrow stacked-card column shell */
+.gp-sidebar {
+  width: 360px;
+  min-height: 100dvh;
+  background: var(--measured-cream);
+  border-left: 1px solid var(--measured-border-soft);
+  box-shadow: var(--shadow-sidebar);
+}
+
 /* === MOBILE OPTIMISATION === */
 html {
   touch-action: manipulation;
@@ -124,7 +138,6 @@ html {
   scrollbar-gutter: stable;
 }
 
-/* Soft custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -157,7 +170,6 @@ body {
   overscroll-behavior: none;
 }
 
-/* Prevent iOS auto-zoom on input focus */
 input,
 select,
 textarea {
@@ -243,7 +255,6 @@ a,
   animation: ambient-float 4s ease-in-out infinite;
 }
 
-/* === CTA GLOW === */
 @keyframes cta-glow {
   0%,
   100% {

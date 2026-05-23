@@ -16,11 +16,11 @@ type Size = "md" | "sm";
 
 const VARIANTS: Record<Variant, string> = {
   ghost:
-    "text-[var(--banksia-subtext)] hover:bg-neutral-100 active:bg-neutral-200",
+    "text-[var(--measured-subtext)] hover:bg-neutral-100 active:bg-neutral-200",
   subtle:
-    "bg-neutral-100 text-[var(--banksia-dark)] hover:bg-neutral-200 active:bg-neutral-300",
+    "bg-neutral-100 text-[var(--measured-dark)] hover:bg-neutral-200 active:bg-neutral-300",
   solid:
-    "bg-[var(--banksia-green)] text-white hover:bg-[var(--banksia-dark-green)]",
+    "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]",
 };
 
 const SIZES: Record<Size, string> = {
@@ -73,7 +73,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
           VARIANTS[variant],
           disabled && "opacity-40 cursor-not-allowed",
           showFocusRing &&
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--banksia-green)]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--banksia-cream)]",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--measured-green)]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--measured-cream)]",
           className,
         )}
         {...(rest as MotionButtonProps)}

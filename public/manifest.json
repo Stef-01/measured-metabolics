@@ -1,12 +1,10 @@
 {
-  "name": "Banksia",
-  "short_name": "Banksia",
-  "description": "The clinician companion.",
-  "start_url": "/today",
+  "name": "Measured Metabolics",
+  "short_name": "Measured",
+  "description": "Metabolic chronic care made easier to deliver, easier to follow, and easier to coordinate.",
+  "start_url": "/p/home",
   "display": "standalone",
   "background_color": "#fafaf8",
   "theme_color": "#2d5a3d",
-  "icons": [
-    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
-  ]
+  "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
 }

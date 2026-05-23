@@ -23,24 +23,24 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Banksia — The Clinician Companion",
+  title: "Measured Metabolics — Patient + Dietitian + GP, one care loop",
   description:
-    "Banksia gives clinicians a calm, focused dashboard for patient cases, prescriptions, and outcomes. Built on the same design system as Sous, tuned for clinical work.",
+    "A metabolic chronic care platform. Patients capture meals and symptoms; dietitians review and plan; GPs see a 30-second sidebar — all on one Supabase data model.",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://banksia.vercel.app",
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://measured.vercel.app",
   ),
   openGraph: {
-    title: "Banksia — The Clinician Companion",
+    title: "Measured Metabolics",
     description:
-      "A calm, focused workspace for dietitians and clinicians. Today's queue, patient cases, and outcomes — all in one place.",
-    siteName: "Banksia",
+      "Metabolic chronic care made easier to deliver, easier to follow, and easier to coordinate.",
+    siteName: "Measured",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Banksia — The Clinician Companion",
+    title: "Measured Metabolics",
     description:
-      "A calm, focused workspace for dietitians and clinicians. Today's queue, patient cases, and outcomes — all in one place.",
+      "Metabolic chronic care made easier to deliver, easier to follow, and easier to coordinate.",
   },
 };
 

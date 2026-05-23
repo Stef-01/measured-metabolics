@@ -1,54 +1,94 @@
-# Banksia
+# Measured Metabolics
 
-The clinician companion. Banksia is the dietitian/clinician-facing twin of Sous — same UI language, built for clinical workflows.
+A metabolic care operating system. Three minimal interfaces sharing one clinical brain:
 
-Banksia is a native Australian flower; the name signals nutrition rooted in real science and a calm, professional surface.
+- **Patient PWA** — captures meals, symptoms, CGM, weight, and goals
+- **Dietitian Web** — review queue, meal plan builder, GP report builder
+- **GP Sidebar** — patient context, transcript analysis, care plan, dietitian referral, dietitian report
+
+> The on-disk folder is `Banksia` for historical reasons (a Windows file lock prevented the rename during scaffolding). The project, package, and brand are all **Measured Metabolics**.
 
 ## Tech stack
 
 - **Framework**: Next.js 16 (App Router) with TypeScript
-- **UI**: React 19, Tailwind CSS 4, Framer Motion, lucide-react
-- **State**: React local state (extend with Zustand/TanStack Query as needed)
+- **UI**: React 19, Tailwind CSS 4, Framer Motion, lucide-react, Recharts
+- **State**: TanStack Query (server) + Zustand (client) + react-hook-form + Zod
+- **Backend (Stage 5+)**: Supabase Postgres, Auth, Storage, Realtime, RLS
+- **AI (Stage 6+)**: Vercel AI SDK with provider-agnostic LLMProvider abstraction, Inngest workers
+- **Compliance (Stage 7+)**: 3-tier consent ledger, audit log, React PDF, escalation rules
 
 ## Commands
 
 ```bash
 pnpm install
-pnpm dev        # http://localhost:3000
+pnpm dev            # http://localhost:3000
 pnpm build
 pnpm lint
+pnpm test
+```
+
+## Routes
+
+```
+/                         role chooser (Stage 1) → onboarding (Stage 5)
+/p/home                   patient home
+/p/meal                   add meal
+/p/plan                   today's meal plan
+/p/metrics                glucose / weight / symptoms
+/p/symptoms               quick symptom check
+/p/messages               dietitian thread
+/d/dashboard              dietitian today
+/d/referrals              referral inbox
+/d/patients               patient panel
+/d/patients/[id]          patient detail
+/d/queue                  meal review queue
+/d/reports                GP report builder
+/d/messages               composer
+/gp/[patientId]/context   sidebar patient context card
+/gp/[patientId]/transcript transcript paste + analysis
+/gp/[patientId]/billing   eligibility + billing
+/gp/[patientId]/care-plan care plan draft
+/gp/[patientId]/referral  dietitian referral
+/gp/[patientId]/report    dietitian report (30-second summary)
 ```
 
 ## Design language
 
-Banksia is a faithful port of the Sous visual system:
+Ported from the Sous design system, retuned for clinical trust:
 
 - Inter (sans) + DM Serif Display (serif) typography
-- Banksia green palette (`--banksia-green` / `--banksia-dark-green` / `--banksia-light-green`)
-- Cream surface (`--banksia-cream`) over white cards
-- Three-tier border + shadow system, soft scrollbars, mobile-first
-- Phone-shaped DeviceFrame on desktop, full-bleed on real mobile
-- Sticky `app-header`, surface utility classes, Framer-Motion-powered tab bar
+- Deep clinical green palette (`--measured-green` / `--measured-dark-green`) over cream
+- Three-tier border + shadow system, soft scrollbars, mobile-first patient surface
+- Phone-shaped DeviceFrame on `/p/*`; full-bleed for `/d/*` and `/gp/*`
+- Sticky `app-header`, `surface-card` / `surface-raised` utilities, motion-driven nav
 
 ## Project structure
 
 ```
 src/
-  app/                    # Next.js App Router
-    (today)/today/        # clinician dashboard (the home of the app)
-    layout.tsx
-    page.tsx              # marketing landing
-    globals.css           # design tokens + base styles
+  app/
+    (patient)/p/{home,meal,plan,metrics,symptoms,messages}/page.tsx
+    (dietitian)/d/{dashboard,referrals,patients,queue,reports,messages}/page.tsx
+    (dietitian)/d/patients/[id]/page.tsx
+    (gp)/gp/[patientId]/{context,transcript,billing,care-plan,referral,report}/page.tsx
+    layout.tsx                 # root: providers, error boundary, toast host
+    page.tsx                   # role chooser
+    globals.css                # design tokens + base styles
+    error.tsx, not-found.tsx
   components/
-    marketing/            # landing
-    shared/               # device frame, tab bar, error boundary, toast host
-    today/                # dashboard cards (patient queue, alerts, etc.)
-    ui/                   # primitives (icon button)
+    marketing/landing.tsx
+    patient/                   # bottom-nav, FAB, screens
+    dietitian/                 # side-nav, queue cards, builders
+    gp/                        # sidebar shell, stacked cards
+    shared/                    # device-frame, error-boundary, toast-host, persona-shell
+    ui/                        # icon-button + primitives
   lib/
-    hooks/                # use-toast, use-haptic, use-navigation
-    utils/                # cn
+    hooks/                     # use-navigation, use-toast, use-haptic
+    mock/                      # patients, referrals, meals, cgm, symptoms, messages
+    utils/                     # cn, format
+  types/                       # shared Zod-derived types
 ```
 
-## Relationship to Sous
+## Roadmap
 
-Banksia is **fully separate** from Sous — independent repo, dependencies, and CSS variable namespace (`--banksia-*` instead of `--nourish-*`). They share a visual language; nothing else.
+See [planning.md](./planning.md) for the 8-stage / 9-week build plan with weekly cadence and recursive 2-loop test/fix rhythm.

@@ -1,23 +1,31 @@
 {
-  "name": "banksia",
-  "version": "0.1.0",
+  "name": "measured",
+  "version": "0.2.0-alpha.1",
   "private": true,
-  "description": "Banksia — the clinician companion. Same UI language as Sous, built for dietitians and clinicians.",
+  "description": "Measured Metabolics — patient PWA, dietitian web, and GP sidebar on one Supabase data model. Metabolic chronic care made easier to deliver, easier to follow, and easier to coordinate.",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . && prettier --check .",
-    "lint:fix": "eslint . --fix && prettier --write ."
+    "lint:fix": "eslint . --fix && prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
+    "@tanstack/react-query": "^5.96.2",
     "clsx": "^2.1.1",
     "framer-motion": "^12.33.0",
     "lucide-react": "^0.460.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "tailwind-merge": "^2.6.1"
+    "react-hook-form": "^7.62.0",
+    "recharts": "^2.15.4",
+    "tailwind-merge": "^2.6.1",
+    "zod": "^3.25.76",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -28,6 +36,7 @@
     "eslint-config-next": "16.1.6",
     "prettier": "^3.8.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^2.1.9"
   }
 }

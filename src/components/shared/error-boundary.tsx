@@ -27,7 +27,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: { componentStack: string }) {
-    console.error("[Banksia ErrorBoundary]", error, info.componentStack);
+    console.error("[Measured ErrorBoundary]", error, info.componentStack);
   }
 
   handleReset = () => {
@@ -39,7 +39,7 @@ export class ErrorBoundary extends Component<Props, State> {
       if (this.props.fallback) return this.props.fallback;
 
       return (
-        <div className="min-h-dvh bg-[var(--banksia-cream)] flex flex-col items-center justify-center gap-5 px-6 text-center">
+        <div className="min-h-dvh bg-[var(--measured-cream)] flex flex-col items-center justify-center gap-5 px-6 text-center">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 border border-red-100">
             <svg
               width="24"
@@ -57,16 +57,16 @@ export class ErrorBoundary extends Component<Props, State> {
             </svg>
           </div>
           <div className="space-y-1.5">
-            <p className="text-sm font-semibold text-[var(--banksia-dark)]">
+            <p className="text-sm font-semibold text-[var(--measured-dark)]">
               Something went wrong
             </p>
-            <p className="text-xs text-[var(--banksia-subtext)] max-w-[240px]">
-              Banksia hit an unexpected error. Tap below to try again.
+            <p className="text-xs text-[var(--measured-subtext)] max-w-[240px]">
+              Measured hit an unexpected error. Tap below to try again.
             </p>
           </div>
           <button
             onClick={this.handleReset}
-            className="rounded-xl bg-[var(--banksia-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--banksia-dark-green)]"
+            className="rounded-xl bg-[var(--measured-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--measured-dark-green)]"
             type="button"
           >
             Try again

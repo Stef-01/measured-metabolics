@@ -19,8 +19,8 @@ const VARIANT_STYLES: Record<
     label: "Milestone",
   },
   "level-up": {
-    bg: "bg-gradient-to-br from-[var(--banksia-green)] to-[var(--banksia-dark-green)]",
-    shadow: "shadow-[var(--banksia-green)]/20",
+    bg: "bg-gradient-to-br from-[var(--measured-green)] to-[var(--measured-dark-green)]",
+    shadow: "shadow-[var(--measured-green)]/20",
     label: "Tier Up",
   },
   success: {
@@ -78,7 +78,8 @@ export function ToastHost() {
 function ToastCard({ toast }: { toast: Toast }) {
   const style = VARIANT_STYLES[toast.variant];
   const label = style.label;
-  const isDark = toast.variant === "achievement" || toast.variant === "level-up";
+  const isDark =
+    toast.variant === "achievement" || toast.variant === "level-up";
   return (
     <button
       type="button"
@@ -94,7 +95,12 @@ function ToastCard({ toast }: { toast: Toast }) {
           <motion.span
             initial={{ rotate: -20, scale: 0 }}
             animate={{ rotate: 0, scale: 1 }}
-            transition={{ type: "spring", stiffness: 200, damping: 10, delay: 0.1 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 10,
+              delay: 0.1,
+            }}
             className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/20 text-2xl"
             aria-hidden
           >

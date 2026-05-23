@@ -28,20 +28,21 @@ export function useDeviceMode() {
   return useContext(DeviceFrameContext);
 }
 
-const STORAGE_KEY = "banksia-device-mode";
+const STORAGE_KEY = "measured-device-mode";
 
 /**
- * DeviceFrame — wraps the app in a phone-shaped container on desktop.
+ * DeviceFrame — wraps the patient PWA in a phone-shaped container on desktop.
  *
  * Behaviour:
  * - Real mobile (touch + narrow viewport): renders fullscreen, no frame.
- * - Desktop: defaults to phone frame; user can toggle to fullscreen desktop.
- * - Marketing landing (`/`): always full-bleed on desktop.
+ * - Patient routes (`/p/*`) on desktop: phone frame (toggleable to desktop).
+ * - Dietitian (`/d/*`), GP (`/gp/*`), and landing (`/`): always full-bleed.
  * - Preference persisted in localStorage across sessions.
  */
 export function DeviceFrame({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const isLanding = pathname === "/";
+  const isPatientApp = pathname.startsWith("/p/") || pathname === "/p";
+  const skipFrame = !isPatientApp;
 
   const [mode, setModeState] = useState<DeviceMode>(() => {
     if (typeof window === "undefined") return "phone";
@@ -86,7 +87,7 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
     );
   }
 
-  if (isLanding) {
+  if (skipFrame) {
     return (
       <DeviceFrameContext.Provider value={{ mode: "desktop", setMode }}>
         {children}
@@ -122,21 +123,90 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
                 9:41
               </span>
               <div className="flex items-center gap-1.5">
-                <svg width="15" height="10" viewBox="0 0 15 10" className="opacity-80">
-                  <rect x="0" y="7" width="2.5" height="3" rx="0.5" fill="white" />
-                  <rect x="4" y="4.5" width="2.5" height="5.5" rx="0.5" fill="white" />
-                  <rect x="8" y="2" width="2.5" height="8" rx="0.5" fill="white" />
-                  <rect x="12" y="0" width="2.5" height="10" rx="0.5" fill="white" opacity="0.35" />
+                <svg
+                  width="15"
+                  height="10"
+                  viewBox="0 0 15 10"
+                  className="opacity-80"
+                >
+                  <rect
+                    x="0"
+                    y="7"
+                    width="2.5"
+                    height="3"
+                    rx="0.5"
+                    fill="white"
+                  />
+                  <rect
+                    x="4"
+                    y="4.5"
+                    width="2.5"
+                    height="5.5"
+                    rx="0.5"
+                    fill="white"
+                  />
+                  <rect
+                    x="8"
+                    y="2"
+                    width="2.5"
+                    height="8"
+                    rx="0.5"
+                    fill="white"
+                  />
+                  <rect
+                    x="12"
+                    y="0"
+                    width="2.5"
+                    height="10"
+                    rx="0.5"
+                    fill="white"
+                    opacity="0.35"
+                  />
                 </svg>
-                <svg width="14" height="10" viewBox="0 0 14 10" className="opacity-80">
+                <svg
+                  width="14"
+                  height="10"
+                  viewBox="0 0 14 10"
+                  className="opacity-80"
+                >
                   <path d="M7 8.5a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" fill="white" />
-                  <path d="M4 6.5a4.5 4.5 0 0 1 6 0" stroke="white" strokeWidth="1.3" strokeLinecap="round" fill="none" />
-                  <path d="M1.5 4a8 8 0 0 1 11 0" stroke="white" strokeWidth="1.3" strokeLinecap="round" fill="none" />
+                  <path
+                    d="M4 6.5a4.5 4.5 0 0 1 6 0"
+                    stroke="white"
+                    strokeWidth="1.3"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                  <path
+                    d="M1.5 4a8 8 0 0 1 11 0"
+                    stroke="white"
+                    strokeWidth="1.3"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
                 </svg>
-                <svg width="24" height="10" viewBox="0 0 24 10" className="opacity-80">
-                  <rect x="0.5" y="0.5" width="20" height="9" rx="2" stroke="white" strokeWidth="1" fill="none" />
+                <svg
+                  width="24"
+                  height="10"
+                  viewBox="0 0 24 10"
+                  className="opacity-80"
+                >
+                  <rect
+                    x="0.5"
+                    y="0.5"
+                    width="20"
+                    height="9"
+                    rx="2"
+                    stroke="white"
+                    strokeWidth="1"
+                    fill="none"
+                  />
                   <rect x="2" y="2" width="14" height="6" rx="1" fill="white" />
-                  <path d="M22 3.5v3a1.5 1.5 0 0 0 0-3z" fill="white" opacity="0.4" />
+                  <path
+                    d="M22 3.5v3a1.5 1.5 0 0 0 0-3z"
+                    fill="white"
+                    opacity="0.4"
+                  />
                 </svg>
               </div>
             </div>
@@ -184,18 +254,26 @@ function DeviceToggle({
         mode === "phone" ? "bottom-6 right-6" : "bottom-4 right-4",
       )}
       type="button"
-      aria-label={mode === "phone" ? "Switch to desktop layout" : "Switch to phone layout"}
-      title={mode === "phone" ? "Switch to desktop layout" : "Switch to phone layout"}
+      aria-label={
+        mode === "phone" ? "Switch to desktop layout" : "Switch to phone layout"
+      }
+      title={
+        mode === "phone" ? "Switch to desktop layout" : "Switch to phone layout"
+      }
     >
       {mode === "phone" ? (
         <>
-          <Monitor size={18} className="text-[var(--banksia-subtext)]" />
-          <span className="text-sm font-medium text-[var(--banksia-dark)]">Desktop</span>
+          <Monitor size={18} className="text-[var(--measured-subtext)]" />
+          <span className="text-sm font-medium text-[var(--measured-dark)]">
+            Desktop
+          </span>
         </>
       ) : (
         <>
-          <Smartphone size={18} className="text-[var(--banksia-subtext)]" />
-          <span className="text-sm font-medium text-[var(--banksia-dark)]">Phone</span>
+          <Smartphone size={18} className="text-[var(--measured-subtext)]" />
+          <span className="text-sm font-medium text-[var(--measured-dark)]">
+            Phone
+          </span>
         </>
       )}
     </button>
