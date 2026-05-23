@@ -64,7 +64,7 @@ const DEFAULT_PHASES: BillingPhase[] = [
   {
     phase: "P3",
     label: "Structured Australian MBS rule engine",
-    status: "planned",
+    status: "live",
     week: "W5",
   },
   {
