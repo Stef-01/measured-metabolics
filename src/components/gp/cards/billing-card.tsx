@@ -221,6 +221,25 @@ export function GpBillingCard({ patient }: { patient: Patient }) {
                     ))}
                   </ul>
 
+                  {h.documentationRequirements &&
+                    h.documentationRequirements.length > 0 && (
+                      <div>
+                        <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                          Documentation requirements
+                        </div>
+                        <ul className="mt-1 space-y-0.5">
+                          {h.documentationRequirements.map((requirement) => (
+                            <li
+                              key={requirement}
+                              className="text-[var(--measured-dark)]"
+                            >
+                              · {requirement}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
                   <div className="rounded-lg border border-[var(--measured-border-soft)] bg-white px-2.5 py-2">
                     <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
                       Clinic-note draft
@@ -253,20 +272,28 @@ export function GpBillingCard({ patient }: { patient: Patient }) {
                       />
                       Create verification task
                     </button>
-                    <a
-                      href="https://www.mbsonline.gov.au/"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 rounded-lg bg-[var(--measured-cream)] px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark)]"
-                    >
-                      MBS Online
-                      <ExternalLink
-                        size={11}
-                        strokeWidth={2.2}
-                        aria-hidden="true"
-                      />
-                    </a>
+                    {h.officialSourceUrl && (
+                      <a
+                        href={h.officialSourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 rounded-lg bg-[var(--measured-cream)] px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark)]"
+                      >
+                        MBS source
+                        <ExternalLink
+                          size={11}
+                          strokeWidth={2.2}
+                          aria-hidden="true"
+                        />
+                      </a>
+                    )}
                   </div>
+                  {h.sourceLastReviewedAt && (
+                    <p className="text-[10px] text-[var(--measured-subtext)]">
+                      MBS source last reviewed {h.sourceLastReviewedAt}. GP must
+                      verify against live Medicare guidance before billing.
+                    </p>
+                  )}
                 </div>
               )}
             </li>

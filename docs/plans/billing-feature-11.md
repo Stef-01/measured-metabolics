@@ -66,11 +66,13 @@ The feature must avoid becoming a "claim maximizer." It is a **documentation and
 
 **Gate:** 20 fixture patients with expected candidate counts; false positives under 15%.
 
-### Phase 3 - Australian MBS rule engine
+### Phase 3 - Australian MBS rule engine (implemented)
 
 **Week target:** W5, before GP sidebar polish.
 
 **What ships:** Structured Australian Medicare rule definitions, still no LLM.
+
+**Implemented now:** `src/lib/mbs/rules.ts` stores source-cited rule metadata for MBS 721, 723, and 10954. `src/lib/mbs/evaluate.ts` evaluates scanner needs against prerequisite blockers, including the hard GPMP-before-TCA and GPMP/TCA-before-allied-health constraints. The GP billing card now shows source links, source review dates, and documentation requirements from these rules.
 
 **Implementation:**
 

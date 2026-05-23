@@ -1,5 +1,6 @@
 import type { Patient } from "./types";
 import { scanBillingNeeds } from "../engine/billing-needs-scanner";
+import { evaluateMbsRules } from "../mbs/evaluate";
 import { mealsForPatient } from "./meals";
 import { threadForPatient } from "./messages";
 import { REFERRALS } from "./referrals";
@@ -30,6 +31,9 @@ export interface BillingIntelligenceSuggestion {
   evidence: BillingEvidence[];
   missingPrerequisites: string[];
   documentationDraft: string;
+  officialSourceUrl?: string;
+  sourceLastReviewedAt?: string;
+  documentationRequirements?: string[];
 }
 
 export interface BillingPhase {
@@ -84,18 +88,38 @@ export function billingSuggestionsForPatient(
   });
 
   if (needs.length > 0) {
-    return needs.map((need) => ({
-      item: need.item,
-      service: need.service,
-      confidence: need.confidence,
-      estimatedRebateAud: need.estimatedRebateAud,
-      stance: need.stance,
-      rationale: need.rationale,
-      whyNow: need.whyNow,
-      evidence: need.evidence,
-      missingPrerequisites: need.missingPrerequisites,
-      documentationDraft: `${need.stance === "defer" ? "Do not bill from current evidence alone." : "Candidate only; GP verification required."} ${need.rationale} Evidence reviewed: ${need.evidence.map((item) => item.label).join(", ")}. Verify eligibility, documentation, and item-frequency rules before billing.`,
-    }));
+    const evaluations = evaluateMbsRules(needs);
+    return needs.map((need) => {
+      const evaluation = evaluations.get(need.item);
+      const effectiveStance =
+        evaluation?.canSurfaceAsCandidate === false ? "defer" : need.stance;
+      const opening =
+        effectiveStance === "defer"
+          ? "Do not bill from current evidence alone."
+          : "Candidate only; GP verification required.";
+
+      return {
+        item: need.item,
+        service: need.service,
+        confidence: need.confidence,
+        estimatedRebateAud:
+          evaluation?.canSurfaceAsCandidate === false
+            ? 0
+            : need.estimatedRebateAud,
+        stance: effectiveStance,
+        rationale: need.rationale,
+        whyNow: need.whyNow,
+        evidence: need.evidence,
+        missingPrerequisites: [
+          ...need.missingPrerequisites,
+          ...(evaluation?.blockers ?? []),
+        ],
+        documentationDraft: `${opening} ${need.rationale} Evidence reviewed: ${need.evidence.map((item) => item.label).join(", ")}. Verify eligibility, documentation, and item-frequency rules before billing.`,
+        officialSourceUrl: evaluation?.officialSourceUrl,
+        sourceLastReviewedAt: evaluation?.lastReviewedAt,
+        documentationRequirements: evaluation?.documentationRequirements,
+      };
+    });
   }
 
   return [

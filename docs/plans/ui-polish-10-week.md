@@ -793,7 +793,7 @@ It adds a GP billing copilot for `/gp/[patientId]/billing` that scans patient ne
 | ----- | ------ | ---------------------------------------------------------- | ------------------------------------------- |
 | P1    | Now/W2 | Static evidence-backed example on the GP billing card      | Demo only; no AI; no guideline retrieval    |
 | P2    | W3     | Deterministic local needs scanner over patient context     | **Implemented**; no LLM; fixture-tested     |
-| P3    | W5     | Structured Australian MBS rule engine with source URLs     | Official-source citations required          |
+| P3    | W5     | Structured Australian MBS rule engine with source URLs     | **Implemented**; official-source citations  |
 | P4    | W8     | AI deep-dive over conversation history and patient context | Eval-gated; every suggestion needs evidence |
 | P5    | W9-W10 | Live MBS retrieval + audit-safe copy/task workflow         | Suppress AI if source cannot be cited       |
 

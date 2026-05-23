@@ -62,6 +62,12 @@ function hasChronicMetabolicNeed(patient: Patient): boolean {
   });
 }
 
+function hasDietitianThreadEvidence(
+  thread: MessageThread | undefined,
+): boolean {
+  return thread?.messages.some((m) => m.fromRole === "dietitian") ?? false;
+}
+
 function conditionEvidence(patient: Patient): BillingNeedEvidence {
   const metrics = [
     `HbA1c ${patient.hbA1cPct}%`,
@@ -155,8 +161,8 @@ function compactEvidence(
 export function scanBillingNeeds(context: BillingScanContext): BillingNeed[] {
   const { patient, thread, symptoms, meals, referral } = context;
   const chronic = hasChronicMetabolicNeed(patient);
-  const hasDietitianCare =
-    Boolean(thread) || Boolean(referral?.assignedDietitianId);
+  const hasDietitianCare = hasDietitianThreadEvidence(thread);
+  const hasDietitianAssignment = Boolean(referral?.assignedDietitianId);
   const hasActiveMealPattern = meals.some(
     (meal) =>
       meal.analysis.clinicalFlags.length > 0 ||
@@ -198,8 +204,8 @@ export function scanBillingNeeds(context: BillingScanContext): BillingNeed[] {
     gpmpFired = true;
   }
 
-  if (chronic && hasDietitianCare) {
-    const tcaDeferred = !gpmpFired;
+  if (chronic && (hasDietitianCare || hasDietitianAssignment)) {
+    const tcaDeferred = !gpmpFired || !hasDietitianCare;
     needs.push({
       id: "tca",
       item: "MBS 723",
@@ -208,10 +214,10 @@ export function scanBillingNeeds(context: BillingScanContext): BillingNeed[] {
       estimatedRebateAud: tcaDeferred ? 0 : 130.85,
       stance: tcaDeferred ? "defer" : "candidate",
       rationale: tcaDeferred
-        ? "Dietitian involvement is visible, but a Team Care Arrangement should not be treated as a billing candidate unless a valid GP Management Plan exists or is created."
+        ? "Dietitian assignment or involvement is visible, but a Team Care Arrangement should not be treated as a billing candidate unless a valid GP Management Plan exists and actual team-care interaction is documented."
         : "Dietitian involvement plus chronic metabolic need may support team-care coordination if the GP verifies provider count and consent.",
       whyNow: tcaDeferred
-        ? "Surface this as a blocker-aware task, not a claim candidate: verify GPMP before considering TCA."
+        ? "Surface this as a blocker-aware task, not a claim candidate: verify GPMP and team-care evidence before considering TCA."
         : "Dietitian activity is visible in the record, so coordination requirements can be made explicit.",
       evidence: compactEvidence([
         firstDietitianMessage(thread),
@@ -220,13 +226,14 @@ export function scanBillingNeeds(context: BillingScanContext): BillingNeed[] {
       ]),
       missingPrerequisites: [
         "GPMP (MBS 721) must exist or be created before a TCA can be billed.",
+        "Document actual dietitian or allied-health contribution, not just assignment.",
         "Confirm at least two collaborating providers will contribute.",
         "Record patient consent and inter-provider communication plan.",
       ],
     });
   }
 
-  if (chronic && hasDietitianCare) {
+  if (chronic && hasDietitianCare && gpmpFired) {
     needs.push({
       id: "dietitian-allied-health",
       item: "MBS 10954",
