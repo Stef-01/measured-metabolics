@@ -5,6 +5,7 @@ import { transcriptAnalyzer } from "@/inngest/workers/transcript-analyzer";
 import { reportDraft } from "@/inngest/workers/report-draft";
 import { mealPlanDraft } from "@/inngest/workers/meal-plan-draft";
 import { notifications } from "@/inngest/workers/notifications";
+import { billingIntelligence } from "@/inngest/workers/billing-intelligence";
 
 export const runtime = "nodejs";
 
@@ -16,5 +17,6 @@ export const { GET, POST, PUT } = serve({
     reportDraft,
     mealPlanDraft,
     notifications,
+    billingIntelligence,
   ],
 });

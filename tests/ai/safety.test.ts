@@ -4,7 +4,11 @@ import {
   buildUnreviewedFallback,
   CONFIDENCE_THRESHOLD,
 } from "@/ai/safety";
-import { MealAnalysisSchema, DietitianReportDraftSchema } from "@/ai/schemas";
+import {
+  MealAnalysisSchema,
+  DietitianReportDraftSchema,
+  BillingSuggestionSchema,
+} from "@/ai/schemas";
 
 /**
  * PRD §22.3 — AI safety acceptance suite.
@@ -87,5 +91,37 @@ describe("PRD §22.3 — AI safety", () => {
     });
     const gated = applySafety("dietitian-report-draft", parsed);
     expect(gated.requires_human_review).toBe(true);
+  });
+
+  it("S-06 billing-intelligence output is always review-required (Feature #11)", () => {
+    const parsed = BillingSuggestionSchema.parse({
+      suggestions: [
+        {
+          itemNumber: "MBS 721",
+          serviceName: "GP Management Plan (GPMP)",
+          rationale:
+            "Candidate may support care-plan documentation, needs GP verification given chronic-condition profile.",
+          evidence: [
+            {
+              kind: "care_plan",
+              id: "care_plan:test",
+              quote: "Type 2 Diabetes + Obesity; HbA1c 8.1%.",
+            },
+          ],
+          missingPrerequisites: ["GP confirms chronic condition expected ≥6mo"],
+          documentationDraft:
+            "Treat as candidate only; GP verification required before billing. MBS 721 GPMP: chronic-care planning review may be useful.",
+          confidence_score: 0.9,
+          requires_human_review: false,
+          safety_flags: ["frequency_check_required"],
+        },
+      ],
+      confidence_score: 0.9,
+      requires_human_review: false,
+      safety_flags: ["frequency_check_required"],
+    });
+    const gated = applySafety("billing-intelligence", parsed);
+    expect(gated.requires_human_review).toBe(true);
+    expect(gated.visible_to_patient).toBe(false);
   });
 });

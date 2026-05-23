@@ -100,11 +100,21 @@ The feature must avoid becoming a "claim maximizer." It is a **documentation and
 
 **Gate:** Each rule must cite an official MBS Online or Medicare source URL and carry `lastReviewedAt`.
 
-### Phase 4 - AI conversation-history deep dive
+### Phase 4 - AI conversation-history deep dive (implemented vibe-stage)
 
 **Week target:** W8, with GP 30-second briefing.
 
-**What ships:** `billing-intelligence` worker scans the patient context and proposes item candidates with citations.
+**What ships:** `billing-intelligence` worker that scans patient context and emits schema-valid item candidates with verbatim citations. The production path is `runStructured("billing-intelligence")` → `applySafety` → audit. Without an LLM key the worker falls back to a deterministic simulator (`runBillingDeepDive`) that produces the same shape, so the GP demo always shows the AI deep-dive panel and CI never depends on flaky LLM output.
+
+**Implemented now:**
+
+- `src/ai/schemas.ts` exposes `BillingSuggestionSchema` (and `BillingSuggestionItemSchema` for per-item validation) plus a `billing-intelligence` entry in the `SCHEMAS` registry.
+- `src/ai/prompts.ts` registers a `billing-intelligence` prompt with hard rules: never say "claimable / billable / approved / auto-claim", always cite verbatim evidence, only emit items from the supplied catalog, and force `requires_human_review = true` when frequency is unverifiable.
+- `src/ai/safety.ts` force-reviews `billing-intelligence` outputs at the safety gate.
+- `src/lib/engine/billing-deep-dive.ts` builds schema-valid output deterministically from `BillingScanContext`, dropping non-MBS scanner needs (e.g. "GP follow-up"), mapping evidence kinds to the AI schema (`condition` → `care_plan`), and stamping safety flags (`frequency_check_required`, plus `defer` / `needs_review` where applicable).
+- `src/inngest/workers/billing-intelligence.ts` is the production worker. It calls `runStructured` first, falls back to `runBillingDeepDive` on `LLMUnconfiguredError`, returns an empty `safety_flags: ["schema_violation"]` batch on schema failure, and audits both `billing.scan.invoked` and `billing.suggestion.generated`.
+- `src/components/gp/cards/billing-card.tsx` renders the deep-dive panel: per-item AI confidence, verbatim quotes with `kind` badges and stable IDs, safety-flag chips, and the same MBS-source links the rule engine surfaces.
+- New audit actions `billing.scan.invoked` and `billing.suggestion.generated` exist in `src/types/db.ts` so the worker can record without type churn.
 
 **Worker:** `src/inngest/workers/billing-intelligence.ts`
 
@@ -161,6 +171,16 @@ BillingSuggestionSchema = z.object({
 - Patient conversation contains sensitive information not needed for billing.
 
 **Gate:** 30 patient-week evals reviewed by a GP advisor; 0 hallucinated item numbers; 0 unsupported evidence chains.
+
+**Vibe-stage gate met now:** `billing-deep-dive.test.ts` runs the simulator across every fixture patient and asserts:
+
+- Output passes `BillingSuggestionSchema` (zero schema violations).
+- No `itemNumber` outside the `MBS_RULES` catalog.
+- No banned billing language ("claimable", "auto-claim", "billable", "approved", "submit claim").
+- `requires_human_review = true` everywhere; per-suggestion `confidence_score ≤ 0.85`; `frequency_check_required` always present.
+- Asha shows MBS 721 + 723 + 10954 with a verbatim dietitian-thread quote.
+- Ken's MBS 723 stays at confidence ≤ 0.5 with `defer` flag and "MBS 721" listed in `missingPrerequisites`.
+- A wellness fixture returns zero suggestions.
 
 ### Phase 5 - Live MBS guideline retrieval and audit-safe billing copilot
 

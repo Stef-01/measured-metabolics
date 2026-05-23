@@ -102,12 +102,57 @@ export const MessageAssistantSchema = z.object({
 });
 export type MessageAssistant = z.infer<typeof MessageAssistantSchema>;
 
+/**
+ * Phase 4 (Feature #11) — billing-intelligence AI deep dive.
+ *
+ * The LLM analyses patient context (conditions, recent meals, dietitian
+ * thread, referral, symptoms, care plan, prior reports) and proposes MBS
+ * candidates. It NEVER says an item is claimable; it surfaces candidates
+ * with cited evidence and missing prerequisites for GP verification.
+ *
+ * `audit` fields live on each suggestion so the safety gate runs per item:
+ * one low-confidence suggestion in a batch shouldn't review-gate the others.
+ */
+export const BillingSuggestionItemSchema = z.object({
+  itemNumber: z.string().regex(/^MBS\s+\d+$/),
+  serviceName: z.string().min(3).max(120),
+  rationale: z.string().min(20).max(260),
+  evidence: z
+    .array(
+      z.object({
+        kind: z.enum([
+          "message",
+          "symptom",
+          "meal",
+          "referral",
+          "care_plan",
+          "report",
+        ]),
+        id: z.string().min(1).max(120),
+        quote: z.string().min(4).max(140),
+      }),
+    )
+    .min(1)
+    .max(5),
+  missingPrerequisites: z.array(z.string().min(4).max(160)).max(6),
+  documentationDraft: z.string().min(20).max(500),
+  ...audit,
+});
+export type BillingSuggestionItem = z.infer<typeof BillingSuggestionItemSchema>;
+
+export const BillingSuggestionSchema = z.object({
+  suggestions: z.array(BillingSuggestionItemSchema).max(5),
+  ...audit,
+});
+export type BillingSuggestion = z.infer<typeof BillingSuggestionSchema>;
+
 export const SCHEMAS = {
   "meal-analysis": MealAnalysisSchema,
   "transcript-analysis": TranscriptAnalysisSchema,
   "meal-plan-draft": MealPlanDraftSchema,
   "dietitian-report-draft": DietitianReportDraftSchema,
   "message-assistant": MessageAssistantSchema,
+  "billing-intelligence": BillingSuggestionSchema,
 } as const;
 
 export type SchemaName = keyof typeof SCHEMAS;

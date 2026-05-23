@@ -1,6 +1,11 @@
 import type { Patient } from "./types";
-import { scanBillingNeeds } from "../engine/billing-needs-scanner";
+import {
+  scanBillingNeeds,
+  type BillingScanContext,
+} from "../engine/billing-needs-scanner";
+import { runBillingDeepDive } from "../engine/billing-deep-dive";
 import { evaluateMbsRules } from "../mbs/evaluate";
+import type { BillingSuggestion } from "@/ai/schemas";
 import { mealsForPatient } from "./meals";
 import { threadForPatient } from "./messages";
 import { REFERRALS } from "./referrals";
@@ -65,7 +70,7 @@ const DEFAULT_PHASES: BillingPhase[] = [
   {
     phase: "P4",
     label: "AI conversation-history deep dive",
-    status: "planned",
+    status: "live",
     week: "W8",
   },
   {
@@ -153,4 +158,18 @@ export function billingSuggestionsForPatient(
 
 export function billingFeaturePhases(): BillingPhase[] {
   return DEFAULT_PHASES;
+}
+
+function billingScanContextForPatient(patient: Patient): BillingScanContext {
+  return {
+    patient,
+    thread: threadForPatient(patient.id),
+    symptoms: symptomsForPatient(patient.id),
+    meals: mealsForPatient(patient.id),
+    referral: REFERRALS.find((referral) => referral.patientId === patient.id),
+  };
+}
+
+export function billingDeepDiveForPatient(patient: Patient): BillingSuggestion {
+  return runBillingDeepDive(billingScanContextForPatient(patient));
 }

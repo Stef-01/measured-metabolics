@@ -1,6 +1,6 @@
 # Measured Metabolics — UI Polish 10-Week Plan
 
-> **Status:** Approved 2026-05-22 · execution scheduled · all 10 game-changer features committed · Feature #11 Billing Intelligence (phased) added 2026-05-22
+> **Status:** Approved 2026-05-22 · execution scheduled · all 10 game-changer features committed · Feature #11 Billing Intelligence (phased) added 2026-05-22 · Phases 1–4 implemented vibe-stage 2026-05-23
 > **Companion to:** `docs/planning.md` (Stages 1–8) · `docs/plans/patient-detail-nutrium.md` (Patient Detail v2)
 > **North star:** Measured should look — and feel — like a product Apple's Health team would ship. Less blocky, more typographic, more photographic, more motion that earns its keep. Nothing on-screen unless it carries weight.
 > **Non-goals:** No new clinical surfaces. No backend reshape. No design system from scratch. We are _polishing_ the existing surfaces, not reinventing them. The 10 AI features layer on top of the existing Stage 6 safety / audit / RLS infrastructure — they do not reshape it.

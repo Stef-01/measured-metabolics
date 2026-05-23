@@ -56,7 +56,9 @@ export type AuditAction =
   | "auth.signed_in"
   | "auth.signed_out"
   | "admin.exported"
-  | "admin.impersonated";
+  | "admin.impersonated"
+  | "billing.scan.invoked"
+  | "billing.suggestion.generated";
 
 export interface Tables {
   organizations: {

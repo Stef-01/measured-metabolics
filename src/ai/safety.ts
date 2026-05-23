@@ -42,6 +42,7 @@ export function applySafety<TName extends SchemaName>(
   if (flags.has("provider_unconfigured")) requires = true;
   if (schemaName === "meal-plan-draft") requires = true; // PRD: dietitian must approve plans
   if (schemaName === "dietitian-report-draft") requires = true;
+  if (schemaName === "billing-intelligence") requires = true; // Feature #11: GP must verify before billing
   return {
     output: parsed,
     requires_human_review: requires,
