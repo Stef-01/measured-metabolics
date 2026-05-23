@@ -4,7 +4,11 @@ import { applySafety, buildUnreviewedFallback } from "@/ai/safety";
 import { recordAudit } from "@/server/audit";
 
 export const mealPlanDraft = inngest.createFunction(
-  { id: "meal-plan-draft", retries: 2, triggers: [{ event: "meal_plan.requested" }] },
+  {
+    id: "meal-plan-draft",
+    retries: 2,
+    triggers: [{ event: "meal_plan.requested" }],
+  },
   async ({ event, step }) => {
     const {
       patient_id,

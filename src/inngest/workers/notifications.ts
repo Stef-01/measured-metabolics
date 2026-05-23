@@ -9,7 +9,11 @@ import { recordAudit } from "@/server/audit";
  * delivery + suppression for marketing-consent-withdrawn patients.
  */
 export const notifications = inngest.createFunction(
-  { id: "notifications", retries: 2, triggers: [{ event: "notification.dispatch" }] },
+  {
+    id: "notifications",
+    retries: 2,
+    triggers: [{ event: "notification.dispatch" }],
+  },
   async ({ event, step }) => {
     const { kind, patient_id, payload } = event.data as Record<string, string>;
     await step.run("audit", () =>

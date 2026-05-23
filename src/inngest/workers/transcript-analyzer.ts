@@ -4,7 +4,11 @@ import { applySafety, buildUnreviewedFallback } from "@/ai/safety";
 import { recordAudit } from "@/server/audit";
 
 export const transcriptAnalyzer = inngest.createFunction(
-  { id: "transcript-analyzer", retries: 2, triggers: [{ event: "transcript.pasted" }] },
+  {
+    id: "transcript-analyzer",
+    retries: 2,
+    triggers: [{ event: "transcript.pasted" }],
+  },
   async ({ event, step }) => {
     const {
       patient_id,
