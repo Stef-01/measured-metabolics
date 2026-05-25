@@ -11,6 +11,7 @@ import {
   Line,
 } from "recharts";
 import { Check, TrendingDown, TrendingUp, Minus } from "lucide-react";
+import { CHART } from "@/lib/chart-tokens";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import {
   CGM_BY_PATIENT,
@@ -203,9 +204,9 @@ export function PatientMetricsScreen() {
                   <Line
                     type="monotone"
                     dataKey="kg"
-                    stroke="#2d5a3d"
+                    stroke={CHART.green}
                     strokeWidth={2.4}
-                    dot={{ r: 3, fill: "#2d5a3d" }}
+                    dot={{ r: 3, fill: CHART.green }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -240,17 +241,17 @@ export function PatientMetricsScreen() {
                       type="monotone"
                       name="Nausea"
                       dataKey="nausea"
-                      stroke="#8c1515"
+                      stroke={CHART.evaluate}
                       strokeWidth={2}
-                      dot={{ r: 3, fill: "#8c1515" }}
+                      dot={{ r: 3, fill: CHART.evaluate }}
                     />
                     <Line
                       type="monotone"
                       name="Constipation"
                       dataKey="constipation"
-                      stroke="#2c5e8a"
+                      stroke={CHART.clinical}
                       strokeWidth={2}
-                      dot={{ r: 3, fill: "#2c5e8a" }}
+                      dot={{ r: 3, fill: CHART.clinical }}
                     />
                   </LineChart>
                 </ResponsiveContainer>

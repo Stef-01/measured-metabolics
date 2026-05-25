@@ -15,6 +15,7 @@ import {
 import { Pencil, MessageSquare, Sparkles } from "lucide-react";
 import { mealImageBySlug } from "@/lib/images";
 import { nearestMealForSpike } from "@/lib/engine/cgm-spike-meal";
+import { CHART } from "@/lib/chart-tokens";
 import { cn } from "@/lib/utils/cn";
 import type { CgmReading, MealLog } from "@/lib/mock/types";
 import type { MealAnnotation } from "@/lib/storage/patient-store";
@@ -104,8 +105,8 @@ export function CgmMealChart({
         >
           <defs>
             <linearGradient id={FILL_GRADIENT_ID} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#2d5a3d" stopOpacity={0.32} />
-              <stop offset="100%" stopColor="#2d5a3d" stopOpacity={0.02} />
+              <stop offset="0%" stopColor={CHART.green} stopOpacity={0.32} />
+              <stop offset="100%" stopColor={CHART.green} stopOpacity={0.02} />
             </linearGradient>
           </defs>
           <CartesianGrid stroke="rgba(0,0,0,0.06)" vertical={false} />
@@ -123,7 +124,7 @@ export function CgmMealChart({
             fontSize={10}
           />
           <YAxis domain={[3, 12]} stroke="rgba(0,0,0,0.4)" fontSize={10} />
-          <ReferenceArea y1={3.9} y2={10} fill="#2d5a3d" fillOpacity={0.06} />
+          <ReferenceArea y1={3.9} y2={10} fill={CHART.green} fillOpacity={0.06} />
           <Tooltip
             cursor={{ stroke: "rgba(45,90,61,0.4)", strokeDasharray: "3 3" }}
             content={() => null}
@@ -131,7 +132,7 @@ export function CgmMealChart({
           <Area
             type="monotone"
             dataKey="mmolL"
-            stroke="#2d5a3d"
+            stroke={CHART.green}
             strokeWidth={2}
             fill={`url(#${FILL_GRADIENT_ID})`}
           />

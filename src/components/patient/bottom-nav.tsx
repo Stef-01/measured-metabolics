@@ -77,7 +77,7 @@ export function PatientBottomNav() {
                     >
                       <Icon size={24} strokeWidth={2.2} className="text-white" aria-hidden="true" />
                     </span>
-                    <span className={cn("text-xs font-semibold transition-colors", isActive ? "text-[var(--measured-dark-green)]" : "text-[var(--measured-subtext)]")}>
+                    <span className={cn("text-[11px] font-semibold transition-colors", isActive ? "text-[var(--measured-dark-green)]" : "text-[var(--measured-subtext)]")}>
                       {tab.label}
                     </span>
                   </Link>
@@ -95,7 +95,7 @@ export function PatientBottomNav() {
               >
                 <Link
                   href={tab.href}
-                  className="relative flex flex-col items-center gap-0.5 rounded-xl px-4 py-1.5 text-xs font-medium"
+                  className="relative flex flex-col items-center gap-0.5 rounded-xl px-4 py-1.5 text-[11px] font-medium"
                   aria-current={isActive ? "page" : undefined}
                   aria-label={tab.label}
                 >
