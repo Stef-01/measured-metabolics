@@ -17,7 +17,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useDietitianQueue } from "@/lib/store/dietitian-store";
-import { DEMO_QUEUE_MEALS, PATIENTS } from "@/lib/mock";
+import { DEMO_QUEUE_MEALS, PATIENTS, CURRENT_PATIENT_ID } from "@/lib/mock";
+import { useStoredMeals } from "@/lib/storage/patient-store";
 import type { MealLog, ReviewStatus } from "@/lib/mock/types";
 import { toast } from "@/lib/hooks/use-toast";
 import { cn } from "@/lib/utils/cn";
@@ -83,7 +84,16 @@ interface Props {
 
 export function DietitianMealQueueScreen({ pool }: Props = {}) {
   const router = useRouter();
-  const baseMeals = pool ?? DEMO_QUEUE_MEALS;
+  const storedMeals = useStoredMeals(CURRENT_PATIENT_ID);
+  const baseMeals = useMemo(() => {
+    const base = pool ?? DEMO_QUEUE_MEALS;
+    const pendingStored = storedMeals.filter(
+      (m) => m.reviewStatus === "pending_review",
+    );
+    const baseIds = new Set(base.map((m) => m.id));
+    const newStored = pendingStored.filter((m) => !baseIds.has(m.id));
+    return [...newStored.slice().reverse(), ...base];
+  }, [pool, storedMeals]);
   const [queueFilter, setQueueFilter] = useState<QueueFilter>("all");
   const [savedEdits, setSavedEdits] = useState<Record<string, SavedMealEdit>>(
     {},
