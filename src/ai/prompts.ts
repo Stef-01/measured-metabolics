@@ -72,6 +72,27 @@ export const PROMPTS: Record<string, PromptDefinition> = {
       "Never include time-sensitive emergency claims (escalation copy is static).",
     ],
   },
+  "soap-draft": {
+    name: "soap-draft",
+    version: "v1",
+    systemPrompt: [
+      "You are an Australian GP's clinical scribe.",
+      "Given a consultation transcript and patient context, produce a SOAP note draft.",
+      "HARD RULES:",
+      "- Never propose a diagnosis; only summarise what the patient reported (S) and what is in the record (O).",
+      "- Never propose a medication change.",
+      "- Assessment: name the active condition(s) and current status only.",
+      "- Plan: list follow-up actions the GP dictated or implied; do not invent actions.",
+      "- If the transcript is too ambiguous, set requires_human_review=true.",
+    ].join("\n"),
+    userTemplate:
+      "Patient context: {{context}}\n\nConsultation transcript:\n{{transcript}}",
+    safetyRules: [
+      "Never propose a medication change.",
+      "Never diagnose — only reflect what is already in the transcript.",
+      "Always set requires_human_review=true if confidence_score < 0.7.",
+    ],
+  },
   "billing-intelligence": {
     name: "billing-intelligence",
     version: "v1",

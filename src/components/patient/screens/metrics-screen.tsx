@@ -10,23 +10,54 @@ import {
   LineChart,
   Line,
 } from "recharts";
+import { Check } from "lucide-react";
 import { PatientAppHeader } from "@/components/patient/app-header";
-import { CGM_BY_PATIENT, CURRENT_PATIENT_ID, PATIENTS } from "@/lib/mock";
+import {
+  CGM_BY_PATIENT,
+  CURRENT_PATIENT_ID,
+  PATIENTS,
+  ASHA_PLAN,
+} from "@/lib/mock";
 import {
   useStoredAnnotations,
   useStoredMeals,
   useStoredSymptoms,
+  useStoredPlanEaten,
 } from "@/lib/storage/patient-store";
 import { CgmMealChart } from "@/components/shared/cgm-meal-chart";
 import { cn } from "@/lib/utils/cn";
+import type { MealType } from "@/lib/mock/types";
 
-type TabId = "glucose" | "weight" | "symptoms";
+type TabId = "glucose" | "weight" | "symptoms" | "adherence";
 
 const TABS: { id: TabId; label: string }[] = [
   { id: "glucose", label: "Glucose" },
   { id: "weight", label: "Weight" },
   { id: "symptoms", label: "Symptoms" },
+  { id: "adherence", label: "Adherence" },
 ];
+
+const MEAL_SHORT: Record<MealType, string> = {
+  breakfast: "BK",
+  lunch: "LU",
+  dinner: "DN",
+  snack: "SN",
+};
+const DAY_SHORT = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+function getWeekDays(): Date[] {
+  const today = new Date();
+  const dow = today.getDay();
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - (dow === 0 ? 6 : dow - 1));
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    return d;
+  });
+}
+
+const WEEK_DAYS = getWeekDays();
 
 const SEVERITY_TO_NUM = {
   none: 0,
@@ -41,6 +72,7 @@ export function PatientMetricsScreen() {
   const symptoms = useStoredSymptoms(me.id);
   const meals = useStoredMeals(me.id);
   const annotations = useStoredAnnotations(me.id);
+  const planEaten = useStoredPlanEaten(me.id);
 
   const weightData = useMemo(
     () =>
@@ -204,6 +236,7 @@ export function PatientMetricsScreen() {
               )}
             </ChartShell>
           )}
+          {tab === "adherence" && <AdherencePanel planEaten={planEaten} />}
         </div>
 
         <a
@@ -239,6 +272,124 @@ function ChartShell({
         )}
       </div>
       {children}
+    </div>
+  );
+}
+
+function AdherencePanel({ planEaten }: { planEaten: Record<string, true> }) {
+  const allMealTypes: MealType[] = ["breakfast", "lunch", "dinner", "snack"];
+
+  const weekTotals = WEEK_DAYS.reduce(
+    (acc, date, idx) => {
+      const meals = ASHA_PLAN.dayItems?.[idx] ?? ASHA_PLAN.items;
+      acc.planned += meals.length;
+      acc.eaten += meals.filter(
+        (m) => !!planEaten[`${date.toDateString()}-${m.mealType}`],
+      ).length;
+      return acc;
+    },
+    { planned: 0, eaten: 0 },
+  );
+
+  const pct =
+    weekTotals.planned > 0
+      ? Math.round((weekTotals.eaten / weekTotals.planned) * 100)
+      : 0;
+
+  return (
+    <div>
+      <div className="mb-3 flex items-center justify-between">
+        <div className="font-serif text-[18px] text-[var(--measured-dark)]">
+          Plan adherence
+        </div>
+        <div className="text-[13px] font-semibold text-[var(--measured-dark-green)]">
+          {pct}%
+        </div>
+      </div>
+
+      {weekTotals.eaten === 0 ? (
+        <p className="py-6 text-center text-[13px] text-[var(--measured-subtext)]">
+          Mark meals as eaten on the Plan tab to track adherence.
+        </p>
+      ) : (
+        <>
+          {/* Progress bar */}
+          <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-[var(--measured-cream)]">
+            <div
+              className="h-full rounded-full bg-[var(--measured-green)] transition-all duration-500"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+
+          {/* 7-day × 4-meal grid */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-center text-[11px]">
+              <thead>
+                <tr>
+                  <th className="w-8 pb-2 text-[var(--measured-subtext)]" />
+                  {WEEK_DAYS.map((date, idx) => (
+                    <th
+                      key={idx}
+                      className="pb-2 font-semibold text-[var(--measured-subtext)]"
+                    >
+                      {DAY_SHORT[idx]}
+                      <br />
+                      <span className="font-normal">{date.getDate()}</span>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {allMealTypes.map((meal) => (
+                  <tr key={meal}>
+                    <td className="py-1 pr-2 text-left text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                      {MEAL_SHORT[meal]}
+                    </td>
+                    {WEEK_DAYS.map((date, idx) => {
+                      const dayMeals =
+                        ASHA_PLAN.dayItems?.[idx] ?? ASHA_PLAN.items;
+                      const hasMeal = dayMeals.some((m) => m.mealType === meal);
+                      const eaten =
+                        hasMeal &&
+                        !!planEaten[`${date.toDateString()}-${meal}`];
+                      return (
+                        <td key={idx} className="py-1">
+                          {hasMeal ? (
+                            <span
+                              className={cn(
+                                "mx-auto flex h-5 w-5 items-center justify-center rounded-full",
+                                eaten
+                                  ? "bg-[var(--measured-green)]"
+                                  : "border border-[var(--measured-border)] bg-white",
+                              )}
+                            >
+                              {eaten && (
+                                <Check
+                                  size={10}
+                                  strokeWidth={2.5}
+                                  className="text-white"
+                                  aria-hidden="true"
+                                />
+                              )}
+                            </span>
+                          ) : (
+                            <span className="mx-auto block h-5 w-5" />
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mt-4 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
+            {weekTotals.eaten} of {weekTotals.planned} planned meals eaten this
+            week. Maya can see this when reviewing your next check-in.
+          </p>
+        </>
+      )}
     </div>
   );
 }

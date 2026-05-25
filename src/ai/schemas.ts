@@ -146,6 +146,15 @@ export const BillingSuggestionSchema = z.object({
 });
 export type BillingSuggestion = z.infer<typeof BillingSuggestionSchema>;
 
+export const SoapDraftSchema = z.object({
+  subjective: z.string().min(10).max(600),
+  objective: z.string().min(10).max(600),
+  assessment: z.string().min(10).max(600),
+  plan: z.string().min(10).max(600),
+  ...audit,
+});
+export type SoapDraft = z.infer<typeof SoapDraftSchema>;
+
 export const SCHEMAS = {
   "meal-analysis": MealAnalysisSchema,
   "transcript-analysis": TranscriptAnalysisSchema,
@@ -153,6 +162,7 @@ export const SCHEMAS = {
   "dietitian-report-draft": DietitianReportDraftSchema,
   "message-assistant": MessageAssistantSchema,
   "billing-intelligence": BillingSuggestionSchema,
+  "soap-draft": SoapDraftSchema,
 } as const;
 
 export type SchemaName = keyof typeof SCHEMAS;
