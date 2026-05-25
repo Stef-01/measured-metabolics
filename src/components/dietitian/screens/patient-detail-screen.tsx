@@ -285,8 +285,7 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
                     </>
                   ) : (
                     <p className="text-[13px] text-[var(--measured-subtext)]">
-                      CGM not connected. Stage 6 will provision device pairing
-                      via Inngest.
+                      No CGM data available for this patient.
                     </p>
                   )}
                 </Card>
@@ -1252,7 +1251,7 @@ function ReportPreview({
         )}
       </button>
       <p className="mt-3 text-[11px] text-[var(--measured-subtext)]">
-        Stage 8 wires this to React PDF and writes an audit row.
+        Sending generates a PDF and writes an audit record.
       </p>
     </Card>
   );
