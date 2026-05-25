@@ -41,10 +41,43 @@ export function PatientMealSavedScreen() {
           </h2>
           <p className="mt-2 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
             {meal
-              ? `${MEAL_LABEL[meal.mealType] ?? meal.mealType} sent for review. Maya usually reviews within a few hours.`
+              ? `${MEAL_LABEL[meal.mealType] ?? meal.mealType} sent for review. Maya will check it shortly.`
               : "Your meal is saved. Maya will review it shortly."}
           </p>
         </div>
+
+        {meal && meal.analysis.confidence > 0 && (
+          <div className="w-full rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-3 text-left">
+            <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-dark-green)]">
+              AI first read
+            </div>
+            <p className="text-[13px] leading-relaxed text-[var(--measured-dark)]">
+              {meal.analysis.dietitianSummary}
+            </p>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {[
+                `Carbs ${meal.analysis.carbLoad}`,
+                `Protein ${meal.analysis.proteinLoad}`,
+                `Fat ${meal.analysis.fatLoad}`,
+              ].map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-semibold text-[var(--measured-subtext)]"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+            {meal.analysis.clinicalFlags.length > 0 && (
+              <p className="mt-2 text-[11px] font-medium text-[var(--measured-clinical-amber)]">
+                {meal.analysis.clinicalFlags.join(" · ")}
+              </p>
+            )}
+            <p className="mt-2 text-[11px] text-[var(--measured-subtext)]">
+              Maya reviews before this appears on your plan.
+            </p>
+          </div>
+        )}
 
         <div className="mt-2 flex flex-col gap-2 text-[13px]">
           <Link

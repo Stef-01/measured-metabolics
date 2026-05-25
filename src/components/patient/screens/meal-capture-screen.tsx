@@ -43,6 +43,7 @@ export function PatientMealCaptureScreen() {
   const [photoDataUrl, setPhotoDataUrl] = useState<string | undefined>();
   const [mealType, setMealType] = useState<MealType>(defaultMealTypeForNow());
   const [note, setNote] = useState("");
+  const [saving, setSaving] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -134,7 +135,41 @@ export function PatientMealCaptureScreen() {
     void startCamera();
   }, [startCamera]);
 
-  const save = useCallback(() => {
+  const save = useCallback(async () => {
+    if (!photoDataUrl || saving) return;
+    setSaving(true);
+
+    let analysis: MealLog["analysis"] = {
+      foods: [],
+      carbLoad: "moderate",
+      proteinLoad: "moderate",
+      fibreLoad: "moderate",
+      fatLoad: "moderate",
+      cuisineTags: [],
+      confidence: 0,
+      dietitianSummary: "Awaiting dietitian review.",
+      clinicalFlags: [],
+    };
+
+    try {
+      const res = await fetch("/api/ai/meal-analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mealType,
+          note,
+          cuisine: "south_asian",
+          cgm: "recent stable readings",
+        }),
+      });
+      if (res.ok) {
+        const data = (await res.json()) as { analysis: MealLog["analysis"] };
+        analysis = data.analysis;
+      }
+    } catch {
+      // fall through to placeholder analysis
+    }
+
     const id = `m-${Date.now()}`;
     const meal: MealLog = {
       id,
@@ -147,22 +182,12 @@ export function PatientMealCaptureScreen() {
       eatenAt: new Date().toISOString(),
       reviewStatus: "pending_review",
       patientNote: note || undefined,
-      analysis: {
-        foods: [],
-        carbLoad: "moderate",
-        proteinLoad: "moderate",
-        fibreLoad: "moderate",
-        fatLoad: "moderate",
-        cuisineTags: [],
-        confidence: 0,
-        dietitianSummary: "Awaiting dietitian review.",
-        clinicalFlags: [],
-      },
+      analysis,
     };
     patientStore.addMeal(CURRENT_PATIENT_ID, meal);
     patientStore.setDraft(CURRENT_PATIENT_ID, null);
     router.push(`/p/meal/saved?id=${id}`);
-  }, [mealType, note, photoDataUrl, router]);
+  }, [mealType, note, photoDataUrl, router, saving]);
 
   return (
     <>
@@ -302,16 +327,16 @@ export function PatientMealCaptureScreen() {
         <motion.button
           type="button"
           whileTap={{ scale: 0.98 }}
-          onClick={save}
-          disabled={!photoDataUrl}
+          onClick={() => void save()}
+          disabled={!photoDataUrl || saving}
           className={cn(
             "cta-shadow mt-1 inline-flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-4 font-semibold text-white",
-            photoDataUrl
+            photoDataUrl && !saving
               ? "bg-[var(--measured-green)]"
               : "cursor-not-allowed bg-[var(--measured-green)]/40",
           )}
         >
-          Save meal
+          {saving ? "Analyzing…" : "Save meal"}
         </motion.button>
 
         <Link
