@@ -26,6 +26,8 @@ import {
   CGM_BY_PATIENT,
   THREADS,
   findSameCuisinePlanFor,
+  GP_PROFILES,
+  DIETITIAN_PROFILES,
 } from "@/lib/mock";
 import { mealsForPatient, pendingMeals } from "@/lib/mock/meals";
 import { symptomsForPatient } from "@/lib/mock/symptoms";
@@ -1198,6 +1200,7 @@ function ReportPreview({
     useState<ReportRec[]>(DEFAULT_RECS);
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
+  const [downloading, setDownloading] = useState(false);
   const [sent, setSent] = useState(false);
 
   const defaultSummary = `Over the past 4 weeks, ${patient.firstName} has uploaded ${mealCount} meals and logged ${symptomCount} symptom check-ins. Time-in-range improved from ${Math.max(50, patient.timeInRangePct - 6)}% to ${patient.timeInRangePct}%. Weight is ${patient.weightDeltaKg > 0 ? "up" : "down"} ${Math.abs(patient.weightDeltaKg).toFixed(1)} kg.`;
@@ -1233,13 +1236,35 @@ function ReportPreview({
     }
   };
 
-  const send = () => {
-    setSent(true);
-    toast.push({
-      variant: "success",
-      title: `Report sent to ${patient.referringGpId.toUpperCase()}`,
-      duration: 1800,
-    });
+  const send = async () => {
+    setDownloading(true);
+    try {
+      const { downloadGpReport } = await import(
+        "@/components/dietitian/gp-report-pdf"
+      );
+      const gp = GP_PROFILES[patient.referringGpId];
+      const dietitian = DIETITIAN_PROFILES[patient.assignedDietitianId];
+      await downloadGpReport({
+        patient,
+        period: "last 4 weeks",
+        summary: aiSummary ?? defaultSummary,
+        recommendations,
+        dietitianName: dietitian?.name ?? "Maya Singh",
+        gpName: gp?.name ?? patient.referringGpId,
+        mealCount,
+        symptomCount,
+      });
+      setSent(true);
+      toast.push({
+        variant: "success",
+        title: `PDF downloaded — send to ${gp?.name ?? patient.referringGpId}`,
+        duration: 2400,
+      });
+    } catch {
+      toast.push({ variant: "info", title: "PDF generation failed", duration: 2000 });
+    } finally {
+      setDownloading(false);
+    }
   };
 
   return (
@@ -1303,27 +1328,34 @@ function ReportPreview({
       </div>
       <button
         type="button"
-        onClick={send}
-        disabled={sent}
+        onClick={() => void send()}
+        disabled={sent || downloading}
         className={cn(
-          "mt-5 inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-[13px] font-semibold",
+          "mt-5 inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-[13px] font-semibold transition-colors",
           sent
             ? "cursor-default bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
-            : "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]",
+            : downloading
+              ? "cursor-not-allowed bg-[var(--measured-green)]/50 text-white"
+              : "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]",
         )}
       >
         {sent ? (
           <>
-            <CheckCircle2 size={14} strokeWidth={2.2} /> Sent to GP
+            <CheckCircle2 size={14} strokeWidth={2.2} /> PDF downloaded
+          </>
+        ) : downloading ? (
+          <>
+            <Send size={14} strokeWidth={2.2} className="animate-pulse" /> Generating PDF…
           </>
         ) : (
           <>
-            <Send size={14} strokeWidth={2.2} /> Send to GP
+            <Send size={14} strokeWidth={2.2} /> Download PDF for GP
           </>
         )}
       </button>
       <p className="mt-3 text-[11px] text-[var(--measured-subtext)]">
-        Sending generates a PDF and writes an audit record.
+        Generates a formatted PDF — attach to referral or email to{" "}
+        {GP_PROFILES[patient.referringGpId]?.name ?? "GP"}.
       </p>
     </Card>
   );

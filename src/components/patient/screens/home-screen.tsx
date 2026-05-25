@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Sparkles,
   X,
+  Flame,
 } from "lucide-react";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import { EscalationCard } from "@/components/patient/escalation-card";
@@ -71,6 +72,15 @@ export function PatientHomeScreen() {
     .find((m) => m.fromRole === "dietitian");
 
   const nextMeal = nextMealForToday(meals);
+  const streak = computeStreak(meals);
+
+  const todayDow = new Date().getDay();
+  const todayIdx = todayDow === 0 ? 6 : todayDow - 1;
+  const todayPlan = ASHA_PLAN.dayItems?.[todayIdx] ?? ASHA_PLAN.items;
+  const todayStr = new Date().toDateString();
+  const todayLogged = meals.filter(
+    (m) => new Date(m.eatenAt).toDateString() === todayStr,
+  ).length;
 
   const showNewPlanBanner = PLAN_APPROVED_RECENTLY && !planBannerDismissed;
 
@@ -130,20 +140,48 @@ export function PatientHomeScreen() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
-          className="surface-raised relative overflow-hidden p-5"
+          className="relative overflow-hidden rounded-3xl bg-[var(--measured-green)] p-5 text-white shadow-[0_4px_20px_-4px_rgba(45,90,61,0.35)]"
         >
-          <div className="text-[11px] font-medium uppercase tracking-wider text-[var(--measured-subtext)]">
-            Your next action
+          {/* Decorative circle */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/8"
+          />
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-white/70">
+                Today · {todayLogged}/{todayPlan.length} logged
+              </div>
+              <div className="mt-1 font-serif text-[24px] leading-tight">
+                {nextMeal !== null ? "Log your next meal" : "All meals logged!"}
+              </div>
+            </div>
+            {streak > 0 && (
+              <div className="flex shrink-0 items-center gap-1 rounded-full bg-white/15 px-2.5 py-1">
+                <Flame size={13} strokeWidth={2.2} aria-hidden="true" />
+                <span className="text-[12px] font-bold">{streak}d</span>
+              </div>
+            )}
           </div>
-          <div className="mt-1 font-serif text-[24px] leading-tight text-[var(--measured-dark)]">
-            Snap your next meal
+
+          {/* Meal progress dots */}
+          <div className="mt-3 flex gap-1.5">
+            {todayPlan.map((item, i) => (
+              <div
+                key={item.mealType}
+                className="h-1.5 flex-1 rounded-full"
+                style={{
+                  backgroundColor:
+                    i < todayLogged ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.25)",
+                }}
+                title={item.mealType}
+              />
+            ))}
           </div>
-          <p className="mt-1 text-[13px] leading-relaxed text-[var(--measured-subtext)]">
-            One photo. Maya reviews it and keeps your plan on track.
-          </p>
+
           <Link
             href="/p/meal"
-            className="cta-shadow mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] px-5 py-4 font-semibold text-white"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3.5 text-[15px] font-semibold text-[var(--measured-dark-green)] shadow-sm transition-opacity hover:opacity-90"
           >
             <Camera size={20} strokeWidth={2.2} aria-hidden="true" />
             Open camera
@@ -242,6 +280,23 @@ export function PatientHomeScreen() {
       </div>
     </>
   );
+}
+
+function computeStreak(meals: MealLog[]): number {
+  if (meals.length === 0) return 0;
+  const loggedDays = new Set(
+    meals.map((m) => new Date(m.eatenAt).toDateString()),
+  );
+  let count = 0;
+  const d = new Date();
+  // start from today if logged, else yesterday
+  if (!loggedDays.has(d.toDateString())) d.setDate(d.getDate() - 1);
+  while (loggedDays.has(d.toDateString())) {
+    count++;
+    d.setDate(d.getDate() - 1);
+    if (count > 365) break;
+  }
+  return count;
 }
 
 function nextMealForToday(meals: MealLog[]): number | null {

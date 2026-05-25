@@ -28,6 +28,13 @@
   --measured-clinical-amber: #b8860b;
   --measured-clinical-amber-soft: #fdf6e3;
 
+  /* Semantic surface tokens — used by admin + shared components */
+  --measured-bg: #f5f4f1;
+  --measured-card: #ffffff;
+  --measured-text: #0d0d0d;
+  --measured-accent: #2d5a3d;
+  --measured-accent-soft: rgba(45, 90, 61, 0.08);
+
   /* Borders — three tiers for subtle → emphatic hierarchy */
   --measured-border-soft: rgba(0, 0, 0, 0.05);
   --measured-border: rgba(0, 0, 0, 0.08);
