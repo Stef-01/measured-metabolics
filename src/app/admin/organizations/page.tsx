@@ -66,7 +66,7 @@ export default function AdminOrganizationsPage() {
           {practices.map(({ gp, patients, dietitians }) => (
             <li
               key={gp.id}
-              className="rounded-2xl border border-[var(--measured-border)] bg-[var(--measured-card)] p-5"
+              className="rounded-2xl border border-[var(--measured-border-soft)] bg-[var(--measured-card)] p-5 shadow-[var(--shadow-card)]"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -92,7 +92,7 @@ export default function AdminOrganizationsPage() {
                     {dietitians.map((d) => (
                       <li
                         key={d.id}
-                        className="rounded-xl bg-[var(--measured-bg)] px-3 py-1.5 text-[13px] text-[var(--measured-text)]"
+                        className="rounded-xl bg-[var(--measured-cream)] px-3 py-1.5 text-[13px] text-[var(--measured-text)] ring-1 ring-[var(--measured-border-soft)]"
                       >
                         <span className="font-medium">{d.name}</span>
                         <span className="ml-1.5 text-[var(--measured-subtext)]">
@@ -113,7 +113,7 @@ export default function AdminOrganizationsPage() {
                     {patients.map((p) => (
                       <li
                         key={p.id}
-                        className="flex items-center justify-between gap-4 rounded-lg bg-[var(--measured-bg)] px-3 py-2 text-[13px]"
+                        className="flex items-center justify-between gap-4 rounded-lg bg-[var(--measured-cream)] px-3 py-2 text-[13px] ring-1 ring-[var(--measured-border-soft)]"
                       >
                         <span className="font-medium text-[var(--measured-text)]">
                           {p.firstName} {p.lastName}

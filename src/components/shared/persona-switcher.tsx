@@ -203,7 +203,7 @@ export function PersonaSwitcher({ active, variant = "rail" }: Props) {
                     >
                       <span
                         aria-hidden="true"
-                        className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-[13px] font-bold text-white shadow-sm"
+                        className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-[13px] font-bold text-white shadow-[var(--shadow-card)]"
                         style={{ backgroundColor: p.accent }}
                       >
                         {p.initials}

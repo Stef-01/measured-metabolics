@@ -250,7 +250,7 @@ function DeviceToggle({
     <button
       onClick={onToggle}
       className={cn(
-        "fixed z-[200] flex items-center gap-2 rounded-full border border-[var(--measured-border)] bg-white px-4 py-2.5 shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105",
+        "fixed z-[200] flex items-center gap-2 rounded-full border border-[var(--measured-border)] bg-white px-4 py-2.5 shadow-[var(--shadow-raised)] transition-all duration-200 hover:scale-105",
         mode === "phone" ? "bottom-6 right-6" : "bottom-4 right-4",
       )}
       type="button"
