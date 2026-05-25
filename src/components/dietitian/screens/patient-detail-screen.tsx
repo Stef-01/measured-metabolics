@@ -34,6 +34,7 @@ import type {
   MealType,
   MealPlanItem,
   MealLog,
+  Cuisine,
 } from "@/lib/mock/types";
 import type { DietitianRecipe } from "@/lib/mock/dietitian-recipes";
 import { RecipePicker } from "@/components/dietitian/recipe-picker";
@@ -537,6 +538,228 @@ const MEAL_LABEL: Record<MealType, string> = {
   snack: "Snack",
 };
 
+const AI_MEAL_TEMPLATES: Record<Cuisine, MealPlanItem[]> = {
+  south_asian: [
+    {
+      mealType: "breakfast",
+      title: "Moong dal chilla",
+      description: "Lentil crepes with mint chutney, served warm.",
+      rationale: "Low GI protein start; avoids refined flour.",
+    },
+    {
+      mealType: "lunch",
+      title: "Brown rice with chana dal",
+      description: "½ cup brown rice, chana dal, spinach salad.",
+      rationale: "Increased fibre to blunt post-lunch spike.",
+    },
+    {
+      mealType: "dinner",
+      title: "Tandoori fish with sautéed greens",
+      description: "Marinated white fish, mustard greens, 1 roti.",
+      rationale: "Replaces rice-heavy dinner; omega-3 benefit.",
+    },
+    {
+      mealType: "snack",
+      title: "Cucumber raita",
+      description: "Low-fat yogurt, cucumber, cumin.",
+      rationale: "Probiotic + hydration, minimal glucose impact.",
+    },
+  ],
+  east_asian: [
+    {
+      mealType: "breakfast",
+      title: "Miso soup with soft tofu and egg",
+      description: "Dashi broth, silken tofu, soft-boiled egg, wakame.",
+      rationale: "Warm protein start, very low GI.",
+    },
+    {
+      mealType: "lunch",
+      title: "Zaru soba with grilled salmon",
+      description: "Cold buckwheat noodles, salmon, daikon.",
+      rationale: "Lower GI than white rice; omega-3 from salmon.",
+    },
+    {
+      mealType: "dinner",
+      title: "Chicken teriyaki with broccoli",
+      description: "Low-sugar teriyaki, steamed broccoli, ¼ cup rice.",
+      rationale: "Portion-controlled rice; non-starchy veg volume.",
+    },
+    {
+      mealType: "snack",
+      title: "Edamame",
+      description: "Steamed, lightly salted.",
+      rationale: "Complete plant protein, high satiety.",
+    },
+  ],
+  mediterranean: [
+    {
+      mealType: "breakfast",
+      title: "Greek yogurt with berries",
+      description: "Full-fat Greek yogurt, mixed berries, flaxseeds.",
+      rationale: "Protein-first breakfast; antioxidants from berries.",
+    },
+    {
+      mealType: "lunch",
+      title: "Grilled fish with quinoa tabbouleh",
+      description: "White fish fillet, quinoa, parsley, tomato.",
+      rationale: "Complete protein, high fibre, low GI.",
+    },
+    {
+      mealType: "dinner",
+      title: "Lemon herb chicken with roasted veg",
+      description: "Chicken thigh, zucchini, capsicum, olive oil.",
+      rationale: "Lean protein, non-starchy vegetables.",
+    },
+    {
+      mealType: "snack",
+      title: "Hummus with cucumber sticks",
+      description: "2 tbsp hummus, sliced cucumber and carrot.",
+      rationale: "Legume protein, minimal glucose impact.",
+    },
+  ],
+  middle_eastern: [
+    {
+      mealType: "breakfast",
+      title: "Labneh with zaatar and tomato",
+      description: "Strained yogurt, zaatar, olive oil, tomato.",
+      rationale: "Protein-dense, low GI start.",
+    },
+    {
+      mealType: "lunch",
+      title: "Lentil soup with lemon",
+      description: "Red lentil, cumin, lemon, 1 whole grain pita.",
+      rationale: "Very high fibre, excellent satiety.",
+    },
+    {
+      mealType: "dinner",
+      title: "Grilled kofta with fattoush",
+      description: "Lean beef kofta, tomato, parsley, wholegrain pita.",
+      rationale: "Lean protein with salad bulk.",
+    },
+    {
+      mealType: "snack",
+      title: "Pistachios (small handful)",
+      description: "Unsalted, 25 g portion.",
+      rationale: "Proven to reduce post-meal glucose response.",
+    },
+  ],
+  anglo: [
+    {
+      mealType: "breakfast",
+      title: "Scrambled eggs on wholegrain toast",
+      description: "2 eggs, 1 slice wholegrain, wilted spinach.",
+      rationale: "Protein first; lower GI than white bread.",
+    },
+    {
+      mealType: "lunch",
+      title: "Lentil vegetable soup",
+      description: "Red lentil, carrot, celery, barley.",
+      rationale: "High soluble fibre, slow glucose release.",
+    },
+    {
+      mealType: "dinner",
+      title: "Grilled chicken with sweet potato",
+      description: "150 g chicken breast, roasted sweet potato, green beans.",
+      rationale: "Moderate GI sweet potato; better than white.",
+    },
+    {
+      mealType: "snack",
+      title: "Apple with almond butter",
+      description: "1 small apple, 1 tbsp almond butter.",
+      rationale: "Fibre + healthy fat slows sugar absorption.",
+    },
+  ],
+  latin_american: [
+    {
+      mealType: "breakfast",
+      title: "Eggs with black beans and avocado",
+      description: "2 eggs, ½ cup black beans, ¼ avocado.",
+      rationale: "High protein + fat; minimal carb load.",
+    },
+    {
+      mealType: "lunch",
+      title: "Caldo de pollo",
+      description: "Chicken broth with vegetables, cilantro.",
+      rationale: "Nutrient-dense, low GI broth meal.",
+    },
+    {
+      mealType: "dinner",
+      title: "Grilled fish tacos (corn tortillas)",
+      description: "White fish, shredded cabbage, lime, 2 corn tortillas.",
+      rationale: "Corn tortilla lower GI than flour; fibre from cabbage.",
+    },
+    {
+      mealType: "snack",
+      title: "Jicama with lime",
+      description: "Sliced jicama, lime juice, mild chili.",
+      rationale: "Very low glycaemic, high inulin fibre.",
+    },
+  ],
+  african: [
+    {
+      mealType: "breakfast",
+      title: "Akara with fresh tomato sauce",
+      description: "Bean fritters, fresh tomato and pepper sauce.",
+      rationale: "High legume protein, no refined grain.",
+    },
+    {
+      mealType: "lunch",
+      title: "Groundnut soup (reduced starch)",
+      description: "Peanut stew with vegetables, small rice portion.",
+      rationale: "Halved starch portion to reduce spike.",
+    },
+    {
+      mealType: "dinner",
+      title: "Grilled tilapia with ugwu",
+      description: "Tilapia, pumpkin leaves, fresh tomato stew.",
+      rationale: "High protein, non-starchy vegetable base.",
+    },
+    {
+      mealType: "snack",
+      title: "Roasted groundnuts",
+      description: "Unsalted, 25 g portion.",
+      rationale: "Protein + healthy fat, low GI.",
+    },
+  ],
+  other: [
+    {
+      mealType: "breakfast",
+      title: "Protein bowl",
+      description: "Eggs or legumes, non-starchy vegetables, small grain.",
+      rationale: "Protein-first for stable morning glucose.",
+    },
+    {
+      mealType: "lunch",
+      title: "Balanced plate",
+      description: "Mixed vegetables, lean protein, low-GI grain.",
+      rationale: "Plate method for consistent carb portions.",
+    },
+    {
+      mealType: "dinner",
+      title: "Lean protein with greens",
+      description: "Fish, chicken, or legumes with leafy greens.",
+      rationale: "Avoids evening glucose spike.",
+    },
+    {
+      mealType: "snack",
+      title: "Nuts or yogurt",
+      description: "Handful of nuts or 100 g Greek yogurt.",
+      rationale: "Protein + fat prevents between-meal dips.",
+    },
+  ],
+};
+
+function weekLabel(isoDate: string): string {
+  const start = new Date(isoDate);
+  const dow = start.getDay();
+  const monday = new Date(start);
+  monday.setDate(start.getDate() - (dow === 0 ? 6 : dow - 1));
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const opts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" };
+  return `${monday.toLocaleDateString([], opts)} – ${sunday.toLocaleDateString([], opts)}`;
+}
+
 const EMPTY_PLAN_ITEMS: MealPlanItem[] = [
   {
     mealType: "breakfast",
@@ -570,6 +793,9 @@ function PlanBuilder({ patient }: { patient: Patient }) {
     isAsha ? ASHA_PLAN.items : EMPTY_PLAN_ITEMS,
   );
   const [approved, setApproved] = useState(isAsha);
+  const [isDraftSaved, setIsDraftSaved] = useState(isAsha);
+  const [isAiDraft, setIsAiDraft] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [pickerSlot, setPickerSlot] = useState<number | null>(null);
 
   const sibling = useMemo(
@@ -577,11 +803,15 @@ function PlanBuilder({ patient }: { patient: Patient }) {
     [patient.id],
   );
 
+  const weekOf = weekLabel(ASHA_PLAN.weekStart);
+
   const update = (idx: number, patch: Partial<MealPlanItem>) => {
     setItems((prev) =>
       prev.map((it, i) => (i === idx ? { ...it, ...patch } : it)),
     );
     setApproved(false);
+    setIsDraftSaved(false);
+    setIsAiDraft(false);
   };
 
   const applyRecipe = (idx: number, recipe: DietitianRecipe) => {
@@ -601,6 +831,8 @@ function PlanBuilder({ patient }: { patient: Patient }) {
     if (!sibling) return;
     setItems(sibling.plan.items.map((it) => ({ ...it })));
     setApproved(false);
+    setIsDraftSaved(false);
+    setIsAiDraft(false);
     toast.push({
       variant: "success",
       title: `Copied ${sibling.sourcePatientName}'s plan as draft`,
@@ -608,13 +840,39 @@ function PlanBuilder({ patient }: { patient: Patient }) {
     });
   };
 
+  const generateAiDraft = () => {
+    setIsGenerating(true);
+    setTimeout(() => {
+      const templates = AI_MEAL_TEMPLATES[patient.cuisine];
+      setItems(templates.map((t) => ({ ...t })));
+      setApproved(false);
+      setIsDraftSaved(false);
+      setIsAiDraft(true);
+      setIsGenerating(false);
+      toast.push({
+        variant: "success",
+        title: "AI draft ready",
+        body: "Review each meal then approve to publish.",
+        duration: 2400,
+      });
+    }, 1600);
+  };
+
+  const saveDraft = () => {
+    setIsDraftSaved(true);
+    toast.push({ variant: "success", title: "Draft saved", duration: 1600 });
+  };
+
   const reset = () => {
     setItems(isAsha ? ASHA_PLAN.items : EMPTY_PLAN_ITEMS);
     setApproved(isAsha);
+    setIsDraftSaved(isAsha);
+    setIsAiDraft(false);
   };
 
   const approve = () => {
     setApproved(true);
+    setIsDraftSaved(true);
     toast.push({
       variant: "success",
       title: `Plan approved for ${patient.firstName}`,
@@ -626,127 +884,166 @@ function PlanBuilder({ patient }: { patient: Patient }) {
 
   return (
     <div className="grid gap-4">
-      {sibling && isEmpty && (
-        <section className="surface-card relative overflow-hidden border-l-4 border-[var(--measured-green)] p-5">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-dark-green)]">
-                <Sparkles size={12} strokeWidth={2.4} aria-hidden="true" />
-                Same-cuisine precedent
-              </div>
-              <h3 className="mt-1.5 font-serif text-[19px] leading-tight text-[var(--measured-dark)]">
-                You already wrote a {patient.cuisineLabel} plan for{" "}
-                {sibling.sourcePatientName}
-              </h3>
-              <p className="mt-1 text-[13px] text-[var(--measured-subtext)]">
-                Copy it as a draft for {patient.firstName}, then adjust per
-                their conditions ({patient.conditions.join(" · ")}).
-              </p>
-            </div>
-            <div className="flex shrink-0 gap-2">
-              <Link
-                href={`/d/patients/${sibling.sourcePatientId}`}
-                className="inline-flex items-center rounded-xl border border-[var(--measured-border)] bg-white px-3 py-1.5 text-[12px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]"
-              >
-                Open source
-              </Link>
-              <button
-                type="button"
-                onClick={cloneFromSibling}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-3 py-1.5 text-[12px] font-semibold text-white hover:bg-[var(--measured-dark-green)]"
-              >
-                <PlusCircle size={14} strokeWidth={2.2} aria-hidden="true" />
-                Copy as draft
-              </button>
-            </div>
+      {/* Plan header: week label + status + actions */}
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+            Week of {weekOf}
           </div>
-        </section>
-      )}
-
-      <Card title="Meal plan builder">
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-[12px] text-[var(--measured-subtext)]">
-          <span>
-            Cuisine{" "}
-            <span className="font-semibold text-[var(--measured-dark)]">
-              {patient.cuisineLabel}
-            </span>{" "}
-            · 4 meal slots
-          </span>
+          <div className="mt-1.5 flex flex-wrap items-center gap-2">
+            {approved ? (
+              <span className="inline-flex items-center gap-1 rounded-full bg-[var(--measured-green)]/10 px-2.5 py-0.5 text-[11px] font-semibold text-[var(--measured-dark-green)]">
+                <CheckCircle2 size={12} strokeWidth={2.2} aria-hidden="true" />
+                Published
+              </span>
+            ) : isDraftSaved ? (
+              <span className="inline-flex items-center rounded-full bg-[var(--measured-clinical-amber)]/15 px-2.5 py-0.5 text-[11px] font-semibold text-[var(--measured-clinical-amber)]">
+                Draft saved
+              </span>
+            ) : (
+              <span className="inline-flex items-center rounded-full bg-[var(--measured-cream)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--measured-subtext)]">
+                Unsaved
+              </span>
+            )}
+            {isAiDraft && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-[var(--measured-clinical-blue)]/10 px-2.5 py-0.5 text-[11px] font-semibold text-[var(--measured-clinical-blue)]">
+                <Sparkles size={11} strokeWidth={2.2} aria-hidden="true" />
+                AI draft · review required
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={reset}
-            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--measured-subtext)] hover:text-[var(--measured-dark)]"
+            className="inline-flex items-center gap-1 rounded-xl border border-[var(--measured-border)] bg-white px-3 py-1.5 text-[12px] font-semibold text-[var(--measured-subtext)] hover:bg-[var(--measured-cream)]"
           >
-            <RotateCcw size={11} strokeWidth={2.2} aria-hidden="true" />
+            <RotateCcw size={12} strokeWidth={2.2} aria-hidden="true" />
             Reset
           </button>
-        </div>
-        <div className="space-y-3">
-          {items.map((it, idx) => (
-            <div
-              key={it.mealType}
-              className="rounded-xl border border-[var(--measured-border-soft)] bg-[var(--measured-cream)] p-3"
+          {!approved && !isEmpty && (
+            <button
+              type="button"
+              onClick={saveDraft}
+              disabled={isDraftSaved}
+              className={cn(
+                "inline-flex items-center gap-1 rounded-xl px-3 py-1.5 text-[12px] font-semibold",
+                isDraftSaved
+                  ? "cursor-default bg-[var(--measured-cream)] text-[var(--measured-subtext)]"
+                  : "border border-[var(--measured-border)] bg-white text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]",
+              )}
             >
-              <div className="flex items-center justify-between gap-3">
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-                  {MEAL_LABEL[it.mealType]}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setPickerSlot(idx)}
-                  className="inline-flex items-center gap-1 rounded-lg bg-white px-2 py-1 text-[11px] font-semibold text-[var(--measured-dark-green)] ring-1 ring-[var(--measured-border)] hover:bg-[var(--measured-green)]/5"
-                >
-                  <Library size={11} strokeWidth={2.2} aria-hidden="true" />
-                  Pick from library
-                </button>
+              Save draft
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={approve}
+            disabled={approved || isEmpty}
+            className={cn(
+              "inline-flex items-center gap-2 rounded-xl px-3 py-1.5 text-[12px] font-semibold",
+              approved
+                ? "cursor-default bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+                : isEmpty
+                  ? "cursor-not-allowed bg-[var(--measured-cream)] text-[var(--measured-subtext)]"
+                  : "cta-shadow bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]",
+            )}
+          >
+            {approved ? (
+              <>
+                <CheckCircle2 size={14} strokeWidth={2.2} aria-hidden="true" />
+                Approved
+              </>
+            ) : (
+              `Approve for ${patient.firstName}`
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* AI + inspiration toolbar */}
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={generateAiDraft}
+          disabled={isGenerating}
+          className={cn(
+            "inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-[12px] font-semibold transition-colors",
+            isGenerating
+              ? "cursor-not-allowed bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]"
+              : "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)] hover:bg-[var(--measured-clinical-blue)]/20",
+          )}
+        >
+          <Sparkles
+            size={13}
+            strokeWidth={2.2}
+            className={isGenerating ? "animate-pulse" : ""}
+            aria-hidden="true"
+          />
+          {isGenerating ? "Generating…" : "Generate AI draft"}
+        </button>
+        {sibling && (
+          <button
+            type="button"
+            onClick={cloneFromSibling}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--measured-border)] bg-white px-3 py-2 text-[12px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]"
+          >
+            <PlusCircle size={13} strokeWidth={2.2} aria-hidden="true" />
+            Copy {sibling.sourcePatientName.split(" ")[0]}&apos;s plan
+          </button>
+        )}
+        <span className="text-[11px] text-[var(--measured-subtext)]">
+          {patient.cuisineLabel} · {patient.conditions.join(" · ")}
+        </span>
+      </div>
+
+      {/* Meal slots */}
+      <div className="space-y-3">
+        {items.map((it, idx) => (
+          <div
+            key={it.mealType}
+            className="rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)]"
+          >
+            <div className="flex items-center justify-between gap-3 border-b border-[var(--measured-border-soft)] pb-3">
+              <div className="text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                {MEAL_LABEL[it.mealType]}
               </div>
-              <input
-                type="text"
-                value={it.title}
-                onChange={(e) => update(idx, { title: e.target.value })}
-                placeholder={`${MEAL_LABEL[it.mealType]} title`}
-                className="mt-1 w-full bg-transparent text-[15px] font-semibold text-[var(--measured-dark)] placeholder:text-[var(--measured-subtext)]/60 focus:outline-none"
-              />
-              <textarea
-                rows={1}
-                value={it.description}
-                onChange={(e) => update(idx, { description: e.target.value })}
-                placeholder="Description for the patient"
-                className="mt-1 w-full resize-none bg-transparent text-[13px] leading-relaxed text-[var(--measured-dark)] placeholder:text-[var(--measured-subtext)]/60 focus:outline-none"
-              />
+              <button
+                type="button"
+                onClick={() => setPickerSlot(idx)}
+                className="inline-flex items-center gap-1 rounded-lg bg-[var(--measured-cream)] px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark-green)] hover:bg-[var(--measured-green)]/10"
+              >
+                <Library size={11} strokeWidth={2.2} aria-hidden="true" />
+                Library
+              </button>
+            </div>
+            <input
+              type="text"
+              value={it.title}
+              onChange={(e) => update(idx, { title: e.target.value })}
+              placeholder={`${MEAL_LABEL[it.mealType]} name`}
+              className="mt-3 w-full bg-transparent text-[16px] font-semibold text-[var(--measured-dark)] placeholder:text-[var(--measured-subtext)]/50 focus:outline-none"
+            />
+            <textarea
+              rows={2}
+              value={it.description}
+              onChange={(e) => update(idx, { description: e.target.value })}
+              placeholder="Patient-facing description"
+              className="mt-1.5 w-full resize-none bg-transparent text-[13px] leading-relaxed text-[var(--measured-dark)] placeholder:text-[var(--measured-subtext)]/50 focus:outline-none"
+            />
+            <div className="mt-2 rounded-lg bg-[var(--measured-green)]/8 px-3 py-2">
               <input
                 type="text"
                 value={it.rationale ?? ""}
                 onChange={(e) => update(idx, { rationale: e.target.value })}
-                placeholder="Rationale (one line)"
-                className="mt-1 w-full bg-transparent text-[12px] italic text-[var(--measured-dark-green)] placeholder:text-[var(--measured-subtext)] focus:outline-none"
+                placeholder="Why this meal? (shown to patient)"
+                className="w-full bg-transparent text-[12px] italic text-[var(--measured-dark-green)] placeholder:text-[var(--measured-subtext)]/60 focus:outline-none"
               />
             </div>
-          ))}
-        </div>
-        <button
-          type="button"
-          onClick={approve}
-          disabled={approved || isEmpty}
-          className={cn(
-            "mt-4 inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-[13px] font-semibold",
-            approved
-              ? "cursor-default bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
-              : isEmpty
-                ? "cursor-not-allowed bg-[var(--measured-cream)] text-[var(--measured-subtext)]"
-                : "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]",
-          )}
-        >
-          {approved ? (
-            <>
-              <CheckCircle2 size={16} strokeWidth={2.2} aria-hidden="true" />
-              Approved
-            </>
-          ) : (
-            <>Approve & send to {patient.firstName}</>
-          )}
-        </button>
-      </Card>
+          </div>
+        ))}
+      </div>
 
       <RecipePicker
         open={pickerSlot !== null}

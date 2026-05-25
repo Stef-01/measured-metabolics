@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Check,
@@ -21,6 +22,15 @@ import type { MealLog, ReviewStatus } from "@/lib/mock/types";
 import { toast } from "@/lib/hooks/use-toast";
 import { cn } from "@/lib/utils/cn";
 import { mealImageBySlug } from "@/lib/images";
+
+type MacroLevel = "low" | "moderate" | "high";
+type MacroValues = {
+  carbLoad: MacroLevel;
+  proteinLoad: MacroLevel;
+  fibreLoad: MacroLevel;
+  fatLoad: MacroLevel;
+};
+type SavedMealEdit = { summary: string; macros: MacroValues };
 
 const SHORTCUTS: {
   key: string;
@@ -48,7 +58,7 @@ const SHORTCUTS: {
   {
     key: "N",
     action: "next",
-    label: "Next",
+    label: "Skip",
     Icon: ArrowRight,
     tone: "neutral",
   },
@@ -65,12 +75,30 @@ const TONE_CLASS: Record<(typeof SHORTCUTS)[number]["tone"], string> = {
     "bg-[var(--measured-cream)] text-[var(--measured-dark)] hover:bg-[var(--measured-input-bg)]",
 };
 
+type QueueFilter = "all" | "flagged" | "high_spike";
+
 interface Props {
   pool?: MealLog[];
 }
 
 export function DietitianMealQueueScreen({ pool }: Props = {}) {
-  const meals = pool ?? DEMO_QUEUE_MEALS;
+  const router = useRouter();
+  const baseMeals = pool ?? DEMO_QUEUE_MEALS;
+  const [queueFilter, setQueueFilter] = useState<QueueFilter>("all");
+  const [savedEdits, setSavedEdits] = useState<Record<string, SavedMealEdit>>(
+    {},
+  );
+  const [editDraft, setEditDraft] = useState<SavedMealEdit | null>(null);
+  const meals = useMemo(() => {
+    switch (queueFilter) {
+      case "flagged":
+        return baseMeals.filter((m) => m.analysis.clinicalFlags.length > 0);
+      case "high_spike":
+        return baseMeals.filter((m) => (m.analysis.cgmPeakDeltaMmol ?? 0) >= 3);
+      default:
+        return baseMeals;
+    }
+  }, [baseMeals, queueFilter]);
   const cursor = useDietitianQueue((s) => s.cursor);
   const setCursor = useDietitianQueue((s) => s.setCursor);
   const recordAction = useDietitianQueue((s) => s.recordAction);
@@ -89,10 +117,10 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
   const current = meals[cursor];
   const remaining = Math.max(0, meals.length - cursor);
 
-  // Reset queue cursor on first mount so reload starts at top.
+  // Reset cursor on mount and whenever the filter changes.
   useEffect(() => {
     reset();
-  }, [reset]);
+  }, [reset, queueFilter]);
 
   // Initialise session start once, after mount, away from render purity rules.
   useEffect(() => {
@@ -117,16 +145,37 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
         return;
       }
       if (action === "edit") {
+        if (!editing) {
+          const meal = meals.find((m) => m.id === id);
+          if (meal) {
+            setEditDraft(
+              savedEdits[id] ?? {
+                summary: meal.analysis.dietitianSummary,
+                macros: {
+                  carbLoad: (meal.analysis.carbLoad ??
+                    "moderate") as MacroLevel,
+                  proteinLoad: (meal.analysis.proteinLoad ??
+                    "moderate") as MacroLevel,
+                  fibreLoad: (meal.analysis.fibreLoad ??
+                    "moderate") as MacroLevel,
+                  fatLoad: (meal.analysis.fatLoad ?? "moderate") as MacroLevel,
+                },
+              },
+            );
+          }
+        } else {
+          setEditDraft(null);
+        }
         toggleEditing();
         return;
       }
       if (action === "message") {
-        toast.push({
-          variant: "info",
-          title: "Composer opening…",
-          body: "Stage 6 wires this to the messages thread.",
-          duration: 1800,
-        });
+        const meal = meals.find((m) => m.id === id);
+        if (meal) {
+          router.push(
+            `/d/messages?patient=${encodeURIComponent(meal.patientId)}`,
+          );
+        }
         return;
       }
       const verb =
@@ -143,7 +192,16 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
         dedupKey: "queue-action",
       });
     },
-    [cursor, recordAction, setCursor, toggleEditing],
+    [
+      cursor,
+      editing,
+      meals,
+      recordAction,
+      router,
+      savedEdits,
+      setCursor,
+      toggleEditing,
+    ],
   );
 
   // === Keyboard shortcuts ===
@@ -187,20 +245,35 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
           <CheckCircle2 size={32} strokeWidth={1.6} aria-hidden="true" />
         </div>
         <h2 className="font-serif text-[28px] text-[var(--measured-dark)]">
-          Queue clear
+          {queueFilter !== "all" ? "No matches" : "Queue clear"}
         </h2>
         <p className="text-[14px] text-[var(--measured-subtext)]">
-          {acted.length > 0
-            ? `${acted.length} meals reviewed${sessionInfo ? ` in ${sessionInfo.elapsed}` : ""}.`
-            : "All meals are reviewed."}
+          {queueFilter === "flagged"
+            ? "No flagged meals in the queue."
+            : queueFilter === "high_spike"
+              ? "No high-spike meals (≥3 mmol/L) found."
+              : acted.length > 0
+                ? `${acted.length} meals reviewed${sessionInfo ? ` in ${sessionInfo.elapsed}` : ""}.`
+                : "All meals are reviewed."}
         </p>
-        <button
-          type="button"
-          onClick={reset}
-          className="mt-3 rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark)]"
-        >
-          Reset (demo)
-        </button>
+        <div className="mt-3 flex gap-2">
+          {queueFilter !== "all" && (
+            <button
+              type="button"
+              onClick={() => setQueueFilter("all")}
+              className="rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark-green)]"
+            >
+              Clear filter
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={reset}
+            className="rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark)]"
+          >
+            Reset (demo)
+          </button>
+        </div>
       </div>
     );
   }
@@ -232,7 +305,54 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
         )}
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[280px_1fr]">
+      {/* Filter strip */}
+      <div className="mt-4 flex items-center gap-2">
+        {(
+          [
+            { id: "all" as QueueFilter, label: "All", count: baseMeals.length },
+            {
+              id: "flagged" as QueueFilter,
+              label: "Flagged",
+              count: baseMeals.filter(
+                (m) => m.analysis.clinicalFlags.length > 0,
+              ).length,
+            },
+            {
+              id: "high_spike" as QueueFilter,
+              label: "High spike",
+              count: baseMeals.filter(
+                (m) => (m.analysis.cgmPeakDeltaMmol ?? 0) >= 3,
+              ).length,
+            },
+          ] as const
+        ).map((f) => (
+          <button
+            key={f.id}
+            type="button"
+            onClick={() => setQueueFilter(f.id)}
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold transition-colors",
+              queueFilter === f.id
+                ? "bg-[var(--measured-dark)] text-white"
+                : "border border-[var(--measured-border)] bg-white text-[var(--measured-subtext)] hover:bg-[var(--measured-cream)]",
+            )}
+          >
+            {f.label}
+            <span
+              className={cn(
+                "rounded-full px-1.5 py-0.5 text-[10px] font-bold",
+                queueFilter === f.id
+                  ? "bg-white/20 text-white"
+                  : "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
+              )}
+            >
+              {f.count}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-4 grid gap-6 lg:grid-cols-[280px_1fr]">
         {/* Left rail: queue */}
         <aside className="surface-card max-h-[calc(100dvh-180px)] overflow-y-auto p-3 scrollbar-hide">
           <ul className="space-y-1.5">
@@ -341,114 +461,243 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
               </div>
             </div>
 
-            <div className="grid gap-3 md:grid-cols-2">
-              <div className="rounded-xl bg-[var(--measured-cream)] p-3 text-[13px]">
-                <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-                  <ListChecks size={12} strokeWidth={2.2} aria-hidden="true" />
-                  AI summary
-                  <span className="ml-auto rounded-full bg-white px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-subtext)]">
-                    {Math.round(current.analysis.confidence * 100)}%
-                  </span>
-                </div>
-                <p className="mt-1.5 leading-relaxed text-[var(--measured-dark)]">
-                  {current.analysis.dietitianSummary}
-                </p>
-                <ul className="mt-2 space-y-0.5 text-[12px] text-[var(--measured-subtext)]">
-                  {current.analysis.foods.slice(0, 4).map((f) => (
-                    <li key={f.name}>
-                      <span className="font-medium text-[var(--measured-dark)]">
-                        {f.name}
-                      </span>{" "}
-                      · {f.quantity}
-                    </li>
-                  ))}
-                </ul>
-                {current.analysis.clinicalFlags.length > 0 && (
-                  <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-[var(--measured-evaluate)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--measured-evaluate)]">
-                    <Flag size={11} strokeWidth={2.2} aria-hidden="true" />
-                    {current.analysis.clinicalFlags[0]}
+            {(() => {
+              const effectiveSummary =
+                savedEdits[current.id]?.summary ??
+                current.analysis.dietitianSummary;
+              const effectiveMacros = savedEdits[current.id]?.macros;
+              const macroValue = (
+                k: "carbLoad" | "proteinLoad" | "fibreLoad" | "fatLoad",
+              ): MacroLevel =>
+                (effectiveMacros?.[k] ??
+                  current.analysis[k] ??
+                  "moderate") as MacroLevel;
+              return (
+                <div className="grid gap-3 md:grid-cols-2">
+                  <div className="rounded-xl bg-[var(--measured-cream)] p-3 text-[13px]">
+                    <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                      <ListChecks
+                        size={12}
+                        strokeWidth={2.2}
+                        aria-hidden="true"
+                      />
+                      AI summary
+                      {savedEdits[current.id] && (
+                        <span className="ml-1 rounded-full bg-[var(--measured-clinical-blue)]/15 px-1.5 py-0.5 text-[9px] font-bold normal-case tracking-normal text-[var(--measured-clinical-blue)]">
+                          edited
+                        </span>
+                      )}
+                      <span className="ml-auto rounded-full bg-white px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-subtext)]">
+                        {Math.round(current.analysis.confidence * 100)}%
+                      </span>
+                    </div>
+                    <p className="mt-1.5 leading-relaxed text-[var(--measured-dark)]">
+                      {effectiveSummary}
+                    </p>
+                    <ul className="mt-2 space-y-0.5 text-[12px] text-[var(--measured-subtext)]">
+                      {current.analysis.foods.slice(0, 4).map((f) => (
+                        <li key={f.name}>
+                          <span className="font-medium text-[var(--measured-dark)]">
+                            {f.name}
+                          </span>{" "}
+                          · {f.quantity}
+                        </li>
+                      ))}
+                    </ul>
+                    {current.analysis.clinicalFlags.length > 0 && (
+                      <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-[var(--measured-evaluate)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--measured-evaluate)]">
+                        <Flag size={11} strokeWidth={2.2} aria-hidden="true" />
+                        {current.analysis.clinicalFlags[0]}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              <div className="rounded-xl bg-[var(--measured-clinical-blue)]/5 p-3 text-[13px]">
-                <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-clinical-blue)]">
-                  <Utensils size={12} strokeWidth={2.2} aria-hidden="true" />
-                  CGM context
+                  <div className="rounded-xl bg-[var(--measured-clinical-blue)]/5 p-3 text-[13px]">
+                    <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-clinical-blue)]">
+                      <Utensils
+                        size={12}
+                        strokeWidth={2.2}
+                        aria-hidden="true"
+                      />
+                      CGM context
+                    </div>
+                    <p className="mt-1.5 leading-relaxed text-[var(--measured-dark)]">
+                      Peak Δ{" "}
+                      <span className="font-semibold">
+                        {current.analysis.cgmPeakDeltaMmol?.toFixed(1) ?? "?"}{" "}
+                        mmol/L
+                      </span>{" "}
+                      at +{current.analysis.cgmPeakAtMin ?? 60} min after
+                      eating.
+                    </p>
+                    <div className="mt-2 grid grid-cols-4 gap-1.5 text-center text-[10px] uppercase tracking-wider text-[var(--measured-subtext)]">
+                      {(["carb", "protein", "fibre", "fat"] as const).map(
+                        (macro) => {
+                          const k = `${macro}Load` as
+                            | "carbLoad"
+                            | "proteinLoad"
+                            | "fibreLoad"
+                            | "fatLoad";
+                          const value = macroValue(k);
+                          return (
+                            <div
+                              key={macro}
+                              className={cn(
+                                "rounded-md py-1.5",
+                                value === "high"
+                                  ? "bg-[var(--measured-evaluate)]/15 text-[var(--measured-evaluate)]"
+                                  : value === "moderate"
+                                    ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
+                                    : "bg-[var(--measured-green)]/15 text-[var(--measured-dark-green)]",
+                              )}
+                            >
+                              <div className="text-[9px]">{macro}</div>
+                              <div className="text-[12px] font-bold normal-case tracking-normal">
+                                {value}
+                              </div>
+                            </div>
+                          );
+                        },
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <p className="mt-1.5 leading-relaxed text-[var(--measured-dark)]">
-                  Peak Δ{" "}
-                  <span className="font-semibold">
-                    {current.analysis.cgmPeakDeltaMmol?.toFixed(1) ?? "?"}{" "}
-                    mmol/L
-                  </span>{" "}
-                  at +{current.analysis.cgmPeakAtMin ?? 60} min after eating.
-                </p>
-                <div className="mt-2 grid grid-cols-4 gap-1.5 text-center text-[10px] uppercase tracking-wider text-[var(--measured-subtext)]">
+              );
+            })()}
+
+            {editing && editDraft && (
+              <div className="rounded-xl border border-[var(--measured-clinical-blue)]/30 bg-[var(--measured-clinical-blue)]/5 p-4">
+                <div className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-clinical-blue)]">
+                  Edit AI summary
+                </div>
+                <textarea
+                  rows={3}
+                  value={editDraft.summary}
+                  onChange={(e) =>
+                    setEditDraft((d) =>
+                      d ? { ...d, summary: e.target.value } : d,
+                    )
+                  }
+                  className="w-full resize-none rounded-xl border border-[var(--measured-border)] bg-white px-3 py-2 text-[13px] leading-relaxed text-[var(--measured-dark)] focus:border-[var(--measured-clinical-blue)] focus:outline-none"
+                />
+                <div className="mt-3 text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-clinical-blue)]">
+                  Macro loads
+                </div>
+                <div className="mt-2 grid grid-cols-4 gap-2">
                   {(["carb", "protein", "fibre", "fat"] as const).map(
                     (macro) => {
-                      const k = `${macro}Load` as
-                        | "carbLoad"
-                        | "proteinLoad"
-                        | "fibreLoad"
-                        | "fatLoad";
-                      const value = current.analysis[k];
+                      const k = `${macro}Load` as keyof MacroValues;
                       return (
-                        <div
-                          key={macro}
-                          className={cn(
-                            "rounded-md py-1.5",
-                            value === "high"
-                              ? "bg-[var(--measured-evaluate)]/15 text-[var(--measured-evaluate)]"
-                              : value === "moderate"
-                                ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
-                                : "bg-[var(--measured-green)]/15 text-[var(--measured-dark-green)]",
-                          )}
-                        >
-                          <div className="text-[9px]">{macro}</div>
-                          <div className="text-[12px] font-bold normal-case tracking-normal">
-                            {value}
+                        <div key={macro}>
+                          <div className="mb-1 text-center text-[10px] uppercase tracking-wider text-[var(--measured-subtext)]">
+                            {macro}
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {(["low", "moderate", "high"] as MacroLevel[]).map(
+                              (level) => (
+                                <button
+                                  type="button"
+                                  key={level}
+                                  onClick={() =>
+                                    setEditDraft((d) =>
+                                      d
+                                        ? {
+                                            ...d,
+                                            macros: { ...d.macros, [k]: level },
+                                          }
+                                        : d,
+                                    )
+                                  }
+                                  className={cn(
+                                    "rounded-md py-1 text-[10px] font-semibold capitalize transition-colors",
+                                    editDraft.macros[k] === level
+                                      ? level === "high"
+                                        ? "bg-[var(--measured-evaluate)] text-white"
+                                        : level === "moderate"
+                                          ? "bg-[var(--measured-clinical-amber)] text-white"
+                                          : "bg-[var(--measured-dark-green)] text-white"
+                                      : "bg-white text-[var(--measured-subtext)] hover:bg-[var(--measured-cream)]",
+                                  )}
+                                >
+                                  {level}
+                                </button>
+                              ),
+                            )}
                           </div>
                         </div>
                       );
                     },
                   )}
                 </div>
-              </div>
-            </div>
-
-            {editing && (
-              <div className="rounded-xl border border-dashed border-[var(--measured-clinical-blue)]/40 bg-[var(--measured-clinical-blue)]/5 p-3 text-[12px]">
-                <div className="font-semibold text-[var(--measured-clinical-blue)]">
-                  Edit mode
+                <div className="mt-3 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSavedEdits((prev) => ({
+                        ...prev,
+                        [current.id]: editDraft,
+                      }));
+                      setEditDraft(null);
+                      toggleEditing();
+                      toast.push({
+                        variant: "success",
+                        title: "Edits saved",
+                        duration: 1400,
+                        dedupKey: "edit-save",
+                      });
+                    }}
+                    className="flex-1 rounded-xl bg-[var(--measured-clinical-blue)] py-2 text-[13px] font-semibold text-white"
+                  >
+                    Save edits
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditDraft(null);
+                      toggleEditing();
+                    }}
+                    className="rounded-xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark)]"
+                  >
+                    Cancel
+                  </button>
                 </div>
-                <p className="mt-1 leading-relaxed text-[var(--measured-dark)]">
-                  Stage 6 wires inline edit to the AI summary + macro chips.
-                  Press <kbd className="rounded bg-white px-1 font-mono">E</kbd>{" "}
-                  again to exit.
-                </p>
               </div>
             )}
 
-            {/* Action bar with shortcut hints */}
-            <div className="grid grid-cols-5 gap-2">
-              {SHORTCUTS.map((sc) => (
-                <button
-                  type="button"
-                  key={sc.key}
-                  onClick={() => handleAction(sc.action, current.id)}
-                  className={cn(
-                    "flex flex-col items-center justify-center gap-1 rounded-2xl px-3 py-3 text-[12px] font-semibold transition-colors",
-                    TONE_CLASS[sc.tone],
-                  )}
-                >
-                  <sc.Icon size={16} strokeWidth={2.2} aria-hidden="true" />
-                  <span>{sc.label}</span>
-                  <kbd className="rounded bg-black/10 px-1.5 py-0.5 text-[10px] font-mono opacity-80">
-                    {sc.key}
-                  </kbd>
-                </button>
-              ))}
+            {/* Action bar — Approve is primary, others secondary */}
+            <div className="space-y-2">
+              <button
+                type="button"
+                onClick={() => handleAction("approved", current.id)}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] px-4 py-3.5 text-[14px] font-semibold text-white transition-colors hover:bg-[var(--measured-dark-green)]"
+              >
+                <Check size={18} strokeWidth={2.2} aria-hidden="true" />
+                Approve
+                <kbd className="ml-auto rounded bg-white/20 px-2 py-0.5 text-[11px] font-mono">
+                  A
+                </kbd>
+              </button>
+              <div className="grid grid-cols-4 gap-2">
+                {SHORTCUTS.filter((sc) => sc.action !== "approved").map(
+                  (sc) => (
+                    <button
+                      type="button"
+                      key={sc.key}
+                      onClick={() => handleAction(sc.action, current.id)}
+                      className={cn(
+                        "flex flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2.5 text-[11px] font-semibold transition-colors",
+                        TONE_CLASS[sc.tone],
+                      )}
+                    >
+                      <sc.Icon size={15} strokeWidth={2.2} aria-hidden="true" />
+                      <span>{sc.label}</span>
+                      <kbd className="rounded bg-black/10 px-1.5 py-0.5 text-[9px] font-mono opacity-80">
+                        {sc.key}
+                      </kbd>
+                    </button>
+                  ),
+                )}
+              </div>
             </div>
           </motion.section>
         </AnimatePresence>
