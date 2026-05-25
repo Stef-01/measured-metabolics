@@ -58,21 +58,21 @@ export function PatientMessagesScreen() {
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className={cn("flex", mine ? "justify-end" : "justify-start")}
+                  className={cn("flex items-end gap-2", mine ? "justify-end" : "justify-start")}
                 >
+                  {!mine && (
+                    <div className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--measured-green)] text-[10px] font-bold text-white">
+                      MS
+                    </div>
+                  )}
                   <div
                     className={cn(
-                      "max-w-[85%] rounded-2xl px-4 py-3 text-[14px] leading-relaxed",
+                      "max-w-[80%] rounded-2xl px-4 py-3 text-[14px] leading-relaxed",
                       mine
-                        ? "bg-[var(--measured-green)] text-white"
-                        : "bg-white text-[var(--measured-dark)] shadow-[var(--shadow-card)]",
+                        ? "rounded-br-md bg-[var(--measured-green)] text-white"
+                        : "rounded-bl-md bg-white text-[var(--measured-dark)] shadow-[var(--shadow-card)]",
                     )}
                   >
-                    {!mine && (
-                      <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-                        Maya · APD
-                      </div>
-                    )}
                     {m.body}
                     <div
                       className={cn(

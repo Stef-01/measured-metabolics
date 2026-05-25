@@ -8,26 +8,15 @@ interface KpiRow {
 }
 
 const VIBE_FIXTURE: KpiRow[] = [
-  {
-    patient_id: "asha",
-    started_at: "2026-04-01T10:00:00Z",
-    completed_loop: true,
-  },
-  {
-    patient_id: "ken",
-    started_at: "2026-04-04T14:00:00Z",
-    completed_loop: true,
-  },
-  {
-    patient_id: "lina",
-    started_at: "2026-04-08T09:00:00Z",
-    completed_loop: false,
-  },
-  {
-    patient_id: "omar",
-    started_at: "2026-04-12T11:00:00Z",
-    completed_loop: true,
-  },
+  { patient_id: "asha", started_at: "2026-04-01T10:00:00Z", completed_loop: true },
+  { patient_id: "ken", started_at: "2026-04-04T14:00:00Z", completed_loop: true },
+  { patient_id: "lina", started_at: "2026-04-08T09:00:00Z", completed_loop: false },
+  { patient_id: "omar", started_at: "2026-04-12T11:00:00Z", completed_loop: true },
+  { patient_id: "priya", started_at: "2026-04-15T09:30:00Z", completed_loop: true },
+  { patient_id: "james", started_at: "2026-04-22T11:15:00Z", completed_loop: false },
+  { patient_id: "sofia", started_at: "2026-05-01T08:45:00Z", completed_loop: false },
+  { patient_id: "ravi", started_at: "2026-02-10T10:00:00Z", completed_loop: true },
+  { patient_id: "grace", started_at: "2026-04-28T14:30:00Z", completed_loop: false },
 ];
 
 export default async function AdminKpiPage() {

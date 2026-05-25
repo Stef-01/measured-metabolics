@@ -8,6 +8,7 @@ import {
   CalendarClock,
   AlertTriangle,
   ArrowRight,
+  ChevronRight,
 } from "lucide-react";
 import { DietitianStatCard } from "@/components/dietitian/stat-card";
 import {
@@ -17,6 +18,8 @@ import {
   newReferrals,
   CURRENT_DIETITIAN_ID,
 } from "@/lib/mock";
+import type { RiskLevel } from "@/lib/mock/types";
+import { cn } from "@/lib/utils/cn";
 
 export function DietitianDashboardScreen() {
   const myPatients = PATIENTS.filter(
@@ -209,6 +212,77 @@ export function DietitianDashboardScreen() {
           </p>
         </div>
       </section>
+
+      {/* Caseload at a glance */}
+      <section className="mt-8">
+        <div className="flex items-center justify-between">
+          <div className="text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+            Caseload
+            <span className="ml-2 rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
+              {myPatients.length}
+            </span>
+          </div>
+          <Link
+            href="/d/patients"
+            className="text-[12px] font-semibold text-[var(--measured-dark-green)] hover:underline"
+          >
+            View all →
+          </Link>
+        </div>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {myPatients.map((p) => (
+            <PatientMiniCard key={p.id} patient={p} />
+          ))}
+        </div>
+      </section>
     </div>
+  );
+}
+
+const RISK_CHIP: Record<RiskLevel, string> = {
+  high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
+  medium: "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
+  low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
+};
+
+function PatientMiniCard({ patient: p }: { patient: (typeof PATIENTS)[number] }) {
+  return (
+    <Link
+      href={`/d/patients/${p.id}`}
+      className="group flex items-center gap-3 rounded-2xl border border-[var(--measured-border-soft)] bg-white p-3.5 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
+    >
+      <div
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[13px] font-bold text-white"
+        style={{
+          backgroundColor: p.risk === "high" ? "var(--measured-evaluate)" : p.risk === "medium" ? "var(--measured-clinical-amber)" : "var(--measured-clinical-blue)",
+        }}
+      >
+        {p.firstName[0]}{p.lastName[0]}
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5 truncate">
+          <span className="truncate text-[13px] font-semibold text-[var(--measured-dark)]">
+            {p.firstName} {p.lastName}
+          </span>
+          <span className={cn("shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase", RISK_CHIP[p.risk])}>
+            {p.risk}
+          </span>
+        </div>
+        <div className="mt-0.5 flex items-center gap-2 text-[11px] text-[var(--measured-subtext)]">
+          <span>HbA1c {p.hbA1cPct}%</span>
+          <span>·</span>
+          <span>TIR {p.timeInRangePct}%</span>
+          <span>·</span>
+          <span>Wk {p.weekNumber}</span>
+        </div>
+        {p.alerts.length > 0 && (
+          <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--measured-evaluate)]">
+            <AlertTriangle size={10} strokeWidth={2.2} aria-hidden="true" />
+            {p.alerts[0]}
+          </div>
+        )}
+      </div>
+      <ChevronRight size={14} className="shrink-0 text-[var(--measured-border-strong)] transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+    </Link>
   );
 }
