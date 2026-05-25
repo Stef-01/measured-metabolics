@@ -1,8 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import {
+  Area,
+  AreaChart,
+  ResponsiveContainer,
+} from "recharts";
 import {
   Camera,
   Activity,
@@ -13,6 +18,7 @@ import {
   X,
   Flame,
 } from "lucide-react";
+import { CHART } from "@/lib/chart-tokens";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import { EscalationCard } from "@/components/patient/escalation-card";
 import { DietitianNotesCard } from "@/components/patient/dietitian-notes-card";
@@ -30,6 +36,7 @@ import {
   THREADS,
   SYMPTOMS,
   CURRENT_PATIENT_ID,
+  CGM_BY_PATIENT,
 } from "@/lib/mock";
 import type { MealType, MealLog } from "@/lib/mock/types";
 
@@ -231,31 +238,7 @@ export function PatientHomeScreen() {
           </div>
         </Link>
 
-        <Link
-          href="/p/metrics"
-          className="group block rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]">
-                <Activity size={18} strokeWidth={2} aria-hidden="true" />
-              </div>
-              <div>
-                <div className="text-[13px] font-semibold text-[var(--measured-dark)]">
-                  Glucose this week
-                </div>
-                <div className="text-[12px] text-[var(--measured-subtext)]">
-                  {me.timeInRangePct}% in range · {meals.length} meals logged
-                </div>
-              </div>
-            </div>
-            <ChevronRight
-              size={18}
-              className="text-[var(--measured-subtext)] transition-transform group-hover:translate-x-0.5"
-              aria-hidden="true"
-            />
-          </div>
-        </Link>
+        <GlucoseSparkCard patientId={me.id} tir={me.timeInRangePct} mealCount={meals.length} />
 
         <Link
           href="/p/messages"
@@ -292,6 +275,81 @@ export function PatientHomeScreen() {
         </Link>
       </div>
     </>
+  );
+}
+
+function GlucoseSparkCard({
+  patientId,
+  tir,
+  mealCount,
+}: {
+  patientId: string;
+  tir: number;
+  mealCount: number;
+}) {
+  const cgm = CGM_BY_PATIENT[patientId];
+  const sparkData = useMemo(() => {
+    if (!cgm) return [];
+    return cgm.readings.slice(-48).map((r) => ({
+      mmolL: r.mmolL,
+      inRange: r.mmolL >= 3.9 && r.mmolL <= 10,
+    }));
+  }, [cgm]);
+
+  const tirColor = tir >= 70 ? CHART.green : tir >= 55 ? "#b97e12" : CHART.evaluate;
+
+  return (
+    <Link
+      href="/p/metrics"
+      className="group block overflow-hidden rounded-2xl border border-[var(--measured-border-soft)] bg-white shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
+    >
+      <div className="flex items-center justify-between gap-3 px-4 pt-4 pb-2">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]">
+            <Activity size={18} strokeWidth={2} aria-hidden="true" />
+          </div>
+          <div>
+            <div className="text-[13px] font-semibold text-[var(--measured-dark)]">
+              Glucose this week
+            </div>
+            <div className="text-[12px] text-[var(--measured-subtext)]">
+              <span style={{ color: tirColor }} className="font-semibold">
+                {tir}% in range
+              </span>{" "}
+              · {mealCount} meals logged
+            </div>
+          </div>
+        </div>
+        <ChevronRight
+          size={18}
+          className="text-[var(--measured-subtext)] transition-transform group-hover:translate-x-0.5"
+          aria-hidden="true"
+        />
+      </div>
+      {sparkData.length > 0 && (
+        <div className="h-[52px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={sparkData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id="spark-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={CHART.green} stopOpacity={0.25} />
+                  <stop offset="100%" stopColor={CHART.green} stopOpacity={0.02} />
+                </linearGradient>
+              </defs>
+              <Area
+                type="monotone"
+                dataKey="mmolL"
+                stroke={CHART.green}
+                strokeWidth={1.5}
+                fill="url(#spark-grad)"
+                dot={false}
+                isAnimationActive={false}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+    </Link>
   );
 }
 
