@@ -23,6 +23,8 @@ export const mealVision = inngest.createFunction(
       meal_log_id,
       patient_id,
       cuisine = "other",
+      meal_type = "meal",
+      note = "",
       cgm_summary = "n/a",
     } = event.data as Record<string, string>;
 
@@ -30,7 +32,12 @@ export const mealVision = inngest.createFunction(
       try {
         const parsed = await runStructured({
           schemaName: "meal-analysis",
-          variables: { cuisine, cgm: cgm_summary },
+          variables: {
+            cuisine,
+            meal_type,
+            note: note || "No note provided",
+            cgm: cgm_summary,
+          },
         });
         return applySafety("meal-analysis", parsed);
       } catch (err) {

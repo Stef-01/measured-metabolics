@@ -53,8 +53,21 @@ export function PatientSymptomsScreen() {
     };
     patientStore.addSymptom(CURRENT_PATIENT_ID, log);
     setSubmitted(true);
-    if (!escalateBecauseOf) {
-      // give the success state a beat, then bounce home
+
+    if (escalateBecauseOf) {
+      const parts: string[] = [];
+      if (nausea === "severe") parts.push("severe nausea");
+      if (constipation === "severe") parts.push("severe constipation");
+      if (hypoSymptoms) parts.push("hypo symptoms (shaky/dizzy)");
+      void fetch("/api/escalate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patient_id: CURRENT_PATIENT_ID,
+          symptoms: parts.join(", "),
+        }),
+      }).catch(() => {});
+    } else {
       setTimeout(() => router.push("/p/home"), 1100);
     }
   };

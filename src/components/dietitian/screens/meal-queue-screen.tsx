@@ -281,7 +281,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
             onClick={reset}
             className="rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark)]"
           >
-            Reset (demo)
+            Reset queue
           </button>
         </div>
       </div>
