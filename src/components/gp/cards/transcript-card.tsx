@@ -15,24 +15,42 @@ interface SoapDraft {
   requiresReview?: boolean;
 }
 
+interface ClinicalInsights {
+  detected_conditions: { name: string; evidence: string }[];
+  referral_intent: string;
+  possible_mbs_prompts: string[];
+  rationale: string;
+}
+
 export function GpTranscriptCard({ patient }: { patient: Patient }) {
   const [text, setText] = useState("");
   const [draft, setDraft] = useState<SoapDraft | null>(null);
+  const [insights, setInsights] = useState<ClinicalInsights | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const analyze = async () => {
     if (!text.trim()) return;
     setAnalyzing(true);
+    setInsights(null);
     try {
       const context = `${patient.firstName} ${patient.lastName}, ${patient.age}yo. Conditions: ${patient.conditions.join(", ")}. Meds: ${patient.meds.join(", ") || "nil"}. HbA1c ${patient.hbA1cPct}%, TIR ${patient.timeInRangePct}%.`;
-      const res = await fetch("/api/ai/soap", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript: text, context }),
-      });
-      if (res.ok) {
-        const data = (await res.json()) as {
+
+      const [soapRes, insightsRes] = await Promise.allSettled([
+        fetch("/api/ai/soap", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ transcript: text, context }),
+        }),
+        fetch("/api/ai/transcript-analysis", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ transcript: text, context }),
+        }),
+      ]);
+
+      if (soapRes.status === "fulfilled" && soapRes.value.ok) {
+        const data = (await soapRes.value.json()) as {
           subjective: string;
           objective: string;
           assessment: string;
@@ -50,6 +68,16 @@ export function GpTranscriptCard({ patient }: { patient: Patient }) {
         });
       } else {
         setDraft(stubAnalyze(text, patient));
+      }
+
+      if (insightsRes.status === "fulfilled" && insightsRes.value.ok) {
+        const data = (await insightsRes.value.json()) as ClinicalInsights;
+        if (
+          data.detected_conditions?.length > 0 ||
+          data.possible_mbs_prompts?.length > 0
+        ) {
+          setInsights(data);
+        }
       }
     } catch {
       setDraft(stubAnalyze(text, patient));
@@ -153,6 +181,63 @@ export function GpTranscriptCard({ patient }: { patient: Patient }) {
               </>
             )}
           </button>
+        </div>
+      )}
+
+      {insights && (
+        <div className="space-y-2 rounded-xl border border-[var(--measured-border-soft)] bg-[var(--measured-clinical-blue)]/5 p-3 text-[12px]">
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-clinical-blue)]">
+            Clinical insights
+          </div>
+          {insights.detected_conditions.length > 0 && (
+            <div>
+              <div className="mb-1 text-[10px] font-semibold text-[var(--measured-subtext)]">
+                Detected
+              </div>
+              <ul className="space-y-1">
+                {insights.detected_conditions.map((c, i) => (
+                  <li
+                    key={i}
+                    className="leading-relaxed text-[var(--measured-dark)]"
+                  >
+                    <span className="font-semibold">{c.name}</span>
+                    {c.evidence ? (
+                      <span className="ml-1 text-[var(--measured-subtext)]">
+                        — &ldquo;{c.evidence}&rdquo;
+                      </span>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {insights.referral_intent !== "none" && (
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-semibold text-[var(--measured-subtext)]">
+                Referral intent:
+              </span>
+              <span className="rounded-full bg-[var(--measured-clinical-blue)]/15 px-2 py-0.5 text-[10px] font-semibold capitalize text-[var(--measured-clinical-blue)]">
+                {insights.referral_intent}
+              </span>
+            </div>
+          )}
+          {insights.possible_mbs_prompts.length > 0 && (
+            <div>
+              <div className="mb-1 text-[10px] font-semibold text-[var(--measured-subtext)]">
+                Possible MBS
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {insights.possible_mbs_prompts.map((item, i) => (
+                  <span
+                    key={i}
+                    className="rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-semibold text-[var(--measured-dark)]"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
