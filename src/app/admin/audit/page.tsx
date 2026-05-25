@@ -152,9 +152,7 @@ export default async function AdminAuditPage({
       </div>
 
       <p className="mt-4 text-[12px] text-[var(--measured-subtext)]">
-        Stage 7 vibe view: showing seeded fixtures. Stage 8 KPI page joins audit
-        + meals to compute the north-star &ldquo;completed care loop rate&rdquo;
-        metric.
+        Showing fixture data when Supabase is not configured.
       </p>
     </div>
   );
