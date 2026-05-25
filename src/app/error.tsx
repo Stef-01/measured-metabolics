@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { AlertTriangle } from "lucide-react";
 
 export default function GlobalError({
   error,
@@ -18,7 +19,13 @@ export default function GlobalError({
 
   return (
     <div className="min-h-dvh bg-[var(--measured-cream)] flex flex-col items-center justify-center gap-5 px-6 text-center">
-      <div className="text-4xl">⚕️</div>
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--measured-evaluate)]/10">
+        <AlertTriangle
+          size={28}
+          className="text-[var(--measured-evaluate)]"
+          strokeWidth={1.8}
+        />
+      </div>
       <div className="space-y-1.5">
         <h2 className="font-serif text-lg font-semibold text-[var(--measured-dark)]">
           Something went wrong
@@ -31,7 +38,7 @@ export default function GlobalError({
       <div className="flex gap-3">
         <button
           onClick={reset}
-          className="rounded-xl border border-neutral-200 bg-white px-5 py-2.5 text-sm font-medium text-[var(--measured-dark)] shadow-sm transition-colors hover:bg-neutral-50"
+          className="rounded-xl border border-[var(--measured-border)] bg-white px-5 py-2.5 text-sm font-medium text-[var(--measured-dark)] shadow-sm transition-colors hover:bg-[var(--measured-cream)]"
           type="button"
         >
           Try again
