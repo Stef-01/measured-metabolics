@@ -43,7 +43,7 @@ export function GpSidebarShell({ patient, children }: Props) {
 
   return (
     <div className="gp-sidebar mx-auto flex flex-col" data-gp-sidebar>
-      <header className="border-b border-[var(--measured-border-soft)] bg-white px-5 pt-4 pb-4">
+      <header className="border-b border-[var(--measured-border-soft)] bg-white px-5 pt-4 pb-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-[var(--measured-subtext)]">
             <Stethoscope size={14} strokeWidth={2.2} aria-hidden="true" />
@@ -51,12 +51,31 @@ export function GpSidebarShell({ patient, children }: Props) {
           </div>
           <PersonaSwitcher active="gp" variant="compact" />
         </div>
-        <div className="mt-3 font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
-          {patient.firstName} {patient.lastName}
-        </div>
-        <div className="mt-1 text-[12px] text-[var(--measured-subtext)]">
-          {patient.age}
-          {patient.sex.toLowerCase()} · {patient.conditions.join(", ")}
+        <div className="mt-3 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
+              {patient.firstName} {patient.lastName}
+            </div>
+            <div className="mt-0.5 text-[12px] text-[var(--measured-subtext)]">
+              {patient.age}
+              {patient.sex.toLowerCase()} · {patient.conditions.join(", ")}
+            </div>
+          </div>
+          <div className="flex shrink-0 flex-col items-end gap-1">
+            <span className="rounded-full bg-[var(--measured-green)]/10 px-2 py-0.5 text-[10px] font-semibold text-[var(--measured-dark-green)]">
+              Wk {patient.weekNumber}
+            </span>
+            <span
+              className={cn(
+                "rounded-full px-2 py-0.5 text-[10px] font-semibold",
+                patient.timeInRangePct >= 70
+                  ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+                  : "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
+              )}
+            >
+              {patient.timeInRangePct}% TIR
+            </span>
+          </div>
         </div>
       </header>
 

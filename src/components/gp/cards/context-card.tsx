@@ -1,4 +1,4 @@
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, TrendingDown, TrendingUp, Minus } from "lucide-react";
 import type { Patient } from "@/lib/mock/types";
 import { recentSevereSymptoms } from "@/lib/mock/symptoms";
 import { cn } from "@/lib/utils/cn";
@@ -13,11 +13,13 @@ export function GpContextCard({ patient }: { patient: Patient }) {
       value: `${patient.hbA1cPct}%`,
       trend:
         patient.hbA1cPct < 7 ? "good" : patient.hbA1cPct < 8 ? "watch" : "high",
+      lowerIsBetter: true,
     },
     {
       label: "Weight Δ",
       value: `${patient.weightDeltaKg > 0 ? "+" : ""}${patient.weightDeltaKg.toFixed(1)} kg`,
       trend: patient.weightDeltaKg < 0 ? "good" : "watch",
+      lowerIsBetter: true,
     },
     {
       label: "TIR",
@@ -28,6 +30,7 @@ export function GpContextCard({ patient }: { patient: Patient }) {
           : patient.timeInRangePct >= 70
             ? "watch"
             : "high",
+      lowerIsBetter: false,
     },
   ] as const;
 
@@ -51,26 +54,45 @@ export function GpContextCard({ patient }: { patient: Patient }) {
       )}
 
       <div className="grid grid-cols-3 gap-2">
-        {tiles.map((t) => (
-          <div
-            key={t.label}
-            className={cn(
-              "rounded-xl bg-white p-3 text-center shadow-[var(--shadow-card)] ring-1",
-              t.trend === "good"
-                ? "ring-[var(--measured-green)]/30"
-                : t.trend === "watch"
-                  ? "ring-[var(--measured-clinical-amber)]/40"
-                  : "ring-[var(--measured-evaluate)]/30",
-            )}
-          >
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-              {t.label}
+        {tiles.map((t) => {
+          const TrendIcon =
+            t.trend === "good"
+              ? t.lowerIsBetter
+                ? TrendingDown
+                : TrendingUp
+              : t.trend === "watch"
+                ? Minus
+                : t.lowerIsBetter
+                  ? TrendingUp
+                  : TrendingDown;
+          const iconColor =
+            t.trend === "good"
+              ? "text-[var(--measured-dark-green)]"
+              : t.trend === "watch"
+                ? "text-[var(--measured-clinical-amber)]"
+                : "text-[var(--measured-evaluate)]";
+          return (
+            <div
+              key={t.label}
+              className={cn(
+                "flex flex-col items-center gap-0.5 rounded-xl bg-white p-3 text-center shadow-[var(--shadow-card)] ring-1",
+                t.trend === "good"
+                  ? "ring-[var(--measured-green)]/30"
+                  : t.trend === "watch"
+                    ? "ring-[var(--measured-clinical-amber)]/40"
+                    : "ring-[var(--measured-evaluate)]/30",
+              )}
+            >
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                {t.label}
+              </div>
+              <div className="font-serif text-[20px] leading-tight text-[var(--measured-dark)]">
+                {t.value}
+              </div>
+              <TrendIcon size={11} strokeWidth={2.4} className={iconColor} aria-hidden="true" />
             </div>
-            <div className="mt-1 font-serif text-[20px] leading-tight text-[var(--measured-dark)]">
-              {t.value}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <section>
