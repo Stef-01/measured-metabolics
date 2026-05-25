@@ -12,6 +12,7 @@ interface SoapDraft {
   assessment: string;
   plan: string;
   confidence: number;
+  requiresReview?: boolean;
 }
 
 export function GpTranscriptCard({ patient }: { patient: Patient }) {
@@ -23,12 +24,38 @@ export function GpTranscriptCard({ patient }: { patient: Patient }) {
   const analyze = async () => {
     if (!text.trim()) return;
     setAnalyzing(true);
-    // Vibe stage: 700ms canned analysis. Stage 7 swaps to Inngest worker
-    // running an LLMProvider with a Zod-validated SOAPDraft schema.
-    setTimeout(() => {
+    try {
+      const context = `${patient.firstName} ${patient.lastName}, ${patient.age}yo. Conditions: ${patient.conditions.join(", ")}. Meds: ${patient.meds.join(", ") || "nil"}. HbA1c ${patient.hbA1cPct}%, TIR ${patient.timeInRangePct}%.`;
+      const res = await fetch("/api/ai/soap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ transcript: text, context }),
+      });
+      if (res.ok) {
+        const data = (await res.json()) as {
+          subjective: string;
+          objective: string;
+          assessment: string;
+          plan: string;
+          confidence_score: number;
+          requires_human_review?: boolean;
+        };
+        setDraft({
+          subjective: data.subjective,
+          objective: data.objective,
+          assessment: data.assessment,
+          plan: data.plan,
+          confidence: data.confidence_score,
+          requiresReview: data.requires_human_review ?? false,
+        });
+      } else {
+        setDraft(stubAnalyze(text, patient));
+      }
+    } catch {
       setDraft(stubAnalyze(text, patient));
+    } finally {
       setAnalyzing(false);
-    }, 700);
+    }
   };
 
   const copy = async () => {
@@ -86,9 +113,16 @@ export function GpTranscriptCard({ patient }: { patient: Patient }) {
         <div className="space-y-2 rounded-xl border border-[var(--measured-border-soft)] bg-white p-3 text-[12px] leading-relaxed">
           <div className="flex items-center justify-between gap-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
             SOAP draft
-            <span className="rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal">
-              {Math.round(draft.confidence * 100)}% confidence
-            </span>
+            <div className="flex items-center gap-1.5">
+              {draft.requiresReview && (
+                <span className="rounded-full bg-[var(--measured-evaluate)]/10 px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-evaluate)]">
+                  Review required
+                </span>
+              )}
+              <span className="rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal">
+                {Math.round(draft.confidence * 100)}% confidence
+              </span>
+            </div>
           </div>
           {(["subjective", "objective", "assessment", "plan"] as const).map(
             (k) => (
@@ -143,5 +177,12 @@ function stubAnalyze(text: string, patient: Patient): SoapDraft {
     lower.includes("rice") || patient.cuisine === "south_asian"
       ? "Continue current dose; reinforce dinner-rice substitution; review HbA1c in 6 weeks."
       : "Continue current plan; review symptoms in 4 weeks; repeat metabolic panel.";
-  return { subjective, objective, assessment, plan, confidence: 0.78 };
+  return {
+    subjective,
+    objective,
+    assessment,
+    plan,
+    confidence: 0.78,
+    requiresReview: false,
+  };
 }

@@ -43,6 +43,7 @@ export function applySafety<TName extends SchemaName>(
   if (schemaName === "meal-plan-draft") requires = true; // PRD: dietitian must approve plans
   if (schemaName === "dietitian-report-draft") requires = true;
   if (schemaName === "billing-intelligence") requires = true; // Feature #11: GP must verify before billing
+  if (schemaName === "soap-draft") requires = true; // GP must verify before adding to clinical record
   return {
     output: parsed,
     requires_human_review: requires,
