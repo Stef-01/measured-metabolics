@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { PatientAppHeader } from "@/components/patient/app-header";
+import { cn } from "@/lib/utils/cn";
 
 export default function PatientPrivacyPage() {
   const [rwe, setRwe] = useState(false);
@@ -17,72 +19,99 @@ export default function PatientPrivacyPage() {
   }
 
   return (
-    <main className="px-5 py-6">
-      <h1 className="text-[22px] font-semibold text-[var(--measured-text)]">
-        Privacy
-      </h1>
-      <p className="mt-2 text-[13px] text-[var(--measured-subtext)]">
-        Withdrawing research or marketing consent does not affect your care.
-      </p>
+    <>
+      <PatientAppHeader eyebrow="Account" title="Privacy" />
+      <div className="mx-auto max-w-md px-5 pt-3 pb-8">
+        <p className="text-[14px] leading-relaxed text-[var(--measured-subtext)]">
+          Withdrawing research or marketing consent does not affect your care.
+        </p>
 
-      <section className="mt-6 space-y-3">
-        <Row
-          title="Research & real-world evidence"
-          on={rwe}
-          onChange={setRwe}
-          onWithdraw={() => withdraw("rwe")}
-          withdrawnAt={withdrawnAt.rwe}
-        />
-        <Row
-          title="Marketing communications"
-          on={marketing}
-          onChange={setMarketing}
-          onWithdraw={() => withdraw("marketing")}
-          withdrawnAt={withdrawnAt.marketing}
-        />
-      </section>
+        <section className="mt-5 space-y-3">
+          <Row
+            title="Research & real-world evidence"
+            description="De-identified data used to support published metabolic care research."
+            on={rwe}
+            onChange={setRwe}
+            onWithdraw={() => withdraw("rwe")}
+            withdrawnAt={withdrawnAt.rwe}
+          />
+          <Row
+            title="Marketing communications"
+            description="Product updates and pilot study invitations."
+            on={marketing}
+            onChange={setMarketing}
+            onWithdraw={() => withdraw("marketing")}
+            withdrawnAt={withdrawnAt.marketing}
+          />
+        </section>
 
-      <p className="mt-8 text-[12px] text-[var(--measured-subtext)]">
-        Care provision consent is required to use Measured. To revoke it,
-        contact your care team.
-      </p>
-    </main>
+        <p className="mt-8 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
+          Care provision consent is required to use Measured. To revoke it,
+          contact your care team.
+        </p>
+      </div>
+    </>
   );
 }
 
 function Row(props: {
   title: string;
+  description: string;
   on: boolean;
   onChange: (v: boolean) => void;
   onWithdraw: () => void;
   withdrawnAt?: string;
 }) {
   return (
-    <div className="rounded-3xl border border-[var(--measured-border)] bg-[var(--measured-card)] p-4">
-      <div className="flex items-start justify-between gap-3">
-        <p className="text-[14px] font-semibold text-[var(--measured-text)]">
-          {props.title}
-        </p>
-        <input
-          type="checkbox"
-          checked={props.on}
-          onChange={(e) => props.onChange(e.target.checked)}
-          className="h-5 w-5 accent-[var(--measured-accent)]"
-        />
+    <div
+      className={cn(
+        "rounded-3xl border p-4 transition-colors",
+        props.on
+          ? "border-[var(--measured-green)]/30 bg-[var(--measured-green)]/4"
+          : "border-[var(--measured-border-soft)] bg-[var(--measured-card)]",
+      )}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <p className="text-[14px] font-semibold text-[var(--measured-dark)]">
+            {props.title}
+          </p>
+          <p className="mt-0.5 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
+            {props.description}
+          </p>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={props.on}
+          onClick={() => props.onChange(!props.on)}
+          className={cn(
+            "relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--measured-green)]/50",
+            props.on ? "bg-[var(--measured-green)]" : "bg-[var(--measured-border)]",
+          )}
+        >
+          <span
+            className={cn(
+              "absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200",
+              props.on && "translate-x-5",
+            )}
+          />
+        </button>
       </div>
-      {props.on ? (
+      {props.on && (
         <button
           type="button"
           onClick={props.onWithdraw}
-          className="mt-3 rounded-2xl border border-[var(--measured-border)] px-3 py-1.5 text-[12px] text-[var(--measured-text)]"
+          className="mt-3 rounded-xl border border-[var(--measured-evaluate)]/30 bg-[var(--measured-evaluate)]/5 px-3 py-1.5 text-[12px] font-semibold text-[var(--measured-evaluate)] transition-colors hover:bg-[var(--measured-evaluate)]/10"
         >
-          Withdraw
+          Withdraw consent
         </button>
-      ) : props.withdrawnAt ? (
+      )}
+      {!props.on && props.withdrawnAt && (
         <p className="mt-2 text-[11px] text-[var(--measured-subtext)]">
-          Withdrawn {new Date(props.withdrawnAt).toLocaleString()}
+          Withdrawn {new Date(props.withdrawnAt).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })}
         </p>
-      ) : null}
+      )}
     </div>
   );
 }

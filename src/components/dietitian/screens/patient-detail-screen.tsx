@@ -251,16 +251,17 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
                           key={s.id}
                           className="rounded-xl bg-[var(--measured-cream)] px-3 py-2"
                         >
-                          <div className="text-[12px] text-[var(--measured-subtext)]">
+                          <div className="mb-1.5 text-[12px] text-[var(--measured-subtext)]">
                             {new Date(s.loggedAt).toLocaleString([], {
                               weekday: "short",
                               hour: "numeric",
                               minute: "2-digit",
                             })}
                           </div>
-                          <div className="text-[var(--measured-dark)]">
-                            Nausea: {s.nausea} · Constipation: {s.constipation}{" "}
-                            · Appetite: {s.appetite}
+                          <div className="flex flex-wrap gap-1.5">
+                            <SeverityChip label="Nausea" value={s.nausea} />
+                            <SeverityChip label="Constipation" value={s.constipation} />
+                            <AppetiteChip value={s.appetite} />
                           </div>
                         </li>
                       ))}
@@ -529,6 +530,40 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
         onClose={() => setAnnotateMeal(null)}
       />
     </div>
+  );
+}
+
+function SeverityChip({
+  label,
+  value,
+}: {
+  label: string;
+  value: "none" | "mild" | "severe";
+}) {
+  const cls =
+    value === "none"
+      ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+      : value === "mild"
+        ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
+        : "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]";
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${cls}`}>
+      <span className="opacity-70">{label}</span>
+      <span>{value}</span>
+    </span>
+  );
+}
+
+function AppetiteChip({ value }: { value: "lower" | "normal" | "higher" }) {
+  const cls =
+    value === "normal"
+      ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+      : "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]";
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${cls}`}>
+      <span className="opacity-70">Appetite</span>
+      <span>{value}</span>
+    </span>
   );
 }
 
