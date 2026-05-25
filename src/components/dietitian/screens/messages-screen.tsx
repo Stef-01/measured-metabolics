@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Search, Pin } from "lucide-react";
+import { Send, Search, Pin, Sparkles } from "lucide-react";
 import { THREADS, PATIENTS, recentSevereSymptoms } from "@/lib/mock";
 import type { MessageThread, Message } from "@/lib/mock/types";
 import { cn } from "@/lib/utils/cn";
@@ -43,6 +43,7 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
     return orderedThreads[0]?.id ?? "";
   });
   const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const [suggesting, setSuggesting] = useState(false);
   const [threadState, setThreadState] =
     useState<MessageThread[]>(orderedThreads);
   const [query, setQuery] = useState("");
@@ -61,6 +62,43 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
       .toLowerCase()
       .includes(query.toLowerCase());
   });
+
+  const suggestReply = useCallback(async () => {
+    if (!active) return;
+    const lastPatientMsg = active.messages
+      .slice()
+      .reverse()
+      .find((m) => m.fromRole === "patient");
+    if (!lastPatientMsg) return;
+    setSuggesting(true);
+    try {
+      const threadText = active.messages
+        .slice(-8)
+        .map(
+          (m) =>
+            `${m.fromRole === "patient" ? "Patient" : "Dietitian"}: ${m.body}`,
+        )
+        .join("\n");
+      const res = await fetch("/api/ai/message-assistant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          thread: threadText,
+          latest: lastPatientMsg.body,
+        }),
+      });
+      if (res.ok) {
+        const data = (await res.json()) as { suggested_reply?: string };
+        if (data.suggested_reply) {
+          setDrafts((d) => ({ ...d, [active.id]: data.suggested_reply! }));
+        }
+      }
+    } catch {
+      // fall through silently
+    } finally {
+      setSuggesting(false);
+    }
+  }, [active]);
 
   const send = useCallback(() => {
     if (!active) return;
@@ -216,6 +254,20 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
 
             <div className="border-t border-[var(--measured-border-soft)] px-5 py-3">
               <div className="mb-2 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={suggestReply}
+                  disabled={suggesting}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold",
+                    suggesting
+                      ? "cursor-not-allowed bg-[var(--measured-green)]/30 text-white"
+                      : "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]",
+                  )}
+                >
+                  <Sparkles size={11} strokeWidth={2.2} aria-hidden="true" />
+                  {suggesting ? "Suggesting…" : "AI suggest"}
+                </button>
                 {TEMPLATES.map((t) => (
                   <button
                     type="button"

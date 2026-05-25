@@ -1212,6 +1212,26 @@ function PlanBuilder({ patient }: { patient: Patient }) {
   );
 }
 
+interface ReportRec {
+  title: string;
+  detail: string;
+}
+
+const DEFAULT_RECS: ReportRec[] = [
+  {
+    title: "Continue current dose",
+    detail: "Review at next visit.",
+  },
+  {
+    title: "Reinforce dinner-rice substitution",
+    detail: `Given Δ3.4 mmol/L post-dinner spike observed in CGM.`,
+  },
+  {
+    title: "Repeat HbA1c in 6 weeks",
+    detail: "Monitor trajectory before adjusting care plan.",
+  },
+];
+
 function ReportPreview({
   patient,
   mealCount,
@@ -1221,12 +1241,44 @@ function ReportPreview({
   mealCount: number;
   symptomCount: number;
 }) {
-  const [recommendations, setRecommendations] = useState([
-    `Continue current dose; review at next visit.`,
-    `Reinforce dinner-rice substitution given Δ${"3.4"} mmol/L spike.`,
-    `Repeat HbA1c in 6 weeks.`,
-  ]);
+  const [recommendations, setRecommendations] =
+    useState<ReportRec[]>(DEFAULT_RECS);
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
   const [sent, setSent] = useState(false);
+
+  const defaultSummary = `Over the past 4 weeks, ${patient.firstName} has uploaded ${mealCount} meals and logged ${symptomCount} symptom check-ins. Time-in-range improved from ${Math.max(50, patient.timeInRangePct - 6)}% to ${patient.timeInRangePct}%. Weight is ${patient.weightDeltaKg > 0 ? "up" : "down"} ${Math.abs(patient.weightDeltaKg).toFixed(1)} kg.`;
+
+  const generate = async () => {
+    setGenerating(true);
+    try {
+      const patientSummary = `${patient.firstName} ${patient.lastName}, ${patient.age}yo. Conditions: ${patient.conditions.join(", ")}. Meds: ${patient.meds.join(", ") || "nil"}. HbA1c ${patient.hbA1cPct}%, TIR ${patient.timeInRangePct}%, weight ${patient.weightKg.toFixed(1)} kg.`;
+      const dataSummary = `${mealCount} meals logged, ${symptomCount} symptom check-ins. TIR improved from ${Math.max(50, patient.timeInRangePct - 6)}% to ${patient.timeInRangePct}%. Weight delta: ${patient.weightDeltaKg > 0 ? "+" : ""}${patient.weightDeltaKg.toFixed(1)} kg.`;
+      const res = await fetch("/api/ai/report-draft", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patient_summary: patientSummary,
+          period: "last 4 weeks",
+          summary: dataSummary,
+        }),
+      });
+      if (res.ok) {
+        const data = (await res.json()) as {
+          summary?: string;
+          recommendations?: { title: string; detail: string }[];
+        };
+        if (data.summary) setAiSummary(data.summary);
+        if (data.recommendations && data.recommendations.length > 0) {
+          setRecommendations(data.recommendations);
+        }
+      }
+    } catch {
+      // fall through to default content
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   const send = () => {
     setSent(true);
@@ -1239,32 +1291,59 @@ function ReportPreview({
 
   return (
     <Card title="GP report draft">
-      <p className="text-[14px] leading-relaxed text-[var(--measured-dark)]">
-        Over the past 4 weeks, {patient.firstName} has uploaded {mealCount}{" "}
-        meals and logged {symptomCount} symptom check-ins. Time-in-range
-        improved from {Math.max(50, patient.timeInRangePct - 6)}% to{" "}
-        {patient.timeInRangePct}%. Weight is{" "}
-        {patient.weightDeltaKg > 0 ? "up" : "down"}{" "}
-        {Math.abs(patient.weightDeltaKg).toFixed(1)} kg.
-      </p>
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-[14px] leading-relaxed text-[var(--measured-dark)]">
+          {aiSummary ?? defaultSummary}
+        </p>
+        <button
+          type="button"
+          onClick={generate}
+          disabled={generating}
+          className={cn(
+            "inline-flex shrink-0 items-center gap-1.5 rounded-2xl px-3 py-1.5 text-[12px] font-semibold",
+            generating
+              ? "cursor-not-allowed bg-[var(--measured-green)]/30 text-white"
+              : "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]",
+          )}
+        >
+          <Sparkles size={12} strokeWidth={2.2} aria-hidden="true" />
+          {generating ? "Generating…" : aiSummary ? "Regenerate" : "AI draft"}
+        </button>
+      </div>
       <div className="mt-4">
         <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
           Recommendations
         </div>
-        <ul className="mt-2 space-y-1.5">
+        <ul className="mt-2 space-y-2">
           {recommendations.map((r, idx) => (
             <li key={idx} className="flex items-start gap-2">
-              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--measured-green)]" />
-              <input
-                type="text"
-                value={r}
-                onChange={(e) =>
-                  setRecommendations((prev) =>
-                    prev.map((p, i) => (i === idx ? e.target.value : p)),
-                  )
-                }
-                className="w-full bg-transparent text-[14px] text-[var(--measured-dark)] focus:outline-none"
-              />
+              <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--measured-green)]" />
+              <div className="min-w-0 flex-1">
+                <input
+                  type="text"
+                  value={r.title}
+                  onChange={(e) =>
+                    setRecommendations((prev) =>
+                      prev.map((p, i) =>
+                        i === idx ? { ...p, title: e.target.value } : p,
+                      ),
+                    )
+                  }
+                  className="w-full bg-transparent text-[13px] font-semibold text-[var(--measured-dark)] focus:outline-none"
+                />
+                <input
+                  type="text"
+                  value={r.detail}
+                  onChange={(e) =>
+                    setRecommendations((prev) =>
+                      prev.map((p, i) =>
+                        i === idx ? { ...p, detail: e.target.value } : p,
+                      ),
+                    )
+                  }
+                  className="w-full bg-transparent text-[13px] text-[var(--measured-subtext)] focus:outline-none"
+                />
+              </div>
             </li>
           ))}
         </ul>
