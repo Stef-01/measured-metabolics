@@ -111,13 +111,16 @@ export function DietitianDashboardScreen() {
                         {s.patientId}
                       </div>
                     )}
-                    <div className="text-[12px] text-[var(--measured-subtext)]">
-                      Nausea: {s.nausea} · Constipation: {s.constipation} ·{" "}
-                      {new Date(s.loggedAt).toLocaleString([], {
-                        weekday: "short",
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })}
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                      <SymChip label="Nausea" value={s.nausea} />
+                      <SymChip label="Constipation" value={s.constipation} />
+                      <span className="text-[11px] text-[var(--measured-subtext)]">
+                        {new Date(s.loggedAt).toLocaleString([], {
+                          weekday: "short",
+                          hour: "numeric",
+                          minute: "2-digit",
+                        })}
+                      </span>
                     </div>
                   </div>
                   <Link
@@ -236,6 +239,27 @@ export function DietitianDashboardScreen() {
         </div>
       </section>
     </div>
+  );
+}
+
+function SymChip({
+  label,
+  value,
+}: {
+  label: string;
+  value: "none" | "mild" | "severe";
+}) {
+  const cls =
+    value === "none"
+      ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+      : value === "mild"
+        ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
+        : "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]";
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${cls}`}>
+      <span className="opacity-70">{label}</span>
+      <span>{value}</span>
+    </span>
   );
 }
 
