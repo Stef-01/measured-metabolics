@@ -20,6 +20,9 @@ import {
   Receipt,
   ShieldCheck,
   Pencil,
+  TrendingDown,
+  TrendingUp,
+  Minus,
 } from "lucide-react";
 import {
   ASHA_PLAN,
@@ -129,26 +132,58 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
             </Link>
           </div>
         </div>
-        <div className="flex flex-col items-end gap-1 text-[12px] text-[var(--measured-subtext)]">
-          <div>
-            HbA1c{" "}
-            <span className="font-semibold text-[var(--measured-dark)]">
-              {patient.hbA1cPct}%
-            </span>
-          </div>
-          <div>
-            TIR{" "}
-            <span className="font-semibold text-[var(--measured-dark)]">
-              {patient.timeInRangePct}%
-            </span>
-          </div>
-          <div>
-            Weight Δ{" "}
-            <span className="font-semibold text-[var(--measured-dark)]">
-              {patient.weightDeltaKg > 0 ? "+" : ""}
-              {patient.weightDeltaKg.toFixed(1)} kg
-            </span>
-          </div>
+        <div className="flex flex-col items-end gap-1.5">
+          {([
+            {
+              label: "HbA1c",
+              value: `${patient.hbA1cPct}%`,
+              good: patient.hbA1cPct < 7,
+              warn: patient.hbA1cPct < 8,
+              lowerBetter: true,
+            },
+            {
+              label: "TIR",
+              value: `${patient.timeInRangePct}%`,
+              good: patient.timeInRangePct >= 70,
+              warn: patient.timeInRangePct >= 55,
+              lowerBetter: false,
+            },
+            {
+              label: "Wt Δ",
+              value: `${patient.weightDeltaKg > 0 ? "+" : ""}${patient.weightDeltaKg.toFixed(1)} kg`,
+              good: patient.weightDeltaKg < 0,
+              warn: patient.weightDeltaKg < 1,
+              lowerBetter: true,
+            },
+          ] as const).map((s) => {
+            const status = s.good ? "good" : s.warn ? "watch" : "high";
+            const TrendIcon =
+              status === "good"
+                ? s.lowerBetter
+                  ? TrendingDown
+                  : TrendingUp
+                : status === "watch"
+                  ? Minus
+                  : s.lowerBetter
+                    ? TrendingUp
+                    : TrendingDown;
+            const tone =
+              status === "good"
+                ? "bg-[var(--measured-green)]/8 text-[var(--measured-dark-green)]"
+                : status === "watch"
+                  ? "bg-[var(--measured-clinical-amber)]/12 text-[var(--measured-clinical-amber)]"
+                  : "bg-[var(--measured-evaluate)]/8 text-[var(--measured-evaluate)]";
+            return (
+              <div
+                key={s.label}
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${tone}`}
+              >
+                <span className="opacity-70">{s.label}</span>
+                <span>{s.value}</span>
+                <TrendIcon size={10} strokeWidth={2.4} aria-hidden="true" />
+              </div>
+            );
+          })}
         </div>
       </header>
 
