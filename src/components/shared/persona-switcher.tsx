@@ -162,23 +162,26 @@ export function PersonaSwitcher({ active, variant = "rail" }: Props) {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: 6, scale: 0.98 }}
+            initial={{ opacity: 0, y: 8, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 4, scale: 0.98 }}
-            transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            exit={{ opacity: 0, y: 6, scale: 0.97 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             role="listbox"
-            aria-label="Switch persona"
+            aria-label="Switch account"
             className={cn(
-              "absolute z-[60] w-[260px] overflow-hidden rounded-2xl border border-[var(--measured-border-soft)] bg-white shadow-[var(--shadow-raised)]",
-              variant === "rail" && "bottom-[calc(100%+8px)] left-0",
-              variant === "compact" && "right-0 top-[calc(100%+6px)]",
-              variant === "floating" && "bottom-[calc(100%+8px)] left-0",
+              "absolute z-[60] w-[280px] overflow-hidden rounded-3xl border border-[var(--measured-border-soft)] bg-white/95 shadow-[0_12px_48px_-8px_rgba(0,0,0,0.18),0_4px_16px_-4px_rgba(0,0,0,0.08)] backdrop-blur-xl",
+              variant === "rail" && "bottom-[calc(100%+10px)] left-0",
+              variant === "compact" && "right-0 top-[calc(100%+8px)]",
+              variant === "floating" && "bottom-[calc(100%+10px)] left-0",
             )}
           >
-            <div className="border-b border-[var(--measured-border-soft)] bg-[var(--measured-cream)] px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-              Demo · Switch persona
+            <div className="px-4 pt-4 pb-3">
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-[var(--measured-subtext)]">
+                Switch account
+              </p>
             </div>
-            <ul className="py-1">
+
+            <ul className="px-2 pb-2 space-y-0.5">
               {PERSONAS.map((p) => {
                 const isActive = p.id === active;
                 return (
@@ -189,52 +192,42 @@ export function PersonaSwitcher({ active, variant = "rail" }: Props) {
                       aria-selected={isActive}
                       onClick={() => handlePick(p)}
                       className={cn(
-                        "flex w-full items-center gap-3 px-3 py-2 text-left transition-colors",
+                        "group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-all duration-150",
                         isActive
-                          ? "bg-[var(--measured-green)]/5"
+                          ? "bg-[var(--measured-green)]/8"
                           : "hover:bg-[var(--measured-cream)]",
                       )}
                     >
                       <span
                         aria-hidden="true"
-                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white"
+                        className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-[13px] font-bold text-white shadow-sm"
                         style={{ backgroundColor: p.accent }}
                       >
                         {p.initials}
+                        {isActive && (
+                          <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--measured-dark-green)] ring-2 ring-white">
+                            <Check size={9} strokeWidth={3} className="text-white" aria-hidden="true" />
+                          </span>
+                        )}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="flex items-center gap-1.5">
+                        <span className="block truncate text-[14px] font-semibold text-[var(--measured-dark)]">
+                          {p.name}
+                        </span>
+                        <span className="flex items-center gap-1 text-[11px] text-[var(--measured-subtext)]">
                           <p.Icon
-                            size={11}
+                            size={10}
                             strokeWidth={2.2}
-                            className="text-[var(--measured-subtext)]"
                             aria-hidden="true"
                           />
-                          <span className="truncate text-[13px] font-semibold text-[var(--measured-dark)]">
-                            {p.name}
-                          </span>
-                        </span>
-                        <span className="block truncate text-[11px] text-[var(--measured-subtext)]">
                           {p.role}
                         </span>
                       </span>
-                      {isActive && (
-                        <Check
-                          size={14}
-                          strokeWidth={2.4}
-                          className="shrink-0 text-[var(--measured-dark-green)]"
-                          aria-label="Currently active"
-                        />
-                      )}
                     </button>
                   </li>
                 );
               })}
             </ul>
-            <div className="border-t border-[var(--measured-border-soft)] px-3 py-2 text-[10px] leading-relaxed text-[var(--measured-subtext)]">
-              Demo build only. Stage 5 replaces this with Supabase Auth role
-              redirect.
-            </div>
           </motion.div>
         )}
       </AnimatePresence>

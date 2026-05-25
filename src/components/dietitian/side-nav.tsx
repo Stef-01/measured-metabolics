@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useNavigation, type DietitianTabId } from "@/lib/hooks/use-navigation";
 import { PersonaSwitcher } from "@/components/shared/persona-switcher";
+import { THREADS } from "@/lib/mock";
 import { cn } from "@/lib/utils/cn";
 
 const ICON_BY_TAB: Record<DietitianTabId, typeof LayoutDashboard> = {
@@ -31,6 +32,12 @@ const ICON_BY_TAB: Record<DietitianTabId, typeof LayoutDashboard> = {
  * Per PRD: keyboard navigation must work — `Tab` cycles, focus rings honour
  * the `:focus-visible` browser default. We rely on Next/Link + button defaults.
  */
+const UNREAD_COUNT = THREADS.reduce(
+  (sum, t) =>
+    sum + t.messages.filter((m) => m.fromRole === "patient" && !m.read).length,
+  0,
+);
+
 export function DietitianSideNav() {
   const tabs = useNavigation("dietitian");
   const pathname = usePathname();
@@ -66,17 +73,32 @@ export function DietitianSideNav() {
                     : "text-[var(--measured-subtext)] hover:bg-[var(--measured-cream)] hover:text-[var(--measured-dark)]",
                 )}
               >
-                <Icon
-                  size={18}
-                  strokeWidth={2}
-                  className={cn(
-                    isActive
-                      ? "text-[var(--measured-green)]"
-                      : "text-[var(--measured-subtext)]",
+                <span className="relative shrink-0">
+                  <Icon
+                    size={18}
+                    strokeWidth={2}
+                    className={cn(
+                      isActive
+                        ? "text-[var(--measured-green)]"
+                        : "text-[var(--measured-subtext)]",
+                    )}
+                    aria-hidden="true"
+                  />
+                  {tab.id === "messages" && UNREAD_COUNT > 0 && (
+                    <span
+                      aria-label={`${UNREAD_COUNT} unread`}
+                      className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[var(--measured-evaluate)] text-[8px] font-bold text-white"
+                    >
+                      {UNREAD_COUNT > 9 ? "9+" : UNREAD_COUNT}
+                    </span>
                   )}
-                  aria-hidden="true"
-                />
+                </span>
                 <span>{tab.label}</span>
+                {tab.id === "messages" && UNREAD_COUNT > 0 && (
+                  <span className="ml-auto rounded-full bg-[var(--measured-evaluate)] px-1.5 py-0.5 text-[9px] font-bold text-white">
+                    {UNREAD_COUNT}
+                  </span>
+                )}
               </Link>
             </li>
           );

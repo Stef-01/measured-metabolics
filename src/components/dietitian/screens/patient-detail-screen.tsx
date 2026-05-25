@@ -20,7 +20,6 @@ import {
   Receipt,
   ShieldCheck,
   Pencil,
-  Copy,
 } from "lucide-react";
 import {
   ASHA_PLAN,
@@ -791,7 +790,6 @@ const EMPTY_PLAN_ITEMS: MealPlanItem[] = [
 
 function PlanBuilder({ patient }: { patient: Patient }) {
   const isAsha = patient.id === "asha";
-  const [mode, setMode] = useState<"week" | "day">("week");
   const [selectedDay, setSelectedDay] = useState(() => {
     const dow = new Date().getDay();
     return dow === 0 ? 6 : dow - 1;
@@ -808,9 +806,8 @@ function PlanBuilder({ patient }: { patient: Patient }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [pickerSlot, setPickerSlot] = useState<number | null>(null);
 
-  const currentItems =
-    mode === "day" ? (dayItems[selectedDay] ?? items) : items;
-  const isDayOverride = mode === "day" && dayItems[selectedDay] !== undefined;
+  const currentItems = dayItems[selectedDay] ?? items;
+  const isDayOverride = dayItems[selectedDay] !== undefined;
 
   const sibling = useMemo(
     () => findSameCuisinePlanFor(patient.id),
@@ -820,19 +817,13 @@ function PlanBuilder({ patient }: { patient: Patient }) {
   const weekOf = weekLabel(ASHA_PLAN.weekStart);
 
   const update = (idx: number, patch: Partial<MealPlanItem>) => {
-    if (mode === "day") {
-      const base = dayItems[selectedDay] ?? items;
-      setDayItems((prev) => ({
-        ...prev,
-        [selectedDay]: base.map((it, i) =>
-          i === idx ? { ...it, ...patch } : it,
-        ),
-      }));
-    } else {
-      setItems((prev) =>
-        prev.map((it, i) => (i === idx ? { ...it, ...patch } : it)),
-      );
-    }
+    const base = dayItems[selectedDay] ?? items;
+    setDayItems((prev) => ({
+      ...prev,
+      [selectedDay]: base.map((it, i) =>
+        i === idx ? { ...it, ...patch } : it,
+      ),
+    }));
     setApproved(false);
     setIsDraftSaved(false);
     setIsAiDraft(false);
@@ -864,26 +855,23 @@ function PlanBuilder({ patient }: { patient: Patient }) {
     });
   };
 
-  const copyDayToAll = () => {
-    const src = dayItems[selectedDay] ?? items;
-    setDayItems(
-      Object.fromEntries(
-        Array.from({ length: 7 }, (_, i) => [i, src.map((it) => ({ ...it }))]),
-      ) as Record<number, MealPlanItem[]>,
-    );
+  const resetDay = () => {
+    setDayItems((prev) => {
+      const next = { ...prev };
+      delete next[selectedDay];
+      return next;
+    });
     setApproved(false);
     setIsDraftSaved(false);
     toast.push({
       variant: "success",
-      title: "Copied to all 7 days",
+      title: `${DAY_LABELS[selectedDay]} reset to week template`,
       duration: 2000,
     });
   };
 
   const generateAiDraft = async () => {
     setIsGenerating(true);
-    const snapMode = mode;
-    const snapDay = selectedDay;
 
     let days: MealPlanItem[][] | null = null;
     try {
@@ -906,33 +894,19 @@ function PlanBuilder({ patient }: { patient: Patient }) {
     }
 
     if (days) {
-      if (snapMode === "day") {
-        const src = days[snapDay] ?? days[0];
-        if (src?.length) {
-          setDayItems((prev) => ({ ...prev, [snapDay]: src }));
-        }
-      } else {
-        // Week mode: use day 0 as the flat template; populate all dayItems too
-        const base = days[0];
-        if (base?.length) setItems(base);
-        const allDays = Object.fromEntries(
-          days
-            .map((d, i) => [i, d] as [number, MealPlanItem[]])
-            .filter(([, d]) => d?.length > 0),
-        ) as Record<number, MealPlanItem[]>;
-        if (Object.keys(allDays).length > 0) setDayItems(allDays);
-      }
+      // Populate base template + all day overrides from AI response
+      const base = days[0];
+      if (base?.length) setItems(base);
+      const allDays = Object.fromEntries(
+        days
+          .map((d, i) => [i, d] as [number, MealPlanItem[]])
+          .filter(([, d]) => d?.length > 0),
+      ) as Record<number, MealPlanItem[]>;
+      if (Object.keys(allDays).length > 0) setDayItems(allDays);
     } else {
       // Fallback to cuisine templates when AI is unconfigured
       const templates = AI_MEAL_TEMPLATES[patient.cuisine];
-      if (snapMode === "day") {
-        setDayItems((prev) => ({
-          ...prev,
-          [snapDay]: templates.map((t) => ({ ...t })),
-        }));
-      } else {
-        setItems(templates.map((t) => ({ ...t })));
-      }
+      setItems(templates.map((t) => ({ ...t })));
     }
 
     setApproved(false);
@@ -1052,55 +1026,34 @@ function PlanBuilder({ patient }: { patient: Patient }) {
         </div>
       </div>
 
-      {/* Mode toggle: Week template / Day-by-day */}
-      <div className="flex items-center gap-1 self-start rounded-xl border border-[var(--measured-border)] bg-white p-1">
-        {(["week", "day"] as const).map((m) => (
+      {/* Day strip — always visible */}
+      <div className="flex gap-1 overflow-x-auto pb-0.5">
+        {DAY_LABELS.map((label, idx) => (
           <button
-            key={m}
+            key={idx}
             type="button"
-            onClick={() => setMode(m)}
+            onClick={() => setSelectedDay(idx)}
             className={cn(
-              "rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-colors",
-              mode === m
+              "flex min-w-[44px] flex-col items-center rounded-xl px-2 py-1.5 text-center transition-colors",
+              selectedDay === idx
                 ? "bg-[var(--measured-green)] text-white"
-                : "text-[var(--measured-subtext)] hover:text-[var(--measured-dark)]",
+                : "border border-[var(--measured-border)] bg-white text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]",
             )}
           >
-            {m === "week" ? "Week template" : "Day-by-day"}
+            <span className="text-[11px] font-semibold">{label}</span>
+            {dayItems[idx] !== undefined && (
+              <span
+                className={cn(
+                  "mt-0.5 h-1 w-1 rounded-full",
+                  selectedDay === idx
+                    ? "bg-white/70"
+                    : "bg-[var(--measured-green)]",
+                )}
+              />
+            )}
           </button>
         ))}
       </div>
-
-      {/* Day strip */}
-      {mode === "day" && (
-        <div className="flex gap-1 overflow-x-auto pb-0.5">
-          {DAY_LABELS.map((label, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => setSelectedDay(idx)}
-              className={cn(
-                "flex min-w-[44px] flex-col items-center rounded-xl px-2 py-1.5 text-center transition-colors",
-                selectedDay === idx
-                  ? "bg-[var(--measured-green)] text-white"
-                  : "border border-[var(--measured-border)] bg-white text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]",
-              )}
-            >
-              <span className="text-[11px] font-semibold">{label}</span>
-              {dayItems[idx] !== undefined && (
-                <span
-                  className={cn(
-                    "mt-0.5 h-1 w-1 rounded-full",
-                    selectedDay === idx
-                      ? "bg-white/70"
-                      : "bg-[var(--measured-green)]",
-                  )}
-                />
-              )}
-            </button>
-          ))}
-        </div>
-      )}
 
       {/* AI + inspiration toolbar */}
       <div className="flex flex-wrap items-center gap-2">
@@ -1133,18 +1086,18 @@ function PlanBuilder({ patient }: { patient: Patient }) {
             Copy {sibling.sourcePatientName.split(" ")[0]}&apos;s plan
           </button>
         )}
-        {mode === "day" && (
+        {isDayOverride && (
           <button
             type="button"
-            onClick={copyDayToAll}
+            onClick={resetDay}
             className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--measured-border)] bg-white px-3 py-2 text-[12px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]"
           >
-            <Copy size={13} strokeWidth={2.2} aria-hidden="true" />
-            Copy to all days
+            <RotateCcw size={13} strokeWidth={2.2} aria-hidden="true" />
+            Reset day
           </button>
         )}
         <span className="text-[11px] text-[var(--measured-subtext)]">
-          {mode === "day" && !isDayOverride && "Using week template · "}
+          {!isDayOverride && "Using week template · "}
           {patient.cuisineLabel} · {patient.conditions.join(" · ")}
         </span>
       </div>
