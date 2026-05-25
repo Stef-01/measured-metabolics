@@ -43,16 +43,24 @@ function isMbsItem(item: string): boolean {
   return item.startsWith("MBS ");
 }
 
-const EVIDENCE_KIND_LABEL: Record<
-  BillingSuggestionItem["evidence"][number]["kind"],
-  string
-> = {
+const EVIDENCE_KIND_LABEL: Partial<Record<string, string>> = {
   message: "Message",
   symptom: "Symptom",
   meal: "Meal",
   referral: "Referral",
   care_plan: "Care plan",
   report: "Report",
+  condition: "Condition",
+};
+
+const EVIDENCE_KIND_BORDER: Partial<Record<string, string>> = {
+  message: "border-[var(--measured-clinical-blue)]",
+  symptom: "border-[var(--measured-evaluate)]",
+  meal: "border-[var(--measured-green)]",
+  referral: "border-[var(--measured-clinical-amber)]",
+  care_plan: "border-[var(--measured-clinical-amber)]",
+  report: "border-[var(--measured-border)]",
+  condition: "border-[var(--measured-clinical-blue)]",
 };
 
 interface GpBillingCardProps {
@@ -268,10 +276,13 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                       {h.evidence.map((e, idx) => (
                         <li
                           key={`${h.item}-${e.kind}-${e.label}-${idx}`}
-                          className="rounded-lg bg-[var(--measured-cream)] px-2.5 py-2"
+                          className={cn(
+                            "rounded-r-lg border-l-2 bg-[var(--measured-cream)] px-2.5 py-2",
+                            EVIDENCE_KIND_BORDER[e.kind] ?? "border-[var(--measured-border)]",
+                          )}
                         >
                           <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-                            {e.label}
+                            {EVIDENCE_KIND_LABEL[e.kind] ?? e.kind} · {e.label}
                           </div>
                           <blockquote className="mt-0.5 leading-relaxed text-[var(--measured-dark)]">
                             &ldquo;{e.quote}&rdquo;
@@ -311,62 +322,46 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                       </div>
                     )}
 
-                  <div className="rounded-lg border border-[var(--measured-border-soft)] bg-white px-2.5 py-2">
-                    <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                  <div className="rounded-lg border border-[var(--measured-border-soft)] bg-[var(--measured-cream)] px-2.5 py-2">
+                    <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
                       Clinic-note draft
                     </div>
-                    <p className="mt-1 leading-relaxed text-[var(--measured-dark)]">
+                    <p className="font-mono text-[11px] leading-relaxed text-[var(--measured-dark)] whitespace-pre-wrap">
                       {h.documentationDraft}
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap gap-2">
-                    {!readOnly && (
-                      <>
-                        <button
-                          type="button"
-                          onClick={() => copy(h)}
-                          className={cn(
-                            "inline-flex items-center gap-1 rounded-lg bg-[var(--measured-green)]/10 px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark-green)]",
-                          )}
-                        >
-                          <Receipt
-                            size={12}
-                            strokeWidth={2.2}
-                            aria-hidden="true"
-                          />
-                          Copy justification
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => createTask(h)}
-                          className="inline-flex items-center gap-1 rounded-lg bg-[var(--measured-cream)] px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark)]"
-                        >
-                          <ClipboardList
-                            size={12}
-                            strokeWidth={2.2}
-                            aria-hidden="true"
-                          />
-                          Create verification task
-                        </button>
-                      </>
-                    )}
-                    {h.officialSourceUrl && (
-                      <a
-                        href={h.officialSourceUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 rounded-lg bg-[var(--measured-cream)] px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark)]"
+                  {!readOnly && (
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => copy(h)}
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-2.5 py-2 text-[11px] font-semibold text-white hover:bg-[var(--measured-dark-green)] transition-colors"
                       >
-                        MBS source
-                        <ExternalLink
-                          size={11}
-                          strokeWidth={2.2}
-                          aria-hidden="true"
-                        />
-                      </a>
-                    )}
-                  </div>
+                        <Receipt size={12} strokeWidth={2.2} aria-hidden="true" />
+                        Copy clinic note
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => createTask(h)}
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[var(--measured-border)] bg-white px-2.5 py-2 text-[11px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)] transition-colors"
+                      >
+                        <ClipboardList size={12} strokeWidth={2.2} aria-hidden="true" />
+                        Create task
+                      </button>
+                    </div>
+                  )}
+                  {h.officialSourceUrl && (
+                    <a
+                      href={h.officialSourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--measured-subtext)] hover:text-[var(--measured-clinical-blue)] transition-colors"
+                    >
+                      View MBS source
+                      <ExternalLink size={10} strokeWidth={2.2} aria-hidden="true" />
+                    </a>
+                  )}
                   {h.sourceLastReviewedAt && (
                     <p className="text-[10px] text-[var(--measured-subtext)]">
                       MBS source last reviewed {h.sourceLastReviewedAt}. GP must
@@ -459,10 +454,13 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                       {s.evidence.map((e, idx) => (
                         <div
                           key={`${s.itemNumber}-${e.kind}-${e.id}-${idx}`}
-                          className="rounded-lg bg-[var(--measured-cream)] px-2.5 py-2"
+                          className={cn(
+                            "rounded-r-lg border-l-2 bg-[var(--measured-cream)] px-2.5 py-2",
+                            EVIDENCE_KIND_BORDER[e.kind] ?? "border-[var(--measured-border)]",
+                          )}
                         >
                           <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-                            <span>{EVIDENCE_KIND_LABEL[e.kind]}</span>
+                            <span>{EVIDENCE_KIND_LABEL[e.kind] ?? e.kind}</span>
                             <span className="font-mono normal-case tracking-normal text-[10px] text-[var(--measured-subtext)]">
                               {e.id}
                             </span>

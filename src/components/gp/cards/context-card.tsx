@@ -1,4 +1,4 @@
-import { AlertTriangle, TrendingDown, TrendingUp, Minus } from "lucide-react";
+import { AlertTriangle, TrendingDown, TrendingUp, Minus, Pill } from "lucide-react";
 import type { Patient } from "@/lib/mock/types";
 import { recentSevereSymptoms } from "@/lib/mock/symptoms";
 import { cn } from "@/lib/utils/cn";
@@ -40,7 +40,7 @@ export function GpContextCard({ patient }: { patient: Patient }) {
         <div className="rounded-xl border border-[var(--measured-evaluate)]/30 bg-[var(--measured-evaluate)]/5 p-3 text-[12px]">
           <div className="flex items-center gap-1.5 font-semibold text-[var(--measured-evaluate)]">
             <AlertTriangle size={12} strokeWidth={2.2} aria-hidden="true" />
-            Severe symptoms reported recently
+            Severe symptoms — flag in consult
           </div>
           <p className="mt-1 leading-relaxed text-[var(--measured-dark)]">
             Last logged{" "}
@@ -48,11 +48,12 @@ export function GpContextCard({ patient }: { patient: Patient }) {
               weekday: "short",
               hour: "numeric",
             })}
-            . Worth flagging in the consult.
+            .
           </p>
         </div>
       )}
 
+      {/* Clinical stat tiles */}
       <div className="grid grid-cols-3 gap-2">
         {tiles.map((t) => {
           const TrendIcon =
@@ -95,26 +96,44 @@ export function GpContextCard({ patient }: { patient: Patient }) {
         })}
       </div>
 
+      {/* Pattern summary — each point as a scannable card */}
       <section>
-        <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-          Pattern summary
+        <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+          Clinical patterns
         </div>
-        <ul className="mt-2 space-y-1.5 text-[13px] leading-relaxed text-[var(--measured-dark)]">
+        <ul className="space-y-1.5">
           {patient.patternSummary.map((s) => (
-            <li key={s} className="flex items-start gap-2">
-              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--measured-green)]" />
-              <span>{s}</span>
+            <li
+              key={s}
+              className="rounded-r-xl border-l-2 border-[var(--measured-green)] bg-white px-3 py-2 text-[12px] leading-relaxed text-[var(--measured-dark)] shadow-[var(--shadow-card)]"
+            >
+              {s}
             </li>
           ))}
         </ul>
       </section>
 
-      <section className="rounded-xl bg-[var(--measured-cream)] p-3 text-[12px] leading-relaxed text-[var(--measured-dark)]">
-        <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-          Meds
+      {/* Medications — pill chips */}
+      <section className="rounded-xl border border-[var(--measured-border-soft)] bg-[var(--measured-cream)] p-3">
+        <div className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+          <Pill size={10} strokeWidth={2.4} aria-hidden="true" />
+          Medications
         </div>
-        <div className="mt-1">
-          {patient.meds.length > 0 ? patient.meds.join(", ") : "Nil regular"}
+        <div className="flex flex-wrap gap-1.5">
+          {patient.meds.length > 0 ? (
+            patient.meds.map((m) => (
+              <span
+                key={m}
+                className="rounded-full bg-white px-2.5 py-1 text-[11px] font-medium text-[var(--measured-dark)] shadow-[var(--shadow-card)] ring-1 ring-[var(--measured-border-soft)]"
+              >
+                {m}
+              </span>
+            ))
+          ) : (
+            <span className="rounded-full bg-[var(--measured-green)]/10 px-2.5 py-1 text-[11px] font-medium text-[var(--measured-dark-green)]">
+              Nil regular
+            </span>
+          )}
         </div>
       </section>
     </div>

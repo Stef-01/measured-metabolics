@@ -41,9 +41,26 @@ export function GpSidebarShell({ patient, children }: Props) {
   const tabs = gpSidebarTabs(patient.id);
   const pathname = usePathname();
 
+  const riskBar =
+    patient.risk === "high"
+      ? "bg-[var(--measured-evaluate)]"
+      : patient.risk === "medium"
+        ? "bg-[var(--measured-clinical-amber)]"
+        : "bg-[var(--measured-green)]";
+
+  const riskChip =
+    patient.risk === "high"
+      ? "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]"
+      : patient.risk === "medium"
+        ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
+        : "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]";
+
   return (
     <div className="gp-sidebar mx-auto flex flex-col" data-gp-sidebar>
-      <header className="border-b border-[var(--measured-border-soft)] bg-white px-5 pt-4 pb-3">
+      {/* Risk-level accent bar */}
+      <div className={cn("h-1 w-full shrink-0", riskBar)} aria-hidden="true" />
+
+      <header className="border-b border-[var(--measured-border-soft)] bg-white px-5 pt-3 pb-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-[var(--measured-subtext)]">
             <Stethoscope size={14} strokeWidth={2.2} aria-hidden="true" />
@@ -64,6 +81,9 @@ export function GpSidebarShell({ patient, children }: Props) {
           <div className="flex shrink-0 flex-col items-end gap-1">
             <span className="rounded-full bg-[var(--measured-green)]/10 px-2 py-0.5 text-[10px] font-semibold text-[var(--measured-dark-green)]">
               Wk {patient.weekNumber}
+            </span>
+            <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize", riskChip)}>
+              {patient.risk} risk
             </span>
             <span
               className={cn(
