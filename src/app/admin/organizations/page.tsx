@@ -42,16 +42,16 @@ export default function AdminOrganizationsPage() {
         ].map((s) => (
           <div
             key={s.label}
-            className={`rounded-2xl border p-4 ${
+            className={`rounded-2xl border p-4 shadow-[var(--shadow-card)] ${
               s.accent
-                ? "border-[var(--measured-accent)] bg-[var(--measured-accent-soft)]"
-                : "border-[var(--measured-border)] bg-[var(--measured-card)]"
+                ? "border-[var(--measured-green)]/25 bg-[var(--measured-green)]/5"
+                : "border-[var(--measured-border-soft)] bg-[var(--measured-card)]"
             }`}
           >
-            <p className="text-[11px] uppercase tracking-wider text-[var(--measured-subtext)]">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
               {s.label}
             </p>
-            <p className="mt-1.5 text-[26px] font-semibold text-[var(--measured-text)]">
+            <p className={`mt-1.5 font-serif text-[28px] leading-none ${s.accent ? "text-[var(--measured-dark-green)]" : "text-[var(--measured-dark)]"}`}>
               {s.value}
             </p>
           </div>
@@ -78,7 +78,7 @@ export default function AdminOrganizationsPage() {
                     {patients.length !== 1 ? "s" : ""}
                   </p>
                 </div>
-                <span className="rounded-full bg-[var(--measured-accent-soft)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--measured-accent)]">
+                <span className="rounded-full bg-[var(--measured-green)]/10 px-2.5 py-0.5 text-[11px] font-semibold text-[var(--measured-dark-green)]">
                   Active
                 </span>
               </div>

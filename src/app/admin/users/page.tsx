@@ -81,15 +81,15 @@ export default function AdminUsersPage() {
             {byRole[role].map((u) => (
               <li
                 key={u.id}
-                className="flex items-center justify-between gap-4 rounded-2xl border border-[var(--measured-border)] bg-[var(--measured-card)] px-4 py-3"
+                className="flex items-center justify-between gap-4 rounded-2xl border border-[var(--measured-border-soft)] bg-[var(--measured-card)] px-4 py-3 shadow-[var(--shadow-card)]"
               >
-                <div>
-                  <span className="text-[14px] font-semibold text-[var(--measured-text)]">
+                <div className="min-w-0">
+                  <div className="text-[14px] font-semibold text-[var(--measured-dark)]">
                     {u.name}
-                  </span>
-                  <span className="ml-2 text-[13px] text-[var(--measured-subtext)]">
+                  </div>
+                  <div className="mt-0.5 text-[12px] text-[var(--measured-subtext)]">
                     {u.detail}
-                  </span>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   {u.consentStatus && (
