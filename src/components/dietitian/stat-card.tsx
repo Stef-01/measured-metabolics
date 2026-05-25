@@ -16,6 +16,13 @@ const TONE_RING: Record<NonNullable<Props["tone"]>, string> = {
   danger: "ring-[var(--measured-evaluate)]/40",
 };
 
+const TONE_BG: Record<NonNullable<Props["tone"]>, string> = {
+  default: "bg-white",
+  warning: "bg-[var(--measured-clinical-amber)]/5",
+  success: "bg-[var(--measured-green)]/5",
+  danger: "bg-[var(--measured-evaluate)]/5",
+};
+
 const TONE_ICON: Record<NonNullable<Props["tone"]>, string> = {
   default: "text-[var(--measured-subtext)]",
   warning: "text-[var(--measured-clinical-amber)]",
@@ -33,7 +40,8 @@ export function DietitianStatCard({
   return (
     <div
       className={cn(
-        "rounded-2xl bg-white p-5 shadow-[var(--shadow-card)] ring-1",
+        "rounded-2xl p-5 shadow-[var(--shadow-card)] ring-1",
+        TONE_BG[tone],
         TONE_RING[tone],
       )}
     >

@@ -49,6 +49,42 @@ export function PatientBottomNav() {
             const isActive =
               pathname === tab.href || pathname.startsWith(`${tab.href}/`);
             const Icon = ICON_BY_TAB[tab.id];
+
+            // Primary action tab — raised green circle, lifted above the bar
+            if (tab.id === "meal") {
+              return (
+                <motion.div
+                  key={tab.id}
+                  whileTap={{ scale: 0.88 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                  style={{ WebkitTapHighlightColor: "transparent" }}
+                  onTapStart={haptic}
+                  className="-mt-5"
+                >
+                  <Link
+                    href={tab.href}
+                    aria-current={isActive ? "page" : undefined}
+                    aria-label={tab.label}
+                    className="flex flex-col items-center gap-0.5"
+                  >
+                    <span
+                      className={cn(
+                        "flex h-14 w-14 items-center justify-center rounded-full shadow-[0_4px_16px_-2px_rgba(45,90,61,0.45)] transition-all",
+                        isActive
+                          ? "bg-[var(--measured-dark-green)]"
+                          : "bg-[var(--measured-green)]",
+                      )}
+                    >
+                      <Icon size={24} strokeWidth={2.2} className="text-white" aria-hidden="true" />
+                    </span>
+                    <span className={cn("text-xs font-semibold transition-colors", isActive ? "text-[var(--measured-dark-green)]" : "text-[var(--measured-subtext)]")}>
+                      {tab.label}
+                    </span>
+                  </Link>
+                </motion.div>
+              );
+            }
+
             return (
               <motion.div
                 key={tab.id}
