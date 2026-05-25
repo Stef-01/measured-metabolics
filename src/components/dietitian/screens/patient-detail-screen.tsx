@@ -880,11 +880,50 @@ function PlanBuilder({ patient }: { patient: Patient }) {
     });
   };
 
-  const generateAiDraft = () => {
+  const generateAiDraft = async () => {
     setIsGenerating(true);
     const snapMode = mode;
     const snapDay = selectedDay;
-    setTimeout(() => {
+
+    let days: MealPlanItem[][] | null = null;
+    try {
+      const res = await fetch("/api/ai/meal-plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patient_summary: `${patient.firstName} ${patient.lastName}, ${patient.age}yo. Conditions: ${patient.conditions.join(", ")}. Meds: ${patient.meds.join(", ") || "nil"}. HbA1c ${patient.hbA1cPct}%.`,
+          cuisine: patient.cuisineLabel,
+          allergies: "none",
+          cgm: `HbA1c ${patient.hbA1cPct}%, TIR ${patient.timeInRangePct}%`,
+        }),
+      });
+      if (res.ok) {
+        const data = (await res.json()) as { days: MealPlanItem[][] };
+        days = data.days;
+      }
+    } catch {
+      // fall through to template fallback
+    }
+
+    if (days) {
+      if (snapMode === "day") {
+        const src = days[snapDay] ?? days[0];
+        if (src?.length) {
+          setDayItems((prev) => ({ ...prev, [snapDay]: src }));
+        }
+      } else {
+        // Week mode: use day 0 as the flat template; populate all dayItems too
+        const base = days[0];
+        if (base?.length) setItems(base);
+        const allDays = Object.fromEntries(
+          days
+            .map((d, i) => [i, d] as [number, MealPlanItem[]])
+            .filter(([, d]) => d?.length > 0),
+        ) as Record<number, MealPlanItem[]>;
+        if (Object.keys(allDays).length > 0) setDayItems(allDays);
+      }
+    } else {
+      // Fallback to cuisine templates when AI is unconfigured
       const templates = AI_MEAL_TEMPLATES[patient.cuisine];
       if (snapMode === "day") {
         setDayItems((prev) => ({
@@ -894,17 +933,18 @@ function PlanBuilder({ patient }: { patient: Patient }) {
       } else {
         setItems(templates.map((t) => ({ ...t })));
       }
-      setApproved(false);
-      setIsDraftSaved(false);
-      setIsAiDraft(true);
-      setIsGenerating(false);
-      toast.push({
-        variant: "success",
-        title: "AI draft ready",
-        body: "Review each meal then approve to publish.",
-        duration: 2400,
-      });
-    }, 1600);
+    }
+
+    setApproved(false);
+    setIsDraftSaved(false);
+    setIsAiDraft(true);
+    setIsGenerating(false);
+    toast.push({
+      variant: "success",
+      title: days ? "AI draft ready" : "Template draft ready",
+      body: "Review each meal then approve to publish.",
+      duration: 2400,
+    });
   };
 
   const saveDraft = () => {
@@ -1066,7 +1106,7 @@ function PlanBuilder({ patient }: { patient: Patient }) {
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
-          onClick={generateAiDraft}
+          onClick={() => void generateAiDraft()}
           disabled={isGenerating}
           className={cn(
             "inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-[12px] font-semibold transition-colors",
