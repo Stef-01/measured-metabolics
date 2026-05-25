@@ -20,6 +20,7 @@ import {
   Receipt,
   ShieldCheck,
   Pencil,
+  Copy,
 } from "lucide-react";
 import {
   ASHA_PLAN,
@@ -760,6 +761,8 @@ function weekLabel(isoDate: string): string {
   return `${monday.toLocaleDateString([], opts)} – ${sunday.toLocaleDateString([], opts)}`;
 }
 
+const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
 const EMPTY_PLAN_ITEMS: MealPlanItem[] = [
   {
     mealType: "breakfast",
@@ -789,14 +792,26 @@ const EMPTY_PLAN_ITEMS: MealPlanItem[] = [
 
 function PlanBuilder({ patient }: { patient: Patient }) {
   const isAsha = patient.id === "asha";
+  const [mode, setMode] = useState<"week" | "day">("week");
+  const [selectedDay, setSelectedDay] = useState(() => {
+    const dow = new Date().getDay();
+    return dow === 0 ? 6 : dow - 1;
+  });
   const [items, setItems] = useState<MealPlanItem[]>(
     isAsha ? ASHA_PLAN.items : EMPTY_PLAN_ITEMS,
   );
+  const [dayItems, setDayItems] = useState<
+    Partial<Record<number, MealPlanItem[]>>
+  >(isAsha ? (ASHA_PLAN.dayItems ?? {}) : {});
   const [approved, setApproved] = useState(isAsha);
   const [isDraftSaved, setIsDraftSaved] = useState(isAsha);
   const [isAiDraft, setIsAiDraft] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [pickerSlot, setPickerSlot] = useState<number | null>(null);
+
+  const currentItems =
+    mode === "day" ? (dayItems[selectedDay] ?? items) : items;
+  const isDayOverride = mode === "day" && dayItems[selectedDay] !== undefined;
 
   const sibling = useMemo(
     () => findSameCuisinePlanFor(patient.id),
@@ -806,9 +821,19 @@ function PlanBuilder({ patient }: { patient: Patient }) {
   const weekOf = weekLabel(ASHA_PLAN.weekStart);
 
   const update = (idx: number, patch: Partial<MealPlanItem>) => {
-    setItems((prev) =>
-      prev.map((it, i) => (i === idx ? { ...it, ...patch } : it)),
-    );
+    if (mode === "day") {
+      const base = dayItems[selectedDay] ?? items;
+      setDayItems((prev) => ({
+        ...prev,
+        [selectedDay]: base.map((it, i) =>
+          i === idx ? { ...it, ...patch } : it,
+        ),
+      }));
+    } else {
+      setItems((prev) =>
+        prev.map((it, i) => (i === idx ? { ...it, ...patch } : it)),
+      );
+    }
     setApproved(false);
     setIsDraftSaved(false);
     setIsAiDraft(false);
@@ -822,7 +847,7 @@ function PlanBuilder({ patient }: { patient: Patient }) {
     });
     toast.push({
       variant: "success",
-      title: `${recipe.title} added to ${MEAL_LABEL[items[idx].mealType]}`,
+      title: `${recipe.title} added to ${MEAL_LABEL[currentItems[idx].mealType]}`,
       duration: 1800,
     });
   };
@@ -840,11 +865,36 @@ function PlanBuilder({ patient }: { patient: Patient }) {
     });
   };
 
+  const copyDayToAll = () => {
+    const src = dayItems[selectedDay] ?? items;
+    setDayItems(
+      Object.fromEntries(
+        Array.from({ length: 7 }, (_, i) => [i, src.map((it) => ({ ...it }))]),
+      ) as Record<number, MealPlanItem[]>,
+    );
+    setApproved(false);
+    setIsDraftSaved(false);
+    toast.push({
+      variant: "success",
+      title: "Copied to all 7 days",
+      duration: 2000,
+    });
+  };
+
   const generateAiDraft = () => {
     setIsGenerating(true);
+    const snapMode = mode;
+    const snapDay = selectedDay;
     setTimeout(() => {
       const templates = AI_MEAL_TEMPLATES[patient.cuisine];
-      setItems(templates.map((t) => ({ ...t })));
+      if (snapMode === "day") {
+        setDayItems((prev) => ({
+          ...prev,
+          [snapDay]: templates.map((t) => ({ ...t })),
+        }));
+      } else {
+        setItems(templates.map((t) => ({ ...t })));
+      }
       setApproved(false);
       setIsDraftSaved(false);
       setIsAiDraft(true);
@@ -865,6 +915,7 @@ function PlanBuilder({ patient }: { patient: Patient }) {
 
   const reset = () => {
     setItems(isAsha ? ASHA_PLAN.items : EMPTY_PLAN_ITEMS);
+    setDayItems(isAsha ? (ASHA_PLAN.dayItems ?? {}) : {});
     setApproved(isAsha);
     setIsDraftSaved(isAsha);
     setIsAiDraft(false);
@@ -880,7 +931,7 @@ function PlanBuilder({ patient }: { patient: Patient }) {
     });
   };
 
-  const isEmpty = items.every((it) => !it.title);
+  const isEmpty = currentItems.every((it) => !it.title);
 
   return (
     <div className="grid gap-4">
@@ -962,6 +1013,56 @@ function PlanBuilder({ patient }: { patient: Patient }) {
         </div>
       </div>
 
+      {/* Mode toggle: Week template / Day-by-day */}
+      <div className="flex items-center gap-1 self-start rounded-xl border border-[var(--measured-border)] bg-white p-1">
+        {(["week", "day"] as const).map((m) => (
+          <button
+            key={m}
+            type="button"
+            onClick={() => setMode(m)}
+            className={cn(
+              "rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-colors",
+              mode === m
+                ? "bg-[var(--measured-green)] text-white"
+                : "text-[var(--measured-subtext)] hover:text-[var(--measured-dark)]",
+            )}
+          >
+            {m === "week" ? "Week template" : "Day-by-day"}
+          </button>
+        ))}
+      </div>
+
+      {/* Day strip */}
+      {mode === "day" && (
+        <div className="flex gap-1 overflow-x-auto pb-0.5">
+          {DAY_LABELS.map((label, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => setSelectedDay(idx)}
+              className={cn(
+                "flex min-w-[44px] flex-col items-center rounded-xl px-2 py-1.5 text-center transition-colors",
+                selectedDay === idx
+                  ? "bg-[var(--measured-green)] text-white"
+                  : "border border-[var(--measured-border)] bg-white text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]",
+              )}
+            >
+              <span className="text-[11px] font-semibold">{label}</span>
+              {dayItems[idx] !== undefined && (
+                <span
+                  className={cn(
+                    "mt-0.5 h-1 w-1 rounded-full",
+                    selectedDay === idx
+                      ? "bg-white/70"
+                      : "bg-[var(--measured-green)]",
+                  )}
+                />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* AI + inspiration toolbar */}
       <div className="flex flex-wrap items-center gap-2">
         <button
@@ -993,14 +1094,25 @@ function PlanBuilder({ patient }: { patient: Patient }) {
             Copy {sibling.sourcePatientName.split(" ")[0]}&apos;s plan
           </button>
         )}
+        {mode === "day" && (
+          <button
+            type="button"
+            onClick={copyDayToAll}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--measured-border)] bg-white px-3 py-2 text-[12px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]"
+          >
+            <Copy size={13} strokeWidth={2.2} aria-hidden="true" />
+            Copy to all days
+          </button>
+        )}
         <span className="text-[11px] text-[var(--measured-subtext)]">
+          {mode === "day" && !isDayOverride && "Using week template · "}
           {patient.cuisineLabel} · {patient.conditions.join(" · ")}
         </span>
       </div>
 
       {/* Meal slots */}
       <div className="space-y-3">
-        {items.map((it, idx) => (
+        {currentItems.map((it, idx) => (
           <div
             key={it.mealType}
             className="rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)]"
@@ -1049,7 +1161,9 @@ function PlanBuilder({ patient }: { patient: Patient }) {
         open={pickerSlot !== null}
         dietitianId={patient.assignedDietitianId}
         patientCuisine={patient.cuisine}
-        mealTypeFilter={pickerSlot !== null ? items[pickerSlot].mealType : null}
+        mealTypeFilter={
+          pickerSlot !== null ? currentItems[pickerSlot].mealType : null
+        }
         onClose={() => setPickerSlot(null)}
         onPick={(r) => {
           if (pickerSlot !== null) applyRecipe(pickerSlot, r);
