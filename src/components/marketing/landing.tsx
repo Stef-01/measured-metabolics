@@ -9,6 +9,7 @@ import {
   ClipboardList,
   PanelRightClose,
   ArrowRight,
+  Shield,
 } from "lucide-react";
 import { HERO } from "@/lib/images";
 
@@ -29,6 +30,8 @@ export function Landing() {
       Icon: Smartphone,
       footnote:
         "Phone-first surface with a single primary action: snap your next meal.",
+      iconBg: "bg-[var(--measured-clinical-blue)]/10",
+      iconColor: "text-[var(--measured-clinical-blue)]",
     },
     {
       id: "dietitian",
@@ -38,6 +41,8 @@ export function Landing() {
       Icon: ClipboardList,
       footnote:
         "Keyboard-driven workflows. Approve, edit, flag — five meals reviewed in under five minutes.",
+      iconBg: "bg-[var(--measured-green)]/10",
+      iconColor: "text-[var(--measured-dark-green)]",
     },
     {
       id: "gp",
@@ -47,6 +52,19 @@ export function Landing() {
       Icon: PanelRightClose,
       footnote:
         "360px column. Patient context, transcript paste, billing, care plan, dietitian referral, dietitian report.",
+      iconBg: "bg-[var(--measured-gold)]/15",
+      iconColor: "text-[#a07710]",
+    },
+    {
+      id: "admin",
+      title: "Admin Console",
+      tagline: "KPI dashboard, audit log, organizations, users",
+      href: "/admin/kpi",
+      Icon: Shield,
+      footnote:
+        "North-star metrics, append-only audit trail, GP practice network, and env flags for stage roll-out.",
+      iconBg: "bg-[var(--measured-evaluate)]/8",
+      iconColor: "text-[var(--measured-evaluate)]",
     },
   ];
 
@@ -104,7 +122,7 @@ export function Landing() {
         </motion.p>
       </section>
 
-      <section className="mx-auto grid max-w-5xl gap-4 px-6 pb-24 md:grid-cols-3">
+      <section className="mx-auto grid max-w-5xl gap-4 px-6 pb-24 sm:grid-cols-2 lg:grid-cols-4">
         {personas.map((p, idx) => (
           <PersonaCard key={p.id} persona={p} delay={idx * 0.06} />
         ))}
@@ -119,12 +137,14 @@ export function Landing() {
 }
 
 interface Persona {
-  id: "patient" | "dietitian" | "gp";
+  id: "patient" | "dietitian" | "gp" | "admin";
   title: string;
   tagline: string;
   href: string;
   Icon: typeof Stethoscope;
   footnote: string;
+  iconBg: string;
+  iconColor: string;
 }
 
 function PersonaCard({ persona, delay }: { persona: Persona; delay: number }) {
@@ -133,31 +153,34 @@ function PersonaCard({ persona, delay }: { persona: Persona; delay: number }) {
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut", delay }}
+      className="h-full"
     >
       <Link
         href={persona.href}
-        className="group relative block h-full overflow-hidden rounded-2xl border border-[var(--measured-border-soft)] bg-white p-6 shadow-[var(--shadow-card)] transition-shadow duration-200 hover:shadow-[var(--shadow-raised)]"
+        className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--measured-border-soft)] bg-white p-6 shadow-[var(--shadow-card)] transition-shadow duration-200 hover:shadow-[var(--shadow-raised)]"
       >
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]">
-            <persona.Icon size={20} strokeWidth={2} aria-hidden="true" />
-          </div>
-          <div className="font-serif text-[20px] tracking-tight">
-            {persona.title}
+        <div className="mb-4">
+          <div
+            className={`flex h-11 w-11 items-center justify-center rounded-2xl ${persona.iconBg} ${persona.iconColor}`}
+          >
+            <persona.Icon size={22} strokeWidth={2} aria-hidden="true" />
           </div>
         </div>
-        <p className="mt-3 text-[14px] text-[var(--measured-dark)]">
+        <div className="font-serif text-[19px] leading-tight tracking-tight text-[var(--measured-dark)]">
+          {persona.title}
+        </div>
+        <p className="mt-2 text-[13px] leading-relaxed text-[var(--measured-dark)]">
           {persona.tagline}
         </p>
-        <p className="mt-2 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
+        <p className="mt-2 flex-1 text-[11px] leading-relaxed text-[var(--measured-subtext)]">
           {persona.footnote}
         </p>
-        <div className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-medium text-[var(--measured-dark-green)]">
+        <div className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--measured-dark-green)]">
           Enter
           <ArrowRight
             size={14}
-            strokeWidth={2.2}
-            className="transition-transform duration-200 group-hover:translate-x-0.5"
+            strokeWidth={2.4}
+            className="transition-transform duration-200 group-hover:translate-x-1"
             aria-hidden="true"
           />
         </div>
