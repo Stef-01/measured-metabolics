@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CheckCheck, Check, ChevronRight } from "lucide-react";
+import { CheckCheck, Check, ChevronRight, Sparkles } from "lucide-react";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import { ASHA_PLAN, RECIPES, CURRENT_PATIENT_ID } from "@/lib/mock";
 import { mealImageBySlug } from "@/lib/images";
@@ -282,9 +282,12 @@ export function PatientPlanScreen() {
                       {item.description}
                     </p>
                     {item.rationale && !isEaten && (
-                      <p className="mt-2 rounded-lg bg-[var(--measured-cream)] px-3 py-2 text-[12px] italic leading-relaxed text-[var(--measured-dark)]">
-                        Why: {item.rationale}
-                      </p>
+                      <div className="mt-2 flex items-start gap-1.5 rounded-xl bg-[var(--measured-green)]/5 px-3 py-2">
+                        <Sparkles size={11} strokeWidth={2.2} className="mt-0.5 shrink-0 text-[var(--measured-dark-green)]" aria-hidden="true" />
+                        <p className="text-[12px] italic leading-relaxed text-[var(--measured-dark)]">
+                          {item.rationale}
+                        </p>
+                      </div>
                     )}
                   </div>
                 </div>

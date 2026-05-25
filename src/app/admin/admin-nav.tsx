@@ -34,7 +34,7 @@ export function AdminNav() {
           <Shield size={15} strokeWidth={2.2} aria-hidden="true" />
         </div>
         <div>
-          <div className="text-[13px] font-semibold text-[var(--measured-dark)]">
+          <div className="font-serif text-[16px] leading-tight tracking-tight text-[var(--measured-dark)]">
             Measured
           </div>
           <div className="text-[10px] uppercase tracking-wider text-[var(--measured-subtext)]">

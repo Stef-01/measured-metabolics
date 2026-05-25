@@ -92,7 +92,7 @@ export function GpSidebarShell({ patient, children }: Props) {
               href={tab.href}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[12px] font-medium transition-colors",
+                "flex shrink-0 items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-[12px] font-medium transition-colors",
                 isActive
                   ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
                   : "text-[var(--measured-subtext)] hover:bg-[var(--measured-cream)] hover:text-[var(--measured-dark)]",

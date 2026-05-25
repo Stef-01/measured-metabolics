@@ -70,6 +70,9 @@ export function PatientHomeScreen() {
   const lastDietitianMsg = [...thread]
     .reverse()
     .find((m) => m.fromRole === "dietitian");
+  const unreadFromMaya = thread.filter(
+    (m) => m.fromRole === "dietitian" && !m.read,
+  ).length;
 
   const nextMeal = nextMealForToday(meals);
   const streak = computeStreak(meals);
@@ -256,12 +259,19 @@ export function PatientHomeScreen() {
           className="group block rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
         >
           <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--measured-gold)]/15 text-[#a07710]">
-              <MessageCircle size={18} strokeWidth={2} aria-hidden="true" />
+            <div className="relative shrink-0">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--measured-gold)]/15 text-[#a07710]">
+                <MessageCircle size={18} strokeWidth={2} aria-hidden="true" />
+              </div>
+              {unreadFromMaya > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--measured-evaluate)] text-[8px] font-bold text-white ring-2 ring-white">
+                  {unreadFromMaya > 9 ? "9+" : unreadFromMaya}
+                </span>
+              )}
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between">
-                <div className="text-[13px] font-semibold text-[var(--measured-dark)]">
+                <div className={unreadFromMaya > 0 ? "text-[13px] font-bold text-[var(--measured-dark)]" : "text-[13px] font-semibold text-[var(--measured-dark)]"}>
                   Maya · APD
                 </div>
                 <ChevronRight
@@ -270,7 +280,7 @@ export function PatientHomeScreen() {
                   aria-hidden="true"
                 />
               </div>
-              <p className="mt-0.5 line-clamp-2 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
+              <p className={`mt-0.5 line-clamp-2 text-[12px] leading-relaxed ${unreadFromMaya > 0 ? "font-medium text-[var(--measured-dark)]" : "text-[var(--measured-subtext)]"}`}>
                 {lastDietitianMsg?.body ??
                   "Maya will message after your next review."}
               </p>
