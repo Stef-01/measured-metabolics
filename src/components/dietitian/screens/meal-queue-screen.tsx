@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Check,
@@ -48,7 +48,7 @@ const SHORTCUTS: {
   {
     key: "N",
     action: "next",
-    label: "Next",
+    label: "Skip",
     Icon: ArrowRight,
     tone: "neutral",
   },
@@ -65,12 +65,25 @@ const TONE_CLASS: Record<(typeof SHORTCUTS)[number]["tone"], string> = {
     "bg-[var(--measured-cream)] text-[var(--measured-dark)] hover:bg-[var(--measured-input-bg)]",
 };
 
+type QueueFilter = "all" | "flagged" | "high_spike";
+
 interface Props {
   pool?: MealLog[];
 }
 
 export function DietitianMealQueueScreen({ pool }: Props = {}) {
-  const meals = pool ?? DEMO_QUEUE_MEALS;
+  const baseMeals = pool ?? DEMO_QUEUE_MEALS;
+  const [queueFilter, setQueueFilter] = useState<QueueFilter>("all");
+  const meals = useMemo(() => {
+    switch (queueFilter) {
+      case "flagged":
+        return baseMeals.filter((m) => m.analysis.clinicalFlags.length > 0);
+      case "high_spike":
+        return baseMeals.filter((m) => (m.analysis.cgmPeakDeltaMmol ?? 0) >= 3);
+      default:
+        return baseMeals;
+    }
+  }, [baseMeals, queueFilter]);
   const cursor = useDietitianQueue((s) => s.cursor);
   const setCursor = useDietitianQueue((s) => s.setCursor);
   const recordAction = useDietitianQueue((s) => s.recordAction);
@@ -89,10 +102,10 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
   const current = meals[cursor];
   const remaining = Math.max(0, meals.length - cursor);
 
-  // Reset queue cursor on first mount so reload starts at top.
+  // Reset cursor on mount and whenever the filter changes.
   useEffect(() => {
     reset();
-  }, [reset]);
+  }, [reset, queueFilter]);
 
   // Initialise session start once, after mount, away from render purity rules.
   useEffect(() => {
@@ -187,20 +200,35 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
           <CheckCircle2 size={32} strokeWidth={1.6} aria-hidden="true" />
         </div>
         <h2 className="font-serif text-[28px] text-[var(--measured-dark)]">
-          Queue clear
+          {queueFilter !== "all" ? "No matches" : "Queue clear"}
         </h2>
         <p className="text-[14px] text-[var(--measured-subtext)]">
-          {acted.length > 0
-            ? `${acted.length} meals reviewed${sessionInfo ? ` in ${sessionInfo.elapsed}` : ""}.`
-            : "All meals are reviewed."}
+          {queueFilter === "flagged"
+            ? "No flagged meals in the queue."
+            : queueFilter === "high_spike"
+              ? "No high-spike meals (≥3 mmol/L) found."
+              : acted.length > 0
+                ? `${acted.length} meals reviewed${sessionInfo ? ` in ${sessionInfo.elapsed}` : ""}.`
+                : "All meals are reviewed."}
         </p>
-        <button
-          type="button"
-          onClick={reset}
-          className="mt-3 rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark)]"
-        >
-          Reset (demo)
-        </button>
+        <div className="mt-3 flex gap-2">
+          {queueFilter !== "all" && (
+            <button
+              type="button"
+              onClick={() => setQueueFilter("all")}
+              className="rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark-green)]"
+            >
+              Clear filter
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={reset}
+            className="rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark)]"
+          >
+            Reset (demo)
+          </button>
+        </div>
       </div>
     );
   }
@@ -232,7 +260,54 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
         )}
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[280px_1fr]">
+      {/* Filter strip */}
+      <div className="mt-4 flex items-center gap-2">
+        {(
+          [
+            { id: "all" as QueueFilter, label: "All", count: baseMeals.length },
+            {
+              id: "flagged" as QueueFilter,
+              label: "Flagged",
+              count: baseMeals.filter(
+                (m) => m.analysis.clinicalFlags.length > 0,
+              ).length,
+            },
+            {
+              id: "high_spike" as QueueFilter,
+              label: "High spike",
+              count: baseMeals.filter(
+                (m) => (m.analysis.cgmPeakDeltaMmol ?? 0) >= 3,
+              ).length,
+            },
+          ] as const
+        ).map((f) => (
+          <button
+            key={f.id}
+            type="button"
+            onClick={() => setQueueFilter(f.id)}
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold transition-colors",
+              queueFilter === f.id
+                ? "bg-[var(--measured-dark)] text-white"
+                : "border border-[var(--measured-border)] bg-white text-[var(--measured-subtext)] hover:bg-[var(--measured-cream)]",
+            )}
+          >
+            {f.label}
+            <span
+              className={cn(
+                "rounded-full px-1.5 py-0.5 text-[10px] font-bold",
+                queueFilter === f.id
+                  ? "bg-white/20 text-white"
+                  : "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
+              )}
+            >
+              {f.count}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-4 grid gap-6 lg:grid-cols-[280px_1fr]">
         {/* Left rail: queue */}
         <aside className="surface-card max-h-[calc(100dvh-180px)] overflow-y-auto p-3 scrollbar-hide">
           <ul className="space-y-1.5">
@@ -430,25 +505,40 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
               </div>
             )}
 
-            {/* Action bar with shortcut hints */}
-            <div className="grid grid-cols-5 gap-2">
-              {SHORTCUTS.map((sc) => (
-                <button
-                  type="button"
-                  key={sc.key}
-                  onClick={() => handleAction(sc.action, current.id)}
-                  className={cn(
-                    "flex flex-col items-center justify-center gap-1 rounded-2xl px-3 py-3 text-[12px] font-semibold transition-colors",
-                    TONE_CLASS[sc.tone],
-                  )}
-                >
-                  <sc.Icon size={16} strokeWidth={2.2} aria-hidden="true" />
-                  <span>{sc.label}</span>
-                  <kbd className="rounded bg-black/10 px-1.5 py-0.5 text-[10px] font-mono opacity-80">
-                    {sc.key}
-                  </kbd>
-                </button>
-              ))}
+            {/* Action bar — Approve is primary, others secondary */}
+            <div className="space-y-2">
+              <button
+                type="button"
+                onClick={() => handleAction("approved", current.id)}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] px-4 py-3.5 text-[14px] font-semibold text-white transition-colors hover:bg-[var(--measured-dark-green)]"
+              >
+                <Check size={18} strokeWidth={2.2} aria-hidden="true" />
+                Approve
+                <kbd className="ml-auto rounded bg-white/20 px-2 py-0.5 text-[11px] font-mono">
+                  A
+                </kbd>
+              </button>
+              <div className="grid grid-cols-4 gap-2">
+                {SHORTCUTS.filter((sc) => sc.action !== "approved").map(
+                  (sc) => (
+                    <button
+                      type="button"
+                      key={sc.key}
+                      onClick={() => handleAction(sc.action, current.id)}
+                      className={cn(
+                        "flex flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2.5 text-[11px] font-semibold transition-colors",
+                        TONE_CLASS[sc.tone],
+                      )}
+                    >
+                      <sc.Icon size={15} strokeWidth={2.2} aria-hidden="true" />
+                      <span>{sc.label}</span>
+                      <kbd className="rounded bg-black/10 px-1.5 py-0.5 text-[9px] font-mono opacity-80">
+                        {sc.key}
+                      </kbd>
+                    </button>
+                  ),
+                )}
+              </div>
             </div>
           </motion.section>
         </AnimatePresence>
