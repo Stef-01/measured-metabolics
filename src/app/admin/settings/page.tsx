@@ -12,7 +12,7 @@ export default function AdminSettingsPage() {
   };
   return (
     <div>
-      <h1 className="text-[24px] font-semibold text-[var(--measured-text)]">
+      <h1 className="font-serif text-[34px] leading-tight tracking-tight text-[var(--measured-dark)]">
         Platform settings
       </h1>
       <p className="mt-1 text-[13px] text-[var(--measured-subtext)]">
@@ -28,8 +28,8 @@ export default function AdminSettingsPage() {
             <span
               className={`rounded-full px-3 py-1 text-[11px] font-semibold ${
                 v
-                  ? "bg-[var(--measured-accent-soft)] text-[var(--measured-accent)]"
-                  : "bg-[var(--measured-card)] text-[var(--measured-subtext)]"
+                  ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+                  : "bg-[var(--measured-cream)] text-[var(--measured-subtext)]"
               }`}
             >
               {v ? "configured" : "not set"}

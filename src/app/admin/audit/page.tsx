@@ -76,10 +76,10 @@ export default async function AdminAuditPage({
     <div>
       <header className="mb-6 flex items-end justify-between">
         <div>
-          <p className="text-[12px] uppercase tracking-wider text-[var(--measured-subtext)]">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
             Compliance
           </p>
-          <h1 className="mt-1 text-[24px] font-semibold text-[var(--measured-text)]">
+          <h1 className="mt-1 font-serif text-[34px] leading-tight tracking-tight text-[var(--measured-dark)]">
             Audit log
           </h1>
           <p className="mt-1 text-[13px] text-[var(--measured-subtext)]">

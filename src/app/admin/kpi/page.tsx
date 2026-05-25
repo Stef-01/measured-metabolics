@@ -36,86 +36,124 @@ export default async function AdminKpiPage() {
   const rate = total ? Math.round((completed / total) * 100) : 0;
 
   return (
-    <div>
-      <p className="text-[12px] uppercase tracking-wider text-[var(--measured-subtext)]">
-        North-star
+    <div className="max-w-3xl">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+        North-star metric
       </p>
-      <h1 className="mt-1 text-[24px] font-semibold text-[var(--measured-text)]">
-        Completed metabolic care loop rate
+      <h1 className="mt-1 font-serif text-[34px] leading-tight tracking-tight text-[var(--measured-dark)]">
+        Completed care loop rate
       </h1>
+      <p className="mt-1 text-[14px] text-[var(--measured-subtext)]">
+        Referral → 3+ meals → approval → GP report viewed within 4 weeks.
+      </p>
 
-      <div className="mt-6 grid grid-cols-3 gap-4">
-        <Card label="Loops started" value={total.toString()} />
-        <Card label="Completed (4-week window)" value={completed.toString()} />
-        <Card label="Completion rate" value={`${rate}%`} accent />
+      {/* Hero completion card */}
+      <div className="mt-6 overflow-hidden rounded-3xl border border-[var(--measured-green)]/25 bg-[var(--measured-green)]/5 p-6">
+        <div className="flex items-end gap-6">
+          <div>
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+              Completion rate
+            </div>
+            <div className="mt-1 font-serif text-[64px] leading-none tracking-tight text-[var(--measured-dark)]">
+              {rate}%
+            </div>
+          </div>
+          <div className="mb-2 flex-1">
+            <div className="mb-1 flex justify-between text-[11px] text-[var(--measured-subtext)]">
+              <span>{completed} completed</span>
+              <span>{total - completed} in progress</span>
+            </div>
+            <div className="h-3 w-full overflow-hidden rounded-full bg-white shadow-inner">
+              <div
+                className="h-full rounded-full bg-[var(--measured-green)] transition-all"
+                style={{ width: `${rate}%` }}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
-      <p className="mt-6 text-[13px] text-[var(--measured-subtext)]">
-        Loop = referral.created → ≥3 meal.uploaded → ≥1 meal.approved →
-        report.sent → record.viewed (the GP opening the report). Window: 4
-        weeks. Materialised view{" "}
-        <code className="rounded bg-[var(--measured-card)] px-1">
+      <div className="mt-4 grid grid-cols-3 gap-3">
+        <StatCard label="Loops started" value={total.toString()} />
+        <StatCard label="Completed (4-wk)" value={completed.toString()} />
+        <StatCard label="In progress" value={(total - completed).toString()} muted />
+      </div>
+
+      <p className="mt-6 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
+        Materialised view{" "}
+        <code className="rounded bg-[var(--measured-card)] px-1 py-0.5">
           kpi_completed_loops
         </code>{" "}
         refreshed nightly via{" "}
-        <code className="rounded bg-[var(--measured-card)] px-1">
+        <code className="rounded bg-[var(--measured-card)] px-1 py-0.5">
           refresh_kpi_completed_loops()
         </code>
         .
       </p>
 
-      <table className="mt-6 w-full text-left text-[13px]">
-        <thead className="text-[var(--measured-subtext)]">
-          <tr>
-            <th className="px-4 py-2">Patient</th>
-            <th className="px-4 py-2">Started</th>
-            <th className="px-4 py-2">Completed</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => (
-            <tr
-              key={`${r.patient_id}-${r.started_at}`}
-              className="border-t border-[var(--measured-border-soft)]"
-            >
-              <td className="px-4 py-2 text-[var(--measured-text)]">
-                {r.patient_id}
-              </td>
-              <td className="px-4 py-2 text-[var(--measured-subtext)]">
-                {new Date(r.started_at).toLocaleDateString()}
-              </td>
-              <td className="px-4 py-2 text-[var(--measured-text)]">
-                {r.completed_loop ? "Yes" : "No"}
-              </td>
+      <div className="mt-6 overflow-hidden rounded-2xl border border-[var(--measured-border)] bg-[var(--measured-card)]">
+        <div className="border-b border-[var(--measured-border-soft)] px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+          All loops · {rows.length} rows
+        </div>
+        <table className="w-full text-left text-[13px]">
+          <thead className="bg-[var(--measured-bg)] text-[var(--measured-subtext)]">
+            <tr>
+              <th className="px-4 py-2.5 font-medium">Patient</th>
+              <th className="px-4 py-2.5 font-medium">Started</th>
+              <th className="px-4 py-2.5 font-medium">Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr
+                key={`${r.patient_id}-${r.started_at}`}
+                className="border-t border-[var(--measured-border-soft)]"
+              >
+                <td className="px-4 py-2.5 font-medium text-[var(--measured-text)]">
+                  {r.patient_id}
+                </td>
+                <td className="px-4 py-2.5 text-[var(--measured-subtext)]">
+                  {new Date(r.started_at).toLocaleDateString([], {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </td>
+                <td className="px-4 py-2.5">
+                  {r.completed_loop ? (
+                    <span className="inline-flex rounded-full bg-[var(--measured-green)]/10 px-2.5 py-0.5 text-[11px] font-semibold text-[var(--measured-dark-green)]">
+                      Completed
+                    </span>
+                  ) : (
+                    <span className="inline-flex rounded-full bg-[var(--measured-clinical-amber)]/15 px-2.5 py-0.5 text-[11px] font-semibold text-[var(--measured-clinical-amber)]">
+                      In progress
+                    </span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
 
-function Card({
+function StatCard({
   label,
   value,
-  accent,
+  muted,
 }: {
   label: string;
   value: string;
-  accent?: boolean;
+  muted?: boolean;
 }) {
   return (
-    <div
-      className={`rounded-3xl border p-5 ${
-        accent
-          ? "border-[var(--measured-accent)] bg-[var(--measured-accent-soft)]"
-          : "border-[var(--measured-border)] bg-[var(--measured-card)]"
-      }`}
-    >
+    <div className="rounded-2xl border border-[var(--measured-border)] bg-[var(--measured-card)] p-4">
       <p className="text-[11px] uppercase tracking-wider text-[var(--measured-subtext)]">
         {label}
       </p>
-      <p className="mt-2 text-[28px] font-semibold text-[var(--measured-text)]">
+      <p className={`mt-2 font-serif text-[28px] leading-none ${muted ? "text-[var(--measured-subtext)]" : "text-[var(--measured-dark)]"}`}>
         {value}
       </p>
     </div>

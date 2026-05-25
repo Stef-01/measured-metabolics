@@ -19,10 +19,10 @@ export default function AdminOrganizationsPage() {
 
   return (
     <div>
-      <p className="text-[12px] uppercase tracking-wider text-[var(--measured-subtext)]">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
         Network
       </p>
-      <h1 className="mt-1 text-[24px] font-semibold text-[var(--measured-text)]">
+      <h1 className="mt-1 font-serif text-[34px] leading-tight tracking-tight text-[var(--measured-dark)]">
         Organizations
       </h1>
       <p className="mt-1 text-[13px] text-[var(--measured-subtext)]">
@@ -123,10 +123,10 @@ export default function AdminOrganizationsPage() {
                           <span
                             className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${
                               p.risk === "high"
-                                ? "bg-red-50 text-red-600"
+                                ? "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]"
                                 : p.risk === "medium"
-                                  ? "bg-amber-50 text-amber-700"
-                                  : "bg-blue-50 text-blue-600"
+                                  ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
+                                  : "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]"
                             }`}
                           >
                             {p.risk}

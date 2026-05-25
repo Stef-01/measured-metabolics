@@ -42,9 +42,9 @@ export default function AdminUsersPage() {
   ];
 
   const ROLE_BADGE: Record<UserRole, string> = {
-    dietitian: "bg-[var(--measured-accent-soft)] text-[var(--measured-accent)]",
-    gp: "bg-blue-50 text-blue-700",
-    patient: "bg-[var(--measured-card)] text-[var(--measured-subtext)]",
+    dietitian: "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
+    gp: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
+    patient: "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
   };
 
   const byRole: Record<UserRole, UserRow[]> = {
@@ -55,10 +55,10 @@ export default function AdminUsersPage() {
 
   return (
     <div>
-      <p className="text-[12px] uppercase tracking-wider text-[var(--measured-subtext)]">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
         Access control
       </p>
-      <h1 className="mt-1 text-[24px] font-semibold text-[var(--measured-text)]">
+      <h1 className="mt-1 font-serif text-[34px] leading-tight tracking-tight text-[var(--measured-dark)]">
         Users
       </h1>
       <p className="mt-1 text-[13px] text-[var(--measured-subtext)]">
@@ -96,8 +96,8 @@ export default function AdminUsersPage() {
                     <span
                       className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
                         u.consentStatus === "signed"
-                          ? "bg-green-50 text-green-700"
-                          : "bg-amber-50 text-amber-700"
+                          ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+                          : "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
                       }`}
                     >
                       {u.consentStatus}
