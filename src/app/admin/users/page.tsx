@@ -73,7 +73,7 @@ export default function AdminUsersPage() {
             {role === "gp"
               ? "GPs"
               : role.charAt(0).toUpperCase() + role.slice(1) + "s"}
-            <span className="ml-2 rounded-full bg-[var(--measured-card)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
+            <span className="ml-2 rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
               {byRole[role].length}
             </span>
           </h2>
