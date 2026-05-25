@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   Users,
   ClipboardCheck,
@@ -9,6 +10,8 @@ import {
   AlertTriangle,
   ArrowRight,
   ChevronRight,
+  MessageSquarePlus,
+  Send,
 } from "lucide-react";
 import { DietitianStatCard } from "@/components/dietitian/stat-card";
 import {
@@ -19,6 +22,7 @@ import {
   CURRENT_DIETITIAN_ID,
 } from "@/lib/mock";
 import type { RiskLevel, ReferralPriority } from "@/lib/mock/types";
+import { patientStore, type MealConsultationRequest } from "@/lib/storage/patient-store";
 import { cn } from "@/lib/utils/cn";
 
 const PRIORITY_TONE: Record<ReferralPriority, string> = {
@@ -68,11 +72,11 @@ export function DietitianDashboardScreen() {
           hint="Caseload"
         />
         <DietitianStatCard
-          label="Meals waiting"
+          label="Meals to review"
           value={pendingMeals}
           Icon={ClipboardCheck}
           tone={pendingMeals > 5 ? "warning" : "default"}
-          hint={pendingMeals > 5 ? "Above 5-meal target" : "Within target"}
+          hint={pendingMeals > 5 ? "Above target · start queue" : "Within target"}
         />
         <DietitianStatCard
           label="Severe flags"
@@ -249,6 +253,8 @@ export function DietitianDashboardScreen() {
           ))}
         </div>
       </section>
+
+      <PatientRequestsSection />
     </div>
   );
 }
@@ -279,6 +285,109 @@ const RISK_CHIP: Record<RiskLevel, string> = {
   medium: "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
   low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
 };
+
+function PatientRequestsSection() {
+  const [requests, setRequests] = useState<
+    Array<MealConsultationRequest & { patientName: string }>
+  >([]);
+  const [replies, setReplies] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const all: Array<MealConsultationRequest & { patientName: string }> = [];
+    for (const p of PATIENTS) {
+      const reqs = patientStore.getRequests(p.id);
+      for (const r of reqs) {
+        if (!r.dietitianReply) {
+          all.push({ ...r, patientName: `${p.firstName} ${p.lastName}` });
+        }
+      }
+    }
+    all.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+    setRequests(all);
+  }, []);
+
+  const reply = (req: (typeof requests)[number]) => {
+    const text = replies[req.id]?.trim();
+    if (!text) return;
+    patientStore.replyToRequest(req.patientId, req.id, text);
+    setReplies((prev) => ({ ...prev, [req.id]: "" }));
+    setRequests((prev) => prev.filter((r) => r.id !== req.id));
+  };
+
+  if (requests.length === 0) return null;
+
+  return (
+    <section className="mt-8">
+      <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+        <MessageSquarePlus size={14} strokeWidth={2} aria-hidden="true" />
+        Patient meal requests
+        <span className="rounded-full bg-[var(--measured-clinical-amber)]/15 px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-clinical-amber)]">
+          {requests.length}
+        </span>
+      </div>
+      <ul className="mt-3 space-y-3">
+        {requests.map((req) => (
+          <li
+            key={req.id}
+            className="surface-card p-4"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-[14px] font-semibold text-[var(--measured-dark)]">
+                    {req.patientName}
+                  </span>
+                  <span className="rounded-full bg-[var(--measured-clinical-amber)]/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-clinical-amber)]">
+                    {req.type.replace("_", " ")}
+                  </span>
+                  <span className="text-[11px] text-[var(--measured-subtext)]">
+                    {new Date(req.createdAt).toLocaleString([], {
+                      weekday: "short",
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </div>
+                <p className="mt-1 text-[13px] leading-relaxed text-[var(--measured-dark)]">
+                  {req.body}
+                </p>
+              </div>
+            </div>
+            <div className="mt-3 flex gap-2">
+              <input
+                type="text"
+                value={replies[req.id] ?? ""}
+                onChange={(e) =>
+                  setReplies((prev) => ({ ...prev, [req.id]: e.target.value }))
+                }
+                placeholder="Reply with a suggestion…"
+                className="flex-1 rounded-xl border border-[var(--measured-border)] bg-[var(--measured-cream)] px-3 py-2 text-[12px] focus:border-[var(--measured-green)] focus:outline-none"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    reply(req);
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => reply(req)}
+                disabled={!replies[req.id]?.trim()}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-3 py-2 text-[12px] font-semibold text-white disabled:bg-[var(--measured-cream)] disabled:text-[var(--measured-subtext)]"
+              >
+                <Send size={13} strokeWidth={2.2} />
+                Reply
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 
 function PatientMiniCard({ patient: p }: { patient: (typeof PATIENTS)[number] }) {
   return (

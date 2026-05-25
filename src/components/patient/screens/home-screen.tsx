@@ -16,6 +16,7 @@ import {
 import { PatientAppHeader } from "@/components/patient/app-header";
 import { EscalationCard } from "@/components/patient/escalation-card";
 import { DietitianNotesCard } from "@/components/patient/dietitian-notes-card";
+import { MealIdeasCard } from "@/components/patient/meal-ideas-card";
 import {
   useSeedPatientStore,
   useStoredMeals,
@@ -138,6 +139,8 @@ export function PatientHomeScreen() {
         )}
 
         <DietitianNotesCard patientId={me.id} />
+
+        <MealIdeasCard patientId={me.id} dietitianName="Maya" />
 
         <motion.div
           initial={{ opacity: 0, y: 8 }}

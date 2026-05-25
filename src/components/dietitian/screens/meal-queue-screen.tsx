@@ -43,8 +43,8 @@ const SHORTCUTS: {
   {
     key: "A",
     action: "approved",
-    label: "Approve",
-    Icon: Check,
+    label: "Reviewed",
+    Icon: CheckCircle2,
     tone: "approve",
   },
   { key: "E", action: "edit", label: "Edit", Icon: Pencil, tone: "edit" },
@@ -77,6 +77,16 @@ const TONE_CLASS: Record<(typeof SHORTCUTS)[number]["tone"], string> = {
 };
 
 type QueueFilter = "all" | "flagged" | "high_spike";
+
+function triageLabel(m: MealLog): { label: string; color: string } | null {
+  if (m.analysis.clinicalFlags.length > 0)
+    return { label: "Flag", color: "var(--measured-evaluate)" };
+  if ((m.analysis.cgmPeakDeltaMmol ?? 0) >= 3)
+    return { label: "High Δ", color: "var(--measured-evaluate)" };
+  if ((m.analysis.cgmPeakDeltaMmol ?? 0) >= 1.5)
+    return { label: "Spike", color: "var(--measured-clinical-amber)" };
+  return null;
+}
 
 interface Props {
   pool?: MealLog[];
@@ -288,7 +298,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
               ? "No high-spike meals (≥3 mmol/L) found."
               : acted.length > 0
                 ? `${acted.length} meals reviewed${sessionInfo ? ` in ${sessionInfo.elapsed}` : ""}.`
-                : "All meals are reviewed."}
+                : "All meals reviewed — great session."}
         </p>
         <div className="mt-3 flex gap-2">
           {queueFilter !== "all" && (
@@ -322,7 +332,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
             Meal review queue
           </div>
           <h1 className="mt-1 font-serif text-[34px] leading-tight tracking-tight text-[var(--measured-dark)]">
-            {remaining} meal{remaining === 1 ? "" : "s"} waiting
+            {remaining} meal{remaining === 1 ? "" : "s"} for clinical review
           </h1>
         </div>
         {sessionInfo && (
@@ -441,6 +451,17 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                         className="text-[var(--measured-evaluate)]"
                         aria-hidden="true"
                       />
+                    )}
+                    {triageLabel(m) !== null && (
+                      <span
+                        className="rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase"
+                        style={{
+                          backgroundColor: `${triageLabel(m)!.color}15`,
+                          color: triageLabel(m)!.color,
+                        }}
+                      >
+                        {triageLabel(m)!.label}
+                      </span>
                     )}
                   </button>
                 </li>
@@ -721,8 +742,8 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                 onClick={() => handleAction("approved", current.id)}
                 className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] px-4 py-3.5 text-[14px] font-semibold text-white transition-colors hover:bg-[var(--measured-dark-green)]"
               >
-                <Check size={18} strokeWidth={2.2} aria-hidden="true" />
-                Approve
+                <CheckCircle2 size={18} strokeWidth={2.2} aria-hidden="true" />
+                Reviewed ✓
                 <kbd className="ml-auto rounded bg-white/20 px-2 py-0.5 text-[11px] font-mono">
                   A
                 </kbd>

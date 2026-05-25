@@ -91,6 +91,16 @@ export interface PointAnnotation {
   note: string;
 }
 
+export interface MealConsultationRequest {
+  id: string;
+  patientId: string;
+  type: "swap_idea" | "meal_ideas" | "question";
+  body: string;
+  createdAt: string;
+  dietitianReply?: string;
+  repliedAt?: string;
+}
+
 /**
  * Dietitian-authored note attached to a specific patient meal. Surfaces on the
  * patient home + metrics screens. Vibe-stage uses localStorage; Stage 6 swaps
@@ -120,6 +130,7 @@ const ANNOTATIONS_KEY = (pid: string) => `${NS}.${pid}.meal-annotations`;
 // Plan eaten: Record<eatenKey, true>
 // Key format: `${date.toDateString()}-${mealType}` — naturally scoped to a calendar date.
 const PLAN_EATEN_KEY = (pid: string) => `${NS}.${pid}.plan-eaten`;
+const REQUESTS_KEY = (pid: string) => `${NS}.${pid}.meal-requests`;
 
 export const patientStore = {
   // === Meal draft (autosaves while user is on /p/meal) ===
@@ -215,6 +226,25 @@ export const patientStore = {
     }
     writeJSON(PLAN_EATEN_KEY(pid), next);
   },
+
+  // === Meal consultation requests (patient → dietitian) ===
+  getRequests(pid: string): MealConsultationRequest[] {
+    return readJSON<MealConsultationRequest[]>(REQUESTS_KEY(pid), []);
+  },
+  addRequest(pid: string, req: MealConsultationRequest) {
+    const all = patientStore.getRequests(pid);
+    writeJSON(REQUESTS_KEY(pid), [req, ...all]);
+  },
+  replyToRequest(pid: string, id: string, reply: string) {
+    const all = patientStore
+      .getRequests(pid)
+      .map((r) =>
+        r.id === id
+          ? { ...r, dietitianReply: reply, repliedAt: new Date().toISOString() }
+          : r,
+      );
+    writeJSON(REQUESTS_KEY(pid), all);
+  },
 };
 
 // Stable, frozen empty references so `useSyncExternalStore`'s server-snapshot
@@ -225,6 +255,7 @@ const EMPTY_SYMPTOMS = Object.freeze([]) as readonly SymptomLog[];
 const EMPTY_MESSAGES = Object.freeze([]) as readonly Message[];
 const EMPTY_ANNOTATIONS = Object.freeze([]) as readonly MealAnnotation[];
 const EMPTY_PLAN_EATEN = Object.freeze({}) as Record<string, true>;
+const EMPTY_REQUESTS = Object.freeze([]) as readonly MealConsultationRequest[];
 
 const getEmptyMeals = (): MealLog[] => EMPTY_MEALS as MealLog[];
 const getEmptySymptoms = (): SymptomLog[] => EMPTY_SYMPTOMS as SymptomLog[];
@@ -233,6 +264,8 @@ const getEmptyAnnotations = (): MealAnnotation[] =>
   EMPTY_ANNOTATIONS as MealAnnotation[];
 const getEmptyPlanEaten = (): Record<string, true> =>
   EMPTY_PLAN_EATEN as Record<string, true>;
+const getEmptyRequests = (): MealConsultationRequest[] =>
+  EMPTY_REQUESTS as MealConsultationRequest[];
 
 export function useStoredMeals(pid: string): MealLog[] {
   return useSyncExternalStore(
@@ -271,6 +304,14 @@ export function useStoredPlanEaten(pid: string): Record<string, true> {
     subscribe,
     () => patientStore.getPlanEaten(pid),
     getEmptyPlanEaten,
+  );
+}
+
+export function useStoredRequests(pid: string): MealConsultationRequest[] {
+  return useSyncExternalStore(
+    subscribe,
+    () => patientStore.getRequests(pid),
+    getEmptyRequests,
   );
 }
 
