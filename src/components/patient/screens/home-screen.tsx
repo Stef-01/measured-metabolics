@@ -165,7 +165,16 @@ export function PatientHomeScreen() {
                 </div>
                 <div className="text-[12px] text-[var(--measured-subtext)]">
                   {nextMeal !== null
-                    ? `Up next: ${MEAL_LABEL[ASHA_PLAN.items[nextMeal].mealType]} · ${ASHA_PLAN.items[nextMeal].title}`
+                    ? (() => {
+                        const todayDow = new Date().getDay();
+                        const todayIdx = todayDow === 0 ? 6 : todayDow - 1;
+                        const todayItems =
+                          ASHA_PLAN.dayItems?.[todayIdx] ?? ASHA_PLAN.items;
+                        const item = todayItems[nextMeal];
+                        return item
+                          ? `Up next: ${MEAL_LABEL[item.mealType]} · ${item.title}`
+                          : "All meals logged today";
+                      })()
                     : "All meals logged today"}
                 </div>
               </div>
@@ -237,9 +246,12 @@ export function PatientHomeScreen() {
 
 function nextMealForToday(meals: MealLog[]): number | null {
   const todayStr = new Date().toDateString();
+  const todayDow = new Date().getDay();
+  const todayIdx = todayDow === 0 ? 6 : todayDow - 1;
+  const todayItems = ASHA_PLAN.dayItems?.[todayIdx] ?? ASHA_PLAN.items;
   const todayCount = meals.filter(
     (m) => new Date(m.eatenAt).toDateString() === todayStr,
   ).length;
-  if (todayCount >= ASHA_PLAN.items.length) return null;
+  if (todayCount >= todayItems.length) return null;
   return todayCount;
 }

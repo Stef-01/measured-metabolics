@@ -1,9 +1,19 @@
 import type { Cuisine, MealPlan, Recipe } from "./types";
 import { PATIENTS } from "./patients";
 
+// Monday of the current week — stable across page loads so localStorage
+// eaten-state keys don't drift when the module re-evaluates.
+function currentWeekMonday(): string {
+  const d = new Date();
+  const dow = d.getDay();
+  d.setDate(d.getDate() - (dow === 0 ? 6 : dow - 1));
+  d.setHours(0, 0, 0, 0);
+  return d.toISOString();
+}
+
 export const ASHA_PLAN: MealPlan = {
   patientId: "asha",
-  weekStart: new Date().toISOString(),
+  weekStart: currentWeekMonday(),
   approvedByDietitianAt: new Date(Date.now() - 86400000).toISOString(),
   items: [
     {
@@ -33,6 +43,226 @@ export const ASHA_PLAN: MealPlan = {
       rationale: "High protein, satisfies crunch craving.",
     },
   ],
+  dayItems: {
+    // 0 = Monday
+    0: [
+      {
+        mealType: "breakfast",
+        title: "Vegetable poha with peanuts",
+        description:
+          "Flattened rice with onion, mustard seeds, roasted peanuts, lemon.",
+        rationale: "Low-GI start; protein and fibre keep glucose under 7.5.",
+      },
+      {
+        mealType: "lunch",
+        title: "Dhal + half cup rice + cucumber raita",
+        description: "Yellow dhal, half cup basmati, raita and cucumber salad.",
+        rationale: "Halved rice portion to reduce post-prandial spike.",
+      },
+      {
+        mealType: "dinner",
+        title: "Tandoori fish, sautéed greens, 1 roti",
+        description:
+          "Yoghurt-marinated fish; mustard greens; one wholewheat roti.",
+        rationale: "Replaces rice-heavy dinner with low-GI option.",
+      },
+      {
+        mealType: "snack",
+        title: "Roasted chickpeas",
+        description: "Air-roasted with chaat masala.",
+        rationale: "High protein, satisfies crunch craving without spiking.",
+      },
+    ],
+    // 1 = Tuesday
+    1: [
+      {
+        mealType: "breakfast",
+        title: "Moong dal chilla with mint chutney",
+        description:
+          "Thin savoury lentil crepe with onion, green chilli, coriander.",
+        rationale: "High-protein, low-GI breakfast — better than paratha.",
+      },
+      {
+        mealType: "lunch",
+        title: "Chana dal + 1 roti + sliced cucumber",
+        description: "Split chickpea curry, one wholewheat roti, raw cucumber.",
+        rationale: "Legume fibre slows glucose absorption.",
+      },
+      {
+        mealType: "dinner",
+        title: "Palak paneer (low-oil) + half cup brown rice",
+        description: "Spinach and cottage cheese curry; half cup cooked rice.",
+        rationale:
+          "Iron and protein from spinach; brown rice lowers GI vs white.",
+      },
+      {
+        mealType: "snack",
+        title: "Apple with 10 almonds",
+        description: "Small apple, 10 raw almonds.",
+        rationale: "Paired fibre + fat slows fructose absorption.",
+      },
+    ],
+    // 2 = Wednesday
+    2: [
+      {
+        mealType: "breakfast",
+        title: "Oats upma with mixed vegetables",
+        description:
+          "Rolled oats cooked with mustard seeds, curry leaf, carrot, peas.",
+        rationale: "Beta-glucan in oats improves post-breakfast glucose.",
+      },
+      {
+        mealType: "lunch",
+        title: "Rajma + half cup brown rice + salad",
+        description:
+          "Kidney bean curry, half cup cooked brown rice, onion salad.",
+        rationale:
+          "Kidney beans are very low GI; boosts weekly legume variety.",
+      },
+      {
+        mealType: "dinner",
+        title: "Grilled chicken tikka + sautéed spinach + 1 roti",
+        description:
+          "Yoghurt-marinated chicken, wilted spinach with garlic, one roti.",
+        rationale:
+          "High protein, minimal starch — lightest dinner of the week.",
+      },
+      {
+        mealType: "snack",
+        title: "Greek yoghurt with cumin",
+        description: "Small cup plain Greek yoghurt, pinch of roasted cumin.",
+        rationale: "Protein-rich snack; cumin may aid glucose metabolism.",
+      },
+    ],
+    // 3 = Thursday
+    3: [
+      {
+        mealType: "breakfast",
+        title: "Egg bhurji on 1 wholewheat roti",
+        description:
+          "Scrambled eggs with onion, tomato, green chilli, turmeric.",
+        rationale: "Eggs provide complete protein; roti adds slow carb.",
+      },
+      {
+        mealType: "lunch",
+        title: "Chole + half cup rice + onion salad",
+        description:
+          "Chickpea curry, half cup basmati, raw onion and coriander.",
+        rationale: "Chickpeas rank among the lowest-GI legumes.",
+      },
+      {
+        mealType: "dinner",
+        title: "Baked masala fish + stir-fried greens",
+        description:
+          "Spiced baked snapper; sautéed bok choy and mustard greens.",
+        rationale:
+          "Baked (not fried) keeps fat low; omega-3 supports insulin sensitivity.",
+      },
+      {
+        mealType: "snack",
+        title: "Roasted makhana",
+        description: "Fox nuts roasted with black pepper and rock salt.",
+        rationale: "Low GI, light protein; curbs evening hunger before dinner.",
+      },
+    ],
+    // 4 = Friday
+    4: [
+      {
+        mealType: "breakfast",
+        title: "Besan chilla with mint chutney",
+        description: "Gram-flour pancake with finely chopped onion and ginger.",
+        rationale: "Chickpea flour is low GI and high in plant protein.",
+      },
+      {
+        mealType: "lunch",
+        title: "Yellow dhal + half cup rice + papad",
+        description:
+          "Toor dhal tempered with cumin, half cup basmati, one papad.",
+        rationale:
+          "Comfort meal kept glucose-friendly by capping rice at half cup.",
+      },
+      {
+        mealType: "dinner",
+        title: "Chicken curry (low-oil) + 1 jowar roti",
+        description: "Tomato-based chicken curry, one sorghum flatbread.",
+        rationale: "Jowar roti is gluten-free and lower GI than wheat.",
+      },
+      {
+        mealType: "snack",
+        title: "Carrot sticks with mint chutney",
+        description:
+          "Raw carrot sticks, small serving of blended mint chutney.",
+        rationale: "Crunchy, low calorie; high beta-carotene.",
+      },
+    ],
+    // 5 = Saturday
+    5: [
+      {
+        mealType: "breakfast",
+        title: "Vegetable upma with coconut",
+        description:
+          "Semolina cooked with vegetables, mustard seeds, grated coconut.",
+        rationale:
+          "Slightly higher carb but balanced by fibre-rich vegetables.",
+      },
+      {
+        mealType: "lunch",
+        title: "Quinoa khichdi with vegetables",
+        description:
+          "Quinoa and moong dal cooked together with carrot and peas.",
+        rationale:
+          "Quinoa provides complete protein and has a low glycaemic load.",
+      },
+      {
+        mealType: "dinner",
+        title: "Paneer tikka + sautéed spinach + 1 roti",
+        description:
+          "Grilled marinated paneer cubes, wilted spinach with garlic, roti.",
+        rationale: "Vegetarian higher-protein dinner; iron from spinach.",
+      },
+      {
+        mealType: "snack",
+        title: "Mixed seeds with dried fruit (small)",
+        description:
+          "1 tbsp each pumpkin and sunflower seeds, 3 dried apricots.",
+        rationale: "Healthy fats + iron; small portion keeps carbs controlled.",
+      },
+    ],
+    // 6 = Sunday
+    6: [
+      {
+        mealType: "breakfast",
+        title: "Idli with sambar (2 idli)",
+        description:
+          "Two steamed rice-lentil cakes with a small bowl of sambar.",
+        rationale:
+          "Fermented idli has lower GI than plain rice; sambar adds protein.",
+      },
+      {
+        mealType: "lunch",
+        title: "Mixed dal + half cup brown rice + cabbage sabzi",
+        description:
+          "Three-lentil dal, half cup brown rice, dry-cooked cabbage.",
+        rationale:
+          "Mixed lentils boost amino-acid profile; cabbage is very low GI.",
+      },
+      {
+        mealType: "dinner",
+        title: "Salmon tikka + sautéed greens + 1 roti",
+        description:
+          "Spiced baked salmon fillet, sautéed mustard greens, one roti.",
+        rationale:
+          "Omega-3 fatty acids in salmon improve insulin sensitivity over time.",
+      },
+      {
+        mealType: "snack",
+        title: "Buttermilk with roasted cumin",
+        description: "One glass thin buttermilk (chaas) with jeera.",
+        rationale:
+          "Probiotic-rich and essentially carb-free; aids digestion on rest day.",
+      },
+    ],
+  },
 };
 
 export const RECIPES: Recipe[] = [

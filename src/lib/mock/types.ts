@@ -151,7 +151,10 @@ export interface MealPlanItem {
 export interface MealPlan {
   patientId: string;
   weekStart: string;
+  /** Default template — shown for any day without a dayItems entry. */
   items: MealPlanItem[];
+  /** Per-day overrides, keyed 0 (Mon) … 6 (Sun). When present, overrides items for that day. */
+  dayItems?: Partial<Record<number, MealPlanItem[]>>;
   approvedByDietitianAt?: string;
 }
 

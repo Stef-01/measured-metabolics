@@ -105,6 +105,9 @@ const SYMPTOMS_KEY = (pid: string) => `${NS}.${pid}.symptoms`;
 const THREAD_KEY = (pid: string) => `${NS}.${pid}.thread`;
 const ONBOARD_KEY = (pid: string) => `${NS}.${pid}.onboarded`;
 const ANNOTATIONS_KEY = (pid: string) => `${NS}.${pid}.meal-annotations`;
+// Plan eaten: Record<eatenKey, true>
+// Key format: `${date.toDateString()}-${mealType}` — naturally scoped to a calendar date.
+const PLAN_EATEN_KEY = (pid: string) => `${NS}.${pid}.plan-eaten`;
 
 export const patientStore = {
   // === Meal draft (autosaves while user is on /p/meal) ===
@@ -185,6 +188,21 @@ export const patientStore = {
       );
     writeJSON(ANNOTATIONS_KEY(pid), all);
   },
+
+  // === Plan eaten state ===
+  getPlanEaten(pid: string): Record<string, true> {
+    return readJSON<Record<string, true>>(PLAN_EATEN_KEY(pid), {});
+  },
+  togglePlanEaten(pid: string, eatenKey: string) {
+    const current = patientStore.getPlanEaten(pid);
+    const next = { ...current };
+    if (next[eatenKey]) {
+      delete next[eatenKey];
+    } else {
+      next[eatenKey] = true;
+    }
+    writeJSON(PLAN_EATEN_KEY(pid), next);
+  },
 };
 
 // Stable, frozen empty references so `useSyncExternalStore`'s server-snapshot
@@ -194,12 +212,15 @@ const EMPTY_MEALS = Object.freeze([]) as readonly MealLog[];
 const EMPTY_SYMPTOMS = Object.freeze([]) as readonly SymptomLog[];
 const EMPTY_MESSAGES = Object.freeze([]) as readonly Message[];
 const EMPTY_ANNOTATIONS = Object.freeze([]) as readonly MealAnnotation[];
+const EMPTY_PLAN_EATEN = Object.freeze({}) as Record<string, true>;
 
 const getEmptyMeals = (): MealLog[] => EMPTY_MEALS as MealLog[];
 const getEmptySymptoms = (): SymptomLog[] => EMPTY_SYMPTOMS as SymptomLog[];
 const getEmptyMessages = (): Message[] => EMPTY_MESSAGES as Message[];
 const getEmptyAnnotations = (): MealAnnotation[] =>
   EMPTY_ANNOTATIONS as MealAnnotation[];
+const getEmptyPlanEaten = (): Record<string, true> =>
+  EMPTY_PLAN_EATEN as Record<string, true>;
 
 export function useStoredMeals(pid: string): MealLog[] {
   return useSyncExternalStore(
@@ -230,6 +251,14 @@ export function useStoredAnnotations(pid: string): MealAnnotation[] {
     subscribe,
     () => patientStore.getAnnotations(pid),
     getEmptyAnnotations,
+  );
+}
+
+export function useStoredPlanEaten(pid: string): Record<string, true> {
+  return useSyncExternalStore(
+    subscribe,
+    () => patientStore.getPlanEaten(pid),
+    getEmptyPlanEaten,
   );
 }
 
