@@ -271,6 +271,10 @@ export const RECIPES: Recipe[] = [
     title: "Vegetable poha with peanuts",
     why: "Steady morning glucose. Protein + fibre.",
     cuisine: "south_asian",
+    prepMinutes: 15,
+    servings: 1,
+    kcalEstimate: 310,
+    macroProfile: { carbs: "moderate", protein: "moderate", fat: "low", fibre: "high" },
     ingredients: [
       "1 cup poha (flattened rice)",
       "1 small onion, diced",
@@ -294,6 +298,10 @@ export const RECIPES: Recipe[] = [
     title: "Tandoori fish with sautéed greens",
     why: "Low-GI, swaps rice for greens.",
     cuisine: "south_asian",
+    prepMinutes: 25,
+    servings: 1,
+    kcalEstimate: 385,
+    macroProfile: { carbs: "low", protein: "high", fat: "low", fibre: "moderate" },
     ingredients: [
       "1 fish fillet (snapper / barramundi)",
       "2 tbsp Greek yoghurt",

@@ -158,6 +158,8 @@ export interface MealPlan {
   approvedByDietitianAt?: string;
 }
 
+export type MacroLoad = "low" | "moderate" | "high";
+
 export interface Recipe {
   id: string;
   title: string;
@@ -165,6 +167,15 @@ export interface Recipe {
   ingredients: string[];
   steps?: string[];
   cuisine: Cuisine;
+  prepMinutes?: number;
+  servings?: number;
+  kcalEstimate?: number;
+  macroProfile?: {
+    carbs: MacroLoad;
+    protein: MacroLoad;
+    fat: MacroLoad;
+    fibre: MacroLoad;
+  };
 }
 
 export interface CarePlanDraft {
