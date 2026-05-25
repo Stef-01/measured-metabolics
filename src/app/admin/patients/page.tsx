@@ -58,7 +58,9 @@ export default async function AdminPatientsPage() {
                   backgroundColor:
                     p.risk === "high"
                       ? "var(--measured-evaluate)"
-                      : "var(--measured-green)",
+                      : p.risk === "medium"
+                        ? "var(--measured-clinical-amber)"
+                        : "var(--measured-clinical-blue)",
                 }}
               >
                 {initials}
@@ -81,8 +83,14 @@ export default async function AdminPatientsPage() {
                     </span>
                   )}
                 </div>
-                <div className="mt-0.5 truncate text-[12px] text-[var(--measured-subtext)]">
-                  {p.conditions.join(" · ")} · Week {p.weekNumber}
+                <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[12px] text-[var(--measured-subtext)]">
+                  <span>{p.conditions.join(" · ")}</span>
+                  <span>·</span>
+                  <span>HbA1c {p.hbA1cPct}%</span>
+                  <span>·</span>
+                  <span>TIR {p.timeInRangePct}%</span>
+                  <span>·</span>
+                  <span>Wk {p.weekNumber}</span>
                 </div>
               </div>
             </li>
