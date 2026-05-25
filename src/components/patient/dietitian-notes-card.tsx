@@ -98,7 +98,7 @@ function NoteItem({
             {ann.points!.map((pin, i) => (
               <div
                 key={pin.id}
-                className="absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 select-none items-center justify-center rounded-full bg-[var(--measured-clinical-blue)] text-[10px] font-bold text-white shadow-md ring-2 ring-white"
+                className="absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 select-none items-center justify-center rounded-full bg-[var(--measured-clinical-blue)] text-[10px] font-bold text-white shadow-[var(--shadow-raised)] ring-2 ring-white"
                 style={{ left: `${pin.x * 100}%`, top: `${pin.y * 100}%` }}
               >
                 {i + 1}

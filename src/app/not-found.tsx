@@ -21,7 +21,7 @@ export default function NotFound() {
       </div>
       <Link
         href="/"
-        className="rounded-xl bg-[var(--measured-green)] px-5 py-2.5 text-[13px] font-medium text-white shadow-sm transition-colors hover:bg-[var(--measured-dark-green)]"
+        className="rounded-xl bg-[var(--measured-green)] px-5 py-2.5 text-[13px] font-medium text-white shadow-[var(--shadow-card)] transition-colors hover:bg-[var(--measured-dark-green)]"
       >
         Home
       </Link>

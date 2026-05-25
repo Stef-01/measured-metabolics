@@ -47,7 +47,7 @@ export function PatientMealSavedScreen() {
         </div>
 
         {meal && meal.analysis.confidence > 0 && (
-          <div className="w-full rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-3 text-left">
+          <div className="w-full rounded-2xl border border-[var(--measured-border-soft)] bg-white px-4 py-3 text-left shadow-[var(--shadow-card)]">
             <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-dark-green)]">
               AI first read
             </div>
@@ -89,7 +89,7 @@ export function PatientMealSavedScreen() {
           </Link>
           <Link
             href="/p/home"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[var(--measured-border)] bg-white px-5 py-3.5 font-semibold text-[var(--measured-dark)]"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[var(--measured-border-soft)] bg-white px-5 py-3.5 text-[13px] font-semibold text-[var(--measured-dark)] shadow-[var(--shadow-card)]"
           >
             Back to home
           </Link>

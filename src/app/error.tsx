@@ -38,14 +38,14 @@ export default function GlobalError({
       <div className="flex gap-3">
         <button
           onClick={reset}
-          className="rounded-xl border border-[var(--measured-border)] bg-white px-5 py-2.5 text-[13px] font-medium text-[var(--measured-dark)] shadow-sm transition-colors hover:bg-[var(--measured-cream)]"
+          className="rounded-xl border border-[var(--measured-border)] bg-white px-5 py-2.5 text-[13px] font-medium text-[var(--measured-dark)] shadow-[var(--shadow-card)] transition-colors hover:bg-[var(--measured-cream)]"
           type="button"
         >
           Try again
         </button>
         <button
           onClick={() => router.push("/")}
-          className="rounded-xl bg-[var(--measured-green)] px-5 py-2.5 text-[13px] font-medium text-white shadow-sm transition-colors hover:bg-[var(--measured-dark-green)]"
+          className="rounded-xl bg-[var(--measured-green)] px-5 py-2.5 text-[13px] font-medium text-white shadow-[var(--shadow-card)] transition-colors hover:bg-[var(--measured-dark-green)]"
           type="button"
         >
           Home

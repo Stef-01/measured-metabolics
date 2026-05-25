@@ -216,7 +216,7 @@ function DrawerForm({
           <div
             key={pin.id}
             onClick={(e) => e.stopPropagation()}
-            className="absolute flex h-7 w-7 -translate-x-1/2 -translate-y-1/2 cursor-default select-none items-center justify-center rounded-full bg-[var(--measured-clinical-blue)] text-[11px] font-bold text-white shadow-lg ring-2 ring-white"
+            className="absolute flex h-7 w-7 -translate-x-1/2 -translate-y-1/2 cursor-default select-none items-center justify-center rounded-full bg-[var(--measured-clinical-blue)] text-[11px] font-bold text-white shadow-[var(--shadow-raised)] ring-2 ring-white"
             style={{ left: `${pin.x * 100}%`, top: `${pin.y * 100}%` }}
           >
             {i + 1}

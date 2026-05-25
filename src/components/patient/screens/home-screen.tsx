@@ -187,7 +187,7 @@ export function PatientHomeScreen() {
 
           <Link
             href="/p/meal"
-            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3.5 text-[15px] font-semibold text-[var(--measured-dark-green)] shadow-sm transition-opacity hover:opacity-90"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3.5 text-[15px] font-semibold text-[var(--measured-dark-green)] shadow-[var(--shadow-card)] transition-opacity hover:opacity-90"
           >
             <Camera size={20} strokeWidth={2.2} aria-hidden="true" />
             Open camera
