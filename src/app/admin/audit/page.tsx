@@ -99,7 +99,7 @@ export default async function AdminAuditPage({
         </p>
       </header>
 
-      <div className="overflow-hidden rounded-3xl border border-[var(--measured-border)] bg-[var(--measured-card)]">
+      <div className="overflow-hidden rounded-3xl border border-[var(--measured-border-soft)] bg-[var(--measured-card)] shadow-[var(--shadow-card)]">
         <table className="w-full text-left text-[13px]">
           <thead className="bg-[var(--measured-bg)] text-[var(--measured-subtext)]">
             <tr>

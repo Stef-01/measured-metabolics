@@ -91,7 +91,7 @@ export default async function AdminKpiPage() {
         .
       </p>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-[var(--measured-border)] bg-[var(--measured-card)]">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-[var(--measured-border-soft)] bg-[var(--measured-card)] shadow-[var(--shadow-card)]">
         <div className="border-b border-[var(--measured-border-soft)] px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
           All loops · {rows.length} rows
         </div>
@@ -149,7 +149,7 @@ function StatCard({
   muted?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-[var(--measured-border)] bg-[var(--measured-card)] p-4">
+    <div className="rounded-2xl border border-[var(--measured-border-soft)] bg-[var(--measured-card)] p-4 shadow-[var(--shadow-card)]">
       <p className="text-[11px] uppercase tracking-wider text-[var(--measured-subtext)]">
         {label}
       </p>
