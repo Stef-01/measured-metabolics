@@ -5,10 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { CheckCheck, Check, ChevronRight } from "lucide-react";
 import { PatientAppHeader } from "@/components/patient/app-header";
-import { ASHA_PLAN, RECIPES } from "@/lib/mock";
+import { ASHA_PLAN, RECIPES, CURRENT_PATIENT_ID } from "@/lib/mock";
 import { mealImageBySlug } from "@/lib/images";
 import type { MealType } from "@/lib/mock/types";
 import { cn } from "@/lib/utils/cn";
+import { useStoredPlanEaten, patientStore } from "@/lib/storage/patient-store";
 
 const MEAL_LABEL: Record<MealType, string> = {
   breakfast: "Breakfast",
@@ -36,6 +37,15 @@ function todayDayIdx(): number {
   return dow === 0 ? 6 : dow - 1;
 }
 
+/** Computed once at module load — stable reference, no render-phase Date calls. */
+const WEEK_DAYS = getWeekDays();
+const TODAY_IDX = todayDayIdx();
+
+/** localStorage key identifying a specific meal on a specific calendar date. */
+function eatenKey(date: Date, mealType: MealType): string {
+  return `${date.toDateString()}-${mealType}`;
+}
+
 function findRecipe(itemTitle: string) {
   const t = itemTitle.toLowerCase();
   return RECIPES.find(
@@ -49,9 +59,9 @@ function findRecipe(itemTitle: string) {
 }
 
 export function PatientPlanScreen() {
-  const weekDays = getWeekDays();
-  const [selectedDay, setSelectedDay] = useState(todayDayIdx());
-  const [eaten, setEaten] = useState<Set<string>>(new Set());
+  const [selectedDay, setSelectedDay] = useState(TODAY_IDX);
+
+  const planEaten = useStoredPlanEaten(CURRENT_PATIENT_ID);
 
   const approvedAt = ASHA_PLAN.approvedByDietitianAt
     ? new Date(ASHA_PLAN.approvedByDietitianAt).toLocaleDateString([], {
@@ -60,22 +70,36 @@ export function PatientPlanScreen() {
       })
     : null;
 
-  const toggleEaten = (dayIdx: number, mealType: MealType) => {
-    setEaten((prev) => {
-      const next = new Set(prev);
-      const key = `${dayIdx}-${mealType}`;
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
+  const dayMeals = ASHA_PLAN.dayItems?.[selectedDay] ?? ASHA_PLAN.items;
+  const selectedDate = WEEK_DAYS[selectedDay];
+  const isToday = selectedDay === TODAY_IDX;
+
+  const toggleEaten = (dayIdx: number, meal: MealType) => {
+    patientStore.togglePlanEaten(
+      CURRENT_PATIENT_ID,
+      eatenKey(WEEK_DAYS[dayIdx], meal),
+    );
   };
 
-  const dayEatenCount = ASHA_PLAN.items.filter((it) =>
-    eaten.has(`${selectedDay}-${it.mealType}`),
+  const isDayMealEaten = (dayIdx: number, meal: MealType) =>
+    !!planEaten[eatenKey(WEEK_DAYS[dayIdx], meal)];
+
+  const dayEatenCount = dayMeals.filter((it) =>
+    isDayMealEaten(selectedDay, it.mealType),
   ).length;
 
-  const selectedDate = weekDays[selectedDay];
-  const isToday = selectedDay === todayDayIdx();
+  // Weekly adherence across all 7 days
+  const weekTotals = WEEK_DAYS.reduce(
+    (acc, date, idx) => {
+      const meals = ASHA_PLAN.dayItems?.[idx] ?? ASHA_PLAN.items;
+      acc.planned += meals.length;
+      acc.eaten += meals.filter(
+        (m) => !!planEaten[eatenKey(date, m.mealType)],
+      ).length;
+      return acc;
+    },
+    { planned: 0, eaten: 0 },
+  );
 
   return (
     <>
@@ -86,17 +110,46 @@ export function PatientPlanScreen() {
         title="Weekly plan"
       />
 
+      {/* Weekly adherence bar — only shown once at least one meal is marked eaten */}
+      {weekTotals.eaten > 0 && (
+        <div className="border-b border-[var(--measured-border-soft)] bg-[var(--measured-cream)]">
+          <div className="mx-auto max-w-md px-5 py-3">
+            <div className="flex items-center justify-between gap-3">
+              <div className="text-[12px] text-[var(--measured-subtext)]">
+                <span className="font-semibold text-[var(--measured-dark)]">
+                  {weekTotals.eaten}
+                </span>{" "}
+                of {weekTotals.planned} meals eaten this week
+              </div>
+              <div className="text-[12px] font-semibold text-[var(--measured-dark-green)]">
+                {Math.round((weekTotals.eaten / weekTotals.planned) * 100)}%
+              </div>
+            </div>
+            <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-white/60">
+              <div
+                className="h-full rounded-full bg-[var(--measured-green)] transition-all duration-500"
+                style={{
+                  width: `${(weekTotals.eaten / weekTotals.planned) * 100}%`,
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Day selector strip */}
       <div className="border-b border-[var(--measured-border-soft)] bg-white">
         <div className="mx-auto max-w-md px-4">
           <div className="flex gap-1 overflow-x-auto py-2 scrollbar-hide">
             {DAY_SHORT.map((label, idx) => {
-              const date = weekDays[idx];
-              const isDayToday = idx === todayDayIdx();
+              const date = WEEK_DAYS[idx];
+              const isDayToday = idx === TODAY_IDX;
               const isSelected = idx === selectedDay;
-              const dayEaten = ASHA_PLAN.items.filter((it) =>
-                eaten.has(`${idx}-${it.mealType}`),
+              const meals = ASHA_PLAN.dayItems?.[idx] ?? ASHA_PLAN.items;
+              const dayEaten = meals.filter(
+                (m) => !!planEaten[eatenKey(WEEK_DAYS[idx], m.mealType)],
               ).length;
+              const allEaten = dayEaten === meals.length && dayEaten > 0;
               return (
                 <button
                   key={label}
@@ -126,15 +179,19 @@ export function PatientPlanScreen() {
                   >
                     {date.getDate()}
                   </span>
-                  {/* Eaten indicator dot */}
+                  {/* Eaten indicator: solid = all eaten, faded = partial */}
                   <span
                     className={cn(
                       "mt-0.5 h-1 w-1 rounded-full",
-                      dayEaten > 0
+                      allEaten
                         ? isSelected
-                          ? "bg-white/70"
+                          ? "bg-white"
                           : "bg-[var(--measured-green)]"
-                        : "bg-transparent",
+                        : dayEaten > 0
+                          ? isSelected
+                            ? "bg-white/50"
+                            : "bg-[var(--measured-green)]/40"
+                          : "bg-transparent",
                     )}
                   />
                 </button>
@@ -159,14 +216,14 @@ export function PatientPlanScreen() {
           {dayEatenCount > 0 && (
             <div className="flex items-center gap-1 text-[12px] font-semibold text-[var(--measured-dark-green)]">
               <CheckCheck size={14} strokeWidth={2.2} aria-hidden="true" />
-              {dayEatenCount}/{ASHA_PLAN.items.length} eaten
+              {dayEatenCount}/{dayMeals.length} eaten
             </div>
           )}
         </div>
 
-        {ASHA_PLAN.items.map((item) => {
+        {dayMeals.map((item) => {
           const recipe = findRecipe(item.title);
-          const isEaten = eaten.has(`${selectedDay}-${item.mealType}`);
+          const isEaten = isDayMealEaten(selectedDay, item.mealType);
           return (
             <div key={item.mealType} className="relative">
               <Link
