@@ -18,8 +18,14 @@ import {
   newReferrals,
   CURRENT_DIETITIAN_ID,
 } from "@/lib/mock";
-import type { RiskLevel } from "@/lib/mock/types";
+import type { RiskLevel, ReferralPriority } from "@/lib/mock/types";
 import { cn } from "@/lib/utils/cn";
+
+const PRIORITY_TONE: Record<ReferralPriority, string> = {
+  high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
+  medium: "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
+  low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
+};
 
 export function DietitianDashboardScreen() {
   const myPatients = PATIENTS.filter(
@@ -168,8 +174,13 @@ export function DietitianDashboardScreen() {
                         {r.patientId}
                       </div>
                     )}
-                    <div className="text-[12px] text-[var(--measured-subtext)]">
-                      {r.referringGpName} · {r.cuisineLabel} · {r.priority}
+                    <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[12px] text-[var(--measured-subtext)]">
+                      <span>{r.referringGpName}</span>
+                      <span>·</span>
+                      <span>{r.cuisineLabel}</span>
+                      <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider", PRIORITY_TONE[r.priority])}>
+                        {r.priority}
+                      </span>
                     </div>
                   </div>
                   <Link
