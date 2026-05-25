@@ -202,6 +202,17 @@ export function PatientPlanScreen() {
       </div>
 
       <div className="mx-auto flex max-w-md flex-col gap-3 px-5 pt-3 pb-8">
+        {/* Day complete celebration */}
+        {dayEatenCount === dayMeals.length && dayMeals.length > 0 && (
+          <div className="flex items-center gap-3 rounded-2xl bg-[var(--measured-green)] px-4 py-3 text-white shadow-[0_4px_16px_-4px_rgba(45,90,61,0.4)]">
+            <CheckCheck size={20} strokeWidth={2.2} aria-hidden="true" />
+            <div className="min-w-0 flex-1">
+              <div className="text-[13px] font-semibold">Day complete!</div>
+              <div className="text-[11px] text-white/80">All {dayMeals.length} meals eaten · great work</div>
+            </div>
+          </div>
+        )}
+
         {/* Day header */}
         <div className="flex items-center justify-between pt-1">
           <div className="text-[13px] font-medium text-[var(--measured-dark)]">
@@ -213,7 +224,7 @@ export function PatientPlanScreen() {
                   day: "numeric",
                 })}
           </div>
-          {dayEatenCount > 0 && (
+          {dayEatenCount > 0 && dayEatenCount < dayMeals.length && (
             <div className="flex items-center gap-1 text-[12px] font-semibold text-[var(--measured-dark-green)]">
               <CheckCheck size={14} strokeWidth={2.2} aria-hidden="true" />
               {dayEatenCount}/{dayMeals.length} eaten

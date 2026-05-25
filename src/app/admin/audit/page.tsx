@@ -126,8 +126,8 @@ export default async function AdminAuditPage({
                     {r.actor_user_id ?? "—"}
                   </span>
                 </td>
-                <td className="px-4 py-2 text-[var(--measured-text)]">
-                  {r.action}
+                <td className="px-4 py-2">
+                  <ActionBadge action={r.action} />
                 </td>
                 <td className="px-4 py-2 text-[var(--measured-subtext)]">
                   {r.target_type ?? "—"}
@@ -155,5 +155,24 @@ export default async function AdminAuditPage({
         Showing fixture data when Supabase is not configured.
       </p>
     </div>
+  );
+}
+
+function ActionBadge({ action }: { action: string }) {
+  const prefix = action.split(".")[0];
+  const cls =
+    prefix === "meal"
+      ? "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]"
+      : prefix === "referral"
+        ? "bg-[var(--measured-gold)]/15 text-[#7a5c00]"
+        : prefix === "report"
+          ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+          : prefix === "consent"
+            ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
+            : "bg-[var(--measured-cream)] text-[var(--measured-subtext)]";
+  return (
+    <span className={`inline-block rounded-full px-2 py-0.5 font-mono text-[11px] font-semibold ${cls}`}>
+      {action}
+    </span>
   );
 }
