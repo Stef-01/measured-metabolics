@@ -66,7 +66,7 @@ export class ErrorBoundary extends Component<Props, State> {
           </div>
           <button
             onClick={this.handleReset}
-            className="rounded-xl bg-[var(--measured-green)] px-6 py-2.5 text-[13px] font-semibold text-white shadow-sm transition-colors hover:bg-[var(--measured-dark-green)]"
+            className="rounded-xl bg-[var(--measured-green)] px-6 py-2.5 text-[13px] font-semibold text-white shadow-[var(--shadow-card)] transition-colors hover:bg-[var(--measured-dark-green)]"
             type="button"
           >
             Try again

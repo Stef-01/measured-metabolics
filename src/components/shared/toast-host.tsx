@@ -85,7 +85,7 @@ function ToastCard({ toast }: { toast: Toast }) {
       type="button"
       onClick={() => toastApi.dismiss(toast.id)}
       className={cn(
-        "w-full rounded-2xl p-5 text-left text-white shadow-xl transition-transform duration-200 active:scale-[0.98]",
+        "w-full rounded-2xl p-5 text-left text-white shadow-[var(--shadow-raised)] transition-transform duration-200 active:scale-[0.98]",
         style.bg,
         style.shadow,
       )}
