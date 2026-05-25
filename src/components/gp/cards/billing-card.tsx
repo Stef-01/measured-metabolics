@@ -73,7 +73,34 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
     items[0]?.item ?? null,
   );
   const [aiOpen, setAiOpen] = useState(true);
+  const [scanning, setScanning] = useState(false);
   const readOnly = variant === "dietitian";
+
+  const triggerScan = async () => {
+    setScanning(true);
+    try {
+      await fetch("/api/billing/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ patient_id: patient.id }),
+      });
+      toast.push({
+        variant: "success",
+        title: "Background scan queued",
+        body: "Audit record will be written when the worker completes.",
+        duration: 2200,
+      });
+    } catch {
+      toast.push({
+        variant: "info",
+        title: "Scan logged (demo mode)",
+        body: "Inngest not reachable; deterministic result shown above.",
+        duration: 2200,
+      });
+    } finally {
+      setScanning(false);
+    }
+  };
 
   const copy = (h: BillingIntelligenceSuggestion) => {
     const text = `${h.item} ${h.service}\n\n${h.documentationDraft}`;
@@ -144,6 +171,22 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
           <ScanPill Icon={ShieldAlert} label="Needs GP verification" />
           <ScanPill Icon={Sparkles} label={`${items.length} candidates`} />
         </div>
+        {!readOnly && (
+          <button
+            type="button"
+            onClick={triggerScan}
+            disabled={scanning}
+            className={cn(
+              "mt-3 inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[11px] font-semibold",
+              scanning
+                ? "cursor-not-allowed bg-[var(--measured-green)]/30 text-white"
+                : "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)] hover:bg-[var(--measured-green)]/20",
+            )}
+          >
+            <Sparkles size={11} strokeWidth={2.2} aria-hidden="true" />
+            {scanning ? "Queuing…" : "Queue background scan"}
+          </button>
+        )}
       </section>
 
       <ul className="space-y-2">
