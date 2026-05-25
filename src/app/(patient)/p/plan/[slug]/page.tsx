@@ -56,9 +56,9 @@ export default async function PatientRecipePage({ params }: Props) {
           <h3 className="font-serif text-[18px] text-[var(--measured-dark)]">
             Ingredients
           </h3>
-          <ul className="field-prose mt-3 space-y-2 text-[var(--measured-dark)]">
+          <ul className="mt-3 space-y-2 text-[var(--measured-dark)]">
             {recipe.ingredients.map((ing) => (
-              <li key={ing} className="flex items-start gap-2">
+              <li key={ing} className="flex items-start gap-2 text-[14px]">
                 <span
                   aria-hidden="true"
                   className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--measured-green)]"
@@ -69,10 +69,25 @@ export default async function PatientRecipePage({ params }: Props) {
           </ul>
         </div>
 
-        <p className="text-center text-[12px] text-[var(--measured-subtext)]">
-          Step-by-step cooking instructions arrive in Stage 6 once the AI is
-          wired in.
-        </p>
+        {recipe.steps && recipe.steps.length > 0 && (
+          <div className="surface-card p-5">
+            <h3 className="font-serif text-[18px] text-[var(--measured-dark)]">
+              Method
+            </h3>
+            <ol className="mt-3 space-y-3">
+              {recipe.steps.map((step, i) => (
+                <li key={i} className="flex items-start gap-3 text-[14px]">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--measured-green)]/15 text-[11px] font-bold text-[var(--measured-dark-green)]">
+                    {i + 1}
+                  </span>
+                  <span className="leading-relaxed text-[var(--measured-dark)]">
+                    {step}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
       </div>
     </>
   );

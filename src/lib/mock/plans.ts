@@ -280,6 +280,14 @@ export const RECIPES: Recipe[] = [
       "Lemon juice",
       "Coriander",
     ],
+    steps: [
+      "Rinse the poha in a fine-mesh strainer under cold water until soft — about 30 seconds. Shake off excess water.",
+      "Heat 1 tsp oil in a non-stick pan over medium heat. Add mustard seeds; cover until they pop (10–15 s).",
+      "Add onion and chilli. Cook 3–4 min until onion is soft and translucent.",
+      "Stir in the rinsed poha. Toss to combine; season with a pinch of salt.",
+      "Add peanuts and cook 1–2 min, stirring continuously, until the poha is lightly toasted.",
+      "Remove from heat. Squeeze lemon juice over and garnish with fresh coriander. Serve immediately.",
+    ],
   },
   {
     id: "tandoori-fish",
@@ -293,6 +301,14 @@ export const RECIPES: Recipe[] = [
       "1 bunch mustard greens",
       "Garlic, ginger, salt",
       "1 wholewheat roti",
+    ],
+    steps: [
+      "Mix Greek yoghurt with tandoori spice, ½ tsp grated ginger, and a pinch of salt to form the marinade.",
+      "Coat the fish fillet evenly with the marinade. Marinate for at least 20 min (or up to 2 h in the fridge).",
+      "Preheat the grill or oven to 220 °C / 200 °C fan. Grill fish 4–5 min per side until cooked through and slightly charred.",
+      "While the fish grills, heat 1 tsp oil in a wide pan. Add sliced garlic; cook 30 s. Add mustard greens and toss for 2–3 min until wilted. Season.",
+      "Warm the roti in a dry pan for 30 s each side.",
+      "Plate fish over the greens with roti on the side. Squeeze lime if desired.",
     ],
   },
 ];

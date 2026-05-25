@@ -163,6 +163,7 @@ export interface Recipe {
   title: string;
   why: string;
   ingredients: string[];
+  steps?: string[];
   cuisine: Cuisine;
 }
 
