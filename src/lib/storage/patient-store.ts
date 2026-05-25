@@ -81,6 +81,16 @@ interface DraftMeal {
   capturedAt: string;
 }
 
+/** A single click-placed pin on a meal photo, with an optional dietitian note. */
+export interface PointAnnotation {
+  id: string;
+  /** Fraction of image width (0–1). */
+  x: number;
+  /** Fraction of image height (0–1). */
+  y: number;
+  note: string;
+}
+
 /**
  * Dietitian-authored note attached to a specific patient meal. Surfaces on the
  * patient home + metrics screens. Vibe-stage uses localStorage; Stage 6 swaps
@@ -94,6 +104,8 @@ interface MealAnnotation {
   body: string;
   /** Optional concrete swap recommendation. */
   recommendation?: string;
+  /** Click-placed pin annotations on the meal photo. */
+  points?: PointAnnotation[];
   createdAt: string;
   /** Set by the patient when they tap "Got it" on the dashboard. */
   acknowledgedAt?: string;
