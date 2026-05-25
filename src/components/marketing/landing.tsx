@@ -112,7 +112,7 @@ export function Landing() {
 
       <footer className="mx-auto flex max-w-6xl items-center justify-between border-t border-[var(--measured-border-soft)] px-6 py-6 text-[12px] text-[var(--measured-subtext)]">
         <span>© Measured Metabolics · {new Date().getFullYear()}</span>
-        <span>Stage 1 vibe build · mock data only</span>
+        <span>Beta · Pilot program</span>
       </footer>
     </main>
   );

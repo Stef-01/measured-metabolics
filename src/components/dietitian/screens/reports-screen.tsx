@@ -70,8 +70,8 @@ export function DietitianReportsScreen() {
       </ul>
 
       <p className="mt-6 text-[12px] text-[var(--measured-subtext)]">
-        Stage 8 wires this list to React PDF and the audit log so each
-        &ldquo;Send to GP&rdquo; emits an immutable record.
+        Each &ldquo;Send to GP&rdquo; emits an immutable record to the audit
+        log.
       </p>
     </div>
   );

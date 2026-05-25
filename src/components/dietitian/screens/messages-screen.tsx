@@ -13,7 +13,11 @@ const TEMPLATES = [
   "Could you log a symptom check-in tonight? Want to track the nausea.",
 ];
 
-export function DietitianComposerScreen() {
+interface Props {
+  initialPatientId?: string;
+}
+
+export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
   const severePatientIds = new Set(
     recentSevereSymptoms().map((s) => s.patientId),
   );
@@ -31,7 +35,13 @@ export function DietitianComposerScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [activeId, setActiveId] = useState<string>(orderedThreads[0]?.id ?? "");
+  const [activeId, setActiveId] = useState<string>(() => {
+    if (initialPatientId) {
+      const t = orderedThreads.find((tt) => tt.patientId === initialPatientId);
+      if (t) return t.id;
+    }
+    return orderedThreads[0]?.id ?? "";
+  });
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [threadState, setThreadState] =
     useState<MessageThread[]>(orderedThreads);
