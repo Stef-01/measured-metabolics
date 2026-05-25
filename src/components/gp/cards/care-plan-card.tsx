@@ -55,8 +55,7 @@ export function GpCarePlanCard({ patient }: { patient: Patient }) {
     setExported(true);
     toast.push({
       variant: "success",
-      title: "Care plan ready",
-      body: "Stage 8 wires React PDF — for now this is a logged event.",
+      title: "Care plan exported",
       duration: 2000,
     });
     setTimeout(() => setExported(false), 2400);
