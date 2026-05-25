@@ -197,7 +197,7 @@ function PatientRow({ p, idx }: { p: Patient; idx: number }) {
     >
       <Link
         href={`/d/patients/${p.id}`}
-        className="grid grid-cols-[1fr_auto_auto] items-center gap-4 rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
+        className="group grid grid-cols-[1fr_auto_auto] items-center gap-4 rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
       >
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
