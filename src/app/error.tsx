@@ -27,10 +27,10 @@ export default function GlobalError({
         />
       </div>
       <div className="space-y-1.5">
-        <h2 className="font-serif text-lg font-semibold text-[var(--measured-dark)]">
+        <h2 className="font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
           Something went wrong
         </h2>
-        <p className="text-sm text-[var(--measured-subtext)] max-w-xs">
+        <p className="text-[13px] text-[var(--measured-subtext)] max-w-xs">
           An unexpected error occurred. Try again or head back to the home
           screen.
         </p>
@@ -38,14 +38,14 @@ export default function GlobalError({
       <div className="flex gap-3">
         <button
           onClick={reset}
-          className="rounded-xl border border-[var(--measured-border)] bg-white px-5 py-2.5 text-sm font-medium text-[var(--measured-dark)] shadow-sm transition-colors hover:bg-[var(--measured-cream)]"
+          className="rounded-xl border border-[var(--measured-border)] bg-white px-5 py-2.5 text-[13px] font-medium text-[var(--measured-dark)] shadow-sm transition-colors hover:bg-[var(--measured-cream)]"
           type="button"
         >
           Try again
         </button>
         <button
           onClick={() => router.push("/")}
-          className="rounded-xl bg-[var(--measured-green)] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[var(--measured-dark-green)]"
+          className="rounded-xl bg-[var(--measured-green)] px-5 py-2.5 text-[13px] font-medium text-white shadow-sm transition-colors hover:bg-[var(--measured-dark-green)]"
           type="button"
         >
           Home

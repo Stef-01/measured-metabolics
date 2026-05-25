@@ -264,14 +264,14 @@ function DeviceToggle({
       {mode === "phone" ? (
         <>
           <Monitor size={18} className="text-[var(--measured-subtext)]" />
-          <span className="text-sm font-medium text-[var(--measured-dark)]">
+          <span className="text-[13px] font-medium text-[var(--measured-dark)]">
             Desktop
           </span>
         </>
       ) : (
         <>
           <Smartphone size={18} className="text-[var(--measured-subtext)]" />
-          <span className="text-sm font-medium text-[var(--measured-dark)]">
+          <span className="text-[13px] font-medium text-[var(--measured-dark)]">
             Phone
           </span>
         </>
