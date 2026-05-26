@@ -8,7 +8,7 @@ const BOOKING_URL =
 const PROTOCOL = [
   {
     n: "01",
-    title: "CGM monitored GLP1 therapy",
+    title: "CGM monitored GLP-1 therapy",
     body: "Six months of clinically guided GLP-1 receptor agonist therapy, titrated to your response with continuous glucose monitoring at every step.",
     photo: "/images/protocol/cgm.jpg",
   },
@@ -48,21 +48,20 @@ export function DoctorLanding() {
       </header>
 
       {/* ── Hero ─────────────────────────────────────── */}
-      <section className="mx-auto max-w-5xl px-6 pt-24 pb-20 md:pt-32 md:pb-28">
-        <p className="mb-6 inline-block rounded-full border border-[var(--measured-border)] px-3.5 py-1 text-[12px] font-medium text-[var(--measured-subtext)]">
+      <section className="mx-auto max-w-5xl px-6 pt-28 pb-24 md:pt-40 md:pb-36">
+        <p className="mb-8 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--measured-subtext)]">
           Health Optimisation Protocol · Beecroft NSW
         </p>
-        <h1 className="font-serif text-[52px] leading-[1.02] tracking-tight text-[var(--measured-dark)] md:text-[72px]">
+        <h1 className="font-serif text-[58px] leading-[1.02] tracking-tight text-[var(--measured-dark)] md:text-[84px]">
           A structured path
           <br />
           to metabolic health.
         </h1>
-        <p className="mt-7 max-w-[520px] text-[17px] leading-relaxed text-[var(--measured-subtext)]">
-          Dr Anubhav Saxena runs a medically supervised six-month program
-          combining GLP-1 therapy, DEXA body composition scanning, and
-          personalised dietitian-led meal planning.
+        <p className="mt-8 max-w-[460px] text-[17px] leading-relaxed text-[var(--measured-subtext)]">
+          A medically supervised six-month program combining GLP-1 therapy, DEXA
+          body composition scanning, and personalised dietitian support.
         </p>
-        <div className="mt-10 flex flex-wrap items-center gap-4">
+        <div className="mt-10">
           <a
             href={BOOKING_URL}
             target="_blank"
@@ -72,29 +71,28 @@ export function DoctorLanding() {
             Book a consultation
             <ArrowRight size={15} strokeWidth={2.4} aria-hidden="true" />
           </a>
-          <span className="text-[13px] text-[var(--measured-subtext)]">
-            via HealthEngine
-          </span>
         </div>
       </section>
 
-      <div className="border-t border-[var(--measured-border-soft)]" />
-
       {/* ── Protocol ─────────────────────────────────── */}
       <section className="bg-[var(--measured-cream)]">
-        <div className="mx-auto max-w-5xl px-6 py-20 md:py-24">
-          <div className="mb-14">
-            <h2 className="font-serif text-[38px] leading-tight tracking-tight text-[var(--measured-dark)]">
+        <div className="mx-auto max-w-5xl px-6 py-24 md:py-32">
+          <div className="mb-16">
+            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--measured-subtext)]">
+              What&apos;s included
+            </p>
+            <h2 className="font-serif text-[42px] leading-tight tracking-tight text-[var(--measured-dark)]">
               The protocol
             </h2>
-            <p className="mt-2 text-[15px] text-[var(--measured-subtext)]">
-              Three integrated components. Six months.
+            <p className="mt-3 max-w-[400px] text-[15px] text-[var(--measured-subtext)]">
+              Three integrated components, coordinated over six months.
             </p>
           </div>
-          <div className="grid gap-12 md:grid-cols-3 md:gap-8">
+
+          <div className="grid gap-14 md:grid-cols-3 md:gap-10">
             {PROTOCOL.map((step) => (
               <div key={step.n} className="relative overflow-hidden">
-                {/* Greyscale photo bleeds in from the right — same treatment across all three */}
+                {/* Greyscale photo bleeds in from the right */}
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute right-0 top-0 bottom-0 w-[62%]"
@@ -119,18 +117,19 @@ export function DoctorLanding() {
                   />
                 </div>
 
-                {/* Text in relative wrapper to stack above the photo */}
+                {/* Text */}
                 <div className="relative">
+                  <div className="mb-6 h-px w-8 bg-[var(--measured-green)]" />
                   <div
                     aria-hidden="true"
-                    className="font-serif text-[52px] leading-none text-[var(--measured-green)]/20"
+                    className="font-serif text-[72px] leading-none text-[var(--measured-green)]/15"
                   >
                     {step.n}
                   </div>
-                  <h3 className="mt-5 font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
+                  <h3 className="mt-6 font-serif text-[24px] leading-tight text-[var(--measured-dark)]">
                     {step.title}
                   </h3>
-                  <p className="mt-2.5 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
+                  <p className="mt-3 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
                     {step.body}
                   </p>
                 </div>
@@ -140,20 +139,18 @@ export function DoctorLanding() {
         </div>
       </section>
 
-      <div className="border-t border-[var(--measured-border-soft)]" />
-
       {/* ── Doctor ───────────────────────────────────── */}
-      <section className="mx-auto max-w-5xl px-6 py-20 md:py-24">
-        <div className="flex flex-col gap-12 md:flex-row md:items-start md:gap-16">
+      <section className="mx-auto max-w-5xl px-6 py-24 md:py-32">
+        <div className="flex flex-col gap-14 md:flex-row md:items-start md:gap-20">
           {/* Portrait */}
           <div className="shrink-0">
-            <div className="relative h-[320px] w-[260px] overflow-hidden rounded-3xl bg-[var(--measured-cream)] shadow-[0_4px_32px_-4px_rgba(0,0,0,0.12)]">
+            <div className="relative h-[380px] w-[300px] overflow-hidden rounded-3xl bg-[var(--measured-cream)] shadow-[0_8px_48px_-8px_rgba(0,0,0,0.14)]">
               <Image
                 src="/images/dr-saxena.jpeg"
                 alt="Dr Anubhav Saxena"
                 fill
                 className="object-cover object-top"
-                sizes="260px"
+                sizes="300px"
                 priority
               />
             </div>
@@ -161,27 +158,27 @@ export function DoctorLanding() {
 
           {/* Bio */}
           <div className="flex flex-col justify-center">
-            <p className="text-[11px] font-medium text-[var(--measured-subtext)]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--measured-subtext)]">
               Your doctor
             </p>
-            <h2 className="mt-4 font-serif text-[38px] leading-tight tracking-tight text-[var(--measured-dark)]">
+            <h2 className="mt-5 font-serif text-[40px] leading-tight tracking-tight text-[var(--measured-dark)]">
               Dr Anubhav Saxena
             </h2>
-            <p className="mt-1 text-[13px] text-[var(--measured-subtext)]">
-              MBBS FRACGP MPhil BSc(Adv) DCH
+            <p className="mt-2 text-[13px] text-[var(--measured-subtext)]">
+              MBBS · FRACGP · MPhil · BSc(Adv) · DCH
             </p>
-            <p className="mt-6 max-w-[460px] text-[16px] leading-relaxed text-[var(--measured-subtext)]">
-              Dr Saxena is a Fellow of the Royal Australian College of General
-              Practitioners with a research background in metabolic medicine. He
+            <p className="mt-7 max-w-[440px] text-[16px] leading-relaxed text-[var(--measured-subtext)]">
+              Fellow of the Royal Australian College of General Practitioners
+              with a research background in metabolic medicine. Dr Saxena
               designed the Health Optimisation Protocol to give patients a
               structured, evidence-based path to lasting weight and metabolic
-              improvement — coordinated from his Beecroft practice.
+              improvement.
             </p>
             <a
               href={BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[var(--measured-dark-green)] transition-opacity hover:opacity-70"
+              className="mt-8 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[var(--measured-dark-green)] transition-opacity hover:opacity-70"
             >
               Book with Dr Saxena
               <ArrowRight size={14} strokeWidth={2.4} aria-hidden="true" />
@@ -192,18 +189,18 @@ export function DoctorLanding() {
 
       {/* ── CTA band ─────────────────────────────────── */}
       <section className="bg-[var(--measured-green)]">
-        <div className="mx-auto max-w-5xl px-6 py-16 text-center md:py-20">
-          <h2 className="font-serif text-[40px] leading-tight tracking-tight text-white md:text-[48px]">
+        <div className="mx-auto max-w-5xl px-6 py-20 text-center md:py-28">
+          <h2 className="font-serif text-[44px] leading-tight tracking-tight text-white md:text-[52px]">
             Ready to start?
           </h2>
-          <p className="mt-3 text-[15px] text-white/65">
-            Book your initial consultation. Availability via HealthEngine.
+          <p className="mt-4 text-[15px] text-white/60">
+            Book your initial consultation via HealthEngine.
           </p>
           <a
             href={BOOKING_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-white px-8 py-4 text-[15px] font-semibold text-[var(--measured-dark-green)] shadow-[0_2px_16px_-2px_rgba(0,0,0,0.2)] transition-colors hover:bg-[var(--measured-cream)]"
+            className="mt-10 inline-flex items-center gap-2 rounded-2xl bg-white px-8 py-4 text-[15px] font-semibold text-[var(--measured-dark-green)] shadow-[0_2px_24px_-4px_rgba(0,0,0,0.25)] transition-colors hover:bg-[var(--measured-cream)]"
           >
             Book on HealthEngine
             <ArrowRight size={15} strokeWidth={2.4} aria-hidden="true" />
