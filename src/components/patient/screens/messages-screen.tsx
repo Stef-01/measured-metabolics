@@ -58,7 +58,10 @@ export function PatientMessagesScreen() {
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className={cn("flex items-end gap-2", mine ? "justify-end" : "justify-start")}
+                  className={cn(
+                    "flex items-end gap-2",
+                    mine ? "justify-end" : "justify-start",
+                  )}
                 >
                   {!mine && (
                     <div className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--measured-green)] text-[10px] font-bold text-white">

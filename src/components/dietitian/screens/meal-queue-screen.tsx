@@ -419,7 +419,12 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                     )}
                   >
                     {isSelected && (
-                      <Check size={11} strokeWidth={2.8} className="text-white" aria-hidden="true" />
+                      <Check
+                        size={11}
+                        strokeWidth={2.8}
+                        className="text-white"
+                        aria-hidden="true"
+                      />
                     )}
                   </button>
                   <button

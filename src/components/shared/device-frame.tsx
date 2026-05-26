@@ -106,7 +106,13 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
 
   return (
     <DeviceFrameContext.Provider value={{ mode, setMode }}>
-      <div className="fixed inset-0 flex items-center justify-center overflow-hidden p-4" style={{ background: "radial-gradient(ellipse at 40% 30%, rgba(45,90,61,0.06) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(44,94,138,0.04) 0%, transparent 60%), #f0ede8" }}>
+      <div
+        className="fixed inset-0 flex items-center justify-center overflow-hidden p-4"
+        style={{
+          background:
+            "radial-gradient(ellipse at 40% 30%, rgba(45,90,61,0.06) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(44,94,138,0.04) 0%, transparent 60%), #f0ede8",
+        }}
+      >
         <div
           className="relative w-[390px] max-w-full"
           style={{ aspectRatio: "390 / 844", maxHeight: "calc(100vh - 2rem)" }}

@@ -87,7 +87,9 @@ function Row(props: {
           onClick={() => props.onChange(!props.on)}
           className={cn(
             "relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--measured-green)]/50",
-            props.on ? "bg-[var(--measured-green)]" : "bg-[var(--measured-border)]",
+            props.on
+              ? "bg-[var(--measured-green)]"
+              : "bg-[var(--measured-border)]",
           )}
         >
           <span
@@ -109,7 +111,11 @@ function Row(props: {
       )}
       {!props.on && props.withdrawnAt && (
         <p className="mt-2 text-[11px] text-[var(--measured-subtext)]">
-          Withdrawn {new Date(props.withdrawnAt).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })}
+          Withdrawn{" "}
+          {new Date(props.withdrawnAt).toLocaleString([], {
+            dateStyle: "medium",
+            timeStyle: "short",
+          })}
         </p>
       )}
     </div>

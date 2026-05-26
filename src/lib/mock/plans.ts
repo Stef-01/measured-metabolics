@@ -274,7 +274,12 @@ export const RECIPES: Recipe[] = [
     prepMinutes: 15,
     servings: 1,
     kcalEstimate: 310,
-    macroProfile: { carbs: "moderate", protein: "moderate", fat: "low", fibre: "high" },
+    macroProfile: {
+      carbs: "moderate",
+      protein: "moderate",
+      fat: "low",
+      fibre: "high",
+    },
     ingredients: [
       "1 cup poha (flattened rice)",
       "1 small onion, diced",
@@ -301,7 +306,12 @@ export const RECIPES: Recipe[] = [
     prepMinutes: 25,
     servings: 1,
     kcalEstimate: 385,
-    macroProfile: { carbs: "low", protein: "high", fat: "low", fibre: "moderate" },
+    macroProfile: {
+      carbs: "low",
+      protein: "high",
+      fat: "low",
+      fibre: "moderate",
+    },
     ingredients: [
       "1 fish fillet (snapper / barramundi)",
       "2 tbsp Greek yoghurt",

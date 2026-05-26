@@ -2,9 +2,11 @@ import { listReferrals, listPatients } from "@/server/services";
 
 const STATUS_TONE: Record<string, string> = {
   new: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
-  consent_pending: "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
+  consent_pending:
+    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
   accepted: "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
-  in_progress: "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
+  in_progress:
+    "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
   discharged: "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
 };
 
@@ -18,7 +20,8 @@ const STATUS_LABEL: Record<string, string> = {
 
 const PRIORITY_TONE: Record<string, string> = {
   high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
-  medium: "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
+  medium:
+    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
   low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
 };
 

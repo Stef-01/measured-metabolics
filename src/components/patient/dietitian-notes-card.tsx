@@ -51,11 +51,7 @@ export function DietitianNotesCard({ patientId }: Props) {
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.18 }}
               >
-                <NoteItem
-                  ann={ann}
-                  meal={meal}
-                  patientId={patientId}
-                />
+                <NoteItem ann={ann} meal={meal} patientId={patientId} />
               </motion.li>
             );
           })}

@@ -106,10 +106,7 @@ function DrawerForm({
     const rect = e.currentTarget.getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-    setPoints((prev) => [
-      ...prev,
-      { id: `pin-${Date.now()}`, x, y, note: "" },
-    ]);
+    setPoints((prev) => [...prev, { id: `pin-${Date.now()}`, x, y, note: "" }]);
   };
 
   const updatePinNote = (id: string, note: string) => {
@@ -121,8 +118,7 @@ function DrawerForm({
   };
 
   const canSave =
-    body.trim().length > 0 ||
-    points.some((p) => p.note.trim().length > 0);
+    body.trim().length > 0 || points.some((p) => p.note.trim().length > 0);
 
   const save = () => {
     if (!canSave) return;

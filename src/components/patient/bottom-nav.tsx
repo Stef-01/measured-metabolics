@@ -64,9 +64,21 @@ export function PatientBottomNav() {
                     )}
                     style={{ boxShadow: "0 2px 12px -2px rgba(45,90,61,0.35)" }}
                   >
-                    <Icon size={22} strokeWidth={2.2} className="text-white" aria-hidden="true" />
+                    <Icon
+                      size={22}
+                      strokeWidth={2.2}
+                      className="text-white"
+                      aria-hidden="true"
+                    />
                   </span>
-                  <span className={cn("text-[11px] font-semibold transition-colors", isActive ? "text-[var(--measured-dark-green)]" : "text-[var(--measured-subtext)]")}>
+                  <span
+                    className={cn(
+                      "text-[11px] font-semibold transition-colors",
+                      isActive
+                        ? "text-[var(--measured-dark-green)]"
+                        : "text-[var(--measured-subtext)]",
+                    )}
+                  >
                     {tab.label}
                   </span>
                 </Link>

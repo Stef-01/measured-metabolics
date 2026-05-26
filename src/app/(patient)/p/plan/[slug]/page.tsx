@@ -13,16 +13,38 @@ interface Props {
 }
 
 const MACRO_TONE: Record<string, Record<MacroLoad, string>> = {
-  Carbs:   { low: "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",    moderate: "bg-[var(--measured-clinical-amber)]/12 text-[var(--measured-clinical-amber)]", high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]" },
-  Protein: { low: "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",           moderate: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",   high: "bg-[var(--measured-clinical-blue)]/20 text-[var(--measured-clinical-blue)]" },
-  Fat:     { low: "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",    moderate: "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",                    high: "bg-[var(--measured-clinical-amber)]/12 text-[var(--measured-clinical-amber)]" },
-  Fibre:   { low: "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",           moderate: "bg-[var(--measured-green)]/8 text-[var(--measured-dark-green)]",               high: "bg-[var(--measured-green)]/15 text-[var(--measured-dark-green)]" },
+  Carbs: {
+    low: "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
+    moderate:
+      "bg-[var(--measured-clinical-amber)]/12 text-[var(--measured-clinical-amber)]",
+    high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
+  },
+  Protein: {
+    low: "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
+    moderate:
+      "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
+    high: "bg-[var(--measured-clinical-blue)]/20 text-[var(--measured-clinical-blue)]",
+  },
+  Fat: {
+    low: "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
+    moderate: "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
+    high: "bg-[var(--measured-clinical-amber)]/12 text-[var(--measured-clinical-amber)]",
+  },
+  Fibre: {
+    low: "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
+    moderate: "bg-[var(--measured-green)]/8 text-[var(--measured-dark-green)]",
+    high: "bg-[var(--measured-green)]/15 text-[var(--measured-dark-green)]",
+  },
 };
 
 function MacroChip({ nutrient, load }: { nutrient: string; load: MacroLoad }) {
-  const tone = MACRO_TONE[nutrient]?.[load] ?? "bg-[var(--measured-cream)] text-[var(--measured-subtext)]";
+  const tone =
+    MACRO_TONE[nutrient]?.[load] ??
+    "bg-[var(--measured-cream)] text-[var(--measured-subtext)]";
   return (
-    <span className={cn("rounded-full px-3 py-1 text-[11px] font-semibold", tone)}>
+    <span
+      className={cn("rounded-full px-3 py-1 text-[11px] font-semibold", tone)}
+    >
       {nutrient} · {load}
     </span>
   );
@@ -70,8 +92,8 @@ export default async function PatientRecipePage({ params }: Props) {
               )}
               {recipe.kcalEstimate && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
-                  <Flame size={11} strokeWidth={2.4} aria-hidden="true" />
-                  ~{recipe.kcalEstimate} kcal
+                  <Flame size={11} strokeWidth={2.4} aria-hidden="true" />~
+                  {recipe.kcalEstimate} kcal
                 </span>
               )}
             </div>

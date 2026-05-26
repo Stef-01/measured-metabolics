@@ -8,15 +8,51 @@ interface KpiRow {
 }
 
 const VIBE_FIXTURE: KpiRow[] = [
-  { patient_id: "asha", started_at: "2026-04-01T10:00:00Z", completed_loop: true },
-  { patient_id: "ken", started_at: "2026-04-04T14:00:00Z", completed_loop: true },
-  { patient_id: "lina", started_at: "2026-04-08T09:00:00Z", completed_loop: false },
-  { patient_id: "omar", started_at: "2026-04-12T11:00:00Z", completed_loop: true },
-  { patient_id: "priya", started_at: "2026-04-15T09:30:00Z", completed_loop: true },
-  { patient_id: "james", started_at: "2026-04-22T11:15:00Z", completed_loop: false },
-  { patient_id: "sofia", started_at: "2026-05-01T08:45:00Z", completed_loop: false },
-  { patient_id: "ravi", started_at: "2026-02-10T10:00:00Z", completed_loop: true },
-  { patient_id: "grace", started_at: "2026-04-28T14:30:00Z", completed_loop: false },
+  {
+    patient_id: "asha",
+    started_at: "2026-04-01T10:00:00Z",
+    completed_loop: true,
+  },
+  {
+    patient_id: "ken",
+    started_at: "2026-04-04T14:00:00Z",
+    completed_loop: true,
+  },
+  {
+    patient_id: "lina",
+    started_at: "2026-04-08T09:00:00Z",
+    completed_loop: false,
+  },
+  {
+    patient_id: "omar",
+    started_at: "2026-04-12T11:00:00Z",
+    completed_loop: true,
+  },
+  {
+    patient_id: "priya",
+    started_at: "2026-04-15T09:30:00Z",
+    completed_loop: true,
+  },
+  {
+    patient_id: "james",
+    started_at: "2026-04-22T11:15:00Z",
+    completed_loop: false,
+  },
+  {
+    patient_id: "sofia",
+    started_at: "2026-05-01T08:45:00Z",
+    completed_loop: false,
+  },
+  {
+    patient_id: "ravi",
+    started_at: "2026-02-10T10:00:00Z",
+    completed_loop: true,
+  },
+  {
+    patient_id: "grace",
+    started_at: "2026-04-28T14:30:00Z",
+    completed_loop: false,
+  },
 ];
 
 export default async function AdminKpiPage() {
@@ -76,7 +112,11 @@ export default async function AdminKpiPage() {
       <div className="mt-4 grid grid-cols-3 gap-3">
         <StatCard label="Loops started" value={total.toString()} />
         <StatCard label="Completed (4-wk)" value={completed.toString()} />
-        <StatCard label="In progress" value={(total - completed).toString()} muted />
+        <StatCard
+          label="In progress"
+          value={(total - completed).toString()}
+          muted
+        />
       </div>
 
       <p className="mt-6 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
@@ -153,7 +193,9 @@ function StatCard({
       <p className="text-[11px] uppercase tracking-wider text-[var(--measured-subtext)]">
         {label}
       </p>
-      <p className={`mt-2 font-serif text-[28px] leading-none ${muted ? "text-[var(--measured-subtext)]" : "text-[var(--measured-dark)]"}`}>
+      <p
+        className={`mt-2 font-serif text-[28px] leading-none ${muted ? "text-[var(--measured-subtext)]" : "text-[var(--measured-dark)]"}`}
+      >
         {value}
       </p>
     </div>
