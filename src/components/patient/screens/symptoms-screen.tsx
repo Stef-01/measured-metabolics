@@ -17,10 +17,25 @@ interface ChipQuestion {
   prompt: string;
 }
 
-const SEVERITY_CHIPS: { id: SymptomSeverity; label: string }[] = [
-  { id: "none", label: "None" },
-  { id: "mild", label: "Mild" },
-  { id: "severe", label: "Severe" },
+const SEVERITY_CHIPS: { id: SymptomSeverity; label: string; dot: string; selected: string }[] = [
+  {
+    id: "none",
+    label: "None",
+    dot: "bg-[var(--measured-green)]",
+    selected: "border-[var(--measured-green)] bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
+  },
+  {
+    id: "mild",
+    label: "Mild",
+    dot: "bg-[var(--measured-clinical-amber)]",
+    selected: "border-[var(--measured-clinical-amber)] bg-[var(--measured-clinical-amber)]/10 text-[var(--measured-clinical-amber)]",
+  },
+  {
+    id: "severe",
+    label: "Severe",
+    dot: "bg-[var(--measured-evaluate)]",
+    selected: "border-[var(--measured-evaluate)] bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
+  },
 ];
 
 const SEVERITY_QUESTIONS: ChipQuestion[] = [
@@ -100,10 +115,10 @@ export function PatientSymptomsScreen() {
           const setValue = q.id === "nausea" ? setNausea : setConstipation;
           return (
             <fieldset key={q.id} className="surface-card p-4">
-              <legend className="px-1 text-[12px] font-medium uppercase tracking-wider text-[var(--measured-subtext)]">
+              <legend className="px-1 text-[13px] font-medium text-[var(--measured-dark)]">
                 {q.prompt}
               </legend>
-              <div className="mt-2 grid grid-cols-3 gap-2">
+              <div className="mt-3 grid grid-cols-3 gap-2">
                 {SEVERITY_CHIPS.map((c) => (
                   <button
                     type="button"
@@ -111,14 +126,19 @@ export function PatientSymptomsScreen() {
                     onClick={() => setValue(c.id)}
                     aria-pressed={value === c.id}
                     className={cn(
-                      "rounded-xl border px-3 py-3 text-[13px] font-semibold transition-colors",
+                      "flex flex-col items-center gap-1.5 rounded-2xl border px-3 py-3.5 text-[13px] font-semibold transition-all",
                       value === c.id
-                        ? c.id === "severe"
-                          ? "border-[var(--measured-evaluate)] bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]"
-                          : "border-[var(--measured-green)] bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+                        ? c.selected
                         : "border-[var(--measured-border)] bg-white text-[var(--measured-subtext)]",
                     )}
                   >
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        "h-2 w-2 rounded-full transition-colors",
+                        value === c.id ? c.dot : "bg-[var(--measured-border)]",
+                      )}
+                    />
                     {c.label}
                   </button>
                 ))}
@@ -178,9 +198,10 @@ export function PatientSymptomsScreen() {
             Save check-in
           </button>
         ) : !escalateBecauseOf ? (
-          <div className="flex items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)]/10 px-5 py-4 text-[13px] font-semibold text-[var(--measured-dark-green)]">
-            <CheckCircle2 size={18} strokeWidth={2.2} aria-hidden="true" />
-            Logged · returning to home
+          <div className="flex flex-col items-center gap-2 rounded-3xl bg-[var(--measured-green)] px-5 py-5 text-center text-white shadow-[0_4px_20px_-4px_rgba(45,90,61,0.35)]">
+            <CheckCircle2 size={28} strokeWidth={2} aria-hidden="true" />
+            <div className="text-[15px] font-semibold">Check-in logged</div>
+            <div className="text-[12px] text-white/75">Returning to home…</div>
           </div>
         ) : null}
 
@@ -231,7 +252,7 @@ function ToggleRow({
             ? isDanger
               ? "bg-[var(--measured-evaluate)] text-white"
               : "bg-[var(--measured-green)] text-white"
-            : "bg-[var(--measured-input-bg)] text-[var(--measured-subtext)]",
+            : "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
         )}
       >
         {checked ? "Yes" : "No"}

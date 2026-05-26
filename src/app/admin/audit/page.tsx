@@ -76,10 +76,10 @@ export default async function AdminAuditPage({
     <div>
       <header className="mb-6 flex items-end justify-between">
         <div>
-          <p className="text-[12px] uppercase tracking-wider text-[var(--measured-subtext)]">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
             Compliance
           </p>
-          <h1 className="mt-1 text-[24px] font-semibold text-[var(--measured-text)]">
+          <h1 className="mt-1 font-serif text-[34px] leading-tight tracking-tight text-[var(--measured-dark)]">
             Audit log
           </h1>
           <p className="mt-1 text-[13px] text-[var(--measured-subtext)]">
@@ -99,7 +99,7 @@ export default async function AdminAuditPage({
         </p>
       </header>
 
-      <div className="overflow-hidden rounded-3xl border border-[var(--measured-border)] bg-[var(--measured-card)]">
+      <div className="overflow-hidden rounded-3xl border border-[var(--measured-border-soft)] bg-[var(--measured-card)] shadow-[var(--shadow-card)]">
         <table className="w-full text-left text-[13px]">
           <thead className="bg-[var(--measured-bg)] text-[var(--measured-subtext)]">
             <tr>
@@ -126,8 +126,8 @@ export default async function AdminAuditPage({
                     {r.actor_user_id ?? "—"}
                   </span>
                 </td>
-                <td className="px-4 py-2 text-[var(--measured-text)]">
-                  {r.action}
+                <td className="px-4 py-2">
+                  <ActionBadge action={r.action} />
                 </td>
                 <td className="px-4 py-2 text-[var(--measured-subtext)]">
                   {r.target_type ?? "—"}
@@ -155,5 +155,24 @@ export default async function AdminAuditPage({
         Showing fixture data when Supabase is not configured.
       </p>
     </div>
+  );
+}
+
+function ActionBadge({ action }: { action: string }) {
+  const prefix = action.split(".")[0];
+  const cls =
+    prefix === "meal"
+      ? "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]"
+      : prefix === "referral"
+        ? "bg-[var(--measured-gold)]/15 text-[#7a5c00]"
+        : prefix === "report"
+          ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+          : prefix === "consent"
+            ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
+            : "bg-[var(--measured-cream)] text-[var(--measured-subtext)]";
+  return (
+    <span className={`inline-block rounded-full px-2 py-0.5 font-mono text-[11px] font-semibold ${cls}`}>
+      {action}
+    </span>
   );
 }

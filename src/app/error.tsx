@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { AlertTriangle } from "lucide-react";
 
 export default function GlobalError({
   error,
@@ -18,12 +19,18 @@ export default function GlobalError({
 
   return (
     <div className="min-h-dvh bg-[var(--measured-cream)] flex flex-col items-center justify-center gap-5 px-6 text-center">
-      <div className="text-4xl">⚕️</div>
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--measured-evaluate)]/10">
+        <AlertTriangle
+          size={28}
+          className="text-[var(--measured-evaluate)]"
+          strokeWidth={1.8}
+        />
+      </div>
       <div className="space-y-1.5">
-        <h2 className="font-serif text-lg font-semibold text-[var(--measured-dark)]">
+        <h2 className="font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
           Something went wrong
         </h2>
-        <p className="text-sm text-[var(--measured-subtext)] max-w-xs">
+        <p className="text-[13px] text-[var(--measured-subtext)] max-w-xs">
           An unexpected error occurred. Try again or head back to the home
           screen.
         </p>
@@ -31,14 +38,14 @@ export default function GlobalError({
       <div className="flex gap-3">
         <button
           onClick={reset}
-          className="rounded-xl border border-neutral-200 bg-white px-5 py-2.5 text-sm font-medium text-[var(--measured-dark)] shadow-sm transition-colors hover:bg-neutral-50"
+          className="rounded-xl border border-[var(--measured-border)] bg-white px-5 py-2.5 text-[13px] font-medium text-[var(--measured-dark)] shadow-[var(--shadow-card)] transition-colors hover:bg-[var(--measured-cream)]"
           type="button"
         >
           Try again
         </button>
         <button
           onClick={() => router.push("/")}
-          className="rounded-xl bg-[var(--measured-green)] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[var(--measured-dark-green)]"
+          className="rounded-xl bg-[var(--measured-green)] px-5 py-2.5 text-[13px] font-medium text-white shadow-[var(--shadow-card)] transition-colors hover:bg-[var(--measured-dark-green)]"
           type="button"
         >
           Home

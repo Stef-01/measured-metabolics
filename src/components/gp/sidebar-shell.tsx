@@ -41,9 +41,26 @@ export function GpSidebarShell({ patient, children }: Props) {
   const tabs = gpSidebarTabs(patient.id);
   const pathname = usePathname();
 
+  const riskBar =
+    patient.risk === "high"
+      ? "bg-[var(--measured-evaluate)]"
+      : patient.risk === "medium"
+        ? "bg-[var(--measured-clinical-amber)]"
+        : "bg-[var(--measured-green)]";
+
+  const riskChip =
+    patient.risk === "high"
+      ? "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]"
+      : patient.risk === "medium"
+        ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
+        : "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]";
+
   return (
     <div className="gp-sidebar mx-auto flex flex-col" data-gp-sidebar>
-      <header className="border-b border-[var(--measured-border-soft)] bg-white px-5 pt-4 pb-4">
+      {/* Risk-level accent bar */}
+      <div className={cn("h-1 w-full shrink-0", riskBar)} aria-hidden="true" />
+
+      <header className="border-b border-[var(--measured-border-soft)] bg-white px-5 pt-3 pb-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-[var(--measured-subtext)]">
             <Stethoscope size={14} strokeWidth={2.2} aria-hidden="true" />
@@ -51,12 +68,18 @@ export function GpSidebarShell({ patient, children }: Props) {
           </div>
           <PersonaSwitcher active="gp" variant="compact" />
         </div>
-        <div className="mt-3 font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
-          {patient.firstName} {patient.lastName}
-        </div>
-        <div className="mt-1 text-[12px] text-[var(--measured-subtext)]">
-          {patient.age}
-          {patient.sex.toLowerCase()} · {patient.conditions.join(", ")}
+        <div className="mt-3 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
+              {patient.firstName} {patient.lastName}
+            </div>
+            <div className="mt-0.5 text-[12px] text-[var(--measured-subtext)]">
+              {patient.age}{patient.sex.toLowerCase()} · wk {patient.weekNumber} · {patient.conditions.join(", ")}
+            </div>
+          </div>
+          <span className={cn("shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize", riskChip)}>
+            {patient.risk} risk
+          </span>
         </div>
       </header>
 
@@ -73,7 +96,7 @@ export function GpSidebarShell({ patient, children }: Props) {
               href={tab.href}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[12px] font-medium transition-colors",
+                "flex shrink-0 items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-[12px] font-medium transition-colors",
                 isActive
                   ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
                   : "text-[var(--measured-subtext)] hover:bg-[var(--measured-cream)] hover:text-[var(--measured-dark)]",

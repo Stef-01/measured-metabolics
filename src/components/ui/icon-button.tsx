@@ -16,9 +16,9 @@ type Size = "md" | "sm";
 
 const VARIANTS: Record<Variant, string> = {
   ghost:
-    "text-[var(--measured-subtext)] hover:bg-neutral-100 active:bg-neutral-200",
+    "text-[var(--measured-subtext)] hover:bg-[var(--measured-cream)] active:bg-[var(--measured-input-bg)]",
   subtle:
-    "bg-neutral-100 text-[var(--measured-dark)] hover:bg-neutral-200 active:bg-neutral-300",
+    "bg-[var(--measured-cream)] text-[var(--measured-dark)] hover:bg-[var(--measured-input-bg)] active:bg-[var(--measured-border-soft)]",
   solid:
     "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]",
 };

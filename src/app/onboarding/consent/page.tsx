@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { CheckCircle2, ShieldCheck } from "lucide-react";
+import { cn } from "@/lib/utils/cn";
 
 const TIERS: Array<{
   kind: "clinical_care" | "rwe" | "marketing";
@@ -46,64 +48,90 @@ export default function ConsentPage() {
 
   return (
     <main className="mx-auto max-w-md px-6 py-10">
-      <p className="text-[12px] uppercase tracking-wide text-[var(--measured-subtext)]">
-        Consent
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+        Onboarding
       </p>
-      <h1 className="mt-2 text-[24px] font-semibold text-[var(--measured-text)]">
+      <h1 className="mt-1 font-serif text-[32px] leading-tight tracking-tight text-[var(--measured-dark)]">
         Three things to choose
       </h1>
-      <p className="mt-3 text-[14px] leading-snug text-[var(--measured-subtext)]">
+      <p className="mt-2 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
         Each one is independent. You can change RWE and marketing on the Privacy
         page later.
       </p>
 
       <ul className="mt-6 space-y-3">
-        {TIERS.map((t) => (
-          <li
-            key={t.kind}
-            className="rounded-3xl border border-[var(--measured-border)] bg-[var(--measured-card)] p-4"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-[15px] font-semibold text-[var(--measured-text)]">
-                  {t.title}
-                </p>
-                <p className="mt-1 text-[12px] text-[var(--measured-subtext)]">
-                  {t.blurb}
-                </p>
-              </div>
-              <label className="ml-2 mt-1 inline-flex cursor-pointer items-center">
-                <input
-                  type="checkbox"
-                  checked={
-                    t.required ? true : state[t.kind as "rwe" | "marketing"]
-                  }
+        {TIERS.map((t) => {
+          const checked = t.required ? true : state[t.kind as "rwe" | "marketing"];
+          return (
+            <li
+              key={t.kind}
+              className={cn(
+                "rounded-3xl border p-4 transition-colors",
+                checked
+                  ? "border-[var(--measured-green)]/30 bg-[var(--measured-green)]/4"
+                  : "border-[var(--measured-border-soft)] bg-[var(--measured-card)]",
+              )}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="text-[15px] font-semibold text-[var(--measured-dark)]">
+                      {t.title}
+                    </p>
+                    {t.required ? (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[var(--measured-green)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-dark-green)]">
+                        <ShieldCheck size={10} strokeWidth={2.2} aria-hidden="true" />
+                        Required
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                        Optional
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--measured-subtext)]">
+                    {t.blurb}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={checked}
                   disabled={t.required}
-                  onChange={() =>
+                  onClick={() =>
                     !t.required && toggle(t.kind as "rwe" | "marketing")
                   }
-                  className="h-5 w-5 accent-[var(--measured-accent)]"
-                />
-              </label>
-            </div>
-            {t.required && (
-              <p className="mt-2 text-[11px] uppercase tracking-wider text-[var(--measured-subtext)]">
-                Required
-              </p>
-            )}
-          </li>
-        ))}
+                  className={cn(
+                    "relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--measured-green)]/50",
+                    checked
+                      ? "bg-[var(--measured-green)]"
+                      : "bg-[var(--measured-border)]",
+                    t.required && "cursor-default opacity-60",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200",
+                      checked && "translate-x-5",
+                    )}
+                  />
+                </button>
+              </div>
+            </li>
+          );
+        })}
       </ul>
 
       {submitted ? (
-        <div className="mt-8 rounded-3xl border border-[var(--measured-border)] bg-[var(--measured-card)] p-5">
-          <p className="text-[14px] text-[var(--measured-text)]">
-            Saved. You can withdraw RWE / marketing any time on the Privacy
-            page.
+        <div className="mt-8 flex flex-col items-center gap-3 rounded-3xl bg-[var(--measured-green)] px-6 py-6 text-center text-white shadow-[0_4px_20px_-4px_rgba(45,90,61,0.35)]">
+          <CheckCircle2 size={28} strokeWidth={2} aria-hidden="true" />
+          <div className="text-[15px] font-semibold">Consent saved</div>
+          <p className="text-[12px] text-white/80">
+            You can update RWE &amp; marketing any time on the Privacy page.
           </p>
           <Link
             href="/p/home"
-            className="mt-3 inline-flex rounded-2xl bg-[var(--measured-text)] px-4 py-2 text-[14px] font-semibold text-[var(--measured-bg)]"
+            className="mt-1 rounded-2xl bg-white px-5 py-2.5 text-[14px] font-semibold text-[var(--measured-dark-green)]"
           >
             Continue to Today
           </Link>
@@ -112,7 +140,7 @@ export default function ConsentPage() {
         <button
           type="button"
           onClick={() => setSubmitted(true)}
-          className="mt-8 w-full rounded-2xl bg-[var(--measured-text)] px-4 py-3 text-[15px] font-semibold text-[var(--measured-bg)]"
+          className="cta-shadow mt-8 w-full rounded-2xl bg-[var(--measured-green)] px-4 py-3.5 text-[15px] font-semibold text-white hover:bg-[var(--measured-dark-green)] transition-colors"
         >
           Save consent
         </button>

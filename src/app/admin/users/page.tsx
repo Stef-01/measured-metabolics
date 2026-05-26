@@ -42,9 +42,9 @@ export default function AdminUsersPage() {
   ];
 
   const ROLE_BADGE: Record<UserRole, string> = {
-    dietitian: "bg-[var(--measured-accent-soft)] text-[var(--measured-accent)]",
-    gp: "bg-blue-50 text-blue-700",
-    patient: "bg-[var(--measured-card)] text-[var(--measured-subtext)]",
+    dietitian: "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
+    gp: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
+    patient: "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
   };
 
   const byRole: Record<UserRole, UserRow[]> = {
@@ -55,10 +55,10 @@ export default function AdminUsersPage() {
 
   return (
     <div>
-      <p className="text-[12px] uppercase tracking-wider text-[var(--measured-subtext)]">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
         Access control
       </p>
-      <h1 className="mt-1 text-[24px] font-semibold text-[var(--measured-text)]">
+      <h1 className="mt-1 font-serif text-[34px] leading-tight tracking-tight text-[var(--measured-dark)]">
         Users
       </h1>
       <p className="mt-1 text-[13px] text-[var(--measured-subtext)]">
@@ -73,7 +73,7 @@ export default function AdminUsersPage() {
             {role === "gp"
               ? "GPs"
               : role.charAt(0).toUpperCase() + role.slice(1) + "s"}
-            <span className="ml-2 rounded-full bg-[var(--measured-card)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
+            <span className="ml-2 rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
               {byRole[role].length}
             </span>
           </h2>
@@ -81,23 +81,23 @@ export default function AdminUsersPage() {
             {byRole[role].map((u) => (
               <li
                 key={u.id}
-                className="flex items-center justify-between gap-4 rounded-2xl border border-[var(--measured-border)] bg-[var(--measured-card)] px-4 py-3"
+                className="flex items-center justify-between gap-4 rounded-2xl border border-[var(--measured-border-soft)] bg-[var(--measured-card)] px-4 py-3 shadow-[var(--shadow-card)]"
               >
-                <div>
-                  <span className="text-[14px] font-semibold text-[var(--measured-text)]">
+                <div className="min-w-0">
+                  <div className="text-[14px] font-semibold text-[var(--measured-dark)]">
                     {u.name}
-                  </span>
-                  <span className="ml-2 text-[13px] text-[var(--measured-subtext)]">
+                  </div>
+                  <div className="mt-0.5 text-[12px] text-[var(--measured-subtext)]">
                     {u.detail}
-                  </span>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   {u.consentStatus && (
                     <span
                       className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
                         u.consentStatus === "signed"
-                          ? "bg-green-50 text-green-700"
-                          : "bg-amber-50 text-amber-700"
+                          ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+                          : "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
                       }`}
                     >
                       {u.consentStatus}

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Search, AlertTriangle } from "lucide-react";
+import { Search, AlertTriangle, ChevronRight } from "lucide-react";
 import { PATIENTS } from "@/lib/mock";
 import type { Cuisine, Patient, RiskLevel } from "@/lib/mock/types";
 import { cn } from "@/lib/utils/cn";
@@ -197,7 +197,7 @@ function PatientRow({ p, idx }: { p: Patient; idx: number }) {
     >
       <Link
         href={`/d/patients/${p.id}`}
-        className="grid grid-cols-[1fr_auto_auto] items-center gap-4 rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
+        className="group grid grid-cols-[1fr_auto_auto] items-center gap-4 rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
       >
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
@@ -235,7 +235,11 @@ function PatientRow({ p, idx }: { p: Patient; idx: number }) {
         <div className="text-[12px] text-[var(--measured-subtext)]">
           Week {p.weekNumber}
         </div>
-        <div className="text-[12px] text-[var(--measured-subtext)]">→</div>
+        <ChevronRight
+          size={16}
+          className="shrink-0 text-[var(--measured-subtext)] transition-transform group-hover:translate-x-0.5"
+          aria-hidden="true"
+        />
       </Link>
     </motion.li>
   );

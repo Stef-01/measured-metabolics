@@ -22,6 +22,41 @@ interface ClinicalInsights {
   rationale: string;
 }
 
+const SOAP_CONFIG = [
+  {
+    key: "subjective" as const,
+    letter: "S",
+    label: "Subjective",
+    bg: "bg-[var(--measured-clinical-blue)]/8",
+    ring: "ring-[var(--measured-clinical-blue)]/25",
+    text: "text-[var(--measured-clinical-blue)]",
+  },
+  {
+    key: "objective" as const,
+    letter: "O",
+    label: "Objective",
+    bg: "bg-[var(--measured-clinical-blue)]/5",
+    ring: "ring-[var(--measured-clinical-blue)]/15",
+    text: "text-[var(--measured-clinical-blue)]",
+  },
+  {
+    key: "assessment" as const,
+    letter: "A",
+    label: "Assessment",
+    bg: "bg-[var(--measured-clinical-amber)]/8",
+    ring: "ring-[var(--measured-clinical-amber)]/25",
+    text: "text-[var(--measured-clinical-amber)]",
+  },
+  {
+    key: "plan" as const,
+    letter: "P",
+    label: "Plan",
+    bg: "bg-[var(--measured-green)]/8",
+    ring: "ring-[var(--measured-green)]/25",
+    text: "text-[var(--measured-dark-green)]",
+  },
+] as const;
+
 export function GpTranscriptCard({ patient }: { patient: Patient }) {
   const [text, setText] = useState("");
   const [draft, setDraft] = useState<SoapDraft | null>(null);
@@ -134,53 +169,75 @@ export function GpTranscriptCard({ patient }: { patient: Patient }) {
         )}
       >
         <Sparkles size={14} strokeWidth={2.2} aria-hidden="true" />
-        {analyzing ? "Analyzing…" : "Analyze"}
+        {analyzing ? "Analyzing…" : "Analyze transcript"}
       </button>
 
       {draft && (
-        <div className="space-y-2 rounded-xl border border-[var(--measured-border-soft)] bg-white p-3 text-[12px] leading-relaxed">
-          <div className="flex items-center justify-between gap-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-            SOAP draft
+        <div className="space-y-2 overflow-hidden rounded-xl border border-[var(--measured-border-soft)] bg-white shadow-[var(--shadow-card)]">
+          {/* Header */}
+          <div className="flex items-center justify-between gap-2 border-b border-[var(--measured-border-soft)] px-3 py-2">
+            <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+              SOAP draft
+            </div>
             <div className="flex items-center gap-1.5">
               {draft.requiresReview && (
-                <span className="rounded-full bg-[var(--measured-evaluate)]/10 px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-evaluate)]">
+                <span className="rounded-full bg-[var(--measured-evaluate)]/10 px-2 py-0.5 text-[10px] font-bold text-[var(--measured-evaluate)]">
                   Review required
                 </span>
               )}
-              <span className="rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal">
-                {Math.round(draft.confidence * 100)}% confidence
+              <span className="rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-bold text-[var(--measured-subtext)]">
+                {Math.round(draft.confidence * 100)}%
               </span>
             </div>
           </div>
-          {(["subjective", "objective", "assessment", "plan"] as const).map(
-            (k) => (
-              <div key={k}>
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-dark-green)]">
-                  {k[0]}
+
+          {/* SOAP sections — each with a distinct coloured block */}
+          <div className="space-y-1.5 px-3 pb-3">
+            {SOAP_CONFIG.map((cfg) => (
+              <div
+                key={cfg.key}
+                className={cn(
+                  "flex items-start gap-2.5 rounded-xl p-2.5 ring-1",
+                  cfg.bg,
+                  cfg.ring,
+                )}
+              >
+                <span
+                  className={cn(
+                    "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
+                    cfg.text,
+                    "bg-white/60",
+                  )}
+                >
+                  {cfg.letter}
                 </span>
-                <span className="ml-1 text-[var(--measured-dark)]">
-                  {draft[k]}
-                </span>
+                <p className="flex-1 text-[12px] leading-relaxed text-[var(--measured-dark)]">
+                  {draft[cfg.key]}
+                </p>
               </div>
-            ),
-          )}
-          <button
-            type="button"
-            onClick={copy}
-            className="mt-1 inline-flex items-center gap-1 rounded-lg bg-[var(--measured-green)]/10 px-3 py-1.5 text-[11px] font-semibold text-[var(--measured-dark-green)]"
-          >
-            {copied ? (
-              <>
-                <Check size={12} strokeWidth={2.4} aria-hidden="true" />
-                Copied
-              </>
-            ) : (
-              <>
-                <Copy size={12} strokeWidth={2.2} aria-hidden="true" />
-                Copy SOAP
-              </>
-            )}
-          </button>
+            ))}
+          </div>
+
+          {/* Copy button */}
+          <div className="border-t border-[var(--measured-border-soft)] px-3 py-2">
+            <button
+              type="button"
+              onClick={copy}
+              className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-3 py-2 text-[12px] font-semibold text-white hover:bg-[var(--measured-dark-green)]"
+            >
+              {copied ? (
+                <>
+                  <Check size={13} strokeWidth={2.4} aria-hidden="true" />
+                  Copied to clipboard
+                </>
+              ) : (
+                <>
+                  <Copy size={13} strokeWidth={2.2} aria-hidden="true" />
+                  Copy SOAP note
+                </>
+              )}
+            </button>
+          </div>
         </div>
       )}
 
@@ -245,9 +302,6 @@ export function GpTranscriptCard({ patient }: { patient: Patient }) {
 }
 
 function stubAnalyze(text: string, patient: Patient): SoapDraft {
-  // Token-based stub: pulls hints from the transcript and from the patient
-  // record so the demo feels live without an LLM call. Replaced by a real
-  // Inngest worker in Stage 7.
   const lower = text.toLowerCase();
   const subjective = lower.includes("nausea")
     ? "Patient reports persistent nausea, particularly after dinner."

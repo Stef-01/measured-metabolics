@@ -1,0 +1,176 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
+const BOOKING_URL =
+  "https://healthengine.com.au/doctor/nsw/beecroft/dr-anubhav-saxena/p123180";
+
+const PROTOCOL = [
+  {
+    n: "01",
+    title: "GLP-1 therapy",
+    body: "Six months of clinically guided GLP-1 receptor agonist therapy, titrated to your response and reviewed at every appointment.",
+  },
+  {
+    n: "02",
+    title: "DEXA body composition",
+    body: "Baseline and completion DEXA scans measure fat mass, lean mass, and visceral fat — giving you objective before-and-after data.",
+  },
+  {
+    n: "03",
+    title: "Personalised meal planning",
+    body: "Your dietitian builds a plan around your cuisine, preferences, and metabolic targets — with recipes adapted specifically for you.",
+  },
+];
+
+export function DoctorLanding() {
+  return (
+    <main className="min-h-dvh bg-white text-[var(--measured-dark)]">
+      {/* ── Nav ──────────────────────────────────────── */}
+      <header className="sticky top-0 z-50 border-b border-[var(--measured-border-soft)] bg-white/96 backdrop-blur-md">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+          <div className="font-serif text-[20px] tracking-tight text-[var(--measured-dark)]">
+            Measured
+          </div>
+          <a
+            href={BOOKING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full bg-[var(--measured-green)] px-4 py-2 text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
+          >
+            Book now
+            <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
+          </a>
+        </div>
+      </header>
+
+      {/* ── Hero ─────────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl px-6 pt-24 pb-20 md:pt-32 md:pb-28">
+        <p className="mb-6 inline-block rounded-full border border-[var(--measured-border)] px-3.5 py-1 text-[12px] font-medium text-[var(--measured-subtext)]">
+          Health Optimisation Protocol · Beecroft NSW
+        </p>
+        <h1 className="font-serif text-[52px] leading-[1.02] tracking-tight text-[var(--measured-dark)] md:text-[72px]">
+          A structured path
+          <br />
+          to metabolic health.
+        </h1>
+        <p className="mt-7 max-w-[520px] text-[17px] leading-relaxed text-[var(--measured-subtext)]">
+          Dr Anubhav Saxena runs a medically supervised six-month program
+          combining GLP-1 therapy, DEXA body composition scanning, and
+          personalised dietitian-led meal planning.
+        </p>
+        <div className="mt-10 flex flex-wrap items-center gap-4">
+          <a
+            href={BOOKING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cta-shadow inline-flex items-center gap-2 rounded-2xl bg-[var(--measured-green)] px-7 py-4 text-[15px] font-semibold text-white transition-opacity hover:opacity-90"
+          >
+            Book a consultation
+            <ArrowRight size={15} strokeWidth={2.4} aria-hidden="true" />
+          </a>
+          <span className="text-[13px] text-[var(--measured-subtext)]">
+            via HealthEngine
+          </span>
+        </div>
+      </section>
+
+      <div className="border-t border-[var(--measured-border-soft)]" />
+
+      {/* ── Protocol ─────────────────────────────────── */}
+      <section className="bg-[var(--measured-cream)]">
+        <div className="mx-auto max-w-5xl px-6 py-20 md:py-24">
+          <div className="mb-14">
+            <h2 className="font-serif text-[38px] leading-tight tracking-tight text-[var(--measured-dark)]">
+              The protocol
+            </h2>
+            <p className="mt-2 text-[15px] text-[var(--measured-subtext)]">
+              Three integrated components. Six months.
+            </p>
+          </div>
+          <div className="grid gap-12 md:grid-cols-3 md:gap-8">
+            {PROTOCOL.map((step) => (
+              <div key={step.n}>
+                <div
+                  aria-hidden="true"
+                  className="font-serif text-[52px] leading-none text-[var(--measured-green)]/20"
+                >
+                  {step.n}
+                </div>
+                <h3 className="mt-5 font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
+                  {step.title}
+                </h3>
+                <p className="mt-2.5 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
+                  {step.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="border-t border-[var(--measured-border-soft)]" />
+
+      {/* ── Doctor ───────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl px-6 py-20 md:py-24">
+        <div className="max-w-[560px]">
+          <p className="text-[11px] font-medium uppercase tracking-widest text-[var(--measured-subtext)]">
+            Your doctor
+          </p>
+          <h2 className="mt-4 font-serif text-[38px] leading-tight tracking-tight text-[var(--measured-dark)]">
+            Dr Anubhav Saxena
+          </h2>
+          <p className="mt-1 text-[13px] text-[var(--measured-subtext)]">
+            MBBS FRACGP MPhil BSc(Adv) DCH
+          </p>
+          <p className="mt-6 text-[16px] leading-relaxed text-[var(--measured-subtext)]">
+            Dr Saxena is a Fellow of the Royal Australian College of General
+            Practitioners with a research background in metabolic medicine. He
+            designed the Health Optimisation Protocol to give patients a
+            structured, evidence-based path to lasting weight and metabolic
+            improvement — coordinated from his Beecroft practice.
+          </p>
+          <a
+            href={BOOKING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[var(--measured-dark-green)] transition-opacity hover:opacity-70"
+          >
+            Book with Dr Saxena
+            <ArrowRight size={14} strokeWidth={2.4} aria-hidden="true" />
+          </a>
+        </div>
+      </section>
+
+      {/* ── CTA band ─────────────────────────────────── */}
+      <section className="bg-[var(--measured-green)]">
+        <div className="mx-auto max-w-5xl px-6 py-16 text-center md:py-20">
+          <h2 className="font-serif text-[40px] leading-tight tracking-tight text-white md:text-[48px]">
+            Ready to start?
+          </h2>
+          <p className="mt-3 text-[15px] text-white/65">
+            Book your initial consultation. Availability via HealthEngine.
+          </p>
+          <a
+            href={BOOKING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-white px-8 py-4 text-[15px] font-semibold text-[var(--measured-dark-green)] shadow-[0_2px_16px_-2px_rgba(0,0,0,0.2)] transition-colors hover:bg-[var(--measured-cream)]"
+          >
+            Book on HealthEngine
+            <ArrowRight size={15} strokeWidth={2.4} aria-hidden="true" />
+          </a>
+        </div>
+      </section>
+
+      {/* ── Footer ───────────────────────────────────── */}
+      <footer className="border-t border-[var(--measured-border-soft)]">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6 text-[12px] text-[var(--measured-subtext)]">
+          <span>Dr Anubhav Saxena · Beecroft NSW · {new Date().getFullYear()}</span>
+          <Link href="/demo" className="transition-colors hover:text-[var(--measured-dark)]">
+            Platform demo →
+          </Link>
+        </div>
+      </footer>
+    </main>
+  );
+}

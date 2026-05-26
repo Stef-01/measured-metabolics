@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   Users,
   ClipboardCheck,
@@ -8,6 +9,9 @@ import {
   CalendarClock,
   AlertTriangle,
   ArrowRight,
+  ChevronRight,
+  MessageSquarePlus,
+  Send,
 } from "lucide-react";
 import { DietitianStatCard } from "@/components/dietitian/stat-card";
 import {
@@ -17,6 +21,15 @@ import {
   newReferrals,
   CURRENT_DIETITIAN_ID,
 } from "@/lib/mock";
+import type { RiskLevel, ReferralPriority } from "@/lib/mock/types";
+import { patientStore, type MealConsultationRequest } from "@/lib/storage/patient-store";
+import { cn } from "@/lib/utils/cn";
+
+const PRIORITY_TONE: Record<ReferralPriority, string> = {
+  high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
+  medium: "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
+  low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
+};
 
 export function DietitianDashboardScreen() {
   const myPatients = PATIENTS.filter(
@@ -59,11 +72,11 @@ export function DietitianDashboardScreen() {
           hint="Caseload"
         />
         <DietitianStatCard
-          label="Meals waiting"
+          label="Meals to review"
           value={pendingMeals}
           Icon={ClipboardCheck}
           tone={pendingMeals > 5 ? "warning" : "default"}
-          hint={pendingMeals > 5 ? "Above 5-meal target" : "Within target"}
+          hint={pendingMeals > 5 ? "Above target · start queue" : "Within target"}
         />
         <DietitianStatCard
           label="Severe flags"
@@ -108,13 +121,16 @@ export function DietitianDashboardScreen() {
                         {s.patientId}
                       </div>
                     )}
-                    <div className="text-[12px] text-[var(--measured-subtext)]">
-                      Nausea: {s.nausea} · Constipation: {s.constipation} ·{" "}
-                      {new Date(s.loggedAt).toLocaleString([], {
-                        weekday: "short",
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })}
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                      <SymChip label="Nausea" value={s.nausea} />
+                      <SymChip label="Constipation" value={s.constipation} />
+                      <span className="text-[11px] text-[var(--measured-subtext)]">
+                        {new Date(s.loggedAt).toLocaleString([], {
+                          weekday: "short",
+                          hour: "numeric",
+                          minute: "2-digit",
+                        })}
+                      </span>
                     </div>
                   </div>
                   <Link
@@ -162,8 +178,13 @@ export function DietitianDashboardScreen() {
                         {r.patientId}
                       </div>
                     )}
-                    <div className="text-[12px] text-[var(--measured-subtext)]">
-                      {r.referringGpName} · {r.cuisineLabel} · {r.priority}
+                    <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[12px] text-[var(--measured-subtext)]">
+                      <span>{r.referringGpName}</span>
+                      <span>·</span>
+                      <span>{r.cuisineLabel}</span>
+                      <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider", PRIORITY_TONE[r.priority])}>
+                        {r.priority}
+                      </span>
                     </div>
                   </div>
                   <Link
@@ -209,6 +230,203 @@ export function DietitianDashboardScreen() {
           </p>
         </div>
       </section>
+
+      {/* Caseload at a glance */}
+      <section className="mt-8">
+        <div className="flex items-center justify-between">
+          <div className="text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+            Caseload
+            <span className="ml-2 rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
+              {myPatients.length}
+            </span>
+          </div>
+          <Link
+            href="/d/patients"
+            className="text-[12px] font-semibold text-[var(--measured-dark-green)] hover:underline"
+          >
+            View all →
+          </Link>
+        </div>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {myPatients.map((p) => (
+            <PatientMiniCard key={p.id} patient={p} />
+          ))}
+        </div>
+      </section>
+
+      <PatientRequestsSection />
     </div>
+  );
+}
+
+function SymChip({
+  label,
+  value,
+}: {
+  label: string;
+  value: "none" | "mild" | "severe";
+}) {
+  const cls =
+    value === "none"
+      ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+      : value === "mild"
+        ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
+        : "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]";
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${cls}`}>
+      <span className="opacity-70">{label}</span>
+      <span>{value}</span>
+    </span>
+  );
+}
+
+const RISK_CHIP: Record<RiskLevel, string> = {
+  high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
+  medium: "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
+  low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
+};
+
+function PatientRequestsSection() {
+  const [requests, setRequests] = useState<
+    Array<MealConsultationRequest & { patientName: string }>
+  >([]);
+  const [replies, setReplies] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const all: Array<MealConsultationRequest & { patientName: string }> = [];
+    for (const p of PATIENTS) {
+      const reqs = patientStore.getRequests(p.id);
+      for (const r of reqs) {
+        if (!r.dietitianReply) {
+          all.push({ ...r, patientName: `${p.firstName} ${p.lastName}` });
+        }
+      }
+    }
+    all.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+    setRequests(all);
+  }, []);
+
+  const reply = (req: (typeof requests)[number]) => {
+    const text = replies[req.id]?.trim();
+    if (!text) return;
+    patientStore.replyToRequest(req.patientId, req.id, text);
+    setReplies((prev) => ({ ...prev, [req.id]: "" }));
+    setRequests((prev) => prev.filter((r) => r.id !== req.id));
+  };
+
+  if (requests.length === 0) return null;
+
+  return (
+    <section className="mt-8">
+      <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+        <MessageSquarePlus size={14} strokeWidth={2} aria-hidden="true" />
+        Patient meal requests
+        <span className="rounded-full bg-[var(--measured-clinical-amber)]/15 px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-clinical-amber)]">
+          {requests.length}
+        </span>
+      </div>
+      <ul className="mt-3 space-y-3">
+        {requests.map((req) => (
+          <li
+            key={req.id}
+            className="surface-card p-4"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-[14px] font-semibold text-[var(--measured-dark)]">
+                    {req.patientName}
+                  </span>
+                  <span className="rounded-full bg-[var(--measured-clinical-amber)]/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-clinical-amber)]">
+                    {req.type.replace("_", " ")}
+                  </span>
+                  <span className="text-[11px] text-[var(--measured-subtext)]">
+                    {new Date(req.createdAt).toLocaleString([], {
+                      weekday: "short",
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </div>
+                <p className="mt-1 text-[13px] leading-relaxed text-[var(--measured-dark)]">
+                  {req.body}
+                </p>
+              </div>
+            </div>
+            <div className="mt-3 flex gap-2">
+              <input
+                type="text"
+                value={replies[req.id] ?? ""}
+                onChange={(e) =>
+                  setReplies((prev) => ({ ...prev, [req.id]: e.target.value }))
+                }
+                placeholder="Reply with a suggestion…"
+                className="flex-1 rounded-xl border border-[var(--measured-border)] bg-[var(--measured-cream)] px-3 py-2 text-[12px] focus:border-[var(--measured-green)] focus:outline-none"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    reply(req);
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => reply(req)}
+                disabled={!replies[req.id]?.trim()}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-3 py-2 text-[12px] font-semibold text-white disabled:bg-[var(--measured-cream)] disabled:text-[var(--measured-subtext)]"
+              >
+                <Send size={13} strokeWidth={2.2} />
+                Reply
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function PatientMiniCard({ patient: p }: { patient: (typeof PATIENTS)[number] }) {
+  return (
+    <Link
+      href={`/d/patients/${p.id}`}
+      className="group flex items-center gap-3 rounded-2xl border border-[var(--measured-border-soft)] bg-white p-3.5 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
+    >
+      <div
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[13px] font-bold text-white"
+        style={{
+          backgroundColor: p.risk === "high" ? "var(--measured-evaluate)" : p.risk === "medium" ? "var(--measured-clinical-amber)" : "var(--measured-clinical-blue)",
+        }}
+      >
+        {p.firstName[0]}{p.lastName[0]}
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5 truncate">
+          <span className="truncate text-[13px] font-semibold text-[var(--measured-dark)]">
+            {p.firstName} {p.lastName}
+          </span>
+          <span className={cn("shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase", RISK_CHIP[p.risk])}>
+            {p.risk}
+          </span>
+        </div>
+        <div className="mt-0.5 flex items-center gap-2 text-[11px] text-[var(--measured-subtext)]">
+          <span>HbA1c {p.hbA1cPct}%</span>
+          <span>·</span>
+          <span>TIR {p.timeInRangePct}%</span>
+          <span>·</span>
+          <span>Wk {p.weekNumber}</span>
+        </div>
+        {p.alerts.length > 0 && (
+          <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--measured-evaluate)]">
+            <AlertTriangle size={10} strokeWidth={2.2} aria-hidden="true" />
+            {p.alerts[0]}
+          </div>
+        )}
+      </div>
+      <ChevronRight size={14} className="shrink-0 text-[var(--measured-border-strong)] transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+    </Link>
   );
 }

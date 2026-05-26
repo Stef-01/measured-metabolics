@@ -106,7 +106,7 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
 
   return (
     <DeviceFrameContext.Provider value={{ mode, setMode }}>
-      <div className="fixed inset-0 flex items-center justify-center bg-neutral-100 overflow-hidden p-4">
+      <div className="fixed inset-0 flex items-center justify-center overflow-hidden p-4" style={{ background: "radial-gradient(ellipse at 40% 30%, rgba(45,90,61,0.06) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(44,94,138,0.04) 0%, transparent 60%), #f0ede8" }}>
         <div
           className="relative w-[390px] max-w-full"
           style={{ aspectRatio: "390 / 844", maxHeight: "calc(100vh - 2rem)" }}
@@ -250,7 +250,7 @@ function DeviceToggle({
     <button
       onClick={onToggle}
       className={cn(
-        "fixed z-[200] flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2.5 shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105",
+        "fixed z-[200] flex items-center gap-2 rounded-full border border-[var(--measured-border)] bg-white px-4 py-2.5 shadow-[var(--shadow-raised)] transition-all duration-200 hover:scale-105",
         mode === "phone" ? "bottom-6 right-6" : "bottom-4 right-4",
       )}
       type="button"
@@ -264,14 +264,14 @@ function DeviceToggle({
       {mode === "phone" ? (
         <>
           <Monitor size={18} className="text-[var(--measured-subtext)]" />
-          <span className="text-sm font-medium text-[var(--measured-dark)]">
+          <span className="text-[13px] font-medium text-[var(--measured-dark)]">
             Desktop
           </span>
         </>
       ) : (
         <>
           <Smartphone size={18} className="text-[var(--measured-subtext)]" />
-          <span className="text-sm font-medium text-[var(--measured-dark)]">
+          <span className="text-[13px] font-medium text-[var(--measured-dark)]">
             Phone
           </span>
         </>

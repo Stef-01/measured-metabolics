@@ -40,13 +40,13 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="min-h-dvh bg-[var(--measured-cream)] flex flex-col items-center justify-center gap-5 px-6 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 border border-red-100">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--measured-evaluate)]/10 border border-[var(--measured-evaluate)]/20">
             <svg
               width="24"
               height="24"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#ef4444"
+              stroke="var(--measured-evaluate)"
               strokeWidth="1.8"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -57,16 +57,16 @@ export class ErrorBoundary extends Component<Props, State> {
             </svg>
           </div>
           <div className="space-y-1.5">
-            <p className="text-sm font-semibold text-[var(--measured-dark)]">
+            <p className="text-[14px] font-semibold text-[var(--measured-dark)]">
               Something went wrong
             </p>
-            <p className="text-xs text-[var(--measured-subtext)] max-w-[240px]">
+            <p className="text-[12px] text-[var(--measured-subtext)] max-w-[240px]">
               Measured hit an unexpected error. Tap below to try again.
             </p>
           </div>
           <button
             onClick={this.handleReset}
-            className="rounded-xl bg-[var(--measured-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--measured-dark-green)]"
+            className="rounded-xl bg-[var(--measured-green)] px-6 py-2.5 text-[13px] font-semibold text-white shadow-[var(--shadow-card)] transition-colors hover:bg-[var(--measured-dark-green)]"
             type="button"
           >
             Try again

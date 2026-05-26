@@ -42,12 +42,18 @@ export default function SignInPage() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6">
-      <div className="rounded-3xl border border-[var(--measured-border)] bg-[var(--measured-card)] p-8 shadow-sm">
-        <h1 className="text-[22px] font-semibold text-[var(--measured-text)]">
-          Sign in to Measured
+      <div className="rounded-3xl border border-[var(--measured-border)] bg-[var(--measured-card)] p-8 shadow-[var(--shadow-raised)]">
+        <div className="mb-6 flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--measured-green)] text-white shadow-[var(--shadow-card)]">
+            <Mail size={18} strokeWidth={2.2} aria-hidden="true" />
+          </div>
+          <span className="font-serif text-[18px] tracking-tight text-[var(--measured-dark)]">Measured</span>
+        </div>
+        <h1 className="font-serif text-[28px] leading-tight tracking-tight text-[var(--measured-dark)]">
+          Sign in
         </h1>
-        <p className="mt-2 text-[14px] text-[var(--measured-subtext)]">
-          We email a magic link. No passwords.
+        <p className="mt-1.5 text-[14px] text-[var(--measured-subtext)]">
+          We email a magic link — no passwords.
         </p>
 
         {!configured && (
@@ -79,7 +85,7 @@ export default function SignInPage() {
           <button
             type="submit"
             disabled={status === "sending" || !email}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--measured-text)] px-4 py-3 text-[15px] font-semibold text-[var(--measured-bg)] disabled:opacity-50"
+            className="cta-shadow flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] px-4 py-3 text-[15px] font-semibold text-white hover:bg-[var(--measured-dark-green)] disabled:opacity-50 transition-colors"
           >
             <Mail size={16} />
             {status === "sending"
@@ -96,7 +102,7 @@ export default function SignInPage() {
           </p>
         )}
         {status === "error" && errorMsg && (
-          <p className="mt-4 text-[13px] text-[var(--measured-clinical-blue)]">
+          <p className="mt-4 rounded-xl bg-[var(--measured-evaluate)]/8 px-3 py-2 text-[13px] text-[var(--measured-evaluate)]">
             {errorMsg}
           </p>
         )}

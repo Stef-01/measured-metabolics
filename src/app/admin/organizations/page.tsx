@@ -19,10 +19,10 @@ export default function AdminOrganizationsPage() {
 
   return (
     <div>
-      <p className="text-[12px] uppercase tracking-wider text-[var(--measured-subtext)]">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
         Network
       </p>
-      <h1 className="mt-1 text-[24px] font-semibold text-[var(--measured-text)]">
+      <h1 className="mt-1 font-serif text-[34px] leading-tight tracking-tight text-[var(--measured-dark)]">
         Organizations
       </h1>
       <p className="mt-1 text-[13px] text-[var(--measured-subtext)]">
@@ -42,16 +42,16 @@ export default function AdminOrganizationsPage() {
         ].map((s) => (
           <div
             key={s.label}
-            className={`rounded-2xl border p-4 ${
+            className={`rounded-2xl border p-4 shadow-[var(--shadow-card)] ${
               s.accent
-                ? "border-[var(--measured-accent)] bg-[var(--measured-accent-soft)]"
-                : "border-[var(--measured-border)] bg-[var(--measured-card)]"
+                ? "border-[var(--measured-green)]/25 bg-[var(--measured-green)]/5"
+                : "border-[var(--measured-border-soft)] bg-[var(--measured-card)]"
             }`}
           >
-            <p className="text-[11px] uppercase tracking-wider text-[var(--measured-subtext)]">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
               {s.label}
             </p>
-            <p className="mt-1.5 text-[26px] font-semibold text-[var(--measured-text)]">
+            <p className={`mt-1.5 font-serif text-[28px] leading-none ${s.accent ? "text-[var(--measured-dark-green)]" : "text-[var(--measured-dark)]"}`}>
               {s.value}
             </p>
           </div>
@@ -66,7 +66,7 @@ export default function AdminOrganizationsPage() {
           {practices.map(({ gp, patients, dietitians }) => (
             <li
               key={gp.id}
-              className="rounded-2xl border border-[var(--measured-border)] bg-[var(--measured-card)] p-5"
+              className="rounded-2xl border border-[var(--measured-border-soft)] bg-[var(--measured-card)] p-5 shadow-[var(--shadow-card)]"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -78,7 +78,7 @@ export default function AdminOrganizationsPage() {
                     {patients.length !== 1 ? "s" : ""}
                   </p>
                 </div>
-                <span className="rounded-full bg-[var(--measured-accent-soft)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--measured-accent)]">
+                <span className="rounded-full bg-[var(--measured-green)]/10 px-2.5 py-0.5 text-[11px] font-semibold text-[var(--measured-dark-green)]">
                   Active
                 </span>
               </div>
@@ -92,7 +92,7 @@ export default function AdminOrganizationsPage() {
                     {dietitians.map((d) => (
                       <li
                         key={d.id}
-                        className="rounded-xl bg-[var(--measured-bg)] px-3 py-1.5 text-[13px] text-[var(--measured-text)]"
+                        className="rounded-xl bg-[var(--measured-cream)] px-3 py-1.5 text-[13px] text-[var(--measured-text)] ring-1 ring-[var(--measured-border-soft)]"
                       >
                         <span className="font-medium">{d.name}</span>
                         <span className="ml-1.5 text-[var(--measured-subtext)]">
@@ -113,7 +113,7 @@ export default function AdminOrganizationsPage() {
                     {patients.map((p) => (
                       <li
                         key={p.id}
-                        className="flex items-center justify-between gap-4 rounded-lg bg-[var(--measured-bg)] px-3 py-2 text-[13px]"
+                        className="flex items-center justify-between gap-4 rounded-lg bg-[var(--measured-cream)] px-3 py-2 text-[13px] ring-1 ring-[var(--measured-border-soft)]"
                       >
                         <span className="font-medium text-[var(--measured-text)]">
                           {p.firstName} {p.lastName}
@@ -123,10 +123,10 @@ export default function AdminOrganizationsPage() {
                           <span
                             className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${
                               p.risk === "high"
-                                ? "bg-red-50 text-red-600"
+                                ? "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]"
                                 : p.risk === "medium"
-                                  ? "bg-amber-50 text-amber-700"
-                                  : "bg-blue-50 text-blue-600"
+                                  ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
+                                  : "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]"
                             }`}
                           >
                             {p.risk}

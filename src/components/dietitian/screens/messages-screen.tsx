@@ -142,41 +142,80 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
               className="w-full rounded-lg border border-[var(--measured-border)] bg-white py-2 pl-8 pr-3 text-[12px] focus:border-[var(--measured-green)] focus:outline-none"
             />
           </label>
-          <ul className="flex-1 space-y-1 overflow-y-auto scrollbar-hide">
+          <ul className="flex-1 space-y-0.5 overflow-y-auto scrollbar-hide">
             {filtered.map((t) => {
               const p = PATIENTS.find((pp) => pp.id === t.patientId);
               const last = t.messages.at(-1);
               const isActive = t.id === activeId;
               const severe = severePatientIds.has(t.patientId);
+              const unread = t.messages.filter(
+                (m) => m.fromRole === "patient" && !m.read,
+              ).length;
+              const initials = p
+                ? `${p.firstName[0]}${p.lastName[0]}`
+                : t.patientId.slice(0, 2).toUpperCase();
               return (
                 <li key={t.id}>
                   <button
                     type="button"
                     onClick={() => setActiveId(t.id)}
                     className={cn(
-                      "group w-full rounded-xl border px-3 py-2 text-left transition-colors",
+                      "group flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors",
                       isActive
                         ? "border-[var(--measured-green)] bg-[var(--measured-green)]/10"
                         : "border-transparent hover:bg-[var(--measured-cream)]",
                     )}
                   >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="truncate text-[13px] font-semibold text-[var(--measured-dark)]">
-                        {p ? `${p.firstName} ${p.lastName}` : t.patientId}
-                      </span>
-                      {severe && (
-                        <Pin
-                          size={11}
-                          strokeWidth={2.2}
-                          className="text-[var(--measured-evaluate)]"
-                          aria-hidden="true"
-                        />
+                    <div className="relative shrink-0">
+                      <div
+                        className="flex h-9 w-9 items-center justify-center rounded-full text-[11px] font-bold text-white"
+                        style={{
+                          backgroundColor: severe
+                            ? "var(--measured-evaluate)"
+                            : "var(--measured-green)",
+                        }}
+                      >
+                        {initials}
+                      </div>
+                      {unread > 0 && (
+                        <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--measured-evaluate)] text-[8px] font-bold text-white ring-2 ring-white">
+                          {unread}
+                        </span>
                       )}
                     </div>
-                    {last && (
-                      <div className="mt-0.5 truncate text-[11px] text-[var(--measured-subtext)]">
-                        {last.body}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className={cn(
+                          "truncate text-[13px]",
+                          unread > 0 ? "font-bold text-[var(--measured-dark)]" : "font-semibold text-[var(--measured-dark)]",
+                        )}>
+                          {p ? `${p.firstName} ${p.lastName}` : t.patientId}
+                        </span>
+                        {last && (
+                          <span className="shrink-0 text-[10px] text-[var(--measured-subtext)]">
+                            {new Date(last.sentAt).toLocaleTimeString([], {
+                              hour: "numeric",
+                              minute: "2-digit",
+                            })}
+                          </span>
+                        )}
                       </div>
+                      {last && (
+                        <div className={cn(
+                          "mt-0.5 truncate text-[11px]",
+                          unread > 0 ? "font-medium text-[var(--measured-dark)]" : "text-[var(--measured-subtext)]",
+                        )}>
+                          {last.fromRole === "dietitian" ? "You: " : ""}{last.body}
+                        </div>
+                      )}
+                    </div>
+                    {severe && (
+                      <Pin
+                        size={11}
+                        strokeWidth={2.2}
+                        className="shrink-0 text-[var(--measured-evaluate)]"
+                        aria-hidden="true"
+                      />
                     )}
                   </button>
                 </li>
@@ -188,16 +227,38 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
         {/* Composer pane */}
         {active ? (
           <section className="surface-card flex flex-col overflow-hidden">
-            <header className="border-b border-[var(--measured-border-soft)] px-5 py-3">
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-                Thread
-              </div>
-              <div className="text-[15px] font-semibold text-[var(--measured-dark)]">
-                {(() => {
-                  const p = PATIENTS.find((pp) => pp.id === active.patientId);
-                  return p ? `${p.firstName} ${p.lastName}` : active.patientId;
-                })()}
-              </div>
+            <header className="flex items-center gap-3 border-b border-[var(--measured-border-soft)] px-5 py-3">
+              {(() => {
+                const p = PATIENTS.find((pp) => pp.id === active.patientId);
+                const initials = p
+                  ? `${p.firstName[0]}${p.lastName[0]}`
+                  : active.patientId.slice(0, 2).toUpperCase();
+                const isSevere = severePatientIds.has(active.patientId);
+                return (
+                  <>
+                    <div
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white"
+                      style={{
+                        backgroundColor: isSevere
+                          ? "var(--measured-evaluate)"
+                          : "var(--measured-green)",
+                      }}
+                    >
+                      {initials}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[15px] font-semibold text-[var(--measured-dark)]">
+                        {p ? `${p.firstName} ${p.lastName}` : active.patientId}
+                      </div>
+                      {p && (
+                        <div className="text-[11px] text-[var(--measured-subtext)]">
+                          {p.conditions.join(" · ")} · Week {p.weekNumber}
+                        </div>
+                      )}
+                    </div>
+                  </>
+                );
+              })()}
             </header>
 
             <div

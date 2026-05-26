@@ -43,8 +43,8 @@ const SHORTCUTS: {
   {
     key: "A",
     action: "approved",
-    label: "Approve",
-    Icon: Check,
+    label: "Reviewed",
+    Icon: CheckCircle2,
     tone: "approve",
   },
   { key: "E", action: "edit", label: "Edit", Icon: Pencil, tone: "edit" },
@@ -78,6 +78,16 @@ const TONE_CLASS: Record<(typeof SHORTCUTS)[number]["tone"], string> = {
 
 type QueueFilter = "all" | "flagged" | "high_spike";
 
+function triageLabel(m: MealLog): { label: string; color: string } | null {
+  if (m.analysis.clinicalFlags.length > 0)
+    return { label: "Flag", color: "var(--measured-evaluate)" };
+  if ((m.analysis.cgmPeakDeltaMmol ?? 0) >= 3)
+    return { label: "High Δ", color: "var(--measured-evaluate)" };
+  if ((m.analysis.cgmPeakDeltaMmol ?? 0) >= 1.5)
+    return { label: "Spike", color: "var(--measured-clinical-amber)" };
+  return null;
+}
+
 interface Props {
   pool?: MealLog[];
 }
@@ -99,6 +109,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
     {},
   );
   const [editDraft, setEditDraft] = useState<SavedMealEdit | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
   const meals = useMemo(() => {
     switch (queueFilter) {
       case "flagged":
@@ -130,7 +141,30 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
   // Reset cursor on mount and whenever the filter changes.
   useEffect(() => {
     reset();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSelected(new Set());
   }, [reset, queueFilter]);
+
+  const toggleSelect = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const bulkAct = (action: "approved" | "flagged") => {
+    selected.forEach((id) => recordAction(id, action));
+    const verb = action === "approved" ? "Approved" : "Flagged";
+    toast.push({
+      variant: action === "flagged" ? "info" : "success",
+      title: `${verb} ${selected.size} meal${selected.size === 1 ? "" : "s"}`,
+      duration: 1800,
+    });
+    setSelected(new Set());
+  };
 
   // Initialise session start once, after mount, away from render purity rules.
   useEffect(() => {
@@ -264,7 +298,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
               ? "No high-spike meals (≥3 mmol/L) found."
               : acted.length > 0
                 ? `${acted.length} meals reviewed${sessionInfo ? ` in ${sessionInfo.elapsed}` : ""}.`
-                : "All meals are reviewed."}
+                : "All meals reviewed — great session."}
         </p>
         <div className="mt-3 flex gap-2">
           {queueFilter !== "all" && (
@@ -298,7 +332,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
             Meal review queue
           </div>
           <h1 className="mt-1 font-serif text-[34px] leading-tight tracking-tight text-[var(--measured-dark)]">
-            {remaining} meal{remaining === 1 ? "" : "s"} waiting
+            {remaining} meal{remaining === 1 ? "" : "s"} for clinical review
           </h1>
         </div>
         {sessionInfo && (
@@ -369,14 +403,30 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
             {meals.map((m, idx) => {
               const isActive = idx === cursor;
               const isPast = idx < cursor;
+              const isSelected = selected.has(m.id);
               const p = PATIENTS.find((pp) => pp.id === m.patientId);
               return (
-                <li key={m.id}>
+                <li key={m.id} className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={(e) => toggleSelect(m.id, e)}
+                    aria-label={isSelected ? "Deselect" : "Select"}
+                    className={cn(
+                      "flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors",
+                      isSelected
+                        ? "border-[var(--measured-green)] bg-[var(--measured-green)]"
+                        : "border-[var(--measured-border)] bg-white hover:border-[var(--measured-green)]",
+                    )}
+                  >
+                    {isSelected && (
+                      <Check size={11} strokeWidth={2.8} className="text-white" aria-hidden="true" />
+                    )}
+                  </button>
                   <button
                     type="button"
                     onClick={() => setCursor(idx)}
                     className={cn(
-                      "flex w-full items-center gap-2 rounded-xl border px-3 py-2 text-left text-[12px]",
+                      "flex flex-1 items-center gap-2 rounded-xl border px-3 py-2 text-left text-[12px]",
                       isActive
                         ? "border-[var(--measured-green)] bg-[var(--measured-green)]/10"
                         : "border-transparent hover:bg-[var(--measured-cream)]",
@@ -401,6 +451,17 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                         className="text-[var(--measured-evaluate)]"
                         aria-hidden="true"
                       />
+                    )}
+                    {triageLabel(m) !== null && (
+                      <span
+                        className="rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase"
+                        style={{
+                          backgroundColor: `${triageLabel(m)!.color}15`,
+                          color: triageLabel(m)!.color,
+                        }}
+                      >
+                        {triageLabel(m)!.label}
+                      </span>
                     )}
                   </button>
                 </li>
@@ -681,8 +742,8 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                 onClick={() => handleAction("approved", current.id)}
                 className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] px-4 py-3.5 text-[14px] font-semibold text-white transition-colors hover:bg-[var(--measured-dark-green)]"
               >
-                <Check size={18} strokeWidth={2.2} aria-hidden="true" />
-                Approve
+                <CheckCircle2 size={18} strokeWidth={2.2} aria-hidden="true" />
+                Reviewed ✓
                 <kbd className="ml-auto rounded bg-white/20 px-2 py-0.5 text-[11px] font-mono">
                   A
                 </kbd>
@@ -712,6 +773,48 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
           </motion.section>
         </AnimatePresence>
       </div>
+
+      {/* Floating bulk action bar */}
+      <AnimatePresence>
+        {selected.size > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2"
+          >
+            <div className="flex items-center gap-2 rounded-2xl border border-[var(--measured-border-soft)] bg-[var(--measured-dark)] px-4 py-3 shadow-[0_8px_32px_-4px_rgba(0,0,0,0.35)]">
+              <span className="mr-1 text-[13px] font-semibold text-white/80">
+                {selected.size} selected
+              </span>
+              <button
+                type="button"
+                onClick={() => bulkAct("approved")}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-3 py-1.5 text-[12px] font-semibold text-white hover:bg-[var(--measured-dark-green)]"
+              >
+                <Check size={13} strokeWidth={2.4} aria-hidden="true" />
+                Approve all
+              </button>
+              <button
+                type="button"
+                onClick={() => bulkAct("flagged")}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--measured-evaluate)] px-3 py-1.5 text-[12px] font-semibold text-white hover:bg-[var(--measured-evaluate-hover)]"
+              >
+                <Flag size={13} strokeWidth={2.2} aria-hidden="true" />
+                Flag all
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelected(new Set())}
+                className="rounded-xl px-2.5 py-1.5 text-[12px] font-semibold text-white/60 hover:text-white"
+              >
+                Cancel
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

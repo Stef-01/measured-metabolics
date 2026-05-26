@@ -20,13 +20,17 @@ import {
   Receipt,
   ShieldCheck,
   Pencil,
-  Copy,
+  TrendingDown,
+  TrendingUp,
+  Minus,
 } from "lucide-react";
 import {
   ASHA_PLAN,
   CGM_BY_PATIENT,
   THREADS,
   findSameCuisinePlanFor,
+  GP_PROFILES,
+  DIETITIAN_PROFILES,
 } from "@/lib/mock";
 import { mealsForPatient, pendingMeals } from "@/lib/mock/meals";
 import { symptomsForPatient } from "@/lib/mock/symptoms";
@@ -128,26 +132,58 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
             </Link>
           </div>
         </div>
-        <div className="flex flex-col items-end gap-1 text-[12px] text-[var(--measured-subtext)]">
-          <div>
-            HbA1c{" "}
-            <span className="font-semibold text-[var(--measured-dark)]">
-              {patient.hbA1cPct}%
-            </span>
-          </div>
-          <div>
-            TIR{" "}
-            <span className="font-semibold text-[var(--measured-dark)]">
-              {patient.timeInRangePct}%
-            </span>
-          </div>
-          <div>
-            Weight Δ{" "}
-            <span className="font-semibold text-[var(--measured-dark)]">
-              {patient.weightDeltaKg > 0 ? "+" : ""}
-              {patient.weightDeltaKg.toFixed(1)} kg
-            </span>
-          </div>
+        <div className="flex flex-col items-end gap-1.5">
+          {([
+            {
+              label: "HbA1c",
+              value: `${patient.hbA1cPct}%`,
+              good: patient.hbA1cPct < 7,
+              warn: patient.hbA1cPct < 8,
+              lowerBetter: true,
+            },
+            {
+              label: "TIR",
+              value: `${patient.timeInRangePct}%`,
+              good: patient.timeInRangePct >= 70,
+              warn: patient.timeInRangePct >= 55,
+              lowerBetter: false,
+            },
+            {
+              label: "Wt Δ",
+              value: `${patient.weightDeltaKg > 0 ? "+" : ""}${patient.weightDeltaKg.toFixed(1)} kg`,
+              good: patient.weightDeltaKg < 0,
+              warn: patient.weightDeltaKg < 1,
+              lowerBetter: true,
+            },
+          ] as const).map((s) => {
+            const status = s.good ? "good" : s.warn ? "watch" : "high";
+            const TrendIcon =
+              status === "good"
+                ? s.lowerBetter
+                  ? TrendingDown
+                  : TrendingUp
+                : status === "watch"
+                  ? Minus
+                  : s.lowerBetter
+                    ? TrendingUp
+                    : TrendingDown;
+            const tone =
+              status === "good"
+                ? "bg-[var(--measured-green)]/8 text-[var(--measured-dark-green)]"
+                : status === "watch"
+                  ? "bg-[var(--measured-clinical-amber)]/12 text-[var(--measured-clinical-amber)]"
+                  : "bg-[var(--measured-evaluate)]/8 text-[var(--measured-evaluate)]";
+            return (
+              <div
+                key={s.label}
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${tone}`}
+              >
+                <span className="opacity-70">{s.label}</span>
+                <span>{s.value}</span>
+                <TrendIcon size={10} strokeWidth={2.4} aria-hidden="true" />
+              </div>
+            );
+          })}
         </div>
       </header>
 
@@ -215,16 +251,17 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
                           key={s.id}
                           className="rounded-xl bg-[var(--measured-cream)] px-3 py-2"
                         >
-                          <div className="text-[12px] text-[var(--measured-subtext)]">
+                          <div className="mb-1.5 text-[12px] text-[var(--measured-subtext)]">
                             {new Date(s.loggedAt).toLocaleString([], {
                               weekday: "short",
                               hour: "numeric",
                               minute: "2-digit",
                             })}
                           </div>
-                          <div className="text-[var(--measured-dark)]">
-                            Nausea: {s.nausea} · Constipation: {s.constipation}{" "}
-                            · Appetite: {s.appetite}
+                          <div className="flex flex-wrap gap-1.5">
+                            <SeverityChip label="Nausea" value={s.nausea} />
+                            <SeverityChip label="Constipation" value={s.constipation} />
+                            <AppetiteChip value={s.appetite} />
                           </div>
                         </li>
                       ))}
@@ -493,6 +530,40 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
         onClose={() => setAnnotateMeal(null)}
       />
     </div>
+  );
+}
+
+function SeverityChip({
+  label,
+  value,
+}: {
+  label: string;
+  value: "none" | "mild" | "severe";
+}) {
+  const cls =
+    value === "none"
+      ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+      : value === "mild"
+        ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
+        : "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]";
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${cls}`}>
+      <span className="opacity-70">{label}</span>
+      <span>{value}</span>
+    </span>
+  );
+}
+
+function AppetiteChip({ value }: { value: "lower" | "normal" | "higher" }) {
+  const cls =
+    value === "normal"
+      ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+      : "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]";
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${cls}`}>
+      <span className="opacity-70">Appetite</span>
+      <span>{value}</span>
+    </span>
   );
 }
 
@@ -791,7 +862,6 @@ const EMPTY_PLAN_ITEMS: MealPlanItem[] = [
 
 function PlanBuilder({ patient }: { patient: Patient }) {
   const isAsha = patient.id === "asha";
-  const [mode, setMode] = useState<"week" | "day">("week");
   const [selectedDay, setSelectedDay] = useState(() => {
     const dow = new Date().getDay();
     return dow === 0 ? 6 : dow - 1;
@@ -808,9 +878,8 @@ function PlanBuilder({ patient }: { patient: Patient }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [pickerSlot, setPickerSlot] = useState<number | null>(null);
 
-  const currentItems =
-    mode === "day" ? (dayItems[selectedDay] ?? items) : items;
-  const isDayOverride = mode === "day" && dayItems[selectedDay] !== undefined;
+  const currentItems = dayItems[selectedDay] ?? items;
+  const isDayOverride = dayItems[selectedDay] !== undefined;
 
   const sibling = useMemo(
     () => findSameCuisinePlanFor(patient.id),
@@ -820,19 +889,13 @@ function PlanBuilder({ patient }: { patient: Patient }) {
   const weekOf = weekLabel(ASHA_PLAN.weekStart);
 
   const update = (idx: number, patch: Partial<MealPlanItem>) => {
-    if (mode === "day") {
-      const base = dayItems[selectedDay] ?? items;
-      setDayItems((prev) => ({
-        ...prev,
-        [selectedDay]: base.map((it, i) =>
-          i === idx ? { ...it, ...patch } : it,
-        ),
-      }));
-    } else {
-      setItems((prev) =>
-        prev.map((it, i) => (i === idx ? { ...it, ...patch } : it)),
-      );
-    }
+    const base = dayItems[selectedDay] ?? items;
+    setDayItems((prev) => ({
+      ...prev,
+      [selectedDay]: base.map((it, i) =>
+        i === idx ? { ...it, ...patch } : it,
+      ),
+    }));
     setApproved(false);
     setIsDraftSaved(false);
     setIsAiDraft(false);
@@ -864,26 +927,23 @@ function PlanBuilder({ patient }: { patient: Patient }) {
     });
   };
 
-  const copyDayToAll = () => {
-    const src = dayItems[selectedDay] ?? items;
-    setDayItems(
-      Object.fromEntries(
-        Array.from({ length: 7 }, (_, i) => [i, src.map((it) => ({ ...it }))]),
-      ) as Record<number, MealPlanItem[]>,
-    );
+  const resetDay = () => {
+    setDayItems((prev) => {
+      const next = { ...prev };
+      delete next[selectedDay];
+      return next;
+    });
     setApproved(false);
     setIsDraftSaved(false);
     toast.push({
       variant: "success",
-      title: "Copied to all 7 days",
+      title: `${DAY_LABELS[selectedDay]} reset to week template`,
       duration: 2000,
     });
   };
 
   const generateAiDraft = async () => {
     setIsGenerating(true);
-    const snapMode = mode;
-    const snapDay = selectedDay;
 
     let days: MealPlanItem[][] | null = null;
     try {
@@ -906,33 +966,19 @@ function PlanBuilder({ patient }: { patient: Patient }) {
     }
 
     if (days) {
-      if (snapMode === "day") {
-        const src = days[snapDay] ?? days[0];
-        if (src?.length) {
-          setDayItems((prev) => ({ ...prev, [snapDay]: src }));
-        }
-      } else {
-        // Week mode: use day 0 as the flat template; populate all dayItems too
-        const base = days[0];
-        if (base?.length) setItems(base);
-        const allDays = Object.fromEntries(
-          days
-            .map((d, i) => [i, d] as [number, MealPlanItem[]])
-            .filter(([, d]) => d?.length > 0),
-        ) as Record<number, MealPlanItem[]>;
-        if (Object.keys(allDays).length > 0) setDayItems(allDays);
-      }
+      // Populate base template + all day overrides from AI response
+      const base = days[0];
+      if (base?.length) setItems(base);
+      const allDays = Object.fromEntries(
+        days
+          .map((d, i) => [i, d] as [number, MealPlanItem[]])
+          .filter(([, d]) => d?.length > 0),
+      ) as Record<number, MealPlanItem[]>;
+      if (Object.keys(allDays).length > 0) setDayItems(allDays);
     } else {
       // Fallback to cuisine templates when AI is unconfigured
       const templates = AI_MEAL_TEMPLATES[patient.cuisine];
-      if (snapMode === "day") {
-        setDayItems((prev) => ({
-          ...prev,
-          [snapDay]: templates.map((t) => ({ ...t })),
-        }));
-      } else {
-        setItems(templates.map((t) => ({ ...t })));
-      }
+      setItems(templates.map((t) => ({ ...t })));
     }
 
     setApproved(false);
@@ -1052,55 +1098,34 @@ function PlanBuilder({ patient }: { patient: Patient }) {
         </div>
       </div>
 
-      {/* Mode toggle: Week template / Day-by-day */}
-      <div className="flex items-center gap-1 self-start rounded-xl border border-[var(--measured-border)] bg-white p-1">
-        {(["week", "day"] as const).map((m) => (
+      {/* Day strip — always visible */}
+      <div className="flex gap-1 overflow-x-auto pb-0.5">
+        {DAY_LABELS.map((label, idx) => (
           <button
-            key={m}
+            key={idx}
             type="button"
-            onClick={() => setMode(m)}
+            onClick={() => setSelectedDay(idx)}
             className={cn(
-              "rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-colors",
-              mode === m
+              "flex min-w-[44px] flex-col items-center rounded-xl px-2 py-1.5 text-center transition-colors",
+              selectedDay === idx
                 ? "bg-[var(--measured-green)] text-white"
-                : "text-[var(--measured-subtext)] hover:text-[var(--measured-dark)]",
+                : "border border-[var(--measured-border)] bg-white text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]",
             )}
           >
-            {m === "week" ? "Week template" : "Day-by-day"}
+            <span className="text-[11px] font-semibold">{label}</span>
+            {dayItems[idx] !== undefined && (
+              <span
+                className={cn(
+                  "mt-0.5 h-1 w-1 rounded-full",
+                  selectedDay === idx
+                    ? "bg-white/70"
+                    : "bg-[var(--measured-green)]",
+                )}
+              />
+            )}
           </button>
         ))}
       </div>
-
-      {/* Day strip */}
-      {mode === "day" && (
-        <div className="flex gap-1 overflow-x-auto pb-0.5">
-          {DAY_LABELS.map((label, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => setSelectedDay(idx)}
-              className={cn(
-                "flex min-w-[44px] flex-col items-center rounded-xl px-2 py-1.5 text-center transition-colors",
-                selectedDay === idx
-                  ? "bg-[var(--measured-green)] text-white"
-                  : "border border-[var(--measured-border)] bg-white text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]",
-              )}
-            >
-              <span className="text-[11px] font-semibold">{label}</span>
-              {dayItems[idx] !== undefined && (
-                <span
-                  className={cn(
-                    "mt-0.5 h-1 w-1 rounded-full",
-                    selectedDay === idx
-                      ? "bg-white/70"
-                      : "bg-[var(--measured-green)]",
-                  )}
-                />
-              )}
-            </button>
-          ))}
-        </div>
-      )}
 
       {/* AI + inspiration toolbar */}
       <div className="flex flex-wrap items-center gap-2">
@@ -1133,18 +1158,18 @@ function PlanBuilder({ patient }: { patient: Patient }) {
             Copy {sibling.sourcePatientName.split(" ")[0]}&apos;s plan
           </button>
         )}
-        {mode === "day" && (
+        {isDayOverride && (
           <button
             type="button"
-            onClick={copyDayToAll}
+            onClick={resetDay}
             className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--measured-border)] bg-white px-3 py-2 text-[12px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]"
           >
-            <Copy size={13} strokeWidth={2.2} aria-hidden="true" />
-            Copy to all days
+            <RotateCcw size={13} strokeWidth={2.2} aria-hidden="true" />
+            Reset day
           </button>
         )}
         <span className="text-[11px] text-[var(--measured-subtext)]">
-          {mode === "day" && !isDayOverride && "Using week template · "}
+          {!isDayOverride && "Using week template · "}
           {patient.cuisineLabel} · {patient.conditions.join(" · ")}
         </span>
       </div>
@@ -1245,6 +1270,7 @@ function ReportPreview({
     useState<ReportRec[]>(DEFAULT_RECS);
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
+  const [downloading, setDownloading] = useState(false);
   const [sent, setSent] = useState(false);
 
   const defaultSummary = `Over the past 4 weeks, ${patient.firstName} has uploaded ${mealCount} meals and logged ${symptomCount} symptom check-ins. Time-in-range improved from ${Math.max(50, patient.timeInRangePct - 6)}% to ${patient.timeInRangePct}%. Weight is ${patient.weightDeltaKg > 0 ? "up" : "down"} ${Math.abs(patient.weightDeltaKg).toFixed(1)} kg.`;
@@ -1280,13 +1306,35 @@ function ReportPreview({
     }
   };
 
-  const send = () => {
-    setSent(true);
-    toast.push({
-      variant: "success",
-      title: `Report sent to ${patient.referringGpId.toUpperCase()}`,
-      duration: 1800,
-    });
+  const send = async () => {
+    setDownloading(true);
+    try {
+      const { downloadGpReport } = await import(
+        "@/components/dietitian/gp-report-pdf"
+      );
+      const gp = GP_PROFILES[patient.referringGpId];
+      const dietitian = DIETITIAN_PROFILES[patient.assignedDietitianId];
+      await downloadGpReport({
+        patient,
+        period: "last 4 weeks",
+        summary: aiSummary ?? defaultSummary,
+        recommendations,
+        dietitianName: dietitian?.name ?? "Maya Singh",
+        gpName: gp?.name ?? patient.referringGpId,
+        mealCount,
+        symptomCount,
+      });
+      setSent(true);
+      toast.push({
+        variant: "success",
+        title: `PDF downloaded — send to ${gp?.name ?? patient.referringGpId}`,
+        duration: 2400,
+      });
+    } catch {
+      toast.push({ variant: "info", title: "PDF generation failed", duration: 2000 });
+    } finally {
+      setDownloading(false);
+    }
   };
 
   return (
@@ -1350,27 +1398,34 @@ function ReportPreview({
       </div>
       <button
         type="button"
-        onClick={send}
-        disabled={sent}
+        onClick={() => void send()}
+        disabled={sent || downloading}
         className={cn(
-          "mt-5 inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-[13px] font-semibold",
+          "mt-5 inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-[13px] font-semibold transition-colors",
           sent
             ? "cursor-default bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
-            : "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]",
+            : downloading
+              ? "cursor-not-allowed bg-[var(--measured-green)]/50 text-white"
+              : "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]",
         )}
       >
         {sent ? (
           <>
-            <CheckCircle2 size={14} strokeWidth={2.2} /> Sent to GP
+            <CheckCircle2 size={14} strokeWidth={2.2} /> PDF downloaded
+          </>
+        ) : downloading ? (
+          <>
+            <Send size={14} strokeWidth={2.2} className="animate-pulse" /> Generating PDF…
           </>
         ) : (
           <>
-            <Send size={14} strokeWidth={2.2} /> Send to GP
+            <Send size={14} strokeWidth={2.2} /> Download PDF for GP
           </>
         )}
       </button>
       <p className="mt-3 text-[11px] text-[var(--measured-subtext)]">
-        Sending generates a PDF and writes an audit record.
+        Generates a formatted PDF — attach to referral or email to{" "}
+        {GP_PROFILES[patient.referringGpId]?.name ?? "GP"}.
       </p>
     </Card>
   );

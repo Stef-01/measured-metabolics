@@ -10,7 +10,8 @@ import {
   LineChart,
   Line,
 } from "recharts";
-import { Check } from "lucide-react";
+import { Check, TrendingDown, TrendingUp, Minus } from "lucide-react";
+import { CHART } from "@/lib/chart-tokens";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import {
   CGM_BY_PATIENT,
@@ -113,6 +114,27 @@ export function PatientMetricsScreen() {
       />
 
       <div className="mx-auto flex max-w-md flex-col gap-4 px-5 pt-3 pb-8">
+        {/* Clinical stats strip */}
+        <div className="grid grid-cols-3 gap-2">
+          <StatPill
+            label="HbA1c"
+            value={`${me.hbA1cPct}%`}
+            status={me.hbA1cPct < 7 ? "good" : me.hbA1cPct < 8 ? "watch" : "high"}
+            lower
+          />
+          <StatPill
+            label="In range"
+            value={`${me.timeInRangePct}%`}
+            status={me.timeInRangePct >= 70 ? "good" : me.timeInRangePct >= 55 ? "watch" : "high"}
+          />
+          <StatPill
+            label="Weight Δ"
+            value={`${me.weightDeltaKg > 0 ? "+" : ""}${me.weightDeltaKg.toFixed(1)} kg`}
+            status={me.weightDeltaKg < 0 ? "good" : "watch"}
+            lower
+          />
+        </div>
+
         <div className="flex gap-2 rounded-full border border-[var(--measured-border)] bg-white p-1">
           {TABS.map((t) => (
             <button
@@ -182,9 +204,9 @@ export function PatientMetricsScreen() {
                   <Line
                     type="monotone"
                     dataKey="kg"
-                    stroke="#2d5a3d"
+                    stroke={CHART.green}
                     strokeWidth={2.4}
-                    dot={{ r: 3, fill: "#2d5a3d" }}
+                    dot={{ r: 3, fill: CHART.green }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -219,17 +241,17 @@ export function PatientMetricsScreen() {
                       type="monotone"
                       name="Nausea"
                       dataKey="nausea"
-                      stroke="#8c1515"
+                      stroke={CHART.evaluate}
                       strokeWidth={2}
-                      dot={{ r: 3, fill: "#8c1515" }}
+                      dot={{ r: 3, fill: CHART.evaluate }}
                     />
                     <Line
                       type="monotone"
                       name="Constipation"
                       dataKey="constipation"
-                      stroke="#2c5e8a"
+                      stroke={CHART.clinical}
                       strokeWidth={2}
-                      dot={{ r: 3, fill: "#2c5e8a" }}
+                      dot={{ r: 3, fill: CHART.clinical }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -247,6 +269,46 @@ export function PatientMetricsScreen() {
         </a>
       </div>
     </>
+  );
+}
+
+function StatPill({
+  label,
+  value,
+  status,
+  lower,
+}: {
+  label: string;
+  value: string;
+  status: "good" | "watch" | "high";
+  lower?: boolean;
+}) {
+  const TrendIcon =
+    status === "good"
+      ? lower
+        ? TrendingDown
+        : TrendingUp
+      : status === "watch"
+        ? Minus
+        : lower
+          ? TrendingUp
+          : TrendingDown;
+  const tone = {
+    good: "text-[var(--measured-dark-green)] bg-[var(--measured-green)]/8",
+    watch: "text-[var(--measured-clinical-amber)] bg-[var(--measured-clinical-amber)]/10",
+    high: "text-[var(--measured-evaluate)] bg-[var(--measured-evaluate)]/8",
+  }[status];
+  const iconColor = {
+    good: "text-[var(--measured-dark-green)]",
+    watch: "text-[var(--measured-clinical-amber)]",
+    high: "text-[var(--measured-evaluate)]",
+  }[status];
+  return (
+    <div className={`flex flex-col items-center gap-1 rounded-2xl px-3 py-3 ${tone}`}>
+      <div className="text-[10px] font-semibold uppercase tracking-wider opacity-70">{label}</div>
+      <div className="font-serif text-[18px] leading-none">{value}</div>
+      <TrendIcon size={11} strokeWidth={2.4} className={iconColor} aria-hidden="true" />
+    </div>
   );
 }
 

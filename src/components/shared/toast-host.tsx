@@ -85,7 +85,7 @@ function ToastCard({ toast }: { toast: Toast }) {
       type="button"
       onClick={() => toastApi.dismiss(toast.id)}
       className={cn(
-        "w-full rounded-2xl p-5 text-left text-white shadow-xl transition-transform duration-200 active:scale-[0.98]",
+        "w-full rounded-2xl p-5 text-left text-white shadow-[var(--shadow-raised)] transition-transform duration-200 active:scale-[0.98]",
         style.bg,
         style.shadow,
       )}
@@ -101,7 +101,7 @@ function ToastCard({ toast }: { toast: Toast }) {
               damping: 10,
               delay: 0.1,
             }}
-            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/20 text-2xl"
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/20 text-[22px]"
             aria-hidden
           >
             {toast.emoji ?? (toast.variant === "level-up" ? "★" : "✦")}
@@ -109,13 +109,13 @@ function ToastCard({ toast }: { toast: Toast }) {
         )}
         <div className="min-w-0 flex-1">
           {label && (
-            <p className="text-xs font-medium uppercase tracking-wide text-white/80">
+            <p className="text-[10px] font-medium uppercase tracking-wide text-white/80">
               {label}
             </p>
           )}
-          <p className="truncate text-lg font-bold">{toast.title}</p>
+          <p className="truncate text-[16px] font-bold">{toast.title}</p>
           {toast.body && (
-            <p className="mt-0.5 text-sm text-white/90">{toast.body}</p>
+            <p className="mt-0.5 text-[13px] text-white/90">{toast.body}</p>
           )}
         </div>
         {toast.action && (
@@ -125,7 +125,7 @@ function ToastCard({ toast }: { toast: Toast }) {
               toast.action?.onClick();
               toastApi.dismiss(toast.id);
             }}
-            className="shrink-0 rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/25"
+            className="shrink-0 rounded-full bg-white/15 px-3 py-1.5 text-[11px] font-semibold text-white hover:bg-white/25"
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {

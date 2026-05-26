@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useNavigation, type DietitianTabId } from "@/lib/hooks/use-navigation";
 import { PersonaSwitcher } from "@/components/shared/persona-switcher";
+import { THREADS } from "@/lib/mock";
 import { cn } from "@/lib/utils/cn";
 
 const ICON_BY_TAB: Record<DietitianTabId, typeof LayoutDashboard> = {
@@ -31,6 +32,12 @@ const ICON_BY_TAB: Record<DietitianTabId, typeof LayoutDashboard> = {
  * Per PRD: keyboard navigation must work — `Tab` cycles, focus rings honour
  * the `:focus-visible` browser default. We rely on Next/Link + button defaults.
  */
+const UNREAD_COUNT = THREADS.reduce(
+  (sum, t) =>
+    sum + t.messages.filter((m) => m.fromRole === "patient" && !m.read).length,
+  0,
+);
+
 export function DietitianSideNav() {
   const tabs = useNavigation("dietitian");
   const pathname = usePathname();
@@ -60,22 +67,30 @@ export function DietitianSideNav() {
                 href={tab.href}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                  "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-colors",
                   isActive
                     ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
                     : "text-[var(--measured-subtext)] hover:bg-[var(--measured-cream)] hover:text-[var(--measured-dark)]",
                 )}
               >
-                <Icon
-                  size={18}
-                  strokeWidth={2}
-                  className={cn(
-                    isActive
-                      ? "text-[var(--measured-green)]"
-                      : "text-[var(--measured-subtext)]",
+                <span className="relative shrink-0">
+                  <Icon
+                    size={18}
+                    strokeWidth={2}
+                    className={cn(
+                      isActive
+                        ? "text-[var(--measured-green)]"
+                        : "text-[var(--measured-subtext)]",
+                    )}
+                    aria-hidden="true"
+                  />
+                  {tab.id === "messages" && UNREAD_COUNT > 0 && (
+                    <span
+                      aria-label={`${UNREAD_COUNT} unread`}
+                      className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-[var(--measured-evaluate)]"
+                    />
                   )}
-                  aria-hidden="true"
-                />
+                </span>
                 <span>{tab.label}</span>
               </Link>
             </li>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CheckCheck, Check, ChevronRight } from "lucide-react";
+import { CheckCheck, Check, ChevronRight, Sparkles } from "lucide-react";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import { ASHA_PLAN, RECIPES, CURRENT_PATIENT_ID } from "@/lib/mock";
 import { mealImageBySlug } from "@/lib/images";
@@ -202,6 +202,17 @@ export function PatientPlanScreen() {
       </div>
 
       <div className="mx-auto flex max-w-md flex-col gap-3 px-5 pt-3 pb-8">
+        {/* Day complete celebration */}
+        {dayEatenCount === dayMeals.length && dayMeals.length > 0 && (
+          <div className="flex items-center gap-3 rounded-2xl bg-[var(--measured-green)] px-4 py-3 text-white shadow-[0_4px_16px_-4px_rgba(45,90,61,0.4)]">
+            <CheckCheck size={20} strokeWidth={2.2} aria-hidden="true" />
+            <div className="min-w-0 flex-1">
+              <div className="text-[13px] font-semibold">Day complete!</div>
+              <div className="text-[11px] text-white/80">All {dayMeals.length} meals eaten · great work</div>
+            </div>
+          </div>
+        )}
+
         {/* Day header */}
         <div className="flex items-center justify-between pt-1">
           <div className="text-[13px] font-medium text-[var(--measured-dark)]">
@@ -213,7 +224,7 @@ export function PatientPlanScreen() {
                   day: "numeric",
                 })}
           </div>
-          {dayEatenCount > 0 && (
+          {dayEatenCount > 0 && dayEatenCount < dayMeals.length && (
             <div className="flex items-center gap-1 text-[12px] font-semibold text-[var(--measured-dark-green)]">
               <CheckCheck size={14} strokeWidth={2.2} aria-hidden="true" />
               {dayEatenCount}/{dayMeals.length} eaten
@@ -282,9 +293,12 @@ export function PatientPlanScreen() {
                       {item.description}
                     </p>
                     {item.rationale && !isEaten && (
-                      <p className="mt-2 rounded-lg bg-[var(--measured-cream)] px-3 py-2 text-[12px] italic leading-relaxed text-[var(--measured-dark)]">
-                        Why: {item.rationale}
-                      </p>
+                      <div className="mt-2 flex items-start gap-1.5 rounded-xl bg-[var(--measured-green)]/5 px-3 py-2">
+                        <Sparkles size={11} strokeWidth={2.2} className="mt-0.5 shrink-0 text-[var(--measured-dark-green)]" aria-hidden="true" />
+                        <p className="text-[12px] italic leading-relaxed text-[var(--measured-dark)]">
+                          {item.rationale}
+                        </p>
+                      </div>
                     )}
                   </div>
                 </div>

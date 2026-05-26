@@ -12,16 +12,16 @@ export default function NotFound() {
         />
       </div>
       <div className="space-y-1.5">
-        <h2 className="font-serif text-lg font-semibold text-[var(--measured-dark)]">
+        <h2 className="font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
           Page not found
         </h2>
-        <p className="text-sm text-[var(--measured-subtext)] max-w-xs">
+        <p className="text-[13px] text-[var(--measured-subtext)] max-w-xs">
           That page doesn&apos;t exist. Pick a persona from the home screen.
         </p>
       </div>
       <Link
         href="/"
-        className="rounded-xl bg-[var(--measured-green)] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[var(--measured-dark-green)]"
+        className="rounded-xl bg-[var(--measured-green)] px-5 py-2.5 text-[13px] font-medium text-white shadow-[var(--shadow-card)] transition-colors hover:bg-[var(--measured-dark-green)]"
       >
         Home
       </Link>
