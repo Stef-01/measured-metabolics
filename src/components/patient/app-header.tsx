@@ -16,7 +16,7 @@ export function PatientAppHeader({ eyebrow, title, trailing }: Props) {
       <div className="mx-auto flex max-w-md items-center justify-between gap-3 px-5 py-4">
         <div className="min-w-0 flex-1">
           {eyebrow && (
-            <div className="text-[11px] font-medium uppercase tracking-wider text-[var(--measured-subtext)]">
+            <div className="text-[11px] font-medium text-[var(--measured-subtext)]">
               {eyebrow}
             </div>
           )}

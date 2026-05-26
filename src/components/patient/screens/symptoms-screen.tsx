@@ -115,7 +115,7 @@ export function PatientSymptomsScreen() {
           const setValue = q.id === "nausea" ? setNausea : setConstipation;
           return (
             <fieldset key={q.id} className="surface-card p-4">
-              <legend className="px-1 text-[12px] font-medium uppercase tracking-wider text-[var(--measured-subtext)]">
+              <legend className="px-1 text-[13px] font-medium text-[var(--measured-dark)]">
                 {q.prompt}
               </legend>
               <div className="mt-3 grid grid-cols-3 gap-2">
@@ -252,7 +252,7 @@ function ToggleRow({
             ? isDanger
               ? "bg-[var(--measured-evaluate)] text-white"
               : "bg-[var(--measured-green)] text-white"
-            : "bg-[var(--measured-input-bg)] text-[var(--measured-subtext)]",
+            : "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
         )}
       >
         {checked ? "Yes" : "No"}

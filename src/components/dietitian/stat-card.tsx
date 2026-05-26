@@ -1,5 +1,5 @@
-import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import type { LucideIcon } from "lucide-react";
 
 interface Props {
   label: string;
@@ -23,20 +23,7 @@ const TONE_BG: Record<NonNullable<Props["tone"]>, string> = {
   danger: "bg-[var(--measured-evaluate)]/5",
 };
 
-const TONE_ICON: Record<NonNullable<Props["tone"]>, string> = {
-  default: "text-[var(--measured-subtext)]",
-  warning: "text-[var(--measured-clinical-amber)]",
-  success: "text-[var(--measured-green)]",
-  danger: "text-[var(--measured-evaluate)]",
-};
-
-export function DietitianStatCard({
-  label,
-  value,
-  Icon,
-  tone = "default",
-  hint,
-}: Props) {
+export function DietitianStatCard({ label, value, tone = "default" }: Props) {
   return (
     <div
       className={cn(
@@ -45,25 +32,10 @@ export function DietitianStatCard({
         TONE_RING[tone],
       )}
     >
-      <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-        {Icon && (
-          <Icon
-            size={14}
-            strokeWidth={2}
-            className={TONE_ICON[tone]}
-            aria-hidden="true"
-          />
-        )}
-        {label}
-      </div>
-      <div className="mt-2 font-serif text-[34px] leading-tight text-[var(--measured-dark)]">
+      <div className="text-[11px] text-[var(--measured-subtext)]">{label}</div>
+      <div className="mt-1.5 font-serif text-[34px] leading-tight text-[var(--measured-dark)]">
         {value}
       </div>
-      {hint && (
-        <div className="mt-1 text-[12px] text-[var(--measured-subtext)]">
-          {hint}
-        </div>
-      )}
     </div>
   );
 }

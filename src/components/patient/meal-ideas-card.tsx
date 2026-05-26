@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Send, X, MessageCircle } from "lucide-react";
+import { Sparkles, Send, X } from "lucide-react";
 import {
   patientStore,
   useStoredRequests,
@@ -59,7 +59,7 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex w-full items-center gap-3 rounded-2xl border border-dashed border-[var(--measured-border)] bg-white px-4 py-3 text-left transition-colors hover:border-[var(--measured-green)]/40 hover:bg-[var(--measured-green)]/5"
+        className="flex w-full items-center gap-3 rounded-2xl border border-[var(--measured-border-soft)] bg-white px-4 py-3 text-left transition-colors hover:bg-[var(--measured-green)]/5"
       >
         <Sparkles size={16} strokeWidth={2.2} className="shrink-0 text-[var(--measured-green)]" aria-hidden="true" />
         <div>
@@ -76,9 +76,8 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
 
   return (
     <section className="surface-card overflow-hidden p-0">
-      <header className="flex items-center justify-between gap-2 border-b border-[var(--measured-border-soft)] bg-[var(--measured-dark-green)]/6 px-4 py-3">
-        <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-dark-green)]">
-          <Sparkles size={12} strokeWidth={2.4} aria-hidden="true" />
+      <header className="flex items-center justify-between gap-2 border-b border-[var(--measured-border-soft)] px-4 py-3">
+        <div className="text-[13px] font-semibold text-[var(--measured-dark)]">
           Meal ideas from {dietitianName}
         </div>
         <button
@@ -152,7 +151,7 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
         <ul className="divide-y divide-[var(--measured-border-soft)]">
           {answered.map((req) => (
             <li key={req.id} className="px-4 py-3">
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+              <div className="text-[11px] text-[var(--measured-subtext)]">
                 {req.type.replace("_", " ")} ·{" "}
                 {new Date(req.createdAt).toLocaleDateString([], {
                   weekday: "short",
@@ -164,8 +163,7 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
                 &ldquo;{req.body}&rdquo;
               </p>
               <div className="mt-1.5 rounded-xl bg-[var(--measured-green)]/8 px-3 py-2">
-                <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-dark-green)]">
-                  <MessageCircle size={10} strokeWidth={2.4} />
+                <div className="text-[11px] font-semibold text-[var(--measured-dark-green)]">
                   {dietitianName} replied
                 </div>
                 <p className="mt-0.5 text-[13px] leading-relaxed text-[var(--measured-dark)]">
@@ -183,8 +181,8 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
           {pending.map((req) => (
             <li key={req.id} className="px-4 py-3">
               <div className="flex items-center gap-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-[var(--measured-clinical-amber)] animate-pulse" />
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                <div className="h-1.5 w-1.5 rounded-full bg-[var(--measured-clinical-amber)]" />
+                <div className="text-[11px] text-[var(--measured-subtext)]">
                   {req.type.replace("_", " ")} · waiting for reply
                 </div>
               </div>

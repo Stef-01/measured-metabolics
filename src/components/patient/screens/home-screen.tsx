@@ -113,27 +113,10 @@ export function PatientHomeScreen() {
         )}
 
         {showNewPlanBanner && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-start justify-between gap-3 rounded-2xl border border-[var(--measured-green)]/25 bg-[var(--measured-green)]/10 px-4 py-3"
-          >
-            <div className="flex items-start gap-2">
-              <Sparkles
-                size={15}
-                strokeWidth={2.2}
-                className="mt-0.5 shrink-0 text-[var(--measured-dark-green)]"
-                aria-hidden="true"
-              />
-              <div>
-                <div className="text-[13px] font-semibold text-[var(--measured-dark-green)]">
-                  New plan from Maya
-                </div>
-                <p className="text-[12px] leading-relaxed text-[var(--measured-subtext)]">
-                  Your meal plan was updated. See what&apos;s new below.
-                </p>
-              </div>
-            </div>
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-[var(--measured-green)]/25 bg-[var(--measured-green)]/8 px-4 py-3">
+            <p className="text-[13px] text-[var(--measured-dark-green)]">
+              Maya updated your meal plan.
+            </p>
             <button
               type="button"
               onClick={() => setPlanBannerDismissed(true)}
@@ -142,7 +125,7 @@ export function PatientHomeScreen() {
             >
               <X size={14} strokeWidth={2.2} aria-hidden="true" />
             </button>
-          </motion.div>
+          </div>
         )}
 
         <DietitianNotesCard patientId={me.id} />

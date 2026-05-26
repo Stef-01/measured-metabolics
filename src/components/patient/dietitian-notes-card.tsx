@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, MessageSquare, Sparkles } from "lucide-react";
+import { CheckCircle2, Sparkles } from "lucide-react";
 import { mealImageBySlug } from "@/lib/images";
 import {
   patientStore,
@@ -33,14 +33,10 @@ export function DietitianNotesCard({ patientId }: Props) {
 
   return (
     <section className="surface-card overflow-hidden p-0">
-      <header className="flex items-center justify-between gap-2 border-b border-[var(--measured-border-soft)] bg-[var(--measured-clinical-blue)]/8 px-4 py-3">
-        <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-clinical-blue)]">
-          <MessageSquare size={12} strokeWidth={2.4} aria-hidden="true" />
-          New notes from your dietitian
+      <header className="border-b border-[var(--measured-border-soft)] px-4 py-3">
+        <div className="text-[13px] font-semibold text-[var(--measured-dark)]">
+          Notes from your dietitian
         </div>
-        <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-bold text-[var(--measured-clinical-blue)]">
-          {visible.length}
-        </span>
       </header>
 
       <ul className="divide-y divide-[var(--measured-border-soft)]">
@@ -162,7 +158,7 @@ function NoteBody({
 }) {
   return (
     <>
-      <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+      <div className="text-[11px] text-[var(--measured-subtext)]">
         {meal
           ? `${meal.mealType} · ${new Date(meal.eatenAt).toLocaleString([], {
               weekday: "short",
@@ -170,7 +166,7 @@ function NoteBody({
             })}`
           : "Meal note"}
         {peak !== undefined && (
-          <span className="ml-1 normal-case text-[var(--measured-evaluate)]">
+          <span className="ml-1 text-[var(--measured-evaluate)]">
             · peak Δ {peak.toFixed(1)} mmol/L
           </span>
         )}

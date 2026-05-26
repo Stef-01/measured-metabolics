@@ -87,18 +87,11 @@ export function DietitianSideNav() {
                   {tab.id === "messages" && UNREAD_COUNT > 0 && (
                     <span
                       aria-label={`${UNREAD_COUNT} unread`}
-                      className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[var(--measured-evaluate)] text-[8px] font-bold text-white"
-                    >
-                      {UNREAD_COUNT > 9 ? "9+" : UNREAD_COUNT}
-                    </span>
+                      className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-[var(--measured-evaluate)]"
+                    />
                   )}
                 </span>
                 <span>{tab.label}</span>
-                {tab.id === "messages" && UNREAD_COUNT > 0 && (
-                  <span className="ml-auto rounded-full bg-[var(--measured-evaluate)] px-1.5 py-0.5 text-[9px] font-bold text-white">
-                    {UNREAD_COUNT}
-                  </span>
-                )}
               </Link>
             </li>
           );

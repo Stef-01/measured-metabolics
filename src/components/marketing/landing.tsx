@@ -122,11 +122,16 @@ export function Landing() {
         </motion.p>
       </section>
 
-      <section className="mx-auto grid max-w-5xl gap-4 px-6 pb-24 sm:grid-cols-2 lg:grid-cols-4">
-        {personas.map((p, idx) => (
-          <PersonaCard key={p.id} persona={p} delay={idx * 0.06} />
+      <motion.section
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: "easeOut", delay: 0.1 }}
+        className="mx-auto grid max-w-5xl gap-4 px-6 pb-24 sm:grid-cols-2 lg:grid-cols-4"
+      >
+        {personas.map((p) => (
+          <PersonaCard key={p.id} persona={p} />
         ))}
-      </section>
+      </motion.section>
 
       <footer className="mx-auto flex max-w-6xl items-center justify-between border-t border-[var(--measured-border-soft)] px-6 py-6 text-[12px] text-[var(--measured-subtext)]">
         <span>© Measured Metabolics · {new Date().getFullYear()}</span>
@@ -147,14 +152,9 @@ interface Persona {
   iconColor: string;
 }
 
-function PersonaCard({ persona, delay }: { persona: Persona; delay: number }) {
+function PersonaCard({ persona }: { persona: Persona }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: "easeOut", delay }}
-      className="h-full"
-    >
+    <div className="h-full">
       <Link
         href={persona.href}
         className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--measured-border-soft)] bg-white p-6 shadow-[var(--shadow-card)] transition-shadow duration-200 hover:shadow-[var(--shadow-raised)]"
@@ -185,6 +185,6 @@ function PersonaCard({ persona, delay }: { persona: Persona; delay: number }) {
           />
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }
