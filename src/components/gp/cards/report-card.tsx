@@ -1,6 +1,15 @@
 "use client";
 
-import { CheckCircle2, ExternalLink, Receipt, FileChartColumn, TrendingDown, TrendingUp, Utensils, Activity } from "lucide-react";
+import {
+  CheckCircle2,
+  ExternalLink,
+  Receipt,
+  FileChartColumn,
+  TrendingDown,
+  TrendingUp,
+  Utensils,
+  Activity,
+} from "lucide-react";
 import Link from "next/link";
 import type { Patient } from "@/lib/mock/types";
 import { mealsForPatient } from "@/lib/mock/meals";
@@ -22,7 +31,8 @@ export function GpReportCard({ patient }: { patient: Patient }) {
       label: "TIR",
       value: `${patient.timeInRangePct}%`,
       Icon: Activity,
-      tone: patient.timeInRangePct >= 70 ? ("green" as const) : ("amber" as const),
+      tone:
+        patient.timeInRangePct >= 70 ? ("green" as const) : ("amber" as const),
     },
     {
       label: "Weight",
@@ -71,7 +81,12 @@ export function GpReportCard({ patient }: { patient: Patient }) {
                 tone.bg,
               )}
             >
-              <s.Icon size={12} strokeWidth={2.2} className={tone.icon} aria-hidden="true" />
+              <s.Icon
+                size={12}
+                strokeWidth={2.2}
+                className={tone.icon}
+                aria-hidden="true"
+              />
               <div className="font-serif text-[16px] leading-tight text-[var(--measured-dark)]">
                 {s.value}
               </div>
@@ -92,8 +107,7 @@ export function GpReportCard({ patient }: { patient: Patient }) {
         <p className="mt-1.5 text-[12px] leading-relaxed text-[var(--measured-dark)]">
           Over 4 weeks, {patient.firstName} uploaded {mealCount} meals, logged{" "}
           {symptomCount} symptom check-ins, and held {patient.timeInRangePct}%
-          time-in-range. Weight{" "}
-          {patient.weightDeltaKg < 0 ? "down" : "up"}{" "}
+          time-in-range. Weight {patient.weightDeltaKg < 0 ? "down" : "up"}{" "}
           {Math.abs(patient.weightDeltaKg).toFixed(1)} kg.{" "}
           {patient.alerts.length > 0
             ? `Open alerts: ${patient.alerts.join(", ").toLowerCase()}.`

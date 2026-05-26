@@ -171,7 +171,9 @@ function ActionBadge({ action }: { action: string }) {
             ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
             : "bg-[var(--measured-cream)] text-[var(--measured-subtext)]";
   return (
-    <span className={`inline-block rounded-full px-2 py-0.5 font-mono text-[11px] font-semibold ${cls}`}>
+    <span
+      className={`inline-block rounded-full px-2 py-0.5 font-mono text-[11px] font-semibold ${cls}`}
+    >
       {action}
     </span>
   );

@@ -51,7 +51,9 @@ export default function AdminOrganizationsPage() {
             <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
               {s.label}
             </p>
-            <p className={`mt-1.5 font-serif text-[28px] leading-none ${s.accent ? "text-[var(--measured-dark-green)]" : "text-[var(--measured-dark)]"}`}>
+            <p
+              className={`mt-1.5 font-serif text-[28px] leading-none ${s.accent ? "text-[var(--measured-dark-green)]" : "text-[var(--measured-dark)]"}`}
+            >
               {s.value}
             </p>
           </div>

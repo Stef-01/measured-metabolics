@@ -11,10 +11,22 @@ import {
 import { toast } from "@/lib/hooks/use-toast";
 import { cn } from "@/lib/utils/cn";
 
-const REQUEST_TYPES: { id: MealConsultationRequest["type"]; label: string; hint: string }[] = [
+const REQUEST_TYPES: {
+  id: MealConsultationRequest["type"];
+  label: string;
+  hint: string;
+}[] = [
   { id: "swap_idea", label: "Swap idea", hint: "What can I use instead of…" },
-  { id: "meal_ideas", label: "Meal ideas", hint: "Suggest meals that work for me" },
-  { id: "question", label: "Ask question", hint: "I have a question about my meals" },
+  {
+    id: "meal_ideas",
+    label: "Meal ideas",
+    hint: "Suggest meals that work for me",
+  },
+  {
+    id: "question",
+    label: "Ask question",
+    hint: "I have a question about my meals",
+  },
 ];
 
 interface Props {
@@ -25,7 +37,8 @@ interface Props {
 export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
   const requests = useStoredRequests(patientId);
   const [open, setOpen] = useState(false);
-  const [type, setType] = useState<MealConsultationRequest["type"]>("swap_idea");
+  const [type, setType] =
+    useState<MealConsultationRequest["type"]>("swap_idea");
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
 
@@ -61,7 +74,12 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
         onClick={() => setOpen(true)}
         className="flex w-full items-center gap-3 rounded-2xl border border-[var(--measured-border-soft)] bg-white px-4 py-3 text-left transition-colors hover:bg-[var(--measured-green)]/5"
       >
-        <Sparkles size={16} strokeWidth={2.2} className="shrink-0 text-[var(--measured-green)]" aria-hidden="true" />
+        <Sparkles
+          size={16}
+          strokeWidth={2.2}
+          className="shrink-0 text-[var(--measured-green)]"
+          aria-hidden="true"
+        />
         <div>
           <div className="text-[13px] font-semibold text-[var(--measured-dark-green)]">
             Ask {dietitianName} for meal ideas
@@ -126,7 +144,10 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={() => { setOpen(false); setBody(""); }}
+                  onClick={() => {
+                    setOpen(false);
+                    setBody("");
+                  }}
                   className="inline-flex items-center gap-1 px-3 py-2 text-[12px] font-semibold text-[var(--measured-subtext)]"
                 >
                   <X size={12} strokeWidth={2.2} /> Cancel

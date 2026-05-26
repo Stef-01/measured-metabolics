@@ -42,7 +42,8 @@ export default function AdminUsersPage() {
   ];
 
   const ROLE_BADGE: Record<UserRole, string> = {
-    dietitian: "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
+    dietitian:
+      "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
     gp: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
     patient: "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
   };

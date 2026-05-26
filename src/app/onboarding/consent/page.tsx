@@ -61,7 +61,9 @@ export default function ConsentPage() {
 
       <ul className="mt-6 space-y-3">
         {TIERS.map((t) => {
-          const checked = t.required ? true : state[t.kind as "rwe" | "marketing"];
+          const checked = t.required
+            ? true
+            : state[t.kind as "rwe" | "marketing"];
           return (
             <li
               key={t.kind}
@@ -80,7 +82,11 @@ export default function ConsentPage() {
                     </p>
                     {t.required ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-[var(--measured-green)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-dark-green)]">
-                        <ShieldCheck size={10} strokeWidth={2.2} aria-hidden="true" />
+                        <ShieldCheck
+                          size={10}
+                          strokeWidth={2.2}
+                          aria-hidden="true"
+                        />
                         Required
                       </span>
                     ) : (

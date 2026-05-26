@@ -47,7 +47,9 @@ export default function SignInPage() {
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--measured-green)] text-white shadow-[var(--shadow-card)]">
             <Mail size={18} strokeWidth={2.2} aria-hidden="true" />
           </div>
-          <span className="font-serif text-[18px] tracking-tight text-[var(--measured-dark)]">Measured</span>
+          <span className="font-serif text-[18px] tracking-tight text-[var(--measured-dark)]">
+            Measured
+          </span>
         </div>
         <h1 className="font-serif text-[28px] leading-tight tracking-tight text-[var(--measured-dark)]">
           Sign in

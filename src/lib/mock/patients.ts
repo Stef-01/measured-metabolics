@@ -181,7 +181,10 @@ export const PATIENTS: Patient[] = [
     risk: "high",
     timeInRangePct: 69,
     weekNumber: 1,
-    alerts: ["Post-meal spike after lunch", "New patient — first review pending"],
+    alerts: [
+      "Post-meal spike after lunch",
+      "New patient — first review pending",
+    ],
     patternSummary: [
       "First week; baseline data being established.",
       "Lunch spike likely due to rice and beans portion.",

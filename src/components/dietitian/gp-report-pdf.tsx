@@ -43,7 +43,12 @@ const s = StyleSheet.create({
     fontFamily: "Helvetica-Bold",
     marginBottom: 8,
   },
-  patientName: { fontSize: 24, color: "#0d0d0d", fontFamily: "Helvetica-Bold", marginBottom: 4 },
+  patientName: {
+    fontSize: 24,
+    color: "#0d0d0d",
+    fontFamily: "Helvetica-Bold",
+    marginBottom: 4,
+  },
   meta: { fontSize: 10, color: "#6b6b6b", lineHeight: 1.5 },
   divider: { height: 1, backgroundColor: "#e2e0db", marginVertical: 18 },
   statsRow: { flexDirection: "row", gap: 10, flexWrap: "wrap" },
@@ -54,12 +59,33 @@ const s = StyleSheet.create({
     paddingVertical: 7,
     minWidth: 80,
   },
-  chipLabel: { fontSize: 7.5, color: "#6b6b6b", textTransform: "uppercase", letterSpacing: 0.7 },
-  chipValue: { fontSize: 15, color: "#2d5a3d", fontFamily: "Helvetica-Bold", marginTop: 2 },
+  chipLabel: {
+    fontSize: 7.5,
+    color: "#6b6b6b",
+    textTransform: "uppercase",
+    letterSpacing: 0.7,
+  },
+  chipValue: {
+    fontSize: 15,
+    color: "#2d5a3d",
+    fontFamily: "Helvetica-Bold",
+    marginTop: 2,
+  },
   bodyText: { fontSize: 10.5, color: "#1a1a1a", lineHeight: 1.65 },
   recRow: { flexDirection: "row", gap: 9, marginBottom: 11 },
-  bullet: { width: 5, height: 5, borderRadius: 99, backgroundColor: "#2d5a3d", marginTop: 3.5 },
-  recTitle: { fontSize: 10.5, fontFamily: "Helvetica-Bold", color: "#0d0d0d", marginBottom: 2 },
+  bullet: {
+    width: 5,
+    height: 5,
+    borderRadius: 99,
+    backgroundColor: "#2d5a3d",
+    marginTop: 3.5,
+  },
+  recTitle: {
+    fontSize: 10.5,
+    fontFamily: "Helvetica-Bold",
+    color: "#0d0d0d",
+    marginBottom: 2,
+  },
   recDetail: { fontSize: 10, color: "#4a4a4a", lineHeight: 1.5 },
   footer: {
     position: "absolute",
@@ -95,9 +121,7 @@ function ReportDocument({ d }: { d: GpReportData }) {
           </View>
           <View style={s.dateBlock}>
             <Text style={s.dateText}>{now}</Text>
-            <Text style={[s.dateText, { marginTop: 2 }]}>
-              {d.period}
-            </Text>
+            <Text style={[s.dateText, { marginTop: 2 }]}>{d.period}</Text>
           </View>
         </View>
 
@@ -140,8 +164,7 @@ function ReportDocument({ d }: { d: GpReportData }) {
                 style={[
                   s.chipValue,
                   {
-                    color:
-                      d.patient.weightDeltaKg <= 0 ? "#2d5a3d" : "#8c1515",
+                    color: d.patient.weightDeltaKg <= 0 ? "#2d5a3d" : "#8c1515",
                   },
                 ]}
               >

@@ -4,7 +4,7 @@
  * Keep in sync with :root values in globals.css.
  */
 export const CHART = {
-  green: "#2d5a3d",    // --measured-green
+  green: "#2d5a3d", // --measured-green
   evaluate: "#8c1515", // --measured-evaluate
   clinical: "#2c5e8a", // --measured-clinical-blue
 } as const;

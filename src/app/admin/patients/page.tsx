@@ -2,13 +2,15 @@ import { listPatients } from "@/server/services";
 
 const RISK_TONE: Record<string, string> = {
   high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
-  medium: "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
+  medium:
+    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
   low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
 };
 
 const CONSENT_TONE: Record<string, string> = {
   signed: "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
-  pending: "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
+  pending:
+    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
   withdrawn: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
 };
 
