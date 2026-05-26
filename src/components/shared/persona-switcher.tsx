@@ -194,7 +194,12 @@ export function PersonaSwitcher({ active, variant = "rail" }: Props) {
                         {p.initials}
                         {isActive && (
                           <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--measured-dark-green)] ring-2 ring-white">
-                            <Check size={9} strokeWidth={3} className="text-white" aria-hidden="true" />
+                            <Check
+                              size={9}
+                              strokeWidth={3}
+                              className="text-white"
+                              aria-hidden="true"
+                            />
                           </span>
                         )}
                       </span>

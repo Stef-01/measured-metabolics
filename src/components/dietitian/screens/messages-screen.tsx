@@ -185,10 +185,14 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-1">
-                        <span className={cn(
-                          "truncate text-[13px]",
-                          unread > 0 ? "font-bold text-[var(--measured-dark)]" : "font-semibold text-[var(--measured-dark)]",
-                        )}>
+                        <span
+                          className={cn(
+                            "truncate text-[13px]",
+                            unread > 0
+                              ? "font-bold text-[var(--measured-dark)]"
+                              : "font-semibold text-[var(--measured-dark)]",
+                          )}
+                        >
                           {p ? `${p.firstName} ${p.lastName}` : t.patientId}
                         </span>
                         {last && (
@@ -201,11 +205,16 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                         )}
                       </div>
                       {last && (
-                        <div className={cn(
-                          "mt-0.5 truncate text-[11px]",
-                          unread > 0 ? "font-medium text-[var(--measured-dark)]" : "text-[var(--measured-subtext)]",
-                        )}>
-                          {last.fromRole === "dietitian" ? "You: " : ""}{last.body}
+                        <div
+                          className={cn(
+                            "mt-0.5 truncate text-[11px]",
+                            unread > 0
+                              ? "font-medium text-[var(--measured-dark)]"
+                              : "text-[var(--measured-subtext)]",
+                          )}
+                        >
+                          {last.fromRole === "dietitian" ? "You: " : ""}
+                          {last.body}
                         </div>
                       )}
                     </div>

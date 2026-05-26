@@ -133,29 +133,31 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
           </div>
         </div>
         <div className="flex flex-col items-end gap-1.5">
-          {([
-            {
-              label: "HbA1c",
-              value: `${patient.hbA1cPct}%`,
-              good: patient.hbA1cPct < 7,
-              warn: patient.hbA1cPct < 8,
-              lowerBetter: true,
-            },
-            {
-              label: "TIR",
-              value: `${patient.timeInRangePct}%`,
-              good: patient.timeInRangePct >= 70,
-              warn: patient.timeInRangePct >= 55,
-              lowerBetter: false,
-            },
-            {
-              label: "Wt Δ",
-              value: `${patient.weightDeltaKg > 0 ? "+" : ""}${patient.weightDeltaKg.toFixed(1)} kg`,
-              good: patient.weightDeltaKg < 0,
-              warn: patient.weightDeltaKg < 1,
-              lowerBetter: true,
-            },
-          ] as const).map((s) => {
+          {(
+            [
+              {
+                label: "HbA1c",
+                value: `${patient.hbA1cPct}%`,
+                good: patient.hbA1cPct < 7,
+                warn: patient.hbA1cPct < 8,
+                lowerBetter: true,
+              },
+              {
+                label: "TIR",
+                value: `${patient.timeInRangePct}%`,
+                good: patient.timeInRangePct >= 70,
+                warn: patient.timeInRangePct >= 55,
+                lowerBetter: false,
+              },
+              {
+                label: "Wt Δ",
+                value: `${patient.weightDeltaKg > 0 ? "+" : ""}${patient.weightDeltaKg.toFixed(1)} kg`,
+                good: patient.weightDeltaKg < 0,
+                warn: patient.weightDeltaKg < 1,
+                lowerBetter: true,
+              },
+            ] as const
+          ).map((s) => {
             const status = s.good ? "good" : s.warn ? "watch" : "high";
             const TrendIcon =
               status === "good"
@@ -260,7 +262,10 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
                           </div>
                           <div className="flex flex-wrap gap-1.5">
                             <SeverityChip label="Nausea" value={s.nausea} />
-                            <SeverityChip label="Constipation" value={s.constipation} />
+                            <SeverityChip
+                              label="Constipation"
+                              value={s.constipation}
+                            />
                             <AppetiteChip value={s.appetite} />
                           </div>
                         </li>
@@ -547,7 +552,9 @@ function SeverityChip({
         ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
         : "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]";
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${cls}`}>
+    <span
+      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${cls}`}
+    >
       <span className="opacity-70">{label}</span>
       <span>{value}</span>
     </span>
@@ -560,7 +567,9 @@ function AppetiteChip({ value }: { value: "lower" | "normal" | "higher" }) {
       ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
       : "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]";
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${cls}`}>
+    <span
+      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${cls}`}
+    >
       <span className="opacity-70">Appetite</span>
       <span>{value}</span>
     </span>
@@ -1309,9 +1318,8 @@ function ReportPreview({
   const send = async () => {
     setDownloading(true);
     try {
-      const { downloadGpReport } = await import(
-        "@/components/dietitian/gp-report-pdf"
-      );
+      const { downloadGpReport } =
+        await import("@/components/dietitian/gp-report-pdf");
       const gp = GP_PROFILES[patient.referringGpId];
       const dietitian = DIETITIAN_PROFILES[patient.assignedDietitianId];
       await downloadGpReport({
@@ -1331,7 +1339,11 @@ function ReportPreview({
         duration: 2400,
       });
     } catch {
-      toast.push({ variant: "info", title: "PDF generation failed", duration: 2000 });
+      toast.push({
+        variant: "info",
+        title: "PDF generation failed",
+        duration: 2000,
+      });
     } finally {
       setDownloading(false);
     }
@@ -1415,7 +1427,8 @@ function ReportPreview({
           </>
         ) : downloading ? (
           <>
-            <Send size={14} strokeWidth={2.2} className="animate-pulse" /> Generating PDF…
+            <Send size={14} strokeWidth={2.2} className="animate-pulse" />{" "}
+            Generating PDF…
           </>
         ) : (
           <>

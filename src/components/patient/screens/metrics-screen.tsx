@@ -119,13 +119,21 @@ export function PatientMetricsScreen() {
           <StatPill
             label="HbA1c"
             value={`${me.hbA1cPct}%`}
-            status={me.hbA1cPct < 7 ? "good" : me.hbA1cPct < 8 ? "watch" : "high"}
+            status={
+              me.hbA1cPct < 7 ? "good" : me.hbA1cPct < 8 ? "watch" : "high"
+            }
             lower
           />
           <StatPill
             label="In range"
             value={`${me.timeInRangePct}%`}
-            status={me.timeInRangePct >= 70 ? "good" : me.timeInRangePct >= 55 ? "watch" : "high"}
+            status={
+              me.timeInRangePct >= 70
+                ? "good"
+                : me.timeInRangePct >= 55
+                  ? "watch"
+                  : "high"
+            }
           />
           <StatPill
             label="Weight Δ"
@@ -295,7 +303,8 @@ function StatPill({
           : TrendingDown;
   const tone = {
     good: "text-[var(--measured-dark-green)] bg-[var(--measured-green)]/8",
-    watch: "text-[var(--measured-clinical-amber)] bg-[var(--measured-clinical-amber)]/10",
+    watch:
+      "text-[var(--measured-clinical-amber)] bg-[var(--measured-clinical-amber)]/10",
     high: "text-[var(--measured-evaluate)] bg-[var(--measured-evaluate)]/8",
   }[status];
   const iconColor = {
@@ -304,10 +313,19 @@ function StatPill({
     high: "text-[var(--measured-evaluate)]",
   }[status];
   return (
-    <div className={`flex flex-col items-center gap-1 rounded-2xl px-3 py-3 ${tone}`}>
-      <div className="text-[10px] font-semibold uppercase tracking-wider opacity-70">{label}</div>
+    <div
+      className={`flex flex-col items-center gap-1 rounded-2xl px-3 py-3 ${tone}`}
+    >
+      <div className="text-[10px] font-semibold uppercase tracking-wider opacity-70">
+        {label}
+      </div>
       <div className="font-serif text-[18px] leading-none">{value}</div>
-      <TrendIcon size={11} strokeWidth={2.4} className={iconColor} aria-hidden="true" />
+      <TrendIcon
+        size={11}
+        strokeWidth={2.4}
+        className={iconColor}
+        aria-hidden="true"
+      />
     </div>
   );
 }

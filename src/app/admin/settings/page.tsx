@@ -1,12 +1,35 @@
 import { isSupabaseConfigured } from "@/lib/supabase/env";
-import { CheckCircle2, Circle, Database, BarChart3, Bug, Brain, Zap, FlaskConical, Users } from "lucide-react";
+import {
+  CheckCircle2,
+  Circle,
+  Database,
+  BarChart3,
+  Bug,
+  Brain,
+  Zap,
+  FlaskConical,
+  Users,
+} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 const FLAG_META: Record<
   string,
-  { label: string; hint: string; Icon: React.ComponentType<{ size?: number; strokeWidth?: number; className?: string; "aria-hidden"?: "true" }> }
+  {
+    label: string;
+    hint: string;
+    Icon: React.ComponentType<{
+      size?: number;
+      strokeWidth?: number;
+      className?: string;
+      "aria-hidden"?: "true";
+    }>;
+  }
 > = {
-  supabase: { label: "Supabase", hint: "Auth, database, storage", Icon: Database },
+  supabase: {
+    label: "Supabase",
+    hint: "Auth, database, storage",
+    Icon: Database,
+  },
   posthog: { label: "PostHog", hint: "Product analytics", Icon: BarChart3 },
   sentry: { label: "Sentry", hint: "Error monitoring", Icon: Bug },
   openai: { label: "OpenAI", hint: "Meal analysis & plan drafts", Icon: Brain },
@@ -56,14 +79,18 @@ export default function AdminSettingsPage() {
             <div
               className={cn(
                 "text-[10px] font-semibold uppercase tracking-wider",
-                allGreen ? "text-[var(--measured-dark-green)]" : "text-[var(--measured-clinical-amber)]",
+                allGreen
+                  ? "text-[var(--measured-dark-green)]"
+                  : "text-[var(--measured-clinical-amber)]",
               )}
             >
               System health
             </div>
             <div className="mt-0.5 font-serif text-[28px] leading-none text-[var(--measured-dark)]">
               {configuredCount}
-              <span className="text-[18px] text-[var(--measured-subtext)]">/{total}</span>
+              <span className="text-[18px] text-[var(--measured-subtext)]">
+                /{total}
+              </span>
             </div>
             <div className="mt-0.5 text-[12px] text-[var(--measured-subtext)]">
               {pct}% of integrations configured
@@ -72,7 +99,11 @@ export default function AdminSettingsPage() {
           <FlaskConical
             size={36}
             strokeWidth={1.5}
-            className={allGreen ? "text-[var(--measured-green)]" : "text-[var(--measured-clinical-amber)]"}
+            className={
+              allGreen
+                ? "text-[var(--measured-green)]"
+                : "text-[var(--measured-clinical-amber)]"
+            }
             aria-hidden="true"
           />
         </div>
@@ -81,7 +112,9 @@ export default function AdminSettingsPage() {
           <div
             className={cn(
               "h-full rounded-full transition-all",
-              allGreen ? "bg-[var(--measured-green)]" : "bg-[var(--measured-clinical-amber)]",
+              allGreen
+                ? "bg-[var(--measured-green)]"
+                : "bg-[var(--measured-clinical-amber)]",
             )}
             style={{ width: `${pct}%` }}
           />

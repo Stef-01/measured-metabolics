@@ -17,24 +17,32 @@ interface ChipQuestion {
   prompt: string;
 }
 
-const SEVERITY_CHIPS: { id: SymptomSeverity; label: string; dot: string; selected: string }[] = [
+const SEVERITY_CHIPS: {
+  id: SymptomSeverity;
+  label: string;
+  dot: string;
+  selected: string;
+}[] = [
   {
     id: "none",
     label: "None",
     dot: "bg-[var(--measured-green)]",
-    selected: "border-[var(--measured-green)] bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
+    selected:
+      "border-[var(--measured-green)] bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
   },
   {
     id: "mild",
     label: "Mild",
     dot: "bg-[var(--measured-clinical-amber)]",
-    selected: "border-[var(--measured-clinical-amber)] bg-[var(--measured-clinical-amber)]/10 text-[var(--measured-clinical-amber)]",
+    selected:
+      "border-[var(--measured-clinical-amber)] bg-[var(--measured-clinical-amber)]/10 text-[var(--measured-clinical-amber)]",
   },
   {
     id: "severe",
     label: "Severe",
     dot: "bg-[var(--measured-evaluate)]",
-    selected: "border-[var(--measured-evaluate)] bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
+    selected:
+      "border-[var(--measured-evaluate)] bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
   },
 ];
 

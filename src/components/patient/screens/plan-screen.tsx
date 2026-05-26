@@ -208,7 +208,9 @@ export function PatientPlanScreen() {
             <CheckCheck size={20} strokeWidth={2.2} aria-hidden="true" />
             <div className="min-w-0 flex-1">
               <div className="text-[13px] font-semibold">Day complete!</div>
-              <div className="text-[11px] text-white/80">All {dayMeals.length} meals eaten · great work</div>
+              <div className="text-[11px] text-white/80">
+                All {dayMeals.length} meals eaten · great work
+              </div>
             </div>
           </div>
         )}
@@ -294,7 +296,12 @@ export function PatientPlanScreen() {
                     </p>
                     {item.rationale && !isEaten && (
                       <div className="mt-2 flex items-start gap-1.5 rounded-xl bg-[var(--measured-green)]/5 px-3 py-2">
-                        <Sparkles size={11} strokeWidth={2.2} className="mt-0.5 shrink-0 text-[var(--measured-dark-green)]" aria-hidden="true" />
+                        <Sparkles
+                          size={11}
+                          strokeWidth={2.2}
+                          className="mt-0.5 shrink-0 text-[var(--measured-dark-green)]"
+                          aria-hidden="true"
+                        />
                         <p className="text-[12px] italic leading-relaxed text-[var(--measured-dark)]">
                           {item.rationale}
                         </p>

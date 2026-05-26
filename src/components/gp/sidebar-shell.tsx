@@ -74,10 +74,17 @@ export function GpSidebarShell({ patient, children }: Props) {
               {patient.firstName} {patient.lastName}
             </div>
             <div className="mt-0.5 text-[12px] text-[var(--measured-subtext)]">
-              {patient.age}{patient.sex.toLowerCase()} · wk {patient.weekNumber} · {patient.conditions.join(", ")}
+              {patient.age}
+              {patient.sex.toLowerCase()} · wk {patient.weekNumber} ·{" "}
+              {patient.conditions.join(", ")}
             </div>
           </div>
-          <span className={cn("shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize", riskChip)}>
+          <span
+            className={cn(
+              "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize",
+              riskChip,
+            )}
+          >
             {patient.risk} risk
           </span>
         </div>

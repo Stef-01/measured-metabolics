@@ -4,6 +4,7 @@ import type { Database } from "@/types/db";
 
 const PUBLIC_PATHS = [
   "/",
+  "/demo",
   "/sign-in",
   "/auth/callback",
   "/_next",

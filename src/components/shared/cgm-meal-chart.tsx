@@ -124,7 +124,12 @@ export function CgmMealChart({
             fontSize={10}
           />
           <YAxis domain={[3, 12]} stroke="rgba(0,0,0,0.4)" fontSize={10} />
-          <ReferenceArea y1={3.9} y2={10} fill={CHART.green} fillOpacity={0.06} />
+          <ReferenceArea
+            y1={3.9}
+            y2={10}
+            fill={CHART.green}
+            fillOpacity={0.06}
+          />
           <Tooltip
             cursor={{ stroke: "rgba(45,90,61,0.4)", strokeDasharray: "3 3" }}
             content={() => null}

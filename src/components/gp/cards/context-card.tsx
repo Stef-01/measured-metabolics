@@ -1,4 +1,10 @@
-import { AlertTriangle, TrendingDown, TrendingUp, Minus, Pill } from "lucide-react";
+import {
+  AlertTriangle,
+  TrendingDown,
+  TrendingUp,
+  Minus,
+  Pill,
+} from "lucide-react";
 import type { Patient } from "@/lib/mock/types";
 import { recentSevereSymptoms } from "@/lib/mock/symptoms";
 import { cn } from "@/lib/utils/cn";
@@ -90,7 +96,12 @@ export function GpContextCard({ patient }: { patient: Patient }) {
               <div className="font-serif text-[20px] leading-tight text-[var(--measured-dark)]">
                 {t.value}
               </div>
-              <TrendIcon size={11} strokeWidth={2.4} className={iconColor} aria-hidden="true" />
+              <TrendIcon
+                size={11}
+                strokeWidth={2.4}
+                className={iconColor}
+                aria-hidden="true"
+              />
             </div>
           );
         })}

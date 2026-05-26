@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -112,32 +113,49 @@ export function DoctorLanding() {
 
       {/* ── Doctor ───────────────────────────────────── */}
       <section className="mx-auto max-w-5xl px-6 py-20 md:py-24">
-        <div className="max-w-[560px]">
-          <p className="text-[11px] font-medium uppercase tracking-widest text-[var(--measured-subtext)]">
-            Your doctor
-          </p>
-          <h2 className="mt-4 font-serif text-[38px] leading-tight tracking-tight text-[var(--measured-dark)]">
-            Dr Anubhav Saxena
-          </h2>
-          <p className="mt-1 text-[13px] text-[var(--measured-subtext)]">
-            MBBS FRACGP MPhil BSc(Adv) DCH
-          </p>
-          <p className="mt-6 text-[16px] leading-relaxed text-[var(--measured-subtext)]">
-            Dr Saxena is a Fellow of the Royal Australian College of General
-            Practitioners with a research background in metabolic medicine. He
-            designed the Health Optimisation Protocol to give patients a
-            structured, evidence-based path to lasting weight and metabolic
-            improvement — coordinated from his Beecroft practice.
-          </p>
-          <a
-            href={BOOKING_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[var(--measured-dark-green)] transition-opacity hover:opacity-70"
-          >
-            Book with Dr Saxena
-            <ArrowRight size={14} strokeWidth={2.4} aria-hidden="true" />
-          </a>
+        <div className="flex flex-col gap-12 md:flex-row md:items-start md:gap-16">
+          {/* Portrait */}
+          <div className="shrink-0">
+            <div className="relative h-[320px] w-[260px] overflow-hidden rounded-3xl bg-[var(--measured-cream)] shadow-[0_4px_32px_-4px_rgba(0,0,0,0.12)]">
+              <Image
+                src="/images/dr-saxena.jpeg"
+                alt="Dr Anubhav Saxena"
+                fill
+                className="object-cover object-top"
+                sizes="260px"
+                priority
+              />
+            </div>
+          </div>
+
+          {/* Bio */}
+          <div className="flex flex-col justify-center">
+            <p className="text-[11px] font-medium text-[var(--measured-subtext)]">
+              Your doctor
+            </p>
+            <h2 className="mt-4 font-serif text-[38px] leading-tight tracking-tight text-[var(--measured-dark)]">
+              Dr Anubhav Saxena
+            </h2>
+            <p className="mt-1 text-[13px] text-[var(--measured-subtext)]">
+              MBBS FRACGP MPhil BSc(Adv) DCH
+            </p>
+            <p className="mt-6 max-w-[460px] text-[16px] leading-relaxed text-[var(--measured-subtext)]">
+              Dr Saxena is a Fellow of the Royal Australian College of General
+              Practitioners with a research background in metabolic medicine. He
+              designed the Health Optimisation Protocol to give patients a
+              structured, evidence-based path to lasting weight and metabolic
+              improvement — coordinated from his Beecroft practice.
+            </p>
+            <a
+              href={BOOKING_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[var(--measured-dark-green)] transition-opacity hover:opacity-70"
+            >
+              Book with Dr Saxena
+              <ArrowRight size={14} strokeWidth={2.4} aria-hidden="true" />
+            </a>
+          </div>
         </div>
       </section>
 
@@ -165,8 +183,13 @@ export function DoctorLanding() {
       {/* ── Footer ───────────────────────────────────── */}
       <footer className="border-t border-[var(--measured-border-soft)]">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6 text-[12px] text-[var(--measured-subtext)]">
-          <span>Dr Anubhav Saxena · Beecroft NSW · {new Date().getFullYear()}</span>
-          <Link href="/demo" className="transition-colors hover:text-[var(--measured-dark)]">
+          <span>
+            Dr Anubhav Saxena · Beecroft NSW · {new Date().getFullYear()}
+          </span>
+          <Link
+            href="/demo"
+            className="transition-colors hover:text-[var(--measured-dark)]"
+          >
             Platform demo →
           </Link>
         </div>
