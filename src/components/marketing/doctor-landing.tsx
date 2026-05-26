@@ -1,27 +1,258 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import type { ReactNode } from "react";
 
 const BOOKING_URL =
   "https://healthengine.com.au/doctor/nsw/beecroft/dr-anubhav-saxena/p123180";
 
-const PROTOCOL = [
+// ── Protocol step illustrations ───────────────────────────────────────────────
+
+function GlpVisual() {
+  return (
+    <svg
+      viewBox="0 0 60 44"
+      fill="none"
+      aria-hidden="true"
+      className="h-full w-full"
+    >
+      {/* Horizontal reference grid */}
+      <line
+        x1="3"
+        y1="12"
+        x2="57"
+        y2="12"
+        stroke="currentColor"
+        strokeWidth="0.5"
+        opacity="0.18"
+      />
+      <line
+        x1="3"
+        y1="24"
+        x2="57"
+        y2="24"
+        stroke="currentColor"
+        strokeWidth="0.5"
+        opacity="0.18"
+      />
+      <line
+        x1="3"
+        y1="36"
+        x2="57"
+        y2="36"
+        stroke="currentColor"
+        strokeWidth="0.5"
+        opacity="0.18"
+      />
+      {/* Area under curve */}
+      <path
+        d="M 5 42 C 14 42 20 30 28 21 C 36 12 45 9 55 8 L 55 42 Z"
+        fill="currentColor"
+        opacity="0.07"
+      />
+      {/* Treatment response curve — gentle S rising over 6 months */}
+      <path
+        d="M 5 42 C 14 42 20 30 28 21 C 36 12 45 9 55 8"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+      {/* Baseline dot */}
+      <circle cx="5" cy="42" r="2.5" fill="currentColor" opacity="0.3" />
+      {/* Goal achieved — dot with halo */}
+      <circle
+        cx="55"
+        cy="8"
+        r="5.5"
+        stroke="currentColor"
+        strokeWidth="1"
+        opacity="0.2"
+      />
+      <circle cx="55" cy="8" r="3" fill="currentColor" />
+    </svg>
+  );
+}
+
+function DexaVisual() {
+  return (
+    <svg
+      viewBox="0 0 60 44"
+      fill="none"
+      aria-hidden="true"
+      className="h-full w-full"
+    >
+      {/* Scan reference line */}
+      <line
+        x1="4"
+        y1="9"
+        x2="56"
+        y2="9"
+        stroke="currentColor"
+        strokeWidth="0.5"
+        opacity="0.18"
+        strokeDasharray="2 3"
+      />
+      {/* BEFORE — more fat (light top), less lean (medium bottom) */}
+      <rect
+        x="5"
+        y="10"
+        width="17"
+        height="14"
+        rx="2.5"
+        fill="currentColor"
+        opacity="0.13"
+      />
+      <rect
+        x="5"
+        y="26"
+        width="17"
+        height="14"
+        rx="2.5"
+        fill="currentColor"
+        opacity="0.48"
+      />
+      {/* Arrow */}
+      <path
+        d="M 27 22 L 32 22"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M 30 19.5 L 33 22 L 30 24.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* AFTER — less fat (light top), more lean (darker, taller bottom) */}
+      <rect
+        x="38"
+        y="10"
+        width="17"
+        height="6"
+        rx="2.5"
+        fill="currentColor"
+        opacity="0.13"
+      />
+      <rect
+        x="38"
+        y="18"
+        width="17"
+        height="22"
+        rx="2.5"
+        fill="currentColor"
+        opacity="0.78"
+      />
+    </svg>
+  );
+}
+
+function MealVisual() {
+  // Plate: center (30,30), radius 20
+  // Three equal 120° sectors starting from top (−90°)
+  // a = top   = (30, 10)
+  // b = lower-right = (30 + 20·cos 30°, 30 + 20·sin 30°) ≈ (47.3, 40)
+  // c = lower-left  = (30 + 20·cos 150°, 30 + 20·sin 150°) ≈ (12.7, 40)
+  return (
+    <svg
+      viewBox="0 0 60 60"
+      fill="none"
+      aria-hidden="true"
+      className="h-full w-full"
+    >
+      {/* Outer plate rim */}
+      <circle
+        cx="30"
+        cy="30"
+        r="26"
+        stroke="currentColor"
+        strokeWidth="1"
+        opacity="0.12"
+      />
+      {/* Sector 1 — protein (top, darkest) */}
+      <path
+        d="M 30 30 L 30 10 A 20 20 0 0 1 47.3 40 Z"
+        fill="currentColor"
+        opacity="0.65"
+      />
+      {/* Sector 2 — vegetables (lower-right, medium) */}
+      <path
+        d="M 30 30 L 47.3 40 A 20 20 0 0 1 12.7 40 Z"
+        fill="currentColor"
+        opacity="0.28"
+      />
+      {/* Sector 3 — carbs / grains (lower-left, lightest) */}
+      <path
+        d="M 30 30 L 12.7 40 A 20 20 0 0 1 30 10 Z"
+        fill="currentColor"
+        opacity="0.12"
+      />
+      {/* White dividers */}
+      <line
+        x1="30"
+        y1="30"
+        x2="30"
+        y2="10"
+        stroke="white"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="30"
+        y1="30"
+        x2="47.3"
+        y2="40"
+        stroke="white"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="30"
+        y1="30"
+        x2="12.7"
+        y2="40"
+        stroke="white"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      {/* Centre circle */}
+      <circle cx="30" cy="30" r="7" fill="white" opacity="0.95" />
+    </svg>
+  );
+}
+
+// ── Protocol data ─────────────────────────────────────────────────────────────
+
+interface ProtocolStep {
+  n: string;
+  title: string;
+  body: string;
+  visual: ReactNode;
+}
+
+const PROTOCOL: ProtocolStep[] = [
   {
     n: "01",
     title: "GLP-1 therapy",
     body: "Six months of clinically guided GLP-1 receptor agonist therapy, titrated to your response and reviewed at every appointment.",
+    visual: <GlpVisual />,
   },
   {
     n: "02",
     title: "DEXA body composition",
     body: "Baseline and completion DEXA scans measure fat mass, lean mass, and visceral fat — giving you objective before-and-after data.",
+    visual: <DexaVisual />,
   },
   {
     n: "03",
     title: "Personalised meal planning",
     body: "Your dietitian builds a plan around your cuisine, preferences, and metabolic targets — with recipes adapted specifically for you.",
+    visual: <MealVisual />,
   },
 ];
+
+// ── Page ──────────────────────────────────────────────────────────────────────
 
 export function DoctorLanding() {
   return (
@@ -88,21 +319,33 @@ export function DoctorLanding() {
               Three integrated components. Six months.
             </p>
           </div>
-          <div className="grid gap-12 md:grid-cols-3 md:gap-8">
+
+          <div className="grid gap-5 md:grid-cols-3">
             {PROTOCOL.map((step) => (
-              <div key={step.n}>
-                <div
-                  aria-hidden="true"
-                  className="font-serif text-[52px] leading-none text-[var(--measured-green)]/20"
-                >
-                  {step.n}
+              <div
+                key={step.n}
+                className="overflow-hidden rounded-3xl bg-white ring-1 ring-[var(--measured-border-soft)] shadow-[var(--shadow-card)]"
+              >
+                {/* Illustration header */}
+                <div className="flex h-[112px] items-center justify-center bg-gradient-to-b from-[var(--measured-green)]/8 to-transparent text-[var(--measured-green)]">
+                  <div className="h-[72px] w-[80px]">{step.visual}</div>
                 </div>
-                <h3 className="mt-5 font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
-                  {step.title}
-                </h3>
-                <p className="mt-2.5 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
-                  {step.body}
-                </p>
+
+                {/* Content */}
+                <div className="p-6">
+                  <div
+                    aria-hidden="true"
+                    className="font-serif text-[48px] leading-none text-[var(--measured-green)]/15"
+                  >
+                    {step.n}
+                  </div>
+                  <h3 className="mt-4 font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2.5 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
+                    {step.body}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
