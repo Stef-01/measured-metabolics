@@ -13,12 +13,18 @@ import {
 } from "./index";
 
 describe("mock fixtures", () => {
-  it("seed cohort: 4 PRD-aligned patients", () => {
-    expect(PATIENTS.map((p) => p.id).sort()).toEqual([
+  it("seed cohort contains the expected patients", () => {
+    const ids = PATIENTS.map((p) => p.id).sort();
+    expect(ids).toEqual([
       "asha",
+      "grace",
+      "james",
       "ken",
       "lina",
       "omar",
+      "priya",
+      "ravi",
+      "sofia",
     ]);
   });
 
