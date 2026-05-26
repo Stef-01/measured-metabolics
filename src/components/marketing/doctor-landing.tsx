@@ -320,32 +320,29 @@ export function DoctorLanding() {
             </p>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid gap-12 md:grid-cols-3 md:gap-8">
             {PROTOCOL.map((step) => (
-              <div
-                key={step.n}
-                className="overflow-hidden rounded-3xl bg-white ring-1 ring-[var(--measured-border-soft)] shadow-[var(--shadow-card)]"
-              >
-                {/* Illustration header */}
-                <div className="flex h-[112px] items-center justify-center bg-gradient-to-b from-[var(--measured-green)]/8 to-transparent text-[var(--measured-green)]">
-                  <div className="h-[72px] w-[80px]">{step.visual}</div>
+              <div key={step.n} className="relative">
+                {/* Illustration — large, ghosted behind content */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute right-0 top-0 h-[100px] w-[112px] text-[var(--measured-green)] opacity-[0.09]"
+                >
+                  {step.visual}
                 </div>
 
-                {/* Content */}
-                <div className="p-6">
-                  <div
-                    aria-hidden="true"
-                    className="font-serif text-[48px] leading-none text-[var(--measured-green)]/15"
-                  >
-                    {step.n}
-                  </div>
-                  <h3 className="mt-4 font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2.5 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
-                    {step.body}
-                  </p>
+                <div
+                  aria-hidden="true"
+                  className="font-serif text-[52px] leading-none text-[var(--measured-green)]/20"
+                >
+                  {step.n}
                 </div>
+                <h3 className="mt-5 font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
+                  {step.title}
+                </h3>
+                <p className="mt-2.5 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
+                  {step.body}
+                </p>
               </div>
             ))}
           </div>
