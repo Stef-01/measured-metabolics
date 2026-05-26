@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Users,
   ClipboardCheck,
@@ -22,12 +22,16 @@ import {
   CURRENT_DIETITIAN_ID,
 } from "@/lib/mock";
 import type { RiskLevel, ReferralPriority } from "@/lib/mock/types";
-import { patientStore, type MealConsultationRequest } from "@/lib/storage/patient-store";
+import {
+  patientStore,
+  type MealConsultationRequest,
+} from "@/lib/storage/patient-store";
 import { cn } from "@/lib/utils/cn";
 
 const PRIORITY_TONE: Record<ReferralPriority, string> = {
   high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
-  medium: "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
+  medium:
+    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
   low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
 };
 
@@ -76,7 +80,9 @@ export function DietitianDashboardScreen() {
           value={pendingMeals}
           Icon={ClipboardCheck}
           tone={pendingMeals > 5 ? "warning" : "default"}
-          hint={pendingMeals > 5 ? "Above target · start queue" : "Within target"}
+          hint={
+            pendingMeals > 5 ? "Above target · start queue" : "Within target"
+          }
         />
         <DietitianStatCard
           label="Severe flags"
@@ -182,7 +188,12 @@ export function DietitianDashboardScreen() {
                       <span>{r.referringGpName}</span>
                       <span>·</span>
                       <span>{r.cuisineLabel}</span>
-                      <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider", PRIORITY_TONE[r.priority])}>
+                      <span
+                        className={cn(
+                          "rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider",
+                          PRIORITY_TONE[r.priority],
+                        )}
+                      >
                         {r.priority}
                       </span>
                     </div>
@@ -273,7 +284,9 @@ function SymChip({
         ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
         : "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]";
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${cls}`}>
+    <span
+      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${cls}`}
+    >
       <span className="opacity-70">{label}</span>
       <span>{value}</span>
     </span>
@@ -282,17 +295,15 @@ function SymChip({
 
 const RISK_CHIP: Record<RiskLevel, string> = {
   high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
-  medium: "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
+  medium:
+    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
   low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
 };
 
 function PatientRequestsSection() {
   const [requests, setRequests] = useState<
     Array<MealConsultationRequest & { patientName: string }>
-  >([]);
-  const [replies, setReplies] = useState<Record<string, string>>({});
-
-  useEffect(() => {
+  >(() => {
     const all: Array<MealConsultationRequest & { patientName: string }> = [];
     for (const p of PATIENTS) {
       const reqs = patientStore.getRequests(p.id);
@@ -302,12 +313,12 @@ function PatientRequestsSection() {
         }
       }
     }
-    all.sort(
+    return all.sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
-    setRequests(all);
-  }, []);
+  });
+  const [replies, setReplies] = useState<Record<string, string>>({});
 
   const reply = (req: (typeof requests)[number]) => {
     const text = replies[req.id]?.trim();
@@ -330,10 +341,7 @@ function PatientRequestsSection() {
       </div>
       <ul className="mt-3 space-y-3">
         {requests.map((req) => (
-          <li
-            key={req.id}
-            className="surface-card p-4"
-          >
+          <li key={req.id} className="surface-card p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
@@ -389,7 +397,11 @@ function PatientRequestsSection() {
   );
 }
 
-function PatientMiniCard({ patient: p }: { patient: (typeof PATIENTS)[number] }) {
+function PatientMiniCard({
+  patient: p,
+}: {
+  patient: (typeof PATIENTS)[number];
+}) {
   return (
     <Link
       href={`/d/patients/${p.id}`}
@@ -398,17 +410,28 @@ function PatientMiniCard({ patient: p }: { patient: (typeof PATIENTS)[number] })
       <div
         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[13px] font-bold text-white"
         style={{
-          backgroundColor: p.risk === "high" ? "var(--measured-evaluate)" : p.risk === "medium" ? "var(--measured-clinical-amber)" : "var(--measured-clinical-blue)",
+          backgroundColor:
+            p.risk === "high"
+              ? "var(--measured-evaluate)"
+              : p.risk === "medium"
+                ? "var(--measured-clinical-amber)"
+                : "var(--measured-clinical-blue)",
         }}
       >
-        {p.firstName[0]}{p.lastName[0]}
+        {p.firstName[0]}
+        {p.lastName[0]}
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5 truncate">
           <span className="truncate text-[13px] font-semibold text-[var(--measured-dark)]">
             {p.firstName} {p.lastName}
           </span>
-          <span className={cn("shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase", RISK_CHIP[p.risk])}>
+          <span
+            className={cn(
+              "shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase",
+              RISK_CHIP[p.risk],
+            )}
+          >
             {p.risk}
           </span>
         </div>
@@ -426,7 +449,11 @@ function PatientMiniCard({ patient: p }: { patient: (typeof PATIENTS)[number] })
           </div>
         )}
       </div>
-      <ChevronRight size={14} className="shrink-0 text-[var(--measured-border-strong)] transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+      <ChevronRight
+        size={14}
+        className="shrink-0 text-[var(--measured-border-strong)] transition-transform group-hover:translate-x-0.5"
+        aria-hidden="true"
+      />
     </Link>
   );
 }

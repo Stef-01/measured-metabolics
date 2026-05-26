@@ -24,7 +24,6 @@ import {
   type BillingIntelligenceSuggestion,
 } from "@/lib/mock/billing-suggestions";
 import type { Patient } from "@/lib/mock/types";
-import type { BillingSuggestionItem } from "@/ai/schemas";
 
 const STANCE_LABEL: Record<BillingIntelligenceSuggestion["stance"], string> = {
   candidate: "Candidate",
@@ -278,7 +277,8 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                           key={`${h.item}-${e.kind}-${e.label}-${idx}`}
                           className={cn(
                             "rounded-r-lg border-l-2 bg-[var(--measured-cream)] px-2.5 py-2",
-                            EVIDENCE_KIND_BORDER[e.kind] ?? "border-[var(--measured-border)]",
+                            EVIDENCE_KIND_BORDER[e.kind] ??
+                              "border-[var(--measured-border)]",
                           )}
                         >
                           <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
@@ -338,7 +338,11 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                         onClick={() => copy(h)}
                         className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-2.5 py-2 text-[11px] font-semibold text-white hover:bg-[var(--measured-dark-green)] transition-colors"
                       >
-                        <Receipt size={12} strokeWidth={2.2} aria-hidden="true" />
+                        <Receipt
+                          size={12}
+                          strokeWidth={2.2}
+                          aria-hidden="true"
+                        />
                         Copy clinic note
                       </button>
                       <button
@@ -346,7 +350,11 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                         onClick={() => createTask(h)}
                         className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[var(--measured-border)] bg-white px-2.5 py-2 text-[11px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)] transition-colors"
                       >
-                        <ClipboardList size={12} strokeWidth={2.2} aria-hidden="true" />
+                        <ClipboardList
+                          size={12}
+                          strokeWidth={2.2}
+                          aria-hidden="true"
+                        />
                         Create task
                       </button>
                     </div>
@@ -359,7 +367,11 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                       className="inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--measured-subtext)] hover:text-[var(--measured-clinical-blue)] transition-colors"
                     >
                       View MBS source
-                      <ExternalLink size={10} strokeWidth={2.2} aria-hidden="true" />
+                      <ExternalLink
+                        size={10}
+                        strokeWidth={2.2}
+                        aria-hidden="true"
+                      />
                     </a>
                   )}
                   {h.sourceLastReviewedAt && (
@@ -456,7 +468,8 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                           key={`${s.itemNumber}-${e.kind}-${e.id}-${idx}`}
                           className={cn(
                             "rounded-r-lg border-l-2 bg-[var(--measured-cream)] px-2.5 py-2",
-                            EVIDENCE_KIND_BORDER[e.kind] ?? "border-[var(--measured-border)]",
+                            EVIDENCE_KIND_BORDER[e.kind] ??
+                              "border-[var(--measured-border)]",
                           )}
                         >
                           <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
