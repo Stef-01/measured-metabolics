@@ -183,8 +183,13 @@ export function DoctorLanding() {
       {/* ── Footer ───────────────────────────────────── */}
       <footer className="border-t border-[var(--measured-border-soft)]">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6 text-[12px] text-[var(--measured-subtext)]">
-          <span>Dr Anubhav Saxena · Beecroft NSW · {new Date().getFullYear()}</span>
-          <Link href="/demo" className="transition-colors hover:text-[var(--measured-dark)]">
+          <span>
+            Dr Anubhav Saxena · Beecroft NSW · {new Date().getFullYear()}
+          </span>
+          <Link
+            href="/demo"
+            className="transition-colors hover:text-[var(--measured-dark)]"
+          >
             Platform demo →
           </Link>
         </div>

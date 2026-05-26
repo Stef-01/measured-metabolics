@@ -3,18 +3,13 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Area,
-  AreaChart,
-  ResponsiveContainer,
-} from "recharts";
+import { Area, AreaChart, ResponsiveContainer } from "recharts";
 import {
   Camera,
   Activity,
   CalendarDays,
   MessageCircle,
   ChevronRight,
-  Sparkles,
   X,
   Flame,
 } from "lucide-react";
@@ -168,7 +163,9 @@ export function PatientHomeScreen() {
                 className="h-1.5 flex-1 rounded-full"
                 style={{
                   backgroundColor:
-                    i < todayLogged ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.25)",
+                    i < todayLogged
+                      ? "rgba(255,255,255,0.9)"
+                      : "rgba(255,255,255,0.25)",
                 }}
                 title={item.mealType}
               />
@@ -221,7 +218,11 @@ export function PatientHomeScreen() {
           </div>
         </Link>
 
-        <GlucoseSparkCard patientId={me.id} tir={me.timeInRangePct} mealCount={meals.length} />
+        <GlucoseSparkCard
+          patientId={me.id}
+          tir={me.timeInRangePct}
+          mealCount={meals.length}
+        />
 
         <Link
           href="/p/messages"
@@ -240,7 +241,13 @@ export function PatientHomeScreen() {
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between">
-                <div className={unreadFromMaya > 0 ? "text-[13px] font-bold text-[var(--measured-dark)]" : "text-[13px] font-semibold text-[var(--measured-dark)]"}>
+                <div
+                  className={
+                    unreadFromMaya > 0
+                      ? "text-[13px] font-bold text-[var(--measured-dark)]"
+                      : "text-[13px] font-semibold text-[var(--measured-dark)]"
+                  }
+                >
                   Maya · APD
                 </div>
                 <ChevronRight
@@ -249,7 +256,9 @@ export function PatientHomeScreen() {
                   aria-hidden="true"
                 />
               </div>
-              <p className={`mt-0.5 line-clamp-2 text-[12px] leading-relaxed ${unreadFromMaya > 0 ? "font-medium text-[var(--measured-dark)]" : "text-[var(--measured-subtext)]"}`}>
+              <p
+                className={`mt-0.5 line-clamp-2 text-[12px] leading-relaxed ${unreadFromMaya > 0 ? "font-medium text-[var(--measured-dark)]" : "text-[var(--measured-subtext)]"}`}
+              >
                 {lastDietitianMsg?.body ??
                   "Maya will message after your next review."}
               </p>
@@ -279,7 +288,8 @@ function GlucoseSparkCard({
     }));
   }, [cgm]);
 
-  const tirColor = tir >= 70 ? CHART.green : tir >= 55 ? "#b97e12" : CHART.evaluate;
+  const tirColor =
+    tir >= 70 ? CHART.green : tir >= 55 ? "#b97e12" : CHART.evaluate;
 
   return (
     <Link
@@ -312,11 +322,22 @@ function GlucoseSparkCard({
       {sparkData.length > 0 && (
         <div className="h-[52px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={sparkData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+            <AreaChart
+              data={sparkData}
+              margin={{ top: 4, right: 0, left: 0, bottom: 0 }}
+            >
               <defs>
                 <linearGradient id="spark-grad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={CHART.green} stopOpacity={0.25} />
-                  <stop offset="100%" stopColor={CHART.green} stopOpacity={0.02} />
+                  <stop
+                    offset="0%"
+                    stopColor={CHART.green}
+                    stopOpacity={0.25}
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor={CHART.green}
+                    stopOpacity={0.02}
+                  />
                 </linearGradient>
               </defs>
               <Area
