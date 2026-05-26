@@ -8,18 +8,21 @@ const BOOKING_URL =
 const PROTOCOL = [
   {
     n: "01",
-    title: "GLP-1 therapy",
-    body: "Six months of clinically guided GLP-1 receptor agonist therapy, titrated to your response and reviewed at every appointment.",
+    title: "CGM monitored GLP1 therapy",
+    body: "Six months of clinically guided GLP-1 receptor agonist therapy, titrated to your response with continuous glucose monitoring at every step.",
+    photo: "/images/protocol/cgm.jpg",
   },
   {
     n: "02",
     title: "DEXA body composition",
     body: "Baseline and completion DEXA scans measure fat mass, lean mass, and visceral fat — giving you objective before-and-after data.",
+    photo: "/images/protocol/dexa.jpg",
   },
   {
     n: "03",
     title: "Personalised meal planning",
     body: "Your dietitian builds a plan around your cuisine, preferences, and metabolic targets — with recipes adapted specifically for you.",
+    photo: "/images/protocol/meal.jpg",
   },
 ];
 
@@ -90,19 +93,47 @@ export function DoctorLanding() {
           </div>
           <div className="grid gap-12 md:grid-cols-3 md:gap-8">
             {PROTOCOL.map((step) => (
-              <div key={step.n}>
+              <div key={step.n} className="relative overflow-hidden">
+                {/* Greyscale photo bleeds in from the right — same treatment across all three */}
                 <div
                   aria-hidden="true"
-                  className="font-serif text-[52px] leading-none text-[var(--measured-green)]/20"
+                  className="pointer-events-none absolute right-0 top-0 bottom-0 w-[62%]"
+                  style={{
+                    maskImage:
+                      "linear-gradient(to right, transparent 0%, black 55%)",
+                    WebkitMaskImage:
+                      "linear-gradient(to right, transparent 0%, black 55%)",
+                  }}
                 >
-                  {step.n}
+                  <Image
+                    src={step.photo}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    style={{
+                      filter: "grayscale(1)",
+                      opacity: 0.16,
+                      mixBlendMode: "multiply",
+                    }}
+                    sizes="(min-width: 768px) 200px, 60vw"
+                  />
                 </div>
-                <h3 className="mt-5 font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
-                  {step.title}
-                </h3>
-                <p className="mt-2.5 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
-                  {step.body}
-                </p>
+
+                {/* Text in relative wrapper to stack above the photo */}
+                <div className="relative">
+                  <div
+                    aria-hidden="true"
+                    className="font-serif text-[52px] leading-none text-[var(--measured-green)]/20"
+                  >
+                    {step.n}
+                  </div>
+                  <h3 className="mt-5 font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2.5 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
+                    {step.body}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
