@@ -16,7 +16,6 @@ function GlpVisual() {
       aria-hidden="true"
       className="h-full w-full"
     >
-      {/* Horizontal reference grid */}
       <line
         x1="3"
         y1="12"
@@ -44,22 +43,18 @@ function GlpVisual() {
         strokeWidth="0.5"
         opacity="0.18"
       />
-      {/* Area under curve */}
       <path
         d="M 5 42 C 14 42 20 30 28 21 C 36 12 45 9 55 8 L 55 42 Z"
         fill="currentColor"
         opacity="0.07"
       />
-      {/* Treatment response curve — gentle S rising over 6 months */}
       <path
         d="M 5 42 C 14 42 20 30 28 21 C 36 12 45 9 55 8"
         stroke="currentColor"
         strokeWidth="2.2"
         strokeLinecap="round"
       />
-      {/* Baseline dot */}
       <circle cx="5" cy="42" r="2.5" fill="currentColor" opacity="0.3" />
-      {/* Goal achieved — dot with halo */}
       <circle
         cx="55"
         cy="8"
@@ -73,151 +68,64 @@ function GlpVisual() {
   );
 }
 
-function DexaVisual() {
+function BodyScanVisual() {
   return (
     <svg
-      viewBox="0 0 60 44"
+      viewBox="0 0 60 66"
       fill="none"
       aria-hidden="true"
       className="h-full w-full"
     >
-      {/* Scan reference line */}
+      {/* Head */}
+      <circle cx="30" cy="11" r="8" stroke="currentColor" strokeWidth="1.2" />
+      {/* Neck */}
+      <path
+        d="M 26 19 L 26 23 L 34 23 L 34 19"
+        stroke="currentColor"
+        strokeWidth="0.8"
+        opacity="0.5"
+      />
+      {/* Torso */}
+      <rect
+        x="18"
+        y="23"
+        width="24"
+        height="33"
+        rx="8"
+        stroke="currentColor"
+        strokeWidth="1.2"
+      />
+      {/* Horizontal scan lines crossing full width */}
+      {[29, 35, 41, 47, 53].map((y) => (
+        <line
+          key={y}
+          x1="4"
+          y1={y}
+          x2="56"
+          y2={y}
+          stroke="currentColor"
+          strokeWidth="0.5"
+          opacity="0.35"
+        />
+      ))}
+      {/* Active scan beam */}
+      <rect
+        x="4"
+        y="39.5"
+        width="52"
+        height="3"
+        rx="1.5"
+        fill="currentColor"
+        opacity="0.14"
+      />
       <line
         x1="4"
-        y1="9"
+        y1="41"
         x2="56"
-        y2="9"
-        stroke="currentColor"
-        strokeWidth="0.5"
-        opacity="0.18"
-        strokeDasharray="2 3"
-      />
-      {/* BEFORE — more fat (light top), less lean (medium bottom) */}
-      <rect
-        x="5"
-        y="10"
-        width="17"
-        height="14"
-        rx="2.5"
-        fill="currentColor"
-        opacity="0.13"
-      />
-      <rect
-        x="5"
-        y="26"
-        width="17"
-        height="14"
-        rx="2.5"
-        fill="currentColor"
-        opacity="0.48"
-      />
-      {/* Arrow */}
-      <path
-        d="M 27 22 L 32 22"
+        y2="41"
         stroke="currentColor"
         strokeWidth="1.5"
-        strokeLinecap="round"
       />
-      <path
-        d="M 30 19.5 L 33 22 L 30 24.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* AFTER — less fat (light top), more lean (darker, taller bottom) */}
-      <rect
-        x="38"
-        y="10"
-        width="17"
-        height="6"
-        rx="2.5"
-        fill="currentColor"
-        opacity="0.13"
-      />
-      <rect
-        x="38"
-        y="18"
-        width="17"
-        height="22"
-        rx="2.5"
-        fill="currentColor"
-        opacity="0.78"
-      />
-    </svg>
-  );
-}
-
-function MealVisual() {
-  // Plate: center (30,30), radius 20
-  // Three equal 120° sectors starting from top (−90°)
-  // a = top   = (30, 10)
-  // b = lower-right = (30 + 20·cos 30°, 30 + 20·sin 30°) ≈ (47.3, 40)
-  // c = lower-left  = (30 + 20·cos 150°, 30 + 20·sin 150°) ≈ (12.7, 40)
-  return (
-    <svg
-      viewBox="0 0 60 60"
-      fill="none"
-      aria-hidden="true"
-      className="h-full w-full"
-    >
-      {/* Outer plate rim */}
-      <circle
-        cx="30"
-        cy="30"
-        r="26"
-        stroke="currentColor"
-        strokeWidth="1"
-        opacity="0.12"
-      />
-      {/* Sector 1 — protein (top, darkest) */}
-      <path
-        d="M 30 30 L 30 10 A 20 20 0 0 1 47.3 40 Z"
-        fill="currentColor"
-        opacity="0.65"
-      />
-      {/* Sector 2 — vegetables (lower-right, medium) */}
-      <path
-        d="M 30 30 L 47.3 40 A 20 20 0 0 1 12.7 40 Z"
-        fill="currentColor"
-        opacity="0.28"
-      />
-      {/* Sector 3 — carbs / grains (lower-left, lightest) */}
-      <path
-        d="M 30 30 L 12.7 40 A 20 20 0 0 1 30 10 Z"
-        fill="currentColor"
-        opacity="0.12"
-      />
-      {/* White dividers */}
-      <line
-        x1="30"
-        y1="30"
-        x2="30"
-        y2="10"
-        stroke="white"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <line
-        x1="30"
-        y1="30"
-        x2="47.3"
-        y2="40"
-        stroke="white"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <line
-        x1="30"
-        y1="30"
-        x2="12.7"
-        y2="40"
-        stroke="white"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      {/* Centre circle */}
-      <circle cx="30" cy="30" r="7" fill="white" opacity="0.95" />
     </svg>
   );
 }
@@ -229,26 +137,40 @@ interface ProtocolStep {
   title: string;
   body: string;
   visual: ReactNode;
+  visualOpacity: number;
 }
 
 const PROTOCOL: ProtocolStep[] = [
   {
     n: "01",
-    title: "GLP-1 therapy",
-    body: "Six months of clinically guided GLP-1 receptor agonist therapy, titrated to your response and reviewed at every appointment.",
+    title: "CGM monitored GLP1 therapy",
+    body: "Six months of clinically guided GLP-1 receptor agonist therapy, titrated to your response with continuous glucose monitoring at every step.",
     visual: <GlpVisual />,
+    visualOpacity: 0.09,
   },
   {
     n: "02",
     title: "DEXA body composition",
     body: "Baseline and completion DEXA scans measure fat mass, lean mass, and visceral fat — giving you objective before-and-after data.",
-    visual: <DexaVisual />,
+    visual: <BodyScanVisual />,
+    visualOpacity: 0.09,
   },
   {
     n: "03",
     title: "Personalised meal planning",
     body: "Your dietitian builds a plan around your cuisine, preferences, and metabolic targets — with recipes adapted specifically for you.",
-    visual: <MealVisual />,
+    visual: (
+      <div className="relative h-full w-full overflow-hidden rounded-2xl">
+        <Image
+          src="/images/meals/mediterranean-bowl.jpg"
+          alt=""
+          fill
+          className="object-cover"
+          sizes="112px"
+        />
+      </div>
+    ),
+    visualOpacity: 0.28,
   },
 ];
 
@@ -323,10 +245,11 @@ export function DoctorLanding() {
           <div className="grid gap-12 md:grid-cols-3 md:gap-8">
             {PROTOCOL.map((step) => (
               <div key={step.n} className="relative">
-                {/* Illustration — large, ghosted behind content */}
+                {/* Visual — ghosted behind content */}
                 <div
                   aria-hidden="true"
-                  className="pointer-events-none absolute right-0 top-0 h-[100px] w-[112px] text-[var(--measured-green)] opacity-[0.09]"
+                  className="pointer-events-none absolute right-0 top-0 h-[100px] w-[112px] text-[var(--measured-green)]"
+                  style={{ opacity: step.visualOpacity }}
                 >
                   {step.visual}
                 </div>
