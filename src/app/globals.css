@@ -59,6 +59,20 @@
   --measured-text-caption: 12px;
   --measured-text-field: 19px;
   --measured-leading-field: 1.6;
+
+  /* ── Fluid typography — scales continuously between 375px and 1280px ── */
+  /* Hero: 40px → 72px */
+  --text-hero: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+  /* Display (h1 sub-sections): 32px → 44px */
+  --text-display: clamp(2rem, 3vw + 0.75rem, 2.75rem);
+  /* Section h2: 30px → 42px */
+  --text-h2: clamp(1.875rem, 2.5vw + 0.6rem, 2.625rem);
+  /* Card heading: 20px → 26px */
+  --text-h3: clamp(1.25rem, 1.2vw + 0.4rem, 1.625rem);
+  /* Body large: 15px → 17px */
+  --text-body-lg: clamp(0.9375rem, 0.4vw + 0.8rem, 1.0625rem);
+  /* Fluid section vertical padding: 64px → 128px */
+  --space-section: clamp(4rem, 8vw + 1rem, 8rem);
 }
 
 .field-prose {
