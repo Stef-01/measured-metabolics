@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -8,183 +7,212 @@ import {
   Smartphone,
   ClipboardList,
   PanelRightClose,
-  ArrowRight,
   Shield,
+  ArrowRight,
 } from "lucide-react";
-import { HERO } from "@/lib/images";
+import { staggerContainer, wordReveal } from "@/lib/motion";
 
-/**
- * Landing — role chooser for the Measured Metabolics demo.
- *
- * Stage 1 surface: lets demo viewers self-select into the patient / dietitian
- * / GP shells. Stage 5 replaces this with role-aware redirect after Supabase
- * Auth signs the user in.
- */
-export function Landing() {
-  const personas: Persona[] = [
-    {
-      id: "patient",
-      title: "Patient PWA",
-      tagline: "Capture meals, log symptoms, see your plan",
-      href: "/p/home",
-      Icon: Smartphone,
-      footnote:
-        "Phone-first surface with a single primary action: snap your next meal.",
-      iconBg: "bg-[var(--measured-clinical-blue)]/10",
-      iconColor: "text-[var(--measured-clinical-blue)]",
-    },
-    {
-      id: "dietitian",
-      title: "Dietitian Web",
-      tagline: "Today's queue, patient panel, plan + report builders",
-      href: "/d/dashboard",
-      Icon: ClipboardList,
-      footnote:
-        "Keyboard-driven workflows. Approve, edit, flag — five meals reviewed in under five minutes.",
-      iconBg: "bg-[var(--measured-green)]/10",
-      iconColor: "text-[var(--measured-dark-green)]",
-    },
-    {
-      id: "gp",
-      title: "GP Sidebar",
-      tagline: "30-second patient context inside Best Practice / MD",
-      href: "/gp/asha/context",
-      Icon: PanelRightClose,
-      footnote:
-        "360px column. Patient context, transcript paste, billing, care plan, dietitian referral, dietitian report.",
-      iconBg: "bg-[var(--measured-gold)]/15",
-      iconColor: "text-[#a07710]",
-    },
-    {
-      id: "admin",
-      title: "Admin Console",
-      tagline: "KPI dashboard, audit log, organizations, users",
-      href: "/admin/kpi",
-      Icon: Shield,
-      footnote:
-        "North-star metrics, append-only audit trail, GP practice network, and env flags for stage roll-out.",
-      iconBg: "bg-[var(--measured-evaluate)]/8",
-      iconColor: "text-[var(--measured-evaluate)]",
-    },
-  ];
+const PERSONAS = [
+  {
+    id: "patient",
+    title: "Patient",
+    tagline: "Capture meals, log symptoms, track your plan",
+    href: "/p/home",
+    Icon: Smartphone,
+    accent: "var(--measured-clinical-blue)",
+    accentSoft: "rgba(44, 94, 138, 0.08)",
+  },
+  {
+    id: "dietitian",
+    title: "Dietitian",
+    tagline: "Queue, patient panel, plan and report builders",
+    href: "/d/dashboard",
+    Icon: ClipboardList,
+    accent: "var(--measured-green)",
+    accentSoft: "rgba(45, 90, 61, 0.08)",
+  },
+  {
+    id: "gp",
+    title: "GP Sidebar",
+    tagline: "30-second patient context in a 360 px column",
+    href: "/gp/asha/context",
+    Icon: PanelRightClose,
+    accent: "#a07710",
+    accentSoft: "rgba(212, 168, 75, 0.1)",
+  },
+  {
+    id: "admin",
+    title: "Admin",
+    tagline: "KPI dashboard, audit log, organisations",
+    href: "/admin/kpi",
+    Icon: Shield,
+    accent: "var(--measured-evaluate)",
+    accentSoft: "rgba(140, 21, 21, 0.06)",
+  },
+] as const;
 
+const cardContainer = staggerContainer(0.08, 0.22);
+
+const cardItem = {
+  hidden: { opacity: 0, y: 14 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" as const },
+  },
+};
+
+// Split a string into word <motion.span> elements for staggered reveal
+function Words({ text, className }: { text: string; className?: string }) {
   return (
-    <main className="relative min-h-dvh overflow-hidden bg-[var(--measured-cream)] text-[var(--measured-dark)]">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10"
-      >
-        <Image
-          src={HERO.gradient}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover opacity-[0.18]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--measured-cream)]/30 via-[var(--measured-cream)]/70 to-[var(--measured-cream)]" />
-      </div>
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 pt-8">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--measured-green)] text-white shadow-[var(--shadow-card)]">
-            <Stethoscope size={18} strokeWidth={2.2} aria-hidden="true" />
-          </div>
-          <div className="font-serif text-[20px] tracking-tight">Measured</div>
-        </div>
-        <span className="text-[12px] uppercase tracking-wider text-[var(--measured-subtext)]">
-          Demo build · Stage&nbsp;1
-        </span>
-      </header>
-
-      <section className="mx-auto max-w-3xl px-6 pt-20 pb-12 text-center">
-        <motion.h1
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="font-serif text-[44px] leading-[1.05] tracking-tight md:text-[56px]"
+    <>
+      {text.split(" ").map((word, i) => (
+        <motion.span
+          key={i}
+          variants={wordReveal}
+          className={`inline-block ${className ?? ""}`}
         >
-          Metabolic chronic care
-          <br />
-          made easier to deliver,
-          <br />
-          easier to follow, and
-          <br />
-          easier to coordinate.
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
-          className="mx-auto mt-6 max-w-xl text-[16px] leading-relaxed text-[var(--measured-subtext)]"
-        >
-          Three minimal interfaces sharing one clinical brain. Pick a persona to
-          step inside the demo.
-        </motion.p>
-      </section>
-
-      <motion.section
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: "easeOut", delay: 0.1 }}
-        className="mx-auto grid max-w-5xl gap-4 px-6 pb-24 sm:grid-cols-2 lg:grid-cols-4"
-      >
-        {personas.map((p) => (
-          <PersonaCard key={p.id} persona={p} />
-        ))}
-      </motion.section>
-
-      <footer className="mx-auto flex max-w-6xl items-center justify-between border-t border-[var(--measured-border-soft)] px-6 py-6 text-[12px] text-[var(--measured-subtext)]">
-        <span>© Measured Metabolics · {new Date().getFullYear()}</span>
-        <span>Beta · Pilot program</span>
-      </footer>
-    </main>
+          {word}&nbsp;
+        </motion.span>
+      ))}
+    </>
   );
 }
 
-interface Persona {
-  id: "patient" | "dietitian" | "gp" | "admin";
-  title: string;
-  tagline: string;
-  href: string;
-  Icon: typeof Stethoscope;
-  footnote: string;
-  iconBg: string;
-  iconColor: string;
-}
+const wordContainer = staggerContainer(0.06, 0);
 
-function PersonaCard({ persona }: { persona: Persona }) {
+export function Landing() {
   return (
-    <div className="h-full">
-      <Link
-        href={persona.href}
-        className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--measured-border-soft)] bg-white p-6 shadow-[var(--shadow-card)] transition-shadow duration-200 hover:shadow-[var(--shadow-raised)]"
-      >
-        <div className="mb-4">
-          <div
-            className={`flex h-11 w-11 items-center justify-center rounded-2xl ${persona.iconBg} ${persona.iconColor}`}
-          >
-            <persona.Icon size={22} strokeWidth={2} aria-hidden="true" />
+    <main className="min-h-dvh bg-[var(--measured-cream)] text-[var(--measured-dark)]">
+      {/* ── Nav ── */}
+      <header className="mx-auto flex max-w-5xl items-center justify-between px-6 pt-8">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--measured-green)] text-white shadow-[var(--shadow-card)]">
+            <Stethoscope size={16} strokeWidth={2.2} aria-hidden="true" />
           </div>
+          <div className="font-serif text-[19px] tracking-tight">Measured</div>
         </div>
-        <div className="font-serif text-[19px] leading-tight tracking-tight text-[var(--measured-dark)]">
-          {persona.title}
+        <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--measured-subtext)]">
+          Demo
+        </span>
+      </header>
+
+      {/* ── Hero ── */}
+      <section className="mx-auto max-w-3xl px-6 pt-20 pb-14 text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+          className="mb-6 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--measured-subtext)]"
+        >
+          Platform demo
+        </motion.p>
+
+        {/* Word-by-word stagger on the heading */}
+        <motion.h1
+          variants={wordContainer}
+          initial="hidden"
+          animate="show"
+          className="font-serif text-[44px] leading-[1.06] tracking-tight md:text-[60px] md:leading-[1.02]"
+        >
+          <span className="block">
+            <Words text="Three interfaces," />
+          </span>
+          <span className="block font-light italic opacity-60">
+            <Words text="one clinical brain." />
+          </span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.5 }}
+          className="mx-auto mt-7 max-w-[400px] text-[16px] leading-relaxed text-[var(--measured-subtext)]"
+        >
+          Patient PWA, dietitian web, GP sidebar, and admin console — each built
+          for how that role actually works.
+        </motion.p>
+      </section>
+
+      {/* ── Persona grid ── */}
+      <motion.section
+        variants={cardContainer}
+        initial="hidden"
+        animate="show"
+        className="mx-auto grid max-w-5xl gap-4 px-6 pb-24 sm:grid-cols-2 lg:grid-cols-4"
+      >
+        {PERSONAS.map((p) => (
+          <motion.div key={p.id} variants={cardItem} className="h-full">
+            <motion.div
+              whileHover={{
+                y: -5,
+                boxShadow:
+                  "0 16px 48px -8px rgba(0,0,0,0.14), 0 4px 12px -2px rgba(0,0,0,0.06)",
+                transition: { type: "spring", stiffness: 300, damping: 22 },
+              }}
+              whileTap={{ scale: 0.97 }}
+              className="h-full"
+            >
+              <Link
+                href={p.href}
+                className="group flex h-full flex-col rounded-2xl border border-[var(--measured-border-soft)] bg-white p-6 shadow-[var(--shadow-card)]"
+              >
+                <motion.div
+                  className="mb-5 flex h-10 w-10 items-center justify-center rounded-2xl"
+                  style={{ background: p.accentSoft, color: p.accent }}
+                  whileHover={{ scale: 1.12 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                >
+                  <p.Icon size={20} strokeWidth={2} aria-hidden="true" />
+                </motion.div>
+
+                <div className="font-serif text-[20px] leading-tight tracking-tight text-[var(--measured-dark)]">
+                  {p.title}
+                </div>
+
+                <p className="mt-2 flex-1 text-[13px] leading-relaxed text-[var(--measured-subtext)]">
+                  {p.tagline}
+                </p>
+
+                <div
+                  className="mt-6 inline-flex items-center gap-1.5 text-[13px] font-semibold"
+                  style={{ color: p.accent }}
+                >
+                  Enter
+                  <motion.span
+                    animate={{ x: [0, 3, 0] }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 1.4,
+                      ease: "easeInOut",
+                      repeatDelay: 0.8,
+                    }}
+                  >
+                    <ArrowRight
+                      size={13}
+                      strokeWidth={2.4}
+                      aria-hidden="true"
+                    />
+                  </motion.span>
+                </div>
+              </Link>
+            </motion.div>
+          </motion.div>
+        ))}
+      </motion.section>
+
+      {/* ── Footer ── */}
+      <footer className="border-t border-[var(--measured-border-soft)]">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6 text-[12px] text-[var(--measured-subtext)]">
+          <span>Measured Metabolics · Demo</span>
+          <Link
+            href="/"
+            className="transition-colors hover:text-[var(--measured-dark)]"
+          >
+            Patient landing ↗
+          </Link>
         </div>
-        <p className="mt-2 text-[13px] leading-relaxed text-[var(--measured-dark)]">
-          {persona.tagline}
-        </p>
-        <p className="mt-2 flex-1 text-[11px] leading-relaxed text-[var(--measured-subtext)]">
-          {persona.footnote}
-        </p>
-        <div className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--measured-dark-green)]">
-          Enter
-          <ArrowRight
-            size={14}
-            strokeWidth={2.4}
-            className="transition-transform duration-200 group-hover:translate-x-1"
-            aria-hidden="true"
-          />
-        </div>
-      </Link>
-    </div>
+      </footer>
+    </main>
   );
 }
