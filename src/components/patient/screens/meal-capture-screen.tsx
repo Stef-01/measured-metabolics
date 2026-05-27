@@ -206,7 +206,12 @@ export function PatientMealCaptureScreen() {
       />
 
       <div className="mx-auto flex max-w-md flex-col gap-4 px-5 pt-3 pb-8">
-        <div className="surface-raised relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-black">
+        <motion.div
+          className="surface-raised relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-black"
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        >
           {photoDataUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -234,35 +239,45 @@ export function PatientMealCaptureScreen() {
           )}
 
           {photoDataUrl && (
-            <button
+            <motion.button
               type="button"
               onClick={retake}
               className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 text-[11px] font-semibold text-white"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: "spring", stiffness: 320, damping: 18, delay: 0.15 }}
+              whileTap={{ scale: 0.92 }}
             >
               <RefreshCw size={12} strokeWidth={2.2} aria-hidden="true" />
               Retake
-            </button>
+            </motion.button>
           )}
-        </div>
+        </motion.div>
 
         {!photoDataUrl && (
           <div className="grid grid-cols-2 gap-3">
-            <button
+            <motion.button
               type="button"
               onClick={startCamera}
               className="cta-shadow inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] px-4 py-3.5 font-semibold text-white"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
               <Camera size={18} strokeWidth={2.2} aria-hidden="true" />
               {stream ? "Active" : "Camera"}
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               type="button"
               onClick={() => fileRef.current?.click()}
               className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-3.5 font-semibold text-[var(--measured-dark)]"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
               <ImageIcon size={18} strokeWidth={2.2} aria-hidden="true" />
               Library
-            </button>
+            </motion.button>
             <input
               ref={fileRef}
               type="file"
@@ -290,7 +305,7 @@ export function PatientMealCaptureScreen() {
           </legend>
           <div className="mt-2 grid grid-cols-4 gap-2">
             {MEAL_TYPES.map((t) => (
-              <button
+              <motion.button
                 type="button"
                 key={t.id}
                 onClick={() => setMealType(t.id)}
@@ -301,12 +316,14 @@ export function PatientMealCaptureScreen() {
                     ? "border-[var(--measured-green)] bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
                     : "border-[var(--measured-border)] bg-white text-[var(--measured-subtext)] hover:border-[var(--measured-green)]/40",
                 )}
+                whileTap={{ scale: 0.93 }}
+                transition={{ type: "spring", stiffness: 400, damping: 18 }}
               >
                 <span className="text-[15px]" aria-hidden="true">
                   {t.emoji}
                 </span>
                 <div>{t.label}</div>
-              </button>
+              </motion.button>
             ))}
           </div>
         </fieldset>

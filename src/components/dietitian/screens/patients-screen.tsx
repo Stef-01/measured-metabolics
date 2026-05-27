@@ -63,7 +63,12 @@ export function DietitianPatientsScreen() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <div className="flex items-end justify-between gap-6">
+      <motion.div
+        className="flex items-end justify-between gap-6"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div>
           <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
             Caseload
@@ -75,7 +80,7 @@ export function DietitianPatientsScreen() {
             {list.length} patients · {flagged.length} flagged
           </p>
         </div>
-      </div>
+      </motion.div>
 
       <div className="mt-6 grid items-center gap-3 md:grid-cols-[1fr_auto]">
         <label className="relative">
@@ -95,7 +100,7 @@ export function DietitianPatientsScreen() {
         </label>
         <div className="flex gap-1 rounded-full border border-[var(--measured-border)] bg-white p-1">
           {RISK_FILTERS.map((f) => (
-            <button
+            <motion.button
               type="button"
               key={f.id}
               onClick={() => setRisk(f.id)}
@@ -106,9 +111,11 @@ export function DietitianPatientsScreen() {
                   ? "bg-[var(--measured-green)] text-white"
                   : "text-[var(--measured-subtext)]",
               )}
+              whileTap={{ scale: 0.94 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
               {f.label}
-            </button>
+            </motion.button>
           ))}
         </div>
       </div>
@@ -191,9 +198,10 @@ function Section({
 function PatientRow({ p, idx }: { p: Patient; idx: number }) {
   return (
     <motion.li
-      initial={{ opacity: 0, y: 4 }}
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2, delay: idx * 0.02 }}
+      transition={{ duration: 0.36, delay: idx * 0.04, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -2 }}
     >
       <Link
         href={`/d/patients/${p.id}`}

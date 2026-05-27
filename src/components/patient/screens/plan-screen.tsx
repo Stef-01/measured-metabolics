@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
 import { CheckCheck, Check, ChevronRight, Sparkles } from "lucide-react";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import { ASHA_PLAN, RECIPES, CURRENT_PATIENT_ID } from "@/lib/mock";
@@ -203,17 +204,25 @@ export function PatientPlanScreen() {
 
       <div className="mx-auto flex max-w-md flex-col gap-3 px-5 pt-3 pb-8">
         {/* Day complete celebration */}
-        {dayEatenCount === dayMeals.length && dayMeals.length > 0 && (
-          <div className="flex items-center gap-3 rounded-2xl bg-[var(--measured-green)] px-4 py-3 text-white shadow-[0_4px_16px_-4px_rgba(45,90,61,0.4)]">
-            <CheckCheck size={20} strokeWidth={2.2} aria-hidden="true" />
-            <div className="min-w-0 flex-1">
-              <div className="text-[13px] font-semibold">Day complete!</div>
-              <div className="text-[11px] text-white/80">
-                All {dayMeals.length} meals eaten · great work
+        <AnimatePresence>
+          {dayEatenCount === dayMeals.length && dayMeals.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: -4 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -4 }}
+              transition={{ type: "spring", stiffness: 400, damping: 28 }}
+              className="flex items-center gap-3 rounded-2xl bg-[var(--measured-green)] px-4 py-3 text-white shadow-[0_4px_16px_-4px_rgba(45,90,61,0.4)]"
+            >
+              <CheckCheck size={20} strokeWidth={2.2} aria-hidden="true" />
+              <div className="min-w-0 flex-1">
+                <div className="text-[13px] font-semibold">Day complete!</div>
+                <div className="text-[11px] text-white/80">
+                  All {dayMeals.length} meals eaten · great work
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Day header */}
         <div className="flex items-center justify-between pt-1">
@@ -234,103 +243,132 @@ export function PatientPlanScreen() {
           )}
         </div>
 
-        {dayMeals.map((item) => {
-          const recipe = findRecipe(item.title);
-          const isEaten = isDayMealEaten(selectedDay, item.mealType);
-          return (
-            <div key={item.mealType} className="relative">
-              <Link
-                href={recipe ? `/p/plan/${recipe.id}` : "/p/plan"}
-                className={cn(
-                  "group block rounded-2xl border bg-white p-4 pb-10 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]",
-                  isEaten
-                    ? "border-[var(--measured-green)]/30"
-                    : "border-[var(--measured-border-soft)]",
-                )}
-              >
-                <div className="flex items-start gap-3">
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[var(--measured-cream)]">
-                    <Image
-                      src={mealImageBySlug(
-                        recipe?.id ?? item.title.toLowerCase(),
-                      )}
-                      alt=""
-                      fill
-                      sizes="64px"
-                      className={cn("object-cover", isEaten && "opacity-50")}
-                    />
-                    {isEaten && (
-                      <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-[var(--measured-green)]/50">
-                        <Check
-                          size={22}
-                          strokeWidth={2.5}
-                          className="text-white"
-                          aria-hidden="true"
-                        />
-                      </div>
+        {/* Meal cards — slide when day changes */}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={selectedDay}
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col gap-3"
+          >
+            {dayMeals.map((item) => {
+              const recipe = findRecipe(item.title);
+              const isEaten = isDayMealEaten(selectedDay, item.mealType);
+              return (
+                <div key={item.mealType} className="relative">
+                  <Link
+                    href={recipe ? `/p/plan/${recipe.id}` : "/p/plan"}
+                    className={cn(
+                      "group block rounded-2xl border bg-white p-4 pb-10 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]",
+                      isEaten
+                        ? "border-[var(--measured-green)]/30"
+                        : "border-[var(--measured-border-soft)]",
                     )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-                        {MEAL_LABEL[item.mealType]}
-                      </div>
-                      <ChevronRight
-                        size={16}
-                        className="text-[var(--measured-subtext)] transition-transform group-hover:translate-x-0.5"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <div
-                      className={cn(
-                        "mt-0.5 text-[15px] font-semibold",
-                        isEaten
-                          ? "text-[var(--measured-subtext)] line-through"
-                          : "text-[var(--measured-dark)]",
-                      )}
-                    >
-                      {item.title}
-                    </div>
-                    <p className="mt-1 text-[13px] leading-relaxed text-[var(--measured-subtext)]">
-                      {item.description}
-                    </p>
-                    {item.rationale && !isEaten && (
-                      <div className="mt-2 flex items-start gap-1.5 rounded-xl bg-[var(--measured-green)]/5 px-3 py-2">
-                        <Sparkles
-                          size={11}
-                          strokeWidth={2.2}
-                          className="mt-0.5 shrink-0 text-[var(--measured-dark-green)]"
-                          aria-hidden="true"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[var(--measured-cream)]">
+                        <Image
+                          src={mealImageBySlug(
+                            recipe?.id ?? item.title.toLowerCase(),
+                          )}
+                          alt=""
+                          fill
+                          sizes="64px"
+                          className={cn(
+                            "object-cover",
+                            isEaten && "opacity-50",
+                          )}
                         />
-                        <p className="text-[12px] italic leading-relaxed text-[var(--measured-dark)]">
-                          {item.rationale}
+                        <AnimatePresence>
+                          {isEaten && (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.7 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.7 }}
+                              transition={{
+                                type: "spring",
+                                stiffness: 480,
+                                damping: 28,
+                              }}
+                              className="absolute inset-0 flex items-center justify-center rounded-xl bg-[var(--measured-green)]/50"
+                            >
+                              <Check
+                                size={22}
+                                strokeWidth={2.5}
+                                className="text-white"
+                                aria-hidden="true"
+                              />
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+                            {MEAL_LABEL[item.mealType]}
+                          </div>
+                          <ChevronRight
+                            size={16}
+                            className="text-[var(--measured-subtext)] transition-transform group-hover:translate-x-0.5"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div
+                          className={cn(
+                            "mt-0.5 text-[15px] font-semibold",
+                            isEaten
+                              ? "text-[var(--measured-subtext)] line-through"
+                              : "text-[var(--measured-dark)]",
+                          )}
+                        >
+                          {item.title}
+                        </div>
+                        <p className="mt-1 text-[13px] leading-relaxed text-[var(--measured-subtext)]">
+                          {item.description}
                         </p>
+                        {item.rationale && !isEaten && (
+                          <div className="mt-2 flex items-start gap-1.5 rounded-xl bg-[var(--measured-green)]/5 px-3 py-2">
+                            <Sparkles
+                              size={11}
+                              strokeWidth={2.2}
+                              className="mt-0.5 shrink-0 text-[var(--measured-dark-green)]"
+                              aria-hidden="true"
+                            />
+                            <p className="text-[12px] italic leading-relaxed text-[var(--measured-dark)]">
+                              {item.rationale}
+                            </p>
+                          </div>
+                        )}
                       </div>
+                    </div>
+                  </Link>
+                  <motion.button
+                    type="button"
+                    onClick={() => toggleEaten(selectedDay, item.mealType)}
+                    aria-label={
+                      isEaten
+                        ? `Unmark ${item.mealType} as eaten`
+                        : `Mark ${item.mealType} as eaten`
+                    }
+                    whileTap={{ scale: 0.88 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    className={cn(
+                      "absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors",
+                      isEaten
+                        ? "bg-[var(--measured-green)]/15 text-[var(--measured-dark-green)] hover:bg-[var(--measured-evaluate)]/10 hover:text-[var(--measured-evaluate)]"
+                        : "bg-[var(--measured-cream)] text-[var(--measured-subtext)] hover:bg-[var(--measured-green)]/10 hover:text-[var(--measured-dark-green)]",
                     )}
-                  </div>
+                  >
+                    <Check size={11} strokeWidth={2.5} aria-hidden="true" />
+                    {isEaten ? "Eaten" : "Mark eaten"}
+                  </motion.button>
                 </div>
-              </Link>
-              <button
-                type="button"
-                onClick={() => toggleEaten(selectedDay, item.mealType)}
-                aria-label={
-                  isEaten
-                    ? `Unmark ${item.mealType} as eaten`
-                    : `Mark ${item.mealType} as eaten`
-                }
-                className={cn(
-                  "absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors",
-                  isEaten
-                    ? "bg-[var(--measured-green)]/15 text-[var(--measured-dark-green)] hover:bg-[var(--measured-evaluate)]/10 hover:text-[var(--measured-evaluate)]"
-                    : "bg-[var(--measured-cream)] text-[var(--measured-subtext)] hover:bg-[var(--measured-green)]/10 hover:text-[var(--measured-dark-green)]",
-                )}
-              >
-                <Check size={11} strokeWidth={2.5} aria-hidden="true" />
-                {isEaten ? "Eaten" : "Mark eaten"}
-              </button>
-            </div>
-          );
-        })}
+              );
+            })}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </>
   );

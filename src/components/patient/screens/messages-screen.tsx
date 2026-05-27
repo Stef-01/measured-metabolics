@@ -112,7 +112,7 @@ export function PatientMessagesScreen() {
                 }
               }}
             />
-            <button
+            <motion.button
               type="button"
               onClick={send}
               disabled={!draft.trim()}
@@ -123,9 +123,11 @@ export function PatientMessagesScreen() {
                   ? "bg-[var(--measured-green)]"
                   : "cursor-not-allowed bg-[var(--measured-green)]/40",
               )}
+              whileTap={draft.trim() ? { scale: 0.88 } : undefined}
+              transition={{ type: "spring", stiffness: 400, damping: 18 }}
             >
               <Send size={18} strokeWidth={2.4} aria-hidden="true" />
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
