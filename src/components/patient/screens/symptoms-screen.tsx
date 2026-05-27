@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import { EscalationCard } from "@/components/patient/escalation-card";
@@ -50,6 +50,16 @@ const SEVERITY_QUESTIONS: ChipQuestion[] = [
   { id: "nausea", prompt: "Nausea today?" },
   { id: "constipation", prompt: "Constipation today?" },
 ];
+
+const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
+const fieldsetItem: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.42, ease } },
+};
+const fieldsetContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.06 } },
+};
 
 export function PatientSymptomsScreen() {
   const router = useRouter();
@@ -99,7 +109,7 @@ export function PatientSymptomsScreen() {
     <>
       <PatientAppHeader eyebrow="Quick check" title="How are you?" />
 
-      <div className="mx-auto flex max-w-md flex-col gap-4 px-5 pt-3 pb-8">
+      <motion.div className="mx-auto flex max-w-md flex-col gap-4 px-5 pt-3 pb-8" variants={fieldsetContainer} initial="hidden" animate="show">
         <AnimatePresence>
           {submitted && escalateBecauseOf && (
             <motion.div
@@ -122,13 +132,13 @@ export function PatientSymptomsScreen() {
           const value = q.id === "nausea" ? nausea : constipation;
           const setValue = q.id === "nausea" ? setNausea : setConstipation;
           return (
-            <fieldset key={q.id} className="surface-card p-4">
+            <motion.fieldset key={q.id} variants={fieldsetItem} className="surface-card p-4">
               <legend className="px-1 text-[13px] font-medium text-[var(--measured-dark)]">
                 {q.prompt}
               </legend>
               <div className="mt-3 grid grid-cols-3 gap-2">
                 {SEVERITY_CHIPS.map((c) => (
-                  <button
+                  <motion.button
                     type="button"
                     key={c.id}
                     onClick={() => setValue(c.id)}
@@ -139,6 +149,8 @@ export function PatientSymptomsScreen() {
                         ? c.selected
                         : "border-[var(--measured-border)] bg-white text-[var(--measured-subtext)]",
                     )}
+                    whileTap={{ scale: 0.93 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 18 }}
                   >
                     <span
                       aria-hidden="true"
@@ -148,14 +160,14 @@ export function PatientSymptomsScreen() {
                       )}
                     />
                     {c.label}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
-            </fieldset>
+            </motion.fieldset>
           );
         })}
 
-        <fieldset className="surface-card p-4">
+        <motion.fieldset variants={fieldsetItem} className="surface-card p-4">
           <legend className="px-1 text-[12px] font-medium uppercase tracking-wider text-[var(--measured-subtext)]">
             Appetite today?
           </legend>
@@ -167,7 +179,7 @@ export function PatientSymptomsScreen() {
                 { id: "higher", label: "Higher" },
               ] as { id: SymptomLog["appetite"]; label: string }[]
             ).map((c) => (
-              <button
+              <motion.button
                 type="button"
                 key={c.id}
                 onClick={() => setAppetite(c.id)}
@@ -178,40 +190,55 @@ export function PatientSymptomsScreen() {
                     ? "border-[var(--measured-green)] bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
                     : "border-[var(--measured-border)] bg-white text-[var(--measured-subtext)]",
                 )}
+                whileTap={{ scale: 0.93 }}
+                transition={{ type: "spring", stiffness: 400, damping: 18 }}
               >
                 {c.label}
-              </button>
+              </motion.button>
             ))}
           </div>
-        </fieldset>
+        </motion.fieldset>
 
-        <ToggleRow
+        <motion.div variants={fieldsetItem}><ToggleRow
           label="Any hypo symptoms (shaky, dizzy)?"
           checked={hypoSymptoms}
           onChange={setHypoSymptoms}
           dangerOnTrue
-        />
-        <ToggleRow
+        /></motion.div>
+        <motion.div variants={fieldsetItem}><ToggleRow
           label="Took medication as planned?"
           checked={medsAsPlanned}
           onChange={setMedsAsPlanned}
-        />
+        /></motion.div>
 
-        {!submitted ? (
-          <button
-            type="button"
-            onClick={submit}
-            className="cta-shadow inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] px-5 py-4 font-semibold text-white"
-          >
-            Save check-in
-          </button>
-        ) : !escalateBecauseOf ? (
-          <div className="flex flex-col items-center gap-2 rounded-3xl bg-[var(--measured-green)] px-5 py-5 text-center text-white shadow-[0_4px_20px_-4px_rgba(45,90,61,0.35)]">
-            <CheckCircle2 size={28} strokeWidth={2} aria-hidden="true" />
-            <div className="text-[15px] font-semibold">Check-in logged</div>
-            <div className="text-[12px] text-white/75">Returning to home…</div>
-          </div>
-        ) : null}
+        <AnimatePresence mode="wait">
+          {!submitted ? (
+            <motion.button
+              key="submit"
+              type="button"
+              onClick={submit}
+              className="cta-shadow inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] px-5 py-4 font-semibold text-white"
+              variants={fieldsetItem}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            >
+              Save check-in
+            </motion.button>
+          ) : !escalateBecauseOf ? (
+            <motion.div
+              key="confirmed"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: "spring", stiffness: 320, damping: 18 }}
+              className="flex flex-col items-center gap-2 rounded-3xl bg-[var(--measured-green)] px-5 py-5 text-center text-white shadow-[0_4px_20px_-4px_rgba(45,90,61,0.35)]"
+            >
+              <CheckCircle2 size={28} strokeWidth={2} aria-hidden="true" />
+              <div className="text-[15px] font-semibold">Check-in logged</div>
+              <div className="text-[12px] text-white/75">Returning to home…</div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
 
         {!submitted && (
           <Link
@@ -221,7 +248,7 @@ export function PatientSymptomsScreen() {
             Skip for now
           </Link>
         )}
-      </div>
+      </motion.div>
     </>
   );
 }
