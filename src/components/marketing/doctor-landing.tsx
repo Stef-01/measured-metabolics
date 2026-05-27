@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { FadeUp } from "./fade-up";
 import { StaggerGroup, StaggerItem } from "./stagger-group";
+import { MobileBookingBar } from "./mobile-booking-bar";
 
 const BOOKING_URL =
   "https://healthengine.com.au/doctor/nsw/beecroft/dr-anubhav-saxena/p123180";
@@ -91,7 +92,7 @@ const FAQ = [
 
 export function DoctorLanding() {
   return (
-    <main className="min-h-dvh bg-white text-[var(--measured-dark)]">
+    <main className="min-h-dvh bg-white pb-20 text-[var(--measured-dark)] md:pb-0">
       {/* ── Nav ──────────────────────────────────────── */}
       <header className="sticky top-0 z-50 border-b border-[var(--measured-border-soft)] bg-white/96 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
@@ -111,17 +112,23 @@ export function DoctorLanding() {
       </header>
 
       {/* ── Hero — dark typographic panel ─────────────── */}
-      <section className="bg-[var(--measured-dark)]">
-        <div className="mx-auto max-w-5xl px-6 pt-28 pb-32 md:pt-40 md:pb-44">
-          <p className="hero-el hero-el-1 mb-10 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
+      <section
+        className="bg-[var(--measured-dark)]"
+        style={{
+          background:
+            "radial-gradient(ellipse at 78% 18%, #1d3428 0%, #0A0A08 58%)",
+        }}
+      >
+        <div className="mx-auto max-w-5xl px-6 pt-20 pb-28 md:pt-40 md:pb-44">
+          <p className="hero-el hero-el-1 mb-8 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
             Health Optimisation Protocol&nbsp;·&nbsp;Beecroft NSW
           </p>
-          <h1 className="hero-el hero-el-2 font-serif text-[58px] font-[400] leading-[1.02] tracking-tight text-white md:text-[88px]">
+          <h1 className="hero-el hero-el-2 font-serif text-[40px] font-normal leading-[1.04] tracking-tight text-white sm:text-[56px] md:text-[88px]">
             A structured path
             <br />
-            <em className="font-[300] italic opacity-80">
+            <span className="font-light italic opacity-75">
               to metabolic health.
-            </em>
+            </span>
           </h1>
           <p className="hero-el hero-el-3 mt-8 max-w-[480px] text-[17px] leading-relaxed text-white/50">
             A medically supervised six-month program combining GLP-1 therapy,
@@ -150,7 +157,7 @@ export function DoctorLanding() {
       {/* ── Outcomes strip ───────────────────────────── */}
       <section className="bg-white">
         <div className="mx-auto max-w-5xl px-6">
-          <div className="grid grid-cols-1 divide-y divide-[var(--measured-border-soft)] py-14 md:grid-cols-3 md:divide-x md:divide-y-0">
+          <div className="grid grid-cols-1 divide-y divide-[var(--measured-border-soft)] py-12 md:grid-cols-3 md:divide-x md:divide-y-0 md:py-16">
             {[
               { stat: "Six months", label: "Complete supervised programme" },
               {
@@ -164,12 +171,12 @@ export function DoctorLanding() {
             ].map(({ stat, label }) => (
               <div
                 key={stat}
-                className="px-8 py-8 text-center first:pl-0 last:pr-0 md:py-0"
+                className="px-0 py-7 text-center md:px-8 md:py-0 md:first:pl-0 md:last:pr-0"
               >
-                <p className="font-serif text-[28px] font-[400] leading-tight tracking-tight text-[var(--measured-dark)] md:text-[32px]">
+                <p className="font-serif text-[26px] font-normal leading-tight tracking-tight text-[var(--measured-dark)] md:text-[30px]">
                   {stat}
                 </p>
-                <p className="mt-2 text-[12px] uppercase tracking-[0.1em] text-[var(--measured-subtext)]">
+                <p className="mt-2 text-[11px] uppercase tracking-[0.1em] text-[var(--measured-subtext)]">
                   {label}
                 </p>
               </div>
@@ -393,6 +400,8 @@ export function DoctorLanding() {
           </div>
         </div>
       </section>
+
+      <MobileBookingBar url={BOOKING_URL} />
 
       {/* ── Footer ───────────────────────────────────── */}
       <footer className="border-t border-[var(--measured-border-soft)]">

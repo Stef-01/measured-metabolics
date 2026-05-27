@@ -145,6 +145,17 @@ details summary::-webkit-details-marker {
   display: none;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .hero-el,
+  .faq-body {
+    animation: none;
+    transition: none;
+  }
+  details[open] > .faq-body {
+    grid-template-rows: 1fr;
+  }
+}
+
 /* === SHARED SURFACE PATTERNS === */
 
 .app-header {
