@@ -19,15 +19,15 @@ const PROTOCOL = [
   },
   {
     n: "02",
-    title: "DEXA body composition",
-    body: "Baseline and completion DEXA scans measure fat mass, lean mass, and visceral fat — giving you objective before-and-after data.",
-    photo: "/images/protocol/dexa.jpg",
+    title: "Personalised meal planning",
+    body: "Your dietitian builds a plan around your cuisine, preferences, and metabolic targets — with recipes adapted specifically for you.",
+    photo: "/images/protocol/meal-bowl.jpg",
   },
   {
     n: "03",
-    title: "Personalised meal planning",
-    body: "Your dietitian builds a plan around your cuisine, preferences, and metabolic targets — with recipes adapted specifically for you.",
-    photo: "/images/protocol/meal.jpg",
+    title: "DEXA body composition",
+    body: "Baseline and completion DEXA scans measure fat mass, lean mass, and visceral fat — giving you objective before-and-after data.",
+    photo: "/images/protocol/dexa.jpg",
   },
 ];
 
