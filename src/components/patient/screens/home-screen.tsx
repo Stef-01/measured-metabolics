@@ -128,10 +128,12 @@ export function PatientHomeScreen() {
         <MealIdeasCard patientId={me.id} dietitianName="Maya" />
 
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
+          transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+          whileTap={{ scale: 0.98 }}
           className="relative overflow-hidden rounded-3xl bg-[var(--measured-green)] p-5 text-white shadow-[0_4px_20px_-4px_rgba(45,90,61,0.35)]"
+          style={{ originY: 0.5 }}
         >
           {/* Decorative circle */}
           <div
@@ -181,90 +183,111 @@ export function PatientHomeScreen() {
           </Link>
         </motion.div>
 
-        <Link
-          href="/p/plan"
-          className="group block rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+          whileTap={{ scale: 0.98 }}
         >
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]">
-                <CalendarDays size={18} strokeWidth={2} aria-hidden="true" />
-              </div>
-              <div>
-                <div className="text-[13px] font-semibold text-[var(--measured-dark)]">
-                  Today&apos;s plan
+          <Link
+            href="/p/plan"
+            className="group block rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]">
+                  <CalendarDays size={18} strokeWidth={2} aria-hidden="true" />
                 </div>
-                <div className="text-[12px] text-[var(--measured-subtext)]">
-                  {nextMeal !== null
-                    ? (() => {
-                        const todayDow = new Date().getDay();
-                        const todayIdx = todayDow === 0 ? 6 : todayDow - 1;
-                        const todayItems =
-                          ASHA_PLAN.dayItems?.[todayIdx] ?? ASHA_PLAN.items;
-                        const item = todayItems[nextMeal];
-                        return item
-                          ? `Up next: ${MEAL_LABEL[item.mealType]} · ${item.title}`
-                          : "All meals logged today";
-                      })()
-                    : "All meals logged today"}
+                <div>
+                  <div className="text-[13px] font-semibold text-[var(--measured-dark)]">
+                    Today&apos;s plan
+                  </div>
+                  <div className="text-[12px] text-[var(--measured-subtext)]">
+                    {nextMeal !== null
+                      ? (() => {
+                          const todayDow = new Date().getDay();
+                          const todayIdx = todayDow === 0 ? 6 : todayDow - 1;
+                          const todayItems =
+                            ASHA_PLAN.dayItems?.[todayIdx] ?? ASHA_PLAN.items;
+                          const item = todayItems[nextMeal];
+                          return item
+                            ? `Up next: ${MEAL_LABEL[item.mealType]} · ${item.title}`
+                            : "All meals logged today";
+                        })()
+                      : "All meals logged today"}
+                  </div>
                 </div>
               </div>
+              <ChevronRight
+                size={18}
+                className="text-[var(--measured-subtext)] transition-transform group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
             </div>
-            <ChevronRight
-              size={18}
-              className="text-[var(--measured-subtext)] transition-transform group-hover:translate-x-0.5"
-              aria-hidden="true"
-            />
-          </div>
-        </Link>
+          </Link>
+        </motion.div>
 
-        <GlucoseSparkCard
-          patientId={me.id}
-          tir={me.timeInRangePct}
-          mealCount={meals.length}
-        />
-
-        <Link
-          href="/p/messages"
-          className="group block rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1], delay: 0.14 }}
+          whileTap={{ scale: 0.98 }}
         >
-          <div className="flex items-start gap-3">
-            <div className="relative shrink-0">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--measured-gold)]/15 text-[#a07710]">
-                <MessageCircle size={18} strokeWidth={2} aria-hidden="true" />
+          <GlucoseSparkCard
+            patientId={me.id}
+            tir={me.timeInRangePct}
+            mealCount={meals.length}
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <Link
+            href="/p/messages"
+            className="group block rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
+          >
+            <div className="flex items-start gap-3">
+              <div className="relative shrink-0">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--measured-gold)]/15 text-[#a07710]">
+                  <MessageCircle size={18} strokeWidth={2} aria-hidden="true" />
+                </div>
+                {unreadFromMaya > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--measured-evaluate)] text-[8px] font-bold text-white ring-2 ring-white">
+                    {unreadFromMaya > 9 ? "9+" : unreadFromMaya}
+                  </span>
+                )}
               </div>
-              {unreadFromMaya > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--measured-evaluate)] text-[8px] font-bold text-white ring-2 ring-white">
-                  {unreadFromMaya > 9 ? "9+" : unreadFromMaya}
-                </span>
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center justify-between">
-                <div
-                  className={
-                    unreadFromMaya > 0
-                      ? "text-[13px] font-bold text-[var(--measured-dark)]"
-                      : "text-[13px] font-semibold text-[var(--measured-dark)]"
-                  }
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <div
+                    className={
+                      unreadFromMaya > 0
+                        ? "text-[13px] font-bold text-[var(--measured-dark)]"
+                        : "text-[13px] font-semibold text-[var(--measured-dark)]"
+                    }
+                  >
+                    Maya · APD
+                  </div>
+                  <ChevronRight
+                    size={16}
+                    className="text-[var(--measured-subtext)] transition-transform group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                </div>
+                <p
+                  className={`mt-0.5 line-clamp-2 text-[12px] leading-relaxed ${unreadFromMaya > 0 ? "font-medium text-[var(--measured-dark)]" : "text-[var(--measured-subtext)]"}`}
                 >
-                  Maya · APD
-                </div>
-                <ChevronRight
-                  size={16}
-                  className="text-[var(--measured-subtext)] transition-transform group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
+                  {lastDietitianMsg?.body ??
+                    "Maya will message after your next review."}
+                </p>
               </div>
-              <p
-                className={`mt-0.5 line-clamp-2 text-[12px] leading-relaxed ${unreadFromMaya > 0 ? "font-medium text-[var(--measured-dark)]" : "text-[var(--measured-subtext)]"}`}
-              >
-                {lastDietitianMsg?.body ??
-                  "Maya will message after your next review."}
-              </p>
             </div>
-          </div>
-        </Link>
+          </Link>
+        </motion.div>
       </div>
     </>
   );

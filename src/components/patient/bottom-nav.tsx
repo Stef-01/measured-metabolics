@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   Home,
   Camera,
@@ -55,9 +56,13 @@ export function PatientBottomNav() {
                   aria-label={tab.label}
                   className="flex flex-col items-center gap-0.5"
                 >
-                  <span
+                  <motion.span
+                    key={isActive ? "cam-active" : "cam-inactive"}
+                    initial={isActive ? { scale: 0.82 } : false}
+                    animate={isActive ? { scale: 1 } : {}}
+                    transition={{ type: "spring", stiffness: 420, damping: 14 }}
                     className={cn(
-                      "flex h-13 w-13 items-center justify-center rounded-full transition-colors",
+                      "flex h-13 w-13 items-center justify-center rounded-full",
                       isActive
                         ? "bg-[var(--measured-dark-green)]"
                         : "bg-[var(--measured-green)]",
@@ -70,7 +75,7 @@ export function PatientBottomNav() {
                       className="text-white"
                       aria-hidden="true"
                     />
-                  </span>
+                  </motion.span>
                   <span
                     className={cn(
                       "text-[11px] font-semibold transition-colors",
@@ -102,17 +107,24 @@ export function PatientBottomNav() {
                   <div className="absolute inset-0 rounded-xl bg-[var(--measured-green)]/10" />
                 )}
                 <div className="relative z-10 flex flex-col items-center gap-0.5">
-                  <Icon
-                    size={22}
-                    strokeWidth={2}
-                    className={cn(
-                      "transition-colors",
-                      isActive
-                        ? "text-[var(--measured-green)]"
-                        : "text-[var(--measured-subtext)]",
-                    )}
-                    aria-hidden="true"
-                  />
+                  <motion.span
+                    key={isActive ? `${tab.id}-active` : `${tab.id}-inactive`}
+                    initial={isActive ? { scale: 0.75 } : false}
+                    animate={isActive ? { scale: 1 } : {}}
+                    transition={{ type: "spring", stiffness: 420, damping: 14 }}
+                  >
+                    <Icon
+                      size={22}
+                      strokeWidth={2}
+                      className={cn(
+                        "transition-colors",
+                        isActive
+                          ? "text-[var(--measured-green)]"
+                          : "text-[var(--measured-subtext)]",
+                      )}
+                      aria-hidden="true"
+                    />
+                  </motion.span>
                   <span
                     className={cn(
                       "transition-colors duration-150",

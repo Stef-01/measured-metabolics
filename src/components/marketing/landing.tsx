@@ -10,6 +10,7 @@ import {
   Shield,
   ArrowRight,
 } from "lucide-react";
+import { staggerContainer, wordReveal } from "@/lib/motion";
 
 const PERSONAS = [
   {
@@ -50,10 +51,7 @@ const PERSONAS = [
   },
 ] as const;
 
-const container = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08, delayChildren: 0.22 } },
-};
+const cardContainer = staggerContainer(0.08, 0.22);
 
 const cardItem = {
   hidden: { opacity: 0, y: 14 },
@@ -63,6 +61,25 @@ const cardItem = {
     transition: { duration: 0.5, ease: "easeOut" as const },
   },
 };
+
+// Split a string into word <motion.span> elements for staggered reveal
+function Words({ text, className }: { text: string; className?: string }) {
+  return (
+    <>
+      {text.split(" ").map((word, i) => (
+        <motion.span
+          key={i}
+          variants={wordReveal}
+          className={`inline-block ${className ?? ""}`}
+        >
+          {word}&nbsp;
+        </motion.span>
+      ))}
+    </>
+  );
+}
+
+const wordContainer = staggerContainer(0.06, 0);
 
 export function Landing() {
   return (
@@ -91,23 +108,25 @@ export function Landing() {
           Platform demo
         </motion.p>
 
+        {/* Word-by-word stagger on the heading */}
         <motion.h1
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, ease: "easeOut", delay: 0.06 }}
+          variants={wordContainer}
+          initial="hidden"
+          animate="show"
           className="font-serif text-[44px] leading-[1.06] tracking-tight md:text-[60px] md:leading-[1.02]"
         >
-          Three interfaces,
-          <br />
-          <span className="font-light italic opacity-60">
-            one clinical brain.
+          <span className="block">
+            <Words text="Three interfaces," />
+          </span>
+          <span className="block font-light italic opacity-60">
+            <Words text="one clinical brain." />
           </span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut", delay: 0.12 }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.5 }}
           className="mx-auto mt-7 max-w-[400px] text-[16px] leading-relaxed text-[var(--measured-subtext)]"
         >
           Patient PWA, dietitian web, GP sidebar, and admin console — each built
@@ -117,45 +136,67 @@ export function Landing() {
 
       {/* ── Persona grid ── */}
       <motion.section
-        variants={container}
+        variants={cardContainer}
         initial="hidden"
         animate="show"
         className="mx-auto grid max-w-5xl gap-4 px-6 pb-24 sm:grid-cols-2 lg:grid-cols-4"
       >
         {PERSONAS.map((p) => (
           <motion.div key={p.id} variants={cardItem} className="h-full">
-            <Link
-              href={p.href}
-              className="group flex h-full flex-col rounded-2xl border border-[var(--measured-border-soft)] bg-white p-6 shadow-[var(--shadow-card)] transition-shadow duration-200 hover:shadow-[var(--shadow-raised)]"
+            <motion.div
+              whileHover={{
+                y: -5,
+                boxShadow:
+                  "0 16px 48px -8px rgba(0,0,0,0.14), 0 4px 12px -2px rgba(0,0,0,0.06)",
+                transition: { type: "spring", stiffness: 300, damping: 22 },
+              }}
+              whileTap={{ scale: 0.97 }}
+              className="h-full"
             >
-              <div
-                className="mb-5 flex h-10 w-10 items-center justify-center rounded-2xl"
-                style={{ background: p.accentSoft, color: p.accent }}
+              <Link
+                href={p.href}
+                className="group flex h-full flex-col rounded-2xl border border-[var(--measured-border-soft)] bg-white p-6 shadow-[var(--shadow-card)]"
               >
-                <p.Icon size={20} strokeWidth={2} aria-hidden="true" />
-              </div>
+                <motion.div
+                  className="mb-5 flex h-10 w-10 items-center justify-center rounded-2xl"
+                  style={{ background: p.accentSoft, color: p.accent }}
+                  whileHover={{ scale: 1.12 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                >
+                  <p.Icon size={20} strokeWidth={2} aria-hidden="true" />
+                </motion.div>
 
-              <div className="font-serif text-[20px] leading-tight tracking-tight text-[var(--measured-dark)]">
-                {p.title}
-              </div>
+                <div className="font-serif text-[20px] leading-tight tracking-tight text-[var(--measured-dark)]">
+                  {p.title}
+                </div>
 
-              <p className="mt-2 flex-1 text-[13px] leading-relaxed text-[var(--measured-subtext)]">
-                {p.tagline}
-              </p>
+                <p className="mt-2 flex-1 text-[13px] leading-relaxed text-[var(--measured-subtext)]">
+                  {p.tagline}
+                </p>
 
-              <div
-                className="mt-6 inline-flex items-center gap-1.5 text-[13px] font-semibold"
-                style={{ color: p.accent }}
-              >
-                Enter
-                <ArrowRight
-                  size={13}
-                  strokeWidth={2.4}
-                  className="transition-transform duration-200 group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
-              </div>
-            </Link>
+                <div
+                  className="mt-6 inline-flex items-center gap-1.5 text-[13px] font-semibold"
+                  style={{ color: p.accent }}
+                >
+                  Enter
+                  <motion.span
+                    animate={{ x: [0, 3, 0] }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 1.4,
+                      ease: "easeInOut",
+                      repeatDelay: 0.8,
+                    }}
+                  >
+                    <ArrowRight
+                      size={13}
+                      strokeWidth={2.4}
+                      aria-hidden="true"
+                    />
+                  </motion.span>
+                </div>
+              </Link>
+            </motion.div>
           </motion.div>
         ))}
       </motion.section>

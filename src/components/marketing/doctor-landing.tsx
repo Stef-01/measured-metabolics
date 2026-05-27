@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { FadeUp } from "./fade-up";
 import { StaggerGroup, StaggerItem } from "./stagger-group";
 import { MobileBookingBar } from "./mobile-booking-bar";
+import { HeroParallax } from "./hero-parallax";
 
 const BOOKING_URL =
   "https://healthengine.com.au/doctor/nsw/beecroft/dr-anubhav-saxena/p123180";
@@ -119,39 +120,42 @@ export function DoctorLanding() {
             "radial-gradient(ellipse at 78% 18%, #1d3428 0%, #0A0A08 58%)",
         }}
       >
-        <div className="mx-auto max-w-5xl px-6 pt-20 pb-28 md:pt-40 md:pb-44">
-          <p className="hero-el hero-el-1 mb-8 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">
-            Health Optimisation Protocol&nbsp;·&nbsp;Beecroft NSW
-          </p>
-          <h1 className="hero-el hero-el-2 font-serif text-[40px] font-normal leading-[1.06] tracking-tight text-white sm:text-[56px] md:text-[88px] md:leading-[1.02]">
-            A structured path
-            <br />
-            <span className="font-light italic opacity-75">
-              to metabolic health.
-            </span>
-          </h1>
-          <p className="hero-el hero-el-3 mt-8 max-w-[480px] text-[17px] leading-relaxed text-white/50">
-            A medically supervised six-month program combining GLP-1 therapy,
-            DEXA body composition scanning, and personalised dietitian support.
-          </p>
-          <div className="hero-el hero-el-4 mt-12 flex items-center gap-6">
-            <a
-              href={BOOKING_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-4 text-[15px] font-semibold text-[var(--measured-dark-green)] transition-all hover:bg-[var(--measured-cream)] active:scale-[0.97]"
-            >
-              Book a consultation
-              <ArrowRight size={15} strokeWidth={2.4} aria-hidden="true" />
-            </a>
-            <a
-              href="#protocol"
-              className="text-[13px] text-white/40 transition-colors hover:text-white/70"
-            >
-              See how it works ↓
-            </a>
+        <HeroParallax>
+          <div className="mx-auto max-w-5xl px-6 pt-20 pb-28 md:pt-40 md:pb-44">
+            <p className="hero-el hero-el-1 mb-8 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">
+              Health Optimisation Protocol&nbsp;·&nbsp;Beecroft NSW
+            </p>
+            <h1 className="hero-el hero-el-2 font-serif text-[40px] font-normal leading-[1.06] tracking-tight text-white sm:text-[56px] md:text-[88px] md:leading-[1.02]">
+              A structured path
+              <br />
+              <span className="font-light italic opacity-75">
+                to metabolic health.
+              </span>
+            </h1>
+            <p className="hero-el hero-el-3 mt-8 max-w-[480px] text-[17px] leading-relaxed text-white/50">
+              A medically supervised six-month program combining GLP-1 therapy,
+              DEXA body composition scanning, and personalised dietitian
+              support.
+            </p>
+            <div className="hero-el hero-el-4 mt-12 flex items-center gap-6">
+              <a
+                href={BOOKING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-4 text-[15px] font-semibold text-[var(--measured-dark-green)] transition-all hover:bg-[var(--measured-cream)] active:scale-[0.97]"
+              >
+                Book a consultation
+                <ArrowRight size={15} strokeWidth={2.4} aria-hidden="true" />
+              </a>
+              <a
+                href="#protocol"
+                className="text-[13px] text-white/40 transition-colors hover:text-white/70"
+              >
+                See how it works ↓
+              </a>
+            </div>
           </div>
-        </div>
+        </HeroParallax>
       </section>
 
       {/* ── Outcomes strip ───────────────────────────── */}
@@ -204,7 +208,7 @@ export function DoctorLanding() {
 
           <StaggerGroup className="grid gap-14 md:grid-cols-3 md:gap-10">
             {PROTOCOL.map((step) => (
-              <StaggerItem key={step.n}>
+              <StaggerItem key={step.n} hover>
                 <div className="relative overflow-hidden">
                   {/* Greyscale photo bleeds in from the right */}
                   <div
@@ -325,7 +329,7 @@ export function DoctorLanding() {
 
           <StaggerGroup className="grid gap-10 md:grid-cols-3">
             {TESTIMONIALS.map((t) => (
-              <StaggerItem key={t.name}>
+              <StaggerItem key={t.name} direction="right">
                 <figure className="border-l-2 border-[var(--measured-green)] pl-6">
                   <blockquote>
                     <p className="font-serif text-[20px] italic leading-[1.55] text-[var(--measured-dark)]">
