@@ -13,10 +13,11 @@
   --measured-light-green: #4a8c5c;
   --measured-gold: #d4a84b;
   --measured-warm: #e8833a;
-  --measured-cream: #fafaf8;
-  --measured-dark: #0d0d0d;
+  --measured-cream: #faf9f6;
+  --measured-sand: #f2efe9;
+  --measured-dark: #0a0a08;
   --measured-input-bg: #f0ede8;
-  --measured-subtext: #6b6b6b;
+  --measured-subtext: #69635e;
   --measured-button: #2d5a3d;
   --measured-button-hover: #1a3d25;
   --measured-evaluate: #8c1515;
@@ -36,9 +37,9 @@
   --measured-accent-soft: rgba(45, 90, 61, 0.08);
 
   /* Borders — three tiers for subtle → emphatic hierarchy */
-  --measured-border-soft: rgba(0, 0, 0, 0.05);
-  --measured-border: rgba(0, 0, 0, 0.08);
-  --measured-border-strong: rgba(0, 0, 0, 0.12);
+  --measured-border-soft: rgba(10, 10, 8, 0.06);
+  --measured-border: rgba(10, 10, 8, 0.1);
+  --measured-border-strong: rgba(10, 10, 8, 0.14);
 
   /* Shadow system */
   --shadow-card:
@@ -91,7 +92,57 @@
   --color-measured-clinical-blue: var(--measured-clinical-blue);
   --color-measured-clinical-amber: var(--measured-clinical-amber);
   --font-sans: "Inter", sans-serif;
-  --font-serif: "DM Serif Display", Georgia, serif;
+  --font-serif: "Cormorant Garamond", "DM Serif Display", Georgia, serif;
+  --color-measured-sand: var(--measured-sand);
+}
+
+/* === LANDING PAGE ANIMATIONS === */
+
+@keyframes landingFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-el {
+  animation: landingFadeUp 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.hero-el-1 {
+  animation-delay: 0ms;
+}
+.hero-el-2 {
+  animation-delay: 80ms;
+}
+.hero-el-3 {
+  animation-delay: 160ms;
+}
+.hero-el-4 {
+  animation-delay: 240ms;
+}
+
+/* FAQ accordion — CSS-only, no JS */
+.faq-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+details[open] > .faq-body {
+  grid-template-rows: 1fr;
+}
+.faq-body > div {
+  overflow: hidden;
+}
+details summary {
+  list-style: none;
+  cursor: pointer;
+}
+details summary::-webkit-details-marker {
+  display: none;
 }
 
 /* === SHARED SURFACE PATTERNS === */

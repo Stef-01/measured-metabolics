@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, DM_Serif_Display } from "next/font/google";
+import { Inter, Cormorant_Garamond } from "next/font/google";
 import { DeviceFrame } from "@/components/shared/device-frame";
 import { ErrorBoundary } from "@/components/shared/error-boundary";
 import { ToastHost } from "@/components/shared/toast-host";
@@ -11,10 +11,12 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const dmSerif = DM_Serif_Display({
+const cormorant = Cormorant_Garamond({
   variable: "--font-serif",
-  weight: "400",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
 });
 
 export const viewport: Viewport = {
@@ -53,7 +55,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${dmSerif.variable} antialiased font-sans min-h-dvh`}
+        className={`${inter.variable} ${cormorant.variable} antialiased font-sans min-h-dvh`}
       >
         <ErrorBoundary>
           <QueryProvider>
