@@ -92,7 +92,7 @@
   --color-measured-clinical-blue: var(--measured-clinical-blue);
   --color-measured-clinical-amber: var(--measured-clinical-amber);
   --font-sans: "Inter", sans-serif;
-  --font-serif: "Cormorant Garamond", "DM Serif Display", Georgia, serif;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
   --color-measured-sand: var(--measured-sand);
 }
 
@@ -205,6 +205,7 @@ html {
   touch-action: manipulation;
   -webkit-text-size-adjust: 100%;
   scrollbar-gutter: stable;
+  scroll-behavior: smooth;
 }
 
 ::-webkit-scrollbar {

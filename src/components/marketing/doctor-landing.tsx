@@ -120,10 +120,10 @@ export function DoctorLanding() {
         }}
       >
         <div className="mx-auto max-w-5xl px-6 pt-20 pb-28 md:pt-40 md:pb-44">
-          <p className="hero-el hero-el-1 mb-8 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
+          <p className="hero-el hero-el-1 mb-8 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">
             Health Optimisation Protocol&nbsp;·&nbsp;Beecroft NSW
           </p>
-          <h1 className="hero-el hero-el-2 font-serif text-[40px] font-normal leading-[1.04] tracking-tight text-white sm:text-[56px] md:text-[88px]">
+          <h1 className="hero-el hero-el-2 font-serif text-[40px] font-normal leading-[1.06] tracking-tight text-white sm:text-[56px] md:text-[88px] md:leading-[1.02]">
             A structured path
             <br />
             <span className="font-light italic opacity-75">
@@ -139,7 +139,7 @@ export function DoctorLanding() {
               href={BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-4 text-[15px] font-semibold text-[var(--measured-dark-green)] transition-colors hover:bg-[var(--measured-cream)]"
+              className="inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-4 text-[15px] font-semibold text-[var(--measured-dark-green)] transition-all hover:bg-[var(--measured-cream)] active:scale-[0.97]"
             >
               Book a consultation
               <ArrowRight size={15} strokeWidth={2.4} aria-hidden="true" />
@@ -173,7 +173,7 @@ export function DoctorLanding() {
                 key={stat}
                 className="px-0 py-7 text-center md:px-8 md:py-0 md:first:pl-0 md:last:pr-0"
               >
-                <p className="font-serif text-[26px] font-normal leading-tight tracking-tight text-[var(--measured-dark)] md:text-[30px]">
+                <p className="font-serif text-[20px] font-normal leading-tight tracking-tight text-[var(--measured-dark)] md:text-[24px]">
                   {stat}
                 </p>
                 <p className="mt-2 text-[11px] uppercase tracking-[0.1em] text-[var(--measured-subtext)]">
@@ -261,13 +261,13 @@ export function DoctorLanding() {
             <div className="flex flex-col gap-14 md:flex-row md:items-start md:gap-20">
               {/* Portrait */}
               <div className="shrink-0">
-                <div className="relative h-[400px] w-[300px] overflow-hidden rounded-2xl bg-[var(--measured-sand)] shadow-[0_8px_48px_-8px_rgba(0,0,0,0.14)]">
+                <div className="relative h-[280px] w-full overflow-hidden rounded-2xl bg-[var(--measured-sand)] shadow-[0_8px_48px_-8px_rgba(0,0,0,0.14)] md:h-[400px] md:w-[300px]">
                   <Image
                     src="/images/dr-saxena.jpeg"
                     alt="Dr Anubhav Saxena"
                     fill
                     className="object-cover object-top"
-                    sizes="300px"
+                    sizes="(min-width: 768px) 300px, 100vw"
                     priority
                   />
                 </div>
@@ -392,7 +392,7 @@ export function DoctorLanding() {
               href={BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-2xl bg-white px-8 py-4 text-[15px] font-semibold text-[var(--measured-dark-green)] shadow-[0_2px_24px_-4px_rgba(0,0,0,0.22)] transition-colors hover:bg-[var(--measured-cream)]"
+              className="inline-flex items-center gap-2 rounded-2xl bg-white px-8 py-4 text-[15px] font-semibold text-[var(--measured-dark-green)] shadow-[0_2px_24px_-4px_rgba(0,0,0,0.22)] transition-all hover:bg-[var(--measured-cream)] active:scale-[0.97]"
             >
               Book via HealthEngine
               <ArrowRight size={15} strokeWidth={2.4} aria-hidden="true" />
