@@ -94,7 +94,12 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
         Back to caseload
       </Link>
 
-      <header className="mt-2 flex items-end justify-between gap-6">
+      <motion.header
+        className="mt-2 flex items-end justify-between gap-6"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div>
           <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
             Patient · Week {patient.weekNumber}
@@ -108,14 +113,17 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
             {patient.cuisineLabel}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
-            <button
+            <motion.button
               type="button"
               onClick={() => setTab("plan")}
               className="cta-shadow inline-flex items-center gap-1.5 rounded-2xl bg-[var(--measured-green)] px-4 py-2 text-[13px] font-semibold text-white hover:bg-[var(--measured-dark-green)]"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
               <CalendarDays size={14} strokeWidth={2.2} aria-hidden="true" />
               Build plan
-            </button>
+            </motion.button>
             <Link
               href={`/d/queue?patient=${patient.id}`}
               className="inline-flex items-center gap-1.5 rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]"
@@ -187,7 +195,7 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
             );
           })}
         </div>
-      </header>
+      </motion.header>
 
       {/* Tab strip */}
       <div className="mt-6 flex gap-2 overflow-x-auto border-b border-[var(--measured-border-soft)] pb-px">
