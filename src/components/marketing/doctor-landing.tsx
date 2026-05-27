@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { FadeUp } from "./fade-up";
 import { StaggerGroup, StaggerItem } from "./stagger-group";
+import { TiltCard } from "./tilt-card";
 import { MobileBookingBar } from "./mobile-booking-bar";
 import { HeroSection } from "./hero-section";
 import { CtaBand } from "./cta-band";
@@ -10,8 +11,6 @@ import { BookNowButton } from "./book-now-button";
 
 const BOOKING_URL =
   "https://healthengine.com.au/doctor/nsw/beecroft/dr-anubhav-saxena/p123180";
-
-// ── Protocol data ─────────────────────────────────────────────────────────────
 
 const PROTOCOL = [
   {
@@ -33,9 +32,6 @@ const PROTOCOL = [
     photo: "/images/protocol/dexa.jpg",
   },
 ];
-
-// ── Testimonials ──────────────────────────────────────────────────────────────
-// Replace with verified patient-approved quotes before launch.
 
 const TESTIMONIALS = [
   {
@@ -60,8 +56,6 @@ const TESTIMONIALS = [
     initial: "P",
   },
 ];
-
-// ── FAQ ───────────────────────────────────────────────────────────────────────
 
 const FAQ = [
   {
@@ -93,8 +87,6 @@ const FAQ = [
     a: "The programme concludes with a final DEXA scan and dietitian review. Dr Saxena provides a written clinical summary and a maintenance plan. Continuation of GLP-1 therapy beyond six months is assessed based on your response and goals.",
   },
 ];
-
-// ── Page ──────────────────────────────────────────────────────────────────────
 
 export function DoctorLanding() {
   return (
@@ -161,56 +153,63 @@ export function DoctorLanding() {
       <section id="protocol" className="bg-[var(--measured-sand)]">
         <div className="mx-auto max-w-5xl px-6 py-24 md:py-32">
           <FadeUp>
-            <div className="mb-16">
+            <div className="mb-14">
               <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--measured-subtext)]">
                 What&apos;s included
               </p>
-              <h2 className="font-serif text-[42px] leading-tight tracking-tight text-[var(--measured-dark)]">
+              <h2
+                className="font-serif leading-tight tracking-tight text-[var(--measured-dark)]"
+                style={{ fontSize: "var(--text-h2)" }}
+              >
                 The protocol
               </h2>
-              <p className="mt-3 max-w-[400px] text-[15px] text-[var(--measured-subtext)]">
+              <p
+                className="mt-3 max-w-[400px] text-[var(--measured-subtext)]"
+                style={{ fontSize: "var(--text-body-lg)" }}
+              >
                 Three integrated components, coordinated over six months.
               </p>
             </div>
           </FadeUp>
 
-          <StaggerGroup className="grid gap-6 md:grid-cols-3">
+          <StaggerGroup className="divide-y divide-[var(--measured-border-soft)]">
             {PROTOCOL.map((step) => (
-              <StaggerItem key={step.n} hover>
-                {/* Card with surface — hover lift makes sense here */}
-                <div className="overflow-hidden rounded-2xl border border-[var(--measured-border-soft)] bg-white shadow-[var(--shadow-card)]">
-                  {/* Image thumbnail */}
-                  <div className="relative h-44 overflow-hidden">
+              <StaggerItem key={step.n}>
+                <div className="flex items-center gap-6 py-10 md:gap-14 md:py-14">
+                  {/* Step number — decorative, ultra-light */}
+                  <div
+                    className="shrink-0 select-none font-serif leading-none"
+                    style={{
+                      fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
+                      color: "rgba(10, 10, 8, 0.08)",
+                    }}
+                  >
+                    {step.n}
+                  </div>
+
+                  {/* Content */}
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-3 h-px w-6 bg-[var(--measured-green)]" />
+                    <h3
+                      className="font-serif leading-tight text-[var(--measured-dark)]"
+                      style={{ fontSize: "var(--text-h3)" }}
+                    >
+                      {step.title}
+                    </h3>
+                    <p className="mt-3 max-w-[380px] text-[15px] leading-relaxed text-[var(--measured-subtext)]">
+                      {step.body}
+                    </p>
+                  </div>
+
+                  {/* Image — editorial side panel, desktop only */}
+                  <div className="relative hidden h-[144px] w-[144px] shrink-0 overflow-hidden rounded-xl md:block">
                     <Image
                       src={step.photo}
                       alt=""
                       fill
-                      className="object-cover transition-transform duration-700 hover:scale-105"
-                      sizes="(min-width: 768px) 320px, 100vw"
+                      className="object-cover"
+                      sizes="144px"
                     />
-                    {/* Step number overlay */}
-                    <div className="absolute right-4 top-4 font-serif text-[52px] leading-none text-white/20 select-none">
-                      {step.n}
-                    </div>
-                    {/* Gradient fade */}
-                    <div
-                      className="pointer-events-none absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to top, rgba(255,255,255,0.15) 0%, transparent 60%)",
-                      }}
-                    />
-                  </div>
-
-                  {/* Card content */}
-                  <div className="p-6">
-                    <div className="mb-4 h-px w-8 bg-[var(--measured-green)]" />
-                    <h3 className="font-serif text-[22px] leading-tight text-[var(--measured-dark)]">
-                      {step.title}
-                    </h3>
-                    <p className="mt-3 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
-                      {step.body}
-                    </p>
                   </div>
                 </div>
               </StaggerItem>
@@ -226,7 +225,6 @@ export function DoctorLanding() {
             <div className="flex flex-col gap-14 md:flex-row md:items-start md:gap-20">
               {/* Portrait with decorative depth */}
               <div className="relative shrink-0">
-                {/* Decorative offset background */}
                 <div
                   aria-hidden="true"
                   className="absolute -bottom-3 -right-3 h-full w-full rounded-2xl bg-[var(--measured-green)]/8"
@@ -236,7 +234,8 @@ export function DoctorLanding() {
                     src="/images/dr-saxena.jpeg"
                     alt="Dr Anubhav Saxena"
                     fill
-                    className="object-cover object-top"
+                    className="object-cover"
+                    style={{ objectPosition: "50% 20%" }}
                     sizes="(min-width: 768px) 300px, 100vw"
                     priority
                   />
@@ -248,7 +247,10 @@ export function DoctorLanding() {
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--measured-subtext)]">
                   Your doctor
                 </p>
-                <h2 className="mt-5 font-serif text-[40px] leading-tight tracking-tight text-[var(--measured-dark)]">
+                <h2
+                  className="mt-5 font-serif leading-tight tracking-tight text-[var(--measured-dark)]"
+                  style={{ fontSize: "var(--text-display)" }}
+                >
                   Dr Anubhav Saxena
                 </h2>
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -261,7 +263,10 @@ export function DoctorLanding() {
                     </span>
                   ))}
                 </div>
-                <p className="mt-7 max-w-[440px] text-[16px] leading-[1.75] text-[var(--measured-subtext)]">
+                <p
+                  className="mt-7 max-w-[440px] leading-[1.75] text-[var(--measured-subtext)]"
+                  style={{ fontSize: "var(--text-body-lg)" }}
+                >
                   Fellow of the Royal Australian College of General
                   Practitioners with a research background in metabolic
                   medicine. Dr Saxena designed the Health Optimisation Protocol
@@ -296,7 +301,10 @@ export function DoctorLanding() {
               <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--measured-subtext)]">
                 Patient outcomes
               </p>
-              <h2 className="font-serif text-[38px] leading-tight tracking-tight text-[var(--measured-dark)]">
+              <h2
+                className="font-serif leading-tight tracking-tight text-[var(--measured-dark)]"
+                style={{ fontSize: "var(--text-h2)" }}
+              >
                 Real results, real patients.
               </h2>
             </div>
@@ -305,40 +313,41 @@ export function DoctorLanding() {
           <StaggerGroup className="grid gap-5 md:grid-cols-3">
             {TESTIMONIALS.map((t) => (
               <StaggerItem key={t.name} direction="right">
-                <figure className="flex h-full flex-col rounded-2xl border border-[var(--measured-border-soft)] bg-white p-7 shadow-[var(--shadow-card)]">
-                  {/* Stars */}
-                  <div className="mb-4 flex gap-0.5">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <span
-                        key={i}
-                        className="text-[14px] text-[var(--measured-gold)]"
-                        aria-hidden="true"
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
-
-                  <blockquote className="flex-1">
-                    <p className="font-serif text-[18px] italic leading-[1.6] text-[var(--measured-dark)]">
-                      &ldquo;{t.quote}&rdquo;
-                    </p>
-                  </blockquote>
-
-                  <figcaption className="mt-6 flex items-center gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--measured-green)]/10 text-[11px] font-bold text-[var(--measured-dark-green)]">
-                      {t.initial}
+                <TiltCard className="h-full">
+                  <figure className="flex h-full flex-col rounded-2xl border border-[var(--measured-border-soft)] bg-white p-7 shadow-[var(--shadow-card)]">
+                    <div className="mb-4 flex gap-0.5">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <span
+                          key={i}
+                          className="text-[14px] text-[var(--measured-gold)]"
+                          aria-hidden="true"
+                        >
+                          ★
+                        </span>
+                      ))}
                     </div>
-                    <div>
-                      <p className="text-[13px] font-semibold text-[var(--measured-dark)]">
-                        {t.name}
+
+                    <blockquote className="flex-1">
+                      <p className="font-serif text-[18px] italic leading-[1.6] text-[var(--measured-dark)]">
+                        &ldquo;{t.quote}&rdquo;
                       </p>
-                      <p className="text-[12px] text-[var(--measured-green)]">
-                        {t.detail}
-                      </p>
-                    </div>
-                  </figcaption>
-                </figure>
+                    </blockquote>
+
+                    <figcaption className="mt-6 flex items-center gap-3">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--measured-green)]/10 text-[11px] font-bold text-[var(--measured-dark-green)]">
+                        {t.initial}
+                      </div>
+                      <div>
+                        <p className="text-[13px] font-semibold text-[var(--measured-dark)]">
+                          {t.name}
+                        </p>
+                        <p className="text-[12px] text-[var(--measured-green)]">
+                          {t.detail}
+                        </p>
+                      </div>
+                    </figcaption>
+                  </figure>
+                </TiltCard>
               </StaggerItem>
             ))}
           </StaggerGroup>
@@ -353,7 +362,10 @@ export function DoctorLanding() {
               <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--measured-subtext)]">
                 Common questions
               </p>
-              <h2 className="font-serif text-[38px] leading-tight tracking-tight text-[var(--measured-dark)]">
+              <h2
+                className="font-serif leading-tight tracking-tight text-[var(--measured-dark)]"
+                style={{ fontSize: "var(--text-h2)" }}
+              >
                 What to expect
               </h2>
             </div>
