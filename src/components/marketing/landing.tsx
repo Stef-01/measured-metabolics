@@ -110,8 +110,8 @@ export function Landing() {
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.12 }}
           className="mx-auto mt-7 max-w-[400px] text-[16px] leading-relaxed text-[var(--measured-subtext)]"
         >
-          Patient PWA, dietitian web, GP sidebar, and admin console — each
-          built for how that role actually works.
+          Patient PWA, dietitian web, GP sidebar, and admin console — each built
+          for how that role actually works.
         </motion.p>
       </section>
 
