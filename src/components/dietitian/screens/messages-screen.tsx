@@ -324,7 +324,7 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
 
             <div className="border-t border-[var(--measured-border-soft)] px-5 py-3">
               <div className="mb-2 flex flex-wrap gap-2">
-                <button
+                <motion.button
                   type="button"
                   onClick={suggestReply}
                   disabled={suggesting}
@@ -334,10 +334,12 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                       ? "cursor-not-allowed bg-[var(--measured-green)]/30 text-white"
                       : "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]",
                   )}
+                  whileTap={!suggesting ? { scale: 0.94 } : undefined}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 >
                   <Sparkles size={11} strokeWidth={2.2} aria-hidden="true" />
                   {suggesting ? "Suggesting…" : "AI suggest"}
-                </button>
+                </motion.button>
                 {TEMPLATES.map((t) => (
                   <button
                     type="button"
@@ -365,7 +367,7 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                     }
                   }}
                 />
-                <button
+                <motion.button
                   type="button"
                   onClick={send}
                   disabled={!(drafts[active.id]?.trim() ?? "")}
@@ -376,9 +378,11 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                       ? "bg-[var(--measured-green)]"
                       : "cursor-not-allowed bg-[var(--measured-green)]/40",
                   )}
+                  whileTap={drafts[active.id]?.trim() ? { scale: 0.88 } : undefined}
+                  transition={{ type: "spring", stiffness: 400, damping: 18 }}
                 >
                   <Send size={16} strokeWidth={2.4} aria-hidden="true" />
-                </button>
+                </motion.button>
               </div>
             </div>
           </section>
