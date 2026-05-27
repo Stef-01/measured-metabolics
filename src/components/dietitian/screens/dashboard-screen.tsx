@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { motion, type Variants } from "framer-motion";
 import {
   Users,
   ClipboardCheck,
@@ -28,6 +29,28 @@ import {
 } from "@/lib/storage/patient-store";
 import { cn } from "@/lib/utils/cn";
 
+const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
+
+const statsContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.08 } },
+};
+
+const statsItem: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.52, ease } },
+};
+
+const patientCardContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06, delayChildren: 0.0 } },
+};
+
+const patientCardItem: Variants = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.42, ease } },
+};
+
 const PRIORITY_TONE: Record<ReferralPriority, string> = {
   high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
   medium:
@@ -45,7 +68,12 @@ export function DietitianDashboardScreen() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="flex items-end justify-between gap-6">
+      <motion.div
+        className="flex items-end justify-between gap-6"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.52, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div>
           <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
             Today
@@ -58,50 +86,73 @@ export function DietitianDashboardScreen() {
             {severe.length} severe-symptom flags
           </p>
         </div>
-        <Link
-          href="/d/queue"
-          className="cta-shadow inline-flex items-center gap-2 rounded-2xl bg-[var(--measured-green)] px-5 py-3 text-[14px] font-semibold text-white"
+        <motion.div
+          whileHover={{ y: -2, scale: 1.03 }}
+          transition={{ type: "spring", stiffness: 380, damping: 22 }}
         >
-          Open meal review
-          <ArrowRight size={16} strokeWidth={2.2} aria-hidden="true" />
-        </Link>
-      </div>
+          <Link
+            href="/d/queue"
+            className="cta-shadow inline-flex items-center gap-2 rounded-2xl bg-[var(--measured-green)] px-5 py-3 text-[14px] font-semibold text-white"
+          >
+            Open meal review
+            <ArrowRight size={16} strokeWidth={2.2} aria-hidden="true" />
+          </Link>
+        </motion.div>
+      </motion.div>
 
-      <div className="mt-7 grid gap-4 md:grid-cols-4">
-        <DietitianStatCard
-          label="Active patients"
-          value={myPatients.length}
-          Icon={Users}
-          tone="default"
-          hint="Caseload"
-        />
-        <DietitianStatCard
-          label="Meals to review"
-          value={pendingMeals}
-          Icon={ClipboardCheck}
-          tone={pendingMeals > 5 ? "warning" : "default"}
-          hint={
-            pendingMeals > 5 ? "Above target · start queue" : "Within target"
-          }
-        />
-        <DietitianStatCard
-          label="Severe flags"
-          value={severe.length}
-          Icon={AlertTriangle}
-          tone={severe.length > 0 ? "danger" : "success"}
-          hint={severe.length > 0 ? "Action required" : "All clear"}
-        />
-        <DietitianStatCard
-          label="Sessions today"
-          value={3}
-          Icon={CalendarClock}
-          tone="default"
-          hint="2 telehealth · 1 in-clinic"
-        />
-      </div>
+      <motion.div
+        className="mt-7 grid gap-4 md:grid-cols-4"
+        variants={statsContainer}
+        initial="hidden"
+        animate="show"
+      >
+        <motion.div variants={statsItem}>
+          <DietitianStatCard
+            label="Active patients"
+            value={myPatients.length}
+            Icon={Users}
+            tone="default"
+            hint="Caseload"
+          />
+        </motion.div>
+        <motion.div variants={statsItem}>
+          <DietitianStatCard
+            label="Meals to review"
+            value={pendingMeals}
+            Icon={ClipboardCheck}
+            tone={pendingMeals > 5 ? "warning" : "default"}
+            hint={
+              pendingMeals > 5 ? "Above target · start queue" : "Within target"
+            }
+          />
+        </motion.div>
+        <motion.div variants={statsItem}>
+          <DietitianStatCard
+            label="Severe flags"
+            value={severe.length}
+            Icon={AlertTriangle}
+            tone={severe.length > 0 ? "danger" : "success"}
+            hint={severe.length > 0 ? "Action required" : "All clear"}
+          />
+        </motion.div>
+        <motion.div variants={statsItem}>
+          <DietitianStatCard
+            label="Sessions today"
+            value={3}
+            Icon={CalendarClock}
+            tone="default"
+            hint="2 telehealth · 1 in-clinic"
+          />
+        </motion.div>
+      </motion.div>
 
       {severe.length > 0 && (
-        <section className="mt-8 rounded-2xl border border-[var(--measured-evaluate)]/30 bg-[var(--measured-evaluate)]/5 p-5">
+        <motion.section
+          className="mt-8 rounded-2xl border border-[var(--measured-evaluate)]/30 bg-[var(--measured-evaluate)]/5 p-5"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.32 }}
+        >
           <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-evaluate)]">
             <AlertTriangle size={14} strokeWidth={2.2} aria-hidden="true" />
             Severe symptoms today
@@ -149,10 +200,16 @@ export function DietitianDashboardScreen() {
               );
             })}
           </ul>
-        </section>
+        </motion.section>
       )}
 
-      <section className="mt-8 grid gap-5 md:grid-cols-2">
+      <motion.section
+        className="mt-8 grid gap-5 md:grid-cols-2"
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="surface-card p-5">
           <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
             <Activity size={14} strokeWidth={2} aria-hidden="true" />
@@ -240,10 +297,16 @@ export function DietitianDashboardScreen() {
             next.
           </p>
         </div>
-      </section>
+      </motion.section>
 
       {/* Caseload at a glance */}
-      <section className="mt-8">
+      <motion.section
+        className="mt-8"
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="flex items-center justify-between">
           <div className="text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
             Caseload
@@ -258,12 +321,20 @@ export function DietitianDashboardScreen() {
             View all →
           </Link>
         </div>
-        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3"
+          variants={patientCardContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
+        >
           {myPatients.map((p) => (
-            <PatientMiniCard key={p.id} patient={p} />
+            <motion.div key={p.id} variants={patientCardItem}>
+              <PatientMiniCard patient={p} />
+            </motion.div>
           ))}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       <PatientRequestsSection />
     </div>
@@ -403,57 +474,62 @@ function PatientMiniCard({
   patient: (typeof PATIENTS)[number];
 }) {
   return (
-    <Link
-      href={`/d/patients/${p.id}`}
-      className="group flex items-center gap-3 rounded-2xl border border-[var(--measured-border-soft)] bg-white p-3.5 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
+    <motion.div
+      whileHover={{ y: -2 }}
+      transition={{ type: "spring", stiffness: 350, damping: 24 }}
     >
-      <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[13px] font-bold text-white"
-        style={{
-          backgroundColor:
-            p.risk === "high"
-              ? "var(--measured-evaluate)"
-              : p.risk === "medium"
-                ? "var(--measured-clinical-amber)"
-                : "var(--measured-clinical-blue)",
-        }}
+      <Link
+        href={`/d/patients/${p.id}`}
+        className="group flex items-center gap-3 rounded-2xl border border-[var(--measured-border-soft)] bg-white p-3.5 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
       >
-        {p.firstName[0]}
-        {p.lastName[0]}
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5 truncate">
-          <span className="truncate text-[13px] font-semibold text-[var(--measured-dark)]">
-            {p.firstName} {p.lastName}
-          </span>
-          <span
-            className={cn(
-              "shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase",
-              RISK_CHIP[p.risk],
-            )}
-          >
-            {p.risk}
-          </span>
+        <div
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[13px] font-bold text-white"
+          style={{
+            backgroundColor:
+              p.risk === "high"
+                ? "var(--measured-evaluate)"
+                : p.risk === "medium"
+                  ? "var(--measured-clinical-amber)"
+                  : "var(--measured-clinical-blue)",
+          }}
+        >
+          {p.firstName[0]}
+          {p.lastName[0]}
         </div>
-        <div className="mt-0.5 flex items-center gap-2 text-[11px] text-[var(--measured-subtext)]">
-          <span>HbA1c {p.hbA1cPct}%</span>
-          <span>·</span>
-          <span>TIR {p.timeInRangePct}%</span>
-          <span>·</span>
-          <span>Wk {p.weekNumber}</span>
-        </div>
-        {p.alerts.length > 0 && (
-          <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--measured-evaluate)]">
-            <AlertTriangle size={10} strokeWidth={2.2} aria-hidden="true" />
-            {p.alerts[0]}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5 truncate">
+            <span className="truncate text-[13px] font-semibold text-[var(--measured-dark)]">
+              {p.firstName} {p.lastName}
+            </span>
+            <span
+              className={cn(
+                "shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase",
+                RISK_CHIP[p.risk],
+              )}
+            >
+              {p.risk}
+            </span>
           </div>
-        )}
-      </div>
-      <ChevronRight
-        size={14}
-        className="shrink-0 text-[var(--measured-border-strong)] transition-transform group-hover:translate-x-0.5"
-        aria-hidden="true"
-      />
-    </Link>
+          <div className="mt-0.5 flex items-center gap-2 text-[11px] text-[var(--measured-subtext)]">
+            <span>HbA1c {p.hbA1cPct}%</span>
+            <span>·</span>
+            <span>TIR {p.timeInRangePct}%</span>
+            <span>·</span>
+            <span>Wk {p.weekNumber}</span>
+          </div>
+          {p.alerts.length > 0 && (
+            <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--measured-evaluate)]">
+              <AlertTriangle size={10} strokeWidth={2.2} aria-hidden="true" />
+              {p.alerts[0]}
+            </div>
+          )}
+        </div>
+        <ChevronRight
+          size={14}
+          className="shrink-0 text-[var(--measured-border-strong)] transition-transform group-hover:translate-x-0.5"
+          aria-hidden="true"
+        />
+      </Link>
+    </motion.div>
   );
 }
