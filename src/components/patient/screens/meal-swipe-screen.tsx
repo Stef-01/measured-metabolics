@@ -158,7 +158,7 @@ function SwipeableCard({
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 420px"
               draggable={false}
-              priority={isTop}
+              priority={offset <= 1}
             />
             <div
               className="absolute inset-0 z-[1]"
