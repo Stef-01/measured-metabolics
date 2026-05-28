@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   LayoutDashboard,
   Inbox,
@@ -47,14 +48,19 @@ export function DietitianSideNav() {
       className="fixed left-0 top-0 z-40 flex h-screen w-[240px] flex-col border-r border-[var(--measured-border-soft)] bg-white"
       aria-label="Dietitian navigation"
     >
-      <div className="flex items-center gap-2 px-5 pt-6 pb-7">
+      <motion.div
+        className="flex items-center gap-2 px-5 pt-6 pb-7"
+        initial={{ opacity: 0, x: -8 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--measured-green)] text-white">
           <Stethoscope size={18} strokeWidth={2.2} aria-hidden="true" />
         </div>
         <div className="font-serif text-[18px] tracking-tight text-[var(--measured-dark)]">
           Measured
         </div>
-      </div>
+      </motion.div>
 
       <ul className="flex flex-col gap-0.5 px-3">
         {tabs.map((tab) => {
@@ -67,12 +73,19 @@ export function DietitianSideNav() {
                 href={tab.href}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-colors",
+                  "relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-colors",
                   isActive
-                    ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+                    ? "text-[var(--measured-dark-green)]"
                     : "text-[var(--measured-subtext)] hover:bg-[var(--measured-cream)] hover:text-[var(--measured-dark)]",
                 )}
               >
+                {isActive && (
+                  <motion.span
+                    layoutId="dietitian-nav-active"
+                    className="absolute inset-0 rounded-xl bg-[var(--measured-green)]/10"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
                 <span className="relative shrink-0">
                   <Icon
                     size={18}
@@ -91,7 +104,7 @@ export function DietitianSideNav() {
                     />
                   )}
                 </span>
-                <span>{tab.label}</span>
+                <span className="relative">{tab.label}</span>
               </Link>
             </li>
           );

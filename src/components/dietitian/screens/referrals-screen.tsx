@@ -50,7 +50,11 @@ export function DietitianReferralsScreen() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
           Referrals
         </div>
@@ -60,7 +64,7 @@ export function DietitianReferralsScreen() {
         <p className="mt-1 text-[14px] text-[var(--measured-subtext)]">
           {newOnes.length} new · {inProgress.length} in progress
         </p>
-      </div>
+      </motion.div>
 
       <Section
         title="New"
@@ -129,9 +133,11 @@ function Row({
   const p = PATIENTS.find((pp) => pp.id === r.patientId);
   return (
     <motion.li
-      initial={{ opacity: 0, y: 4 }}
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -4 }}
+      transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -2 }}
       className="grid grid-cols-[1fr_auto] items-center gap-4 rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)]"
     >
       <div className="min-w-0">
@@ -193,7 +199,7 @@ function Row({
           )}
         </div>
       ) : (
-        <button
+        <motion.button
           type="button"
           onClick={() => accept(r.id)}
           disabled={r.consentStatus !== "signed"}
@@ -203,9 +209,14 @@ function Row({
               ? "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]"
               : "cursor-not-allowed bg-[var(--measured-input-bg)] text-[var(--measured-subtext)]",
           )}
+          whileHover={
+            r.consentStatus === "signed" ? { scale: 1.03 } : undefined
+          }
+          whileTap={r.consentStatus === "signed" ? { scale: 0.95 } : undefined}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
         >
           {r.consentStatus === "signed" ? "Accept" : "Awaiting consent"}
-        </button>
+        </motion.button>
       )}
     </motion.li>
   );

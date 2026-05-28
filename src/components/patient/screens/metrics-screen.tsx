@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
   CartesianGrid,
   XAxis,
@@ -66,6 +67,16 @@ const SEVERITY_TO_NUM = {
   severe: 2,
 } as const;
 
+const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
+const pillContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.06 } },
+};
+const pillItem: Variants = {
+  hidden: { opacity: 0, y: 10, scale: 0.95 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.42, ease } },
+};
+
 export function PatientMetricsScreen() {
   const [tab, setTab] = useState<TabId>("glucose");
   const me = PATIENTS.find((p) => p.id === CURRENT_PATIENT_ID)!;
@@ -115,7 +126,12 @@ export function PatientMetricsScreen() {
 
       <div className="mx-auto flex max-w-md flex-col gap-4 px-5 pt-3 pb-8">
         {/* Clinical stats strip */}
-        <div className="grid grid-cols-3 gap-2">
+        <motion.div
+          className="grid grid-cols-3 gap-2"
+          variants={pillContainer}
+          initial="hidden"
+          animate="show"
+        >
           <StatPill
             label="HbA1c"
             value={`${me.hbA1cPct}%`}
@@ -141,11 +157,11 @@ export function PatientMetricsScreen() {
             status={me.weightDeltaKg < 0 ? "good" : "watch"}
             lower
           />
-        </div>
+        </motion.div>
 
         <div className="flex gap-2 rounded-full border border-[var(--measured-border)] bg-white p-1">
           {TABS.map((t) => (
-            <button
+            <motion.button
               type="button"
               key={t.id}
               onClick={() => setTab(t.id)}
@@ -156,125 +172,179 @@ export function PatientMetricsScreen() {
                   ? "bg-[var(--measured-green)] text-white"
                   : "text-[var(--measured-subtext)]",
               )}
+              whileTap={{ scale: 0.94 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
               {t.label}
-            </button>
+            </motion.button>
           ))}
         </div>
 
         <div className="surface-card p-4">
-          {tab === "glucose" && (
-            <ChartShell
-              title="Glucose · last 48h"
-              subtitle={`${me.timeInRangePct}% time in range`}
-            >
-              {cgm ? (
-                <CgmMealChart
-                  readings={cgm.readings}
-                  meals={meals}
-                  annotations={annotations}
-                  height={220}
-                />
-              ) : (
-                <div className="flex h-[220px] items-center justify-center text-[13px] text-[var(--measured-subtext)]">
-                  Connect your sensor to see glucose patterns.
-                </div>
-              )}
-              <p className="mt-3 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
-                Tap any spike on the chart to see the meal that caused it
-                {annotations.length > 0
-                  ? ", along with Maya's note."
-                  : "."}{" "}
-                {cgm && (
-                  <>
-                    Highest spike: {cgm.highestSpike.deltaMmol.toFixed(1)}{" "}
-                    mmol/L after {cgm.highestSpike.mealType}.
-                  </>
-                )}
-              </p>
-            </ChartShell>
-          )}
-          {tab === "weight" && (
-            <ChartShell
-              title="Weight · last 14 days"
-              subtitle={`${me.weightDeltaKg > 0 ? "+" : ""}${me.weightDeltaKg.toFixed(1)} kg`}
-            >
-              <ResponsiveContainer width="100%" height={220}>
-                <LineChart data={weightData}>
-                  <CartesianGrid stroke="rgba(0,0,0,0.06)" vertical={false} />
-                  <XAxis dataKey="day" stroke="rgba(0,0,0,0.4)" fontSize={10} />
-                  <YAxis
-                    domain={["auto", "auto"]}
-                    stroke="rgba(0,0,0,0.4)"
-                    fontSize={10}
-                  />
-                  <Tooltip formatter={(v: number) => `${v.toFixed(1)} kg`} />
-                  <Line
-                    type="monotone"
-                    dataKey="kg"
-                    stroke={CHART.green}
-                    strokeWidth={2.4}
-                    dot={{ r: 3, fill: CHART.green }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </ChartShell>
-          )}
-          {tab === "symptoms" && (
-            <ChartShell title="Symptoms" subtitle="Last logged check-ins">
-              {symptomData.length === 0 ? (
-                <div className="flex h-[220px] items-center justify-center text-center text-[13px] text-[var(--measured-subtext)]">
-                  No symptom check-ins yet. Open the Symptoms tab to log one.
-                </div>
-              ) : (
-                <ResponsiveContainer width="100%" height={220}>
-                  <LineChart data={symptomData}>
-                    <CartesianGrid stroke="rgba(0,0,0,0.06)" vertical={false} />
-                    <XAxis
-                      dataKey="idx"
-                      stroke="rgba(0,0,0,0.4)"
-                      fontSize={10}
+          <AnimatePresence mode="wait">
+            {tab === "glucose" && (
+              <motion.div
+                key="glucose"
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+              >
+                <ChartShell
+                  title="Glucose · last 48h"
+                  subtitle={`${me.timeInRangePct}% time in range`}
+                >
+                  {cgm ? (
+                    <CgmMealChart
+                      readings={cgm.readings}
+                      meals={meals}
+                      annotations={annotations}
+                      height={220}
                     />
-                    <YAxis
-                      domain={[0, 2]}
-                      ticks={[0, 1, 2]}
-                      tickFormatter={(v: number) =>
-                        ["none", "mild", "severe"][v] ?? ""
-                      }
-                      stroke="rgba(0,0,0,0.4)"
-                      fontSize={10}
-                    />
-                    <Tooltip />
-                    <Line
-                      type="monotone"
-                      name="Nausea"
-                      dataKey="nausea"
-                      stroke={CHART.evaluate}
-                      strokeWidth={2}
-                      dot={{ r: 3, fill: CHART.evaluate }}
-                    />
-                    <Line
-                      type="monotone"
-                      name="Constipation"
-                      dataKey="constipation"
-                      stroke={CHART.clinical}
-                      strokeWidth={2}
-                      dot={{ r: 3, fill: CHART.clinical }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              )}
-            </ChartShell>
-          )}
-          {tab === "adherence" && <AdherencePanel planEaten={planEaten} />}
+                  ) : (
+                    <div className="flex h-[220px] items-center justify-center text-[13px] text-[var(--measured-subtext)]">
+                      Connect your sensor to see glucose patterns.
+                    </div>
+                  )}
+                  <p className="mt-3 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
+                    Tap any spike on the chart to see the meal that caused it
+                    {annotations.length > 0
+                      ? ", along with Maya's note."
+                      : "."}{" "}
+                    {cgm && (
+                      <>
+                        Highest spike: {cgm.highestSpike.deltaMmol.toFixed(1)}{" "}
+                        mmol/L after {cgm.highestSpike.mealType}.
+                      </>
+                    )}
+                  </p>
+                </ChartShell>
+              </motion.div>
+            )}
+            {tab === "weight" && (
+              <motion.div
+                key="weight"
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+              >
+                <ChartShell
+                  title="Weight · last 14 days"
+                  subtitle={`${me.weightDeltaKg > 0 ? "+" : ""}${me.weightDeltaKg.toFixed(1)} kg`}
+                >
+                  <ResponsiveContainer width="100%" height={220}>
+                    <LineChart data={weightData}>
+                      <CartesianGrid
+                        stroke="rgba(0,0,0,0.06)"
+                        vertical={false}
+                      />
+                      <XAxis
+                        dataKey="day"
+                        stroke="rgba(0,0,0,0.4)"
+                        fontSize={10}
+                      />
+                      <YAxis
+                        domain={["auto", "auto"]}
+                        stroke="rgba(0,0,0,0.4)"
+                        fontSize={10}
+                      />
+                      <Tooltip
+                        formatter={(v: number) => `${v.toFixed(1)} kg`}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="kg"
+                        stroke={CHART.green}
+                        strokeWidth={2.4}
+                        dot={{ r: 3, fill: CHART.green }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </ChartShell>
+              </motion.div>
+            )}
+            {tab === "symptoms" && (
+              <motion.div
+                key="symptoms"
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+              >
+                <ChartShell title="Symptoms" subtitle="Last logged check-ins">
+                  {symptomData.length === 0 ? (
+                    <div className="flex h-[220px] items-center justify-center text-center text-[13px] text-[var(--measured-subtext)]">
+                      No symptom check-ins yet. Open the Symptoms tab to log
+                      one.
+                    </div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height={220}>
+                      <LineChart data={symptomData}>
+                        <CartesianGrid
+                          stroke="rgba(0,0,0,0.06)"
+                          vertical={false}
+                        />
+                        <XAxis
+                          dataKey="idx"
+                          stroke="rgba(0,0,0,0.4)"
+                          fontSize={10}
+                        />
+                        <YAxis
+                          domain={[0, 2]}
+                          ticks={[0, 1, 2]}
+                          tickFormatter={(v: number) =>
+                            ["none", "mild", "severe"][v] ?? ""
+                          }
+                          stroke="rgba(0,0,0,0.4)"
+                          fontSize={10}
+                        />
+                        <Tooltip />
+                        <Line
+                          type="monotone"
+                          name="Nausea"
+                          dataKey="nausea"
+                          stroke={CHART.evaluate}
+                          strokeWidth={2}
+                          dot={{ r: 3, fill: CHART.evaluate }}
+                        />
+                        <Line
+                          type="monotone"
+                          name="Constipation"
+                          dataKey="constipation"
+                          stroke={CHART.clinical}
+                          strokeWidth={2}
+                          dot={{ r: 3, fill: CHART.clinical }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  )}
+                </ChartShell>
+              </motion.div>
+            )}
+            {tab === "adherence" && (
+              <motion.div
+                key="adherence"
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+              >
+                <AdherencePanel planEaten={planEaten} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        <a
+        <motion.a
           href="/p/symptoms"
           className="rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-3 text-center text-[13px] font-semibold text-[var(--measured-dark-green)] hover:bg-[var(--measured-cream)]"
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.97 }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
         >
           Quick symptom check
-        </a>
+        </motion.a>
       </div>
     </>
   );
@@ -313,7 +383,8 @@ function StatPill({
     high: "text-[var(--measured-evaluate)]",
   }[status];
   return (
-    <div
+    <motion.div
+      variants={pillItem}
       className={`flex flex-col items-center gap-1 rounded-2xl px-3 py-3 ${tone}`}
     >
       <div className="text-[10px] font-semibold uppercase tracking-wider opacity-70">
@@ -326,7 +397,7 @@ function StatPill({
         className={iconColor}
         aria-hidden="true"
       />
-    </div>
+    </motion.div>
   );
 }
 
@@ -395,9 +466,11 @@ function AdherencePanel({ planEaten }: { planEaten: Record<string, true> }) {
         <>
           {/* Progress bar */}
           <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-[var(--measured-cream)]">
-            <div
-              className="h-full rounded-full bg-[var(--measured-green)] transition-all duration-500"
-              style={{ width: `${pct}%` }}
+            <motion.div
+              className="h-full rounded-full bg-[var(--measured-green)]"
+              initial={{ width: 0 }}
+              animate={{ width: `${pct}%` }}
+              transition={{ duration: 0.72, ease: [0.16, 1, 0.3, 1] }}
             />
           </div>
 

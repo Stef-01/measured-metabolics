@@ -2,12 +2,7 @@
 
 import Image from "next/image";
 import { useRef } from "react";
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { staggerContainer, wordReveal } from "@/lib/motion";
 
@@ -151,7 +146,12 @@ export function HeroSection({ bookingUrl }: { bookingUrl: string }) {
       <motion.div
         className="pointer-events-none absolute -bottom-20 right-1/4 h-[280px] w-[280px] rounded-full bg-[var(--measured-gold)]/4 blur-[100px]"
         animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.45, 0.2] }}
-        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 6 }}
+        transition={{
+          duration: 14,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 6,
+        }}
       />
 
       <div className="mx-auto max-w-5xl px-6 pt-16 pb-24 md:pt-28 md:pb-32">
@@ -168,7 +168,11 @@ export function HeroSection({ bookingUrl }: { bookingUrl: string }) {
               <motion.span
                 className="block h-1.5 w-1.5 rounded-full bg-[var(--measured-green)]"
                 animate={{ scale: [1, 1.9, 1], opacity: [1, 0.35, 1] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
               />
               <span className="text-[11px] font-semibold uppercase tracking-[0.17em] text-white/35">
                 Health Optimisation Protocol&nbsp;·&nbsp;Beecroft NSW
@@ -195,19 +199,28 @@ export function HeroSection({ bookingUrl }: { bookingUrl: string }) {
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+              transition={{
+                duration: 0.7,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.6,
+              }}
               className="mt-7 max-w-[400px] leading-relaxed text-white/40"
               style={{ fontSize: "var(--text-body-lg)" }}
             >
-              A medically supervised six-month programme combining GLP-1 therapy,
-              DEXA body composition scanning, and personalised dietitian support.
+              A medically supervised six-month programme combining GLP-1
+              therapy, DEXA body composition scanning, and personalised
+              dietitian support.
             </motion.p>
 
             {/* CTAs — primary is magnetic */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.75 }}
+              transition={{
+                duration: 0.7,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.75,
+              }}
               className="mt-9 flex flex-wrap items-center gap-4"
             >
               <MagneticCTA href={bookingUrl}>

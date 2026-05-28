@@ -1,3 +1,5 @@
+"use client";
+
 import {
   AlertTriangle,
   TrendingDown,
@@ -5,9 +7,20 @@ import {
   Minus,
   Pill,
 } from "lucide-react";
+import { motion, type Variants } from "framer-motion";
 import type { Patient } from "@/lib/mock/types";
 import { recentSevereSymptoms } from "@/lib/mock/symptoms";
 import { cn } from "@/lib/utils/cn";
+
+const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
+const container: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.04 } },
+};
+const item: Variants = {
+  hidden: { opacity: 0, y: 8, scale: 0.96 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.38, ease } },
+};
 
 export function GpContextCard({ patient }: { patient: Patient }) {
   const severe = recentSevereSymptoms().filter(
@@ -60,7 +73,12 @@ export function GpContextCard({ patient }: { patient: Patient }) {
       )}
 
       {/* Clinical stat tiles */}
-      <div className="grid grid-cols-3 gap-2">
+      <motion.div
+        className="grid grid-cols-3 gap-2"
+        variants={container}
+        initial="hidden"
+        animate="show"
+      >
         {tiles.map((t) => {
           const TrendIcon =
             t.trend === "good"
@@ -79,8 +97,9 @@ export function GpContextCard({ patient }: { patient: Patient }) {
                 ? "text-[var(--measured-clinical-amber)]"
                 : "text-[var(--measured-evaluate)]";
           return (
-            <div
+            <motion.div
               key={t.label}
+              variants={item}
               className={cn(
                 "flex flex-col items-center gap-0.5 rounded-xl bg-white p-3 text-center shadow-[var(--shadow-card)] ring-1",
                 t.trend === "good"
@@ -102,26 +121,33 @@ export function GpContextCard({ patient }: { patient: Patient }) {
                 className={iconColor}
                 aria-hidden="true"
               />
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Pattern summary — each point as a scannable card */}
       <section>
         <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
           Clinical patterns
         </div>
-        <ul className="space-y-1.5">
+        <motion.ul
+          className="space-y-1.5"
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+        >
           {patient.patternSummary.map((s) => (
-            <li
+            <motion.li
               key={s}
+              variants={item}
               className="rounded-r-xl border-l-2 border-[var(--measured-green)] bg-white px-3 py-2 text-[12px] leading-relaxed text-[var(--measured-dark)] shadow-[var(--shadow-card)]"
             >
               {s}
-            </li>
+            </motion.li>
           ))}
-        </ul>
+        </motion.ul>
       </section>
 
       {/* Medications — pill chips */}

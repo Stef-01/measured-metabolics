@@ -12,6 +12,7 @@ import {
   Settings,
   Shield,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import { PersonaSwitcher } from "@/components/shared/persona-switcher";
 
@@ -29,7 +30,12 @@ export function AdminNav() {
   const pathname = usePathname();
   return (
     <aside className="flex h-screen flex-col border-r border-[var(--measured-border)] bg-[var(--measured-card)] px-3 py-6">
-      <div className="mb-5 flex items-center gap-2.5 px-3">
+      <motion.div
+        className="mb-5 flex items-center gap-2.5 px-3"
+        initial={{ opacity: 0, x: -8 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--measured-green)] text-white">
           <Shield size={15} strokeWidth={2.2} aria-hidden="true" />
         </div>
@@ -41,7 +47,7 @@ export function AdminNav() {
             Admin
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <nav className="flex flex-col gap-0.5">
         {TABS.map((t) => {
@@ -53,23 +59,31 @@ export function AdminNav() {
               href={t.href}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-colors",
+                "relative flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-colors",
                 isActive
-                  ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+                  ? "text-[var(--measured-dark-green)]"
                   : "text-[var(--measured-subtext)] hover:bg-[var(--measured-bg)] hover:text-[var(--measured-dark)]",
               )}
             >
+              {isActive && (
+                <motion.span
+                  layoutId="admin-nav-active"
+                  className="absolute inset-0 rounded-xl bg-[var(--measured-green)]/10"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
               <t.Icon
                 size={16}
                 strokeWidth={2}
                 className={cn(
+                  "relative",
                   isActive
                     ? "text-[var(--measured-green)]"
                     : "text-[var(--measured-subtext)]",
                 )}
                 aria-hidden="true"
               />
-              {t.label}
+              <span className="relative">{t.label}</span>
             </Link>
           );
         })}

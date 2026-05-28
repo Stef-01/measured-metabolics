@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   FileText,
   Send,
@@ -65,7 +66,11 @@ export function DietitianReportsScreen() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
           Reports
         </div>
@@ -76,10 +81,10 @@ export function DietitianReportsScreen() {
           Pick a patient to draft a report. AI prefills the summary; you edit
           and send.
         </p>
-      </div>
+      </motion.div>
 
       <ul className="mt-6 grid gap-3 md:grid-cols-2">
-        {myPatients.map((p) => {
+        {myPatients.map((p, idx) => {
           const gp = GP_PROFILES[p.referringGpId];
           const hbA1cStatus: StatStatus =
             p.hbA1cPct < 7 ? "good" : p.hbA1cPct < 8 ? "watch" : "high";
@@ -96,7 +101,17 @@ export function DietitianReportsScreen() {
                 ? "watch"
                 : "high";
           return (
-            <li key={p.id}>
+            <motion.li
+              key={p.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.38,
+                delay: idx * 0.06,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              whileHover={{ y: -2 }}
+            >
               <Link
                 href={`/d/patients/${p.id}`}
                 className="group block rounded-2xl border border-[var(--measured-border-soft)] bg-white p-5 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
@@ -146,7 +161,7 @@ export function DietitianReportsScreen() {
                   Open report builder
                 </div>
               </Link>
-            </li>
+            </motion.li>
           );
         })}
       </ul>

@@ -3,7 +3,18 @@
 import { useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, ShieldCheck } from "lucide-react";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
+
+const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
+const listContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+};
+const listItem: Variants = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.42, ease } },
+};
 
 const TIERS: Array<{
   kind: "clinical_care" | "rwe" | "marketing";
@@ -48,25 +59,37 @@ export default function ConsentPage() {
 
   return (
     <main className="mx-auto max-w-md px-6 py-10">
-      <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-        Onboarding
-      </p>
-      <h1 className="mt-1 font-serif text-[32px] leading-tight tracking-tight text-[var(--measured-dark)]">
-        Three things to choose
-      </h1>
-      <p className="mt-2 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
-        Each one is independent. You can change RWE and marketing on the Privacy
-        page later.
-      </p>
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
+          Onboarding
+        </p>
+        <h1 className="mt-1 font-serif text-[32px] leading-tight tracking-tight text-[var(--measured-dark)]">
+          Three things to choose
+        </h1>
+        <p className="mt-2 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
+          Each one is independent. You can change RWE and marketing on the
+          Privacy page later.
+        </p>
+      </motion.div>
 
-      <ul className="mt-6 space-y-3">
+      <motion.ul
+        className="mt-6 space-y-3"
+        variants={listContainer}
+        initial="hidden"
+        animate="show"
+      >
         {TIERS.map((t) => {
           const checked = t.required
             ? true
             : state[t.kind as "rwe" | "marketing"];
           return (
-            <li
+            <motion.li
               key={t.kind}
+              variants={listItem}
               className={cn(
                 "rounded-3xl border p-4 transition-colors",
                 checked
@@ -115,42 +138,56 @@ export default function ConsentPage() {
                     t.required && "cursor-default opacity-60",
                   )}
                 >
-                  <span
+                  <motion.span
+                    layout
                     className={cn(
-                      "absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200",
+                      "absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow",
                       checked && "translate-x-5",
                     )}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
                 </button>
               </div>
-            </li>
+            </motion.li>
           );
         })}
-      </ul>
+      </motion.ul>
 
-      {submitted ? (
-        <div className="mt-8 flex flex-col items-center gap-3 rounded-3xl bg-[var(--measured-green)] px-6 py-6 text-center text-white shadow-[0_4px_20px_-4px_rgba(45,90,61,0.35)]">
-          <CheckCircle2 size={28} strokeWidth={2} aria-hidden="true" />
-          <div className="text-[15px] font-semibold">Consent saved</div>
-          <p className="text-[12px] text-white/80">
-            You can update RWE &amp; marketing any time on the Privacy page.
-          </p>
-          <Link
-            href="/p/home"
-            className="mt-1 rounded-2xl bg-white px-5 py-2.5 text-[14px] font-semibold text-[var(--measured-dark-green)]"
+      <AnimatePresence mode="wait">
+        {submitted ? (
+          <motion.div
+            key="confirmed"
+            className="mt-8 flex flex-col items-center gap-3 rounded-3xl bg-[var(--measured-green)] px-6 py-6 text-center text-white shadow-[0_4px_20px_-4px_rgba(45,90,61,0.35)]"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ type: "spring", stiffness: 320, damping: 18 }}
           >
-            Continue to Today
-          </Link>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setSubmitted(true)}
-          className="cta-shadow mt-8 w-full rounded-2xl bg-[var(--measured-green)] px-4 py-3.5 text-[15px] font-semibold text-white hover:bg-[var(--measured-dark-green)] transition-colors"
-        >
-          Save consent
-        </button>
-      )}
+            <CheckCircle2 size={28} strokeWidth={2} aria-hidden="true" />
+            <div className="text-[15px] font-semibold">Consent saved</div>
+            <p className="text-[12px] text-white/80">
+              You can update RWE &amp; marketing any time on the Privacy page.
+            </p>
+            <Link
+              href="/p/home"
+              className="mt-1 rounded-2xl bg-white px-5 py-2.5 text-[14px] font-semibold text-[var(--measured-dark-green)]"
+            >
+              Continue to Today
+            </Link>
+          </motion.div>
+        ) : (
+          <motion.button
+            key="submit"
+            type="button"
+            onClick={() => setSubmitted(true)}
+            className="cta-shadow mt-8 w-full rounded-2xl bg-[var(--measured-green)] px-4 py-3.5 text-[15px] font-semibold text-white hover:bg-[var(--measured-dark-green)] transition-colors"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.96 }}
+          >
+            Save consent
+          </motion.button>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

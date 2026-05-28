@@ -284,10 +284,25 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
 
   if (!current) {
     return (
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-3 py-24 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]">
+      <motion.div
+        className="mx-auto flex max-w-3xl flex-col items-center gap-3 py-24 text-center"
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <motion.div
+          className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+          initial={{ scale: 0.6, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{
+            type: "spring",
+            stiffness: 320,
+            damping: 18,
+            delay: 0.1,
+          }}
+        >
           <CheckCircle2 size={32} strokeWidth={1.6} aria-hidden="true" />
-        </div>
+        </motion.div>
         <h2 className="font-serif text-[28px] text-[var(--measured-dark)]">
           {queueFilter !== "all" ? "No matches" : "Queue clear"}
         </h2>
@@ -302,23 +317,29 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
         </p>
         <div className="mt-3 flex gap-2">
           {queueFilter !== "all" && (
-            <button
+            <motion.button
               type="button"
               onClick={() => setQueueFilter("all")}
               className="rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark-green)]"
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
               Clear filter
-            </button>
+            </motion.button>
           )}
-          <button
+          <motion.button
             type="button"
             onClick={reset}
             className="rounded-2xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark)]"
+            whileHover={{ y: -1 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
           >
             Reset queue
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
@@ -326,7 +347,12 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="flex items-end justify-between gap-6">
+      <motion.div
+        className="flex items-end justify-between gap-6"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div>
           <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
             Meal review queue
@@ -335,19 +361,27 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
             {remaining} meal{remaining === 1 ? "" : "s"} for clinical review
           </h1>
         </div>
-        {sessionInfo && (
-          <div className="rounded-2xl border border-[var(--measured-border-soft)] bg-white px-4 py-2 text-[12px] text-[var(--measured-dark)]">
-            <span className="font-semibold">{sessionInfo.count}</span> reviewed
-            ·{" "}
-            <Clock
-              size={11}
-              strokeWidth={2}
-              className="inline -mt-0.5 mx-1 text-[var(--measured-subtext)]"
-            />
-            {sessionInfo.elapsed}
-          </div>
-        )}
-      </div>
+        <AnimatePresence>
+          {sessionInfo && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              className="rounded-2xl border border-[var(--measured-border-soft)] bg-white px-4 py-2 text-[12px] text-[var(--measured-dark)]"
+            >
+              <span className="font-semibold">{sessionInfo.count}</span>{" "}
+              reviewed ·{" "}
+              <Clock
+                size={11}
+                strokeWidth={2}
+                className="inline -mt-0.5 mx-1 text-[var(--measured-subtext)]"
+              />
+              {sessionInfo.elapsed}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
       {/* Filter strip */}
       <div className="mt-4 flex items-center gap-2">
@@ -427,7 +461,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                       />
                     )}
                   </button>
-                  <button
+                  <motion.button
                     type="button"
                     onClick={() => setCursor(idx)}
                     className={cn(
@@ -437,6 +471,8 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                         : "border-transparent hover:bg-[var(--measured-cream)]",
                       isPast && "opacity-50",
                     )}
+                    whileHover={isActive ? undefined : { x: 2 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 24 }}
                   >
                     <span className="text-[20px]" aria-hidden="true">
                       {m.photoEmoji}
@@ -468,7 +504,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                         {triageLabel(m)!.label}
                       </span>
                     )}
-                  </button>
+                  </motion.button>
                 </li>
               );
             })}
@@ -742,21 +778,24 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
 
             {/* Action bar — Approve is primary, others secondary */}
             <div className="space-y-2">
-              <button
+              <motion.button
                 type="button"
                 onClick={() => handleAction("approved", current.id)}
                 className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] px-4 py-3.5 text-[14px] font-semibold text-white transition-colors hover:bg-[var(--measured-dark-green)]"
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.96 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
               >
                 <CheckCircle2 size={18} strokeWidth={2.2} aria-hidden="true" />
                 Reviewed ✓
                 <kbd className="ml-auto rounded bg-white/20 px-2 py-0.5 text-[11px] font-mono">
                   A
                 </kbd>
-              </button>
+              </motion.button>
               <div className="grid grid-cols-4 gap-2">
                 {SHORTCUTS.filter((sc) => sc.action !== "approved").map(
                   (sc) => (
-                    <button
+                    <motion.button
                       type="button"
                       key={sc.key}
                       onClick={() => handleAction(sc.action, current.id)}
@@ -764,13 +803,20 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                         "flex flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2.5 text-[11px] font-semibold transition-colors",
                         TONE_CLASS[sc.tone],
                       )}
+                      whileHover={{ y: -1 }}
+                      whileTap={{ scale: 0.91 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 20,
+                      }}
                     >
                       <sc.Icon size={15} strokeWidth={2.2} aria-hidden="true" />
                       <span>{sc.label}</span>
                       <kbd className="rounded bg-black/10 px-1.5 py-0.5 text-[9px] font-mono opacity-80">
                         {sc.key}
                       </kbd>
-                    </button>
+                    </motion.button>
                   ),
                 )}
               </div>

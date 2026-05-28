@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { FadeUp } from "./fade-up";
@@ -7,7 +6,10 @@ import { TiltCard } from "./tilt-card";
 import { MobileBookingBar } from "./mobile-booking-bar";
 import { HeroSection } from "./hero-section";
 import { CtaBand } from "./cta-band";
-import { BookNowButton } from "./book-now-button";
+import { NavBar } from "./nav-bar";
+import { FaqItem } from "./faq-item";
+import { ProtocolSection } from "./protocol-section";
+import { ParallaxPortrait } from "./parallax-portrait";
 
 const BOOKING_URL =
   "https://healthengine.com.au/doctor/nsw/beecroft/dr-anubhav-saxena/p123180";
@@ -91,29 +93,8 @@ const FAQ = [
 export function DoctorLanding() {
   return (
     <main className="min-h-dvh bg-white pb-20 text-[var(--measured-dark)] md:pb-0">
-      {/* ── Nav ──────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 border-b border-[var(--measured-border-soft)] bg-white/96 backdrop-blur-md">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <div className="font-serif text-[20px] tracking-tight text-[var(--measured-dark)]">
-            Measured
-          </div>
-          <nav className="hidden items-center gap-7 md:flex">
-            <a
-              href="#protocol"
-              className="text-[13px] font-medium text-[var(--measured-subtext)] transition-colors hover:text-[var(--measured-dark)]"
-            >
-              How it works
-            </a>
-            <a
-              href="#faq"
-              className="text-[13px] font-medium text-[var(--measured-subtext)] transition-colors hover:text-[var(--measured-dark)]"
-            >
-              FAQ
-            </a>
-          </nav>
-          <BookNowButton url={BOOKING_URL} />
-        </div>
-      </header>
+      {/* ── Nav — scroll-linked frosted glass + progress line ──────── */}
+      <NavBar bookingUrl={BOOKING_URL} />
 
       {/* ── Hero ─────────────────────────────────────── */}
       <HeroSection bookingUrl={BOOKING_URL} />
@@ -149,7 +130,7 @@ export function DoctorLanding() {
         </div>
       </section>
 
-      {/* ── Protocol ─────────────────────────────────── */}
+      {/* ── Protocol — editorial rows with animated hairline + image wipe ── */}
       <section id="protocol" className="bg-[var(--measured-sand)]">
         <div className="mx-auto max-w-5xl px-6 py-24 md:py-32">
           <FadeUp>
@@ -172,87 +153,46 @@ export function DoctorLanding() {
             </div>
           </FadeUp>
 
-          <StaggerGroup className="divide-y divide-[var(--measured-border-soft)]">
-            {PROTOCOL.map((step) => (
-              <StaggerItem key={step.n}>
-                <div className="flex items-center gap-6 py-10 md:gap-14 md:py-14">
-                  {/* Step number — decorative, ultra-light */}
-                  <div
-                    className="shrink-0 select-none font-serif leading-none"
-                    style={{
-                      fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
-                      color: "rgba(10, 10, 8, 0.08)",
-                    }}
-                  >
-                    {step.n}
-                  </div>
-
-                  {/* Content */}
-                  <div className="min-w-0 flex-1">
-                    <div className="mb-3 h-px w-6 bg-[var(--measured-green)]" />
-                    <h3
-                      className="font-serif leading-tight text-[var(--measured-dark)]"
-                      style={{ fontSize: "var(--text-h3)" }}
-                    >
-                      {step.title}
-                    </h3>
-                    <p className="mt-3 max-w-[380px] text-[15px] leading-relaxed text-[var(--measured-subtext)]">
-                      {step.body}
-                    </p>
-                  </div>
-
-                  {/* Image — editorial side panel, desktop only */}
-                  <div className="relative hidden h-[144px] w-[144px] shrink-0 overflow-hidden rounded-xl md:block">
-                    <Image
-                      src={step.photo}
-                      alt=""
-                      fill
-                      className="object-cover"
-                      sizes="144px"
-                    />
-                  </div>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
+          <ProtocolSection steps={PROTOCOL} />
         </div>
       </section>
 
-      {/* ── Doctor ───────────────────────────────────── */}
+      {/* ── Doctor — staggered bio + scroll parallax portrait ────────── */}
       <section className="bg-white">
         <div className="mx-auto max-w-5xl px-6 py-24 md:py-32">
-          <FadeUp>
-            <div className="flex flex-col gap-14 md:flex-row md:items-start md:gap-20">
-              {/* Portrait with decorative depth */}
-              <div className="relative shrink-0">
-                <div
-                  aria-hidden="true"
-                  className="absolute -bottom-3 -right-3 h-full w-full rounded-2xl bg-[var(--measured-green)]/8"
-                />
-                <div className="relative h-[280px] w-full overflow-hidden rounded-2xl shadow-[0_8px_48px_-8px_rgba(0,0,0,0.14)] md:h-[400px] md:w-[300px]">
-                  <Image
-                    src="/images/dr-saxena.jpeg"
-                    alt="Dr Anubhav Saxena"
-                    fill
-                    className="object-cover"
-                    style={{ objectPosition: "50% 20%" }}
-                    sizes="(min-width: 768px) 300px, 100vw"
-                    priority
-                  />
-                </div>
-              </div>
+          <div className="flex flex-col gap-14 md:flex-row md:items-start md:gap-20">
+            {/* Portrait with decorative depth */}
+            <FadeUp className="relative shrink-0">
+              <div
+                aria-hidden="true"
+                className="absolute -bottom-3 -right-3 h-full w-full rounded-2xl bg-[var(--measured-green)]/8"
+              />
+              <ParallaxPortrait
+                src="/images/dr-saxena.jpeg"
+                alt="Dr Anubhav Saxena"
+                sizes="(min-width: 768px) 300px, 100vw"
+                priority
+              />
+            </FadeUp>
 
-              {/* Bio */}
-              <div className="flex flex-col justify-center">
+            {/* Bio — each element staggers in independently */}
+            <div className="flex flex-col justify-center">
+              <FadeUp delay={0}>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--measured-subtext)]">
                   Your doctor
                 </p>
+              </FadeUp>
+
+              <FadeUp delay={0.08}>
                 <h2
                   className="mt-5 font-serif leading-tight tracking-tight text-[var(--measured-dark)]"
                   style={{ fontSize: "var(--text-display)" }}
                 >
                   Dr Anubhav Saxena
                 </h2>
+              </FadeUp>
+
+              <FadeUp delay={0.14}>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {["MBBS", "FRACGP", "MPhil"].map((c) => (
                     <span
@@ -263,6 +203,9 @@ export function DoctorLanding() {
                     </span>
                   ))}
                 </div>
+              </FadeUp>
+
+              <FadeUp delay={0.22}>
                 <p
                   className="mt-7 max-w-[440px] leading-[1.75] text-[var(--measured-subtext)]"
                   style={{ fontSize: "var(--text-body-lg)" }}
@@ -273,6 +216,9 @@ export function DoctorLanding() {
                   to give patients a structured, evidence-based path to lasting
                   weight and metabolic improvement.
                 </p>
+              </FadeUp>
+
+              <FadeUp delay={0.3}>
                 <a
                   href={BOOKING_URL}
                   target="_blank"
@@ -287,13 +233,13 @@ export function DoctorLanding() {
                     aria-hidden="true"
                   />
                 </a>
-              </div>
+              </FadeUp>
             </div>
-          </FadeUp>
+          </div>
         </div>
       </section>
 
-      {/* ── Testimonials ─────────────────────────────── */}
+      {/* ── Testimonials — 3D tilt cards ─────────────── */}
       <section className="bg-[var(--measured-sand)]">
         <div className="mx-auto max-w-5xl px-6 py-24 md:py-32">
           <FadeUp>
@@ -354,7 +300,7 @@ export function DoctorLanding() {
         </div>
       </section>
 
-      {/* ── FAQ ──────────────────────────────────────── */}
+      {/* ── FAQ — AnimatePresence smooth accordion ────── */}
       <section id="faq" className="bg-white">
         <div className="mx-auto max-w-3xl px-6 py-24 md:py-32">
           <FadeUp>
@@ -373,24 +319,7 @@ export function DoctorLanding() {
 
           <div className="divide-y divide-[var(--measured-border-soft)]">
             {FAQ.map((item) => (
-              <details key={item.q} className="group py-5">
-                <summary className="flex cursor-pointer items-start justify-between gap-6 text-[16px] font-medium text-[var(--measured-dark)]">
-                  <span>{item.q}</span>
-                  <ChevronDown
-                    size={18}
-                    strokeWidth={2}
-                    className="mt-0.5 shrink-0 text-[var(--measured-subtext)] transition-transform duration-300 group-open:rotate-180"
-                    aria-hidden="true"
-                  />
-                </summary>
-                <div className="faq-body">
-                  <div>
-                    <p className="pb-1 pt-4 text-[15px] leading-relaxed text-[var(--measured-subtext)]">
-                      {item.a}
-                    </p>
-                  </div>
-                </div>
-              </details>
+              <FaqItem key={item.q} q={item.q} a={item.a} />
             ))}
           </div>
         </div>

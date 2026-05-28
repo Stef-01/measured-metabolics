@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   User,
   FileText,
@@ -60,7 +61,12 @@ export function GpSidebarShell({ patient, children }: Props) {
       {/* Risk-level accent bar */}
       <div className={cn("h-1 w-full shrink-0", riskBar)} aria-hidden="true" />
 
-      <header className="border-b border-[var(--measured-border-soft)] bg-white px-5 pt-3 pb-3">
+      <motion.header
+        className="border-b border-[var(--measured-border-soft)] bg-white px-5 pt-3 pb-3"
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-[var(--measured-subtext)]">
             <Stethoscope size={14} strokeWidth={2.2} aria-hidden="true" />
@@ -88,7 +94,7 @@ export function GpSidebarShell({ patient, children }: Props) {
             {patient.risk} risk
           </span>
         </div>
-      </header>
+      </motion.header>
 
       <nav
         className="flex gap-1 overflow-x-auto border-b border-[var(--measured-border-soft)] bg-white px-2 py-2 scrollbar-hide"
@@ -103,12 +109,19 @@ export function GpSidebarShell({ patient, children }: Props) {
               href={tab.href}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex shrink-0 items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-[12px] font-medium transition-colors",
+                "relative flex shrink-0 items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-[12px] font-medium transition-colors",
                 isActive
-                  ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
+                  ? "text-[var(--measured-dark-green)]"
                   : "text-[var(--measured-subtext)] hover:bg-[var(--measured-cream)] hover:text-[var(--measured-dark)]",
               )}
             >
+              {isActive && (
+                <motion.span
+                  layoutId="gp-nav-tab"
+                  className="absolute inset-0 rounded-xl bg-[var(--measured-green)]/10"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
               <Icon size={14} strokeWidth={2} aria-hidden="true" />
               {tab.label}
             </Link>
@@ -116,7 +129,14 @@ export function GpSidebarShell({ patient, children }: Props) {
         })}
       </nav>
 
-      <main className="flex-1 overflow-y-auto px-4 py-4">{children}</main>
+      <motion.main
+        className="flex-1 overflow-y-auto px-4 py-4"
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+      >
+        {children}
+      </motion.main>
     </div>
   );
 }
