@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { motion } from "framer-motion";
 import { AlertTriangle } from "lucide-react";
 
 interface Props {
@@ -22,9 +24,12 @@ export function EscalationCard({
   cta = "Send now",
 }: Props) {
   return (
-    <div
+    <motion.div
       className="rounded-2xl border border-[var(--measured-evaluate)]/25 bg-[var(--measured-evaluate)]/5 p-4 shadow-[var(--shadow-card)]"
       role="alert"
+      initial={{ opacity: 0, y: -8, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ type: "spring", stiffness: 320, damping: 20 }}
     >
       <div className="flex items-start gap-3">
         <div
@@ -40,14 +45,16 @@ export function EscalationCard({
           <p className="mt-1 text-[14px] leading-relaxed text-[var(--measured-dark)]">
             {reason}
           </p>
-          <Link
+          <motion.a
             href={href}
             className="mt-3 inline-flex items-center justify-center rounded-xl bg-[var(--measured-evaluate)] px-4 py-2 text-[13px] font-semibold text-white shadow-[var(--shadow-card)] transition-colors hover:bg-[var(--measured-evaluate-hover)]"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.96 }}
           >
             {cta} → {dietitianName}
-          </Link>
+          </motion.a>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
