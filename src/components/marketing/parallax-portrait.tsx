@@ -28,7 +28,7 @@ export function ParallaxPortrait({
   return (
     <div
       ref={ref}
-      className="relative h-[280px] w-full overflow-hidden rounded-2xl shadow-[0_8px_48px_-8px_rgba(0,0,0,0.14)] md:h-[400px] md:w-[300px]"
+      className="relative h-[360px] w-full overflow-hidden rounded-2xl shadow-[0_8px_48px_-8px_rgba(0,0,0,0.14)] md:h-[400px] md:w-[300px]"
     >
       {/* Slightly oversized wrapper so parallax never shows gaps at edges */}
       <motion.div className="absolute -inset-y-8 inset-x-0" style={{ y }}>
@@ -37,7 +37,7 @@ export function ParallaxPortrait({
           alt={alt}
           fill
           className="object-cover"
-          style={{ objectPosition: "50% 30%" }}
+          style={{ objectPosition: "50% 0%" }}
           sizes={sizes}
           priority={priority}
         />
