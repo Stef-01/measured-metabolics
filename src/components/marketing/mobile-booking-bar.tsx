@@ -15,6 +15,7 @@ export function MobileBookingBar({ url }: { url: string }) {
     <AnimatePresence>
       {visible && (
         <motion.div
+          key="booking-bar"
           className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--measured-border-soft)] bg-white/96 px-4 pt-3 backdrop-blur-md md:hidden pb-[max(env(safe-area-inset-bottom,0px),16px)]"
           initial={{ y: "100%" }}
           animate={{ y: 0 }}

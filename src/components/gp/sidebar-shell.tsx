@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   User,
   FileText,
@@ -115,13 +115,16 @@ export function GpSidebarShell({ patient, children }: Props) {
                   : "text-[var(--measured-subtext)] hover:bg-[var(--measured-cream)] hover:text-[var(--measured-dark)]",
               )}
             >
-              {isActive && (
-                <motion.span
-                  layoutId="gp-nav-tab"
-                  className="absolute inset-0 rounded-xl bg-[var(--measured-green)]/10"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
+              <AnimatePresence>
+                {isActive && (
+                  <motion.span
+                    key="gp-nav-tab"
+                    layoutId="gp-nav-tab"
+                    className="absolute inset-0 rounded-xl bg-[var(--measured-green)]/10"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </AnimatePresence>
               <Icon size={14} strokeWidth={2} aria-hidden="true" />
               {tab.label}
             </Link>

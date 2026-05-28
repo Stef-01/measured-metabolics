@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -346,7 +346,7 @@ export function MealSwipeScreen({
               </div>
             </motion.div>
           ) : (
-            <>
+            <React.Fragment key="cards">
               {/* Render cards back-to-front so front card sits on top in DOM */}
               {cards
                 .slice(0, 3)
@@ -366,7 +366,7 @@ export function MealSwipeScreen({
                     />
                   );
                 })}
-            </>
+            </React.Fragment>
           )}
         </AnimatePresence>
       </div>
