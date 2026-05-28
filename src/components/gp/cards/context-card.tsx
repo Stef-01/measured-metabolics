@@ -73,7 +73,12 @@ export function GpContextCard({ patient }: { patient: Patient }) {
       )}
 
       {/* Clinical stat tiles */}
-      <motion.div className="grid grid-cols-3 gap-2" variants={container} initial="hidden" animate="show">
+      <motion.div
+        className="grid grid-cols-3 gap-2"
+        variants={container}
+        initial="hidden"
+        animate="show"
+      >
         {tiles.map((t) => {
           const TrendIcon =
             t.trend === "good"
@@ -126,7 +131,13 @@ export function GpContextCard({ patient }: { patient: Patient }) {
         <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
           Clinical patterns
         </div>
-        <motion.ul className="space-y-1.5" variants={container} initial="hidden" whileInView="show" viewport={{ once: true }}>
+        <motion.ul
+          className="space-y-1.5"
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+        >
           {patient.patternSummary.map((s) => (
             <motion.li
               key={s}

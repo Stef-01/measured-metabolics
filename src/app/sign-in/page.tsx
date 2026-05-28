@@ -116,7 +116,8 @@ export default function SignInPage() {
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              Check {email}. The link signs you in and routes you to your persona.
+              Check {email}. The link signs you in and routes you to your
+              persona.
             </motion.p>
           )}
           {status === "error" && errorMsg && (

@@ -378,7 +378,9 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                       ? "bg-[var(--measured-green)]"
                       : "cursor-not-allowed bg-[var(--measured-green)]/40",
                   )}
-                  whileTap={drafts[active.id]?.trim() ? { scale: 0.88 } : undefined}
+                  whileTap={
+                    drafts[active.id]?.trim() ? { scale: 0.88 } : undefined
+                  }
                   transition={{ type: "spring", stiffness: 400, damping: 18 }}
                 >
                   <Send size={16} strokeWidth={2.4} aria-hidden="true" />

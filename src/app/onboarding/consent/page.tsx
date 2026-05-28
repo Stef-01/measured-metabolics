@@ -71,8 +71,8 @@ export default function ConsentPage() {
           Three things to choose
         </h1>
         <p className="mt-2 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
-          Each one is independent. You can change RWE and marketing on the Privacy
-          page later.
+          Each one is independent. You can change RWE and marketing on the
+          Privacy page later.
         </p>
       </motion.div>
 

@@ -200,7 +200,11 @@ function PatientRow({ p, idx }: { p: Patient; idx: number }) {
     <motion.li
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.36, delay: idx * 0.04, ease: [0.16, 1, 0.3, 1] }}
+      transition={{
+        duration: 0.36,
+        delay: idx * 0.04,
+        ease: [0.16, 1, 0.3, 1],
+      }}
       whileHover={{ y: -2 }}
     >
       <Link

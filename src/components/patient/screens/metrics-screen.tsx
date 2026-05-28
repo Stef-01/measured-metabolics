@@ -126,7 +126,12 @@ export function PatientMetricsScreen() {
 
       <div className="mx-auto flex max-w-md flex-col gap-4 px-5 pt-3 pb-8">
         {/* Clinical stats strip */}
-        <motion.div className="grid grid-cols-3 gap-2" variants={pillContainer} initial="hidden" animate="show">
+        <motion.div
+          className="grid grid-cols-3 gap-2"
+          variants={pillContainer}
+          initial="hidden"
+          animate="show"
+        >
           <StatPill
             label="HbA1c"
             value={`${me.hbA1cPct}%`}
@@ -178,7 +183,13 @@ export function PatientMetricsScreen() {
         <div className="surface-card p-4">
           <AnimatePresence mode="wait">
             {tab === "glucose" && (
-              <motion.div key="glucose" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -8 }} transition={{ duration: 0.22, ease: "easeOut" }}>
+              <motion.div
+                key="glucose"
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+              >
                 <ChartShell
                   title="Glucose · last 48h"
                   subtitle={`${me.timeInRangePct}% time in range`}
@@ -211,21 +222,36 @@ export function PatientMetricsScreen() {
               </motion.div>
             )}
             {tab === "weight" && (
-              <motion.div key="weight" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -8 }} transition={{ duration: 0.22, ease: "easeOut" }}>
+              <motion.div
+                key="weight"
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+              >
                 <ChartShell
                   title="Weight · last 14 days"
                   subtitle={`${me.weightDeltaKg > 0 ? "+" : ""}${me.weightDeltaKg.toFixed(1)} kg`}
                 >
                   <ResponsiveContainer width="100%" height={220}>
                     <LineChart data={weightData}>
-                      <CartesianGrid stroke="rgba(0,0,0,0.06)" vertical={false} />
-                      <XAxis dataKey="day" stroke="rgba(0,0,0,0.4)" fontSize={10} />
+                      <CartesianGrid
+                        stroke="rgba(0,0,0,0.06)"
+                        vertical={false}
+                      />
+                      <XAxis
+                        dataKey="day"
+                        stroke="rgba(0,0,0,0.4)"
+                        fontSize={10}
+                      />
                       <YAxis
                         domain={["auto", "auto"]}
                         stroke="rgba(0,0,0,0.4)"
                         fontSize={10}
                       />
-                      <Tooltip formatter={(v: number) => `${v.toFixed(1)} kg`} />
+                      <Tooltip
+                        formatter={(v: number) => `${v.toFixed(1)} kg`}
+                      />
                       <Line
                         type="monotone"
                         dataKey="kg"
@@ -239,16 +265,26 @@ export function PatientMetricsScreen() {
               </motion.div>
             )}
             {tab === "symptoms" && (
-              <motion.div key="symptoms" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -8 }} transition={{ duration: 0.22, ease: "easeOut" }}>
+              <motion.div
+                key="symptoms"
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+              >
                 <ChartShell title="Symptoms" subtitle="Last logged check-ins">
                   {symptomData.length === 0 ? (
                     <div className="flex h-[220px] items-center justify-center text-center text-[13px] text-[var(--measured-subtext)]">
-                      No symptom check-ins yet. Open the Symptoms tab to log one.
+                      No symptom check-ins yet. Open the Symptoms tab to log
+                      one.
                     </div>
                   ) : (
                     <ResponsiveContainer width="100%" height={220}>
                       <LineChart data={symptomData}>
-                        <CartesianGrid stroke="rgba(0,0,0,0.06)" vertical={false} />
+                        <CartesianGrid
+                          stroke="rgba(0,0,0,0.06)"
+                          vertical={false}
+                        />
                         <XAxis
                           dataKey="idx"
                           stroke="rgba(0,0,0,0.4)"
@@ -287,7 +323,13 @@ export function PatientMetricsScreen() {
               </motion.div>
             )}
             {tab === "adherence" && (
-              <motion.div key="adherence" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -8 }} transition={{ duration: 0.22, ease: "easeOut" }}>
+              <motion.div
+                key="adherence"
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+              >
                 <AdherencePanel planEaten={planEaten} />
               </motion.div>
             )}

@@ -209,7 +209,9 @@ function Row({
               ? "bg-[var(--measured-green)] text-white hover:bg-[var(--measured-dark-green)]"
               : "cursor-not-allowed bg-[var(--measured-input-bg)] text-[var(--measured-subtext)]",
           )}
-          whileHover={r.consentStatus === "signed" ? { scale: 1.03 } : undefined}
+          whileHover={
+            r.consentStatus === "signed" ? { scale: 1.03 } : undefined
+          }
           whileTap={r.consentStatus === "signed" ? { scale: 0.95 } : undefined}
           transition={{ type: "spring", stiffness: 400, damping: 20 }}
         >

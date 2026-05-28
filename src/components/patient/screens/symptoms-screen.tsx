@@ -109,7 +109,12 @@ export function PatientSymptomsScreen() {
     <>
       <PatientAppHeader eyebrow="Quick check" title="How are you?" />
 
-      <motion.div className="mx-auto flex max-w-md flex-col gap-4 px-5 pt-3 pb-8" variants={fieldsetContainer} initial="hidden" animate="show">
+      <motion.div
+        className="mx-auto flex max-w-md flex-col gap-4 px-5 pt-3 pb-8"
+        variants={fieldsetContainer}
+        initial="hidden"
+        animate="show"
+      >
         <AnimatePresence>
           {submitted && escalateBecauseOf && (
             <motion.div
@@ -132,7 +137,11 @@ export function PatientSymptomsScreen() {
           const value = q.id === "nausea" ? nausea : constipation;
           const setValue = q.id === "nausea" ? setNausea : setConstipation;
           return (
-            <motion.fieldset key={q.id} variants={fieldsetItem} className="surface-card p-4">
+            <motion.fieldset
+              key={q.id}
+              variants={fieldsetItem}
+              className="surface-card p-4"
+            >
               <legend className="px-1 text-[13px] font-medium text-[var(--measured-dark)]">
                 {q.prompt}
               </legend>
@@ -199,17 +208,21 @@ export function PatientSymptomsScreen() {
           </div>
         </motion.fieldset>
 
-        <motion.div variants={fieldsetItem}><ToggleRow
-          label="Any hypo symptoms (shaky, dizzy)?"
-          checked={hypoSymptoms}
-          onChange={setHypoSymptoms}
-          dangerOnTrue
-        /></motion.div>
-        <motion.div variants={fieldsetItem}><ToggleRow
-          label="Took medication as planned?"
-          checked={medsAsPlanned}
-          onChange={setMedsAsPlanned}
-        /></motion.div>
+        <motion.div variants={fieldsetItem}>
+          <ToggleRow
+            label="Any hypo symptoms (shaky, dizzy)?"
+            checked={hypoSymptoms}
+            onChange={setHypoSymptoms}
+            dangerOnTrue
+          />
+        </motion.div>
+        <motion.div variants={fieldsetItem}>
+          <ToggleRow
+            label="Took medication as planned?"
+            checked={medsAsPlanned}
+            onChange={setMedsAsPlanned}
+          />
+        </motion.div>
 
         <AnimatePresence mode="wait">
           {!submitted ? (
@@ -235,7 +248,9 @@ export function PatientSymptomsScreen() {
             >
               <CheckCircle2 size={28} strokeWidth={2} aria-hidden="true" />
               <div className="text-[15px] font-semibold">Check-in logged</div>
-              <div className="text-[12px] text-white/75">Returning to home…</div>
+              <div className="text-[12px] text-white/75">
+                Returning to home…
+              </div>
             </motion.div>
           ) : null}
         </AnimatePresence>

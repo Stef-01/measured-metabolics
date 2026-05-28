@@ -294,7 +294,12 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
           className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
           initial={{ scale: 0.6, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 320, damping: 18, delay: 0.1 }}
+          transition={{
+            type: "spring",
+            stiffness: 320,
+            damping: 18,
+            delay: 0.1,
+          }}
         >
           <CheckCircle2 size={32} strokeWidth={1.6} aria-hidden="true" />
         </motion.div>
@@ -365,8 +370,8 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
               className="rounded-2xl border border-[var(--measured-border-soft)] bg-white px-4 py-2 text-[12px] text-[var(--measured-dark)]"
             >
-              <span className="font-semibold">{sessionInfo.count}</span> reviewed
-              ·{" "}
+              <span className="font-semibold">{sessionInfo.count}</span>{" "}
+              reviewed ·{" "}
               <Clock
                 size={11}
                 strokeWidth={2}
@@ -800,7 +805,11 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                       )}
                       whileHover={{ y: -1 }}
                       whileTap={{ scale: 0.91 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 20,
+                      }}
                     >
                       <sc.Icon size={15} strokeWidth={2.2} aria-hidden="true" />
                       <span>{sc.label}</span>

@@ -105,7 +105,11 @@ export function DietitianReportsScreen() {
               key={p.id}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.38, delay: idx * 0.06, ease: [0.16, 1, 0.3, 1] }}
+              transition={{
+                duration: 0.38,
+                delay: idx * 0.06,
+                ease: [0.16, 1, 0.3, 1],
+              }}
               whileHover={{ y: -2 }}
             >
               <Link

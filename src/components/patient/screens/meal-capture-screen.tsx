@@ -245,7 +245,12 @@ export function PatientMealCaptureScreen() {
               className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 text-[11px] font-semibold text-white"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ type: "spring", stiffness: 320, damping: 18, delay: 0.15 }}
+              transition={{
+                type: "spring",
+                stiffness: 320,
+                damping: 18,
+                delay: 0.15,
+              }}
               whileTap={{ scale: 0.92 }}
             >
               <RefreshCw size={12} strokeWidth={2.2} aria-hidden="true" />
