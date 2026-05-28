@@ -127,6 +127,13 @@ function SwipeableCard({
   return (
     <motion.div
       className="absolute inset-x-3 touch-none"
+      role="article"
+      aria-roledescription="swipeable meal card"
+      aria-label={
+        isTop
+          ? `${suggestion.name}. ${suggestion.mealType}${suggestion.origin ? `, ${suggestion.origin}` : ""}. Swipe right or press Add to add to plan; swipe left or press Skip to pass.`
+          : suggestion.name
+      }
       style={{
         x: isTop ? x : 0,
         rotate: isTop ? rotate : 0,
@@ -275,6 +282,11 @@ export function MealSwipeScreen({
   const [cards, setCards] = useState(MEAL_SUGGESTIONS);
   const [savedCount, setSavedCount] = useState(0);
   const done = cards.length === 0;
+  const doneRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (done) doneRef.current?.focus();
+  }, [done]);
 
   function handleSwipe(id: string, dir: "left" | "right") {
     if (dir === "right") setSavedCount((n) => n + 1);
@@ -295,12 +307,14 @@ export function MealSwipeScreen({
       <PatientAppHeader eyebrow="Meal ideas" title="What sounds good?" />
 
       {/* Card stack */}
-      <div className="relative flex-1">
+      <div className="relative flex-1" aria-live="polite" aria-atomic="true">
         <AnimatePresence>
           {done ? (
             <motion.div
               key="done"
-              className="flex h-full flex-col items-center justify-center px-10 text-center"
+              ref={doneRef}
+              tabIndex={-1}
+              className="flex h-full flex-col items-center justify-center px-10 text-center focus:outline-none"
               initial={{ opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ type: "spring", stiffness: 300, damping: 22 }}
