@@ -148,27 +148,25 @@ function SwipeableCard({
           cursor: isTop ? "grab" : "default",
         }}
       >
-        {/* Food photo — fills card, image sits below all overlays */}
+        {/* Food photo + colour-identity tint — both always appear together */}
         {suggestion.imageUrl && (
-          <Image
-            src={suggestion.imageUrl}
-            alt={suggestion.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 420px"
-            draggable={false}
-            priority={isTop}
-          />
-        )}
-
-        {/* Color-identity top tint — ties photo to each card's gradient personality */}
-        {suggestion.imageUrl && (
-          <div
-            className="absolute inset-0 z-[1]"
-            style={{
-              background: `linear-gradient(180deg, ${suggestion.gradientFrom}cc 0%, ${suggestion.gradientFrom}44 30%, transparent 55%)`,
-            }}
-          />
+          <>
+            <Image
+              src={suggestion.imageUrl}
+              alt={suggestion.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 420px"
+              draggable={false}
+              priority={isTop}
+            />
+            <div
+              className="absolute inset-0 z-[1]"
+              style={{
+                background: `linear-gradient(180deg, ${suggestion.gradientFrom}cc 0%, ${suggestion.gradientFrom}44 30%, transparent 55%)`,
+              }}
+            />
+          </>
         )}
 
         {/* Dietitian pick badge */}
