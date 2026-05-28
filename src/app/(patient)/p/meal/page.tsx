@@ -1,5 +1,5 @@
-import { PatientMealCaptureScreen } from "@/components/patient/screens/meal-capture-screen";
+import { MealSwipeScreen } from "@/components/patient/screens/meal-swipe-screen";
 
 export default function PatientMealPage() {
-  return <PatientMealCaptureScreen />;
+  return <MealSwipeScreen />;
 }
