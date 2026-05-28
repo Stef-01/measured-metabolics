@@ -1,3 +1,5 @@
+import { MEAL } from "@/lib/images";
+
 export interface MealSuggestion {
   id: string;
   name: string;
@@ -15,6 +17,7 @@ export interface MealSuggestion {
   gradientTo: string;
   dietitianPick: boolean;
   dietitianNote?: string;
+  imageUrl?: string;
 }
 
 export const MEAL_SUGGESTIONS: MealSuggestion[] = [
@@ -39,6 +42,7 @@ export const MEAL_SUGGESTIONS: MealSuggestion[] = [
     gradientTo: "#c47800",
     dietitianPick: true,
     dietitianNote: "Zero glucose spike · maximal protein",
+    imageUrl: MEAL.mediterranean,
   },
   {
     id: "ms-2",
@@ -61,6 +65,7 @@ export const MEAL_SUGGESTIONS: MealSuggestion[] = [
     gradientTo: "#1a5040",
     dietitianPick: true,
     dietitianNote: "Ideal fasting-break · stable insulin",
+    imageUrl: MEAL.greens,
   },
   {
     id: "ms-3",
@@ -82,6 +87,7 @@ export const MEAL_SUGGESTIONS: MealSuggestion[] = [
     gradientFrom: "#4a1a0a",
     gradientTo: "#8b3a1a",
     dietitianPick: false,
+    imageUrl: MEAL.southAsian,
   },
   {
     id: "ms-4",
@@ -103,6 +109,7 @@ export const MEAL_SUGGESTIONS: MealSuggestion[] = [
     gradientFrom: "#2d0a3d",
     gradientTo: "#5c1a6e",
     dietitianPick: false,
+    imageUrl: MEAL.asian,
   },
   {
     id: "ms-5",
@@ -124,6 +131,7 @@ export const MEAL_SUGGESTIONS: MealSuggestion[] = [
     gradientFrom: "#1a2a00",
     gradientTo: "#3d6200",
     dietitianPick: false,
+    imageUrl: MEAL.fruit,
   },
   {
     id: "ms-6",
@@ -146,6 +154,7 @@ export const MEAL_SUGGESTIONS: MealSuggestion[] = [
     gradientTo: "#6e1a2a",
     dietitianPick: true,
     dietitianNote: "High zinc · anti-inflammatory spice blend",
+    imageUrl: MEAL.southAsian,
   },
   {
     id: "ms-7",
@@ -167,6 +176,7 @@ export const MEAL_SUGGESTIONS: MealSuggestion[] = [
     gradientTo: "#253350",
     dietitianPick: true,
     dietitianNote: "Maximal omega-3 · zero glycaemic load",
+    imageUrl: MEAL.salad,
   },
   {
     id: "ms-8",
@@ -188,6 +198,7 @@ export const MEAL_SUGGESTIONS: MealSuggestion[] = [
     gradientFrom: "#1c1008",
     gradientTo: "#3d2208",
     dietitianPick: false,
+    imageUrl: MEAL.mediterranean,
   },
   {
     id: "ms-9",
@@ -209,6 +220,7 @@ export const MEAL_SUGGESTIONS: MealSuggestion[] = [
     gradientFrom: "#0a1f0e",
     gradientTo: "#1a4a20",
     dietitianPick: false,
+    imageUrl: MEAL.toast,
   },
   {
     id: "ms-10",
@@ -231,6 +243,7 @@ export const MEAL_SUGGESTIONS: MealSuggestion[] = [
     gradientTo: "#7a1540",
     dietitianPick: true,
     dietitianNote: "Lean complete protein · anti-inflammatory",
+    imageUrl: MEAL.poha,
   },
   {
     id: "ms-11",
@@ -254,6 +267,7 @@ export const MEAL_SUGGESTIONS: MealSuggestion[] = [
     gradientTo: "#1a3550",
     dietitianPick: true,
     dietitianNote: "Nobu's signature · exceptional omega-3",
+    imageUrl: MEAL.asian,
   },
   {
     id: "ms-12",
@@ -275,5 +289,6 @@ export const MEAL_SUGGESTIONS: MealSuggestion[] = [
     gradientFrom: "#1a1000",
     gradientTo: "#4a3000",
     dietitianPick: false,
+    imageUrl: MEAL.salad,
   },
 ];

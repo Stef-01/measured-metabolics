@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   motion,
@@ -126,6 +127,13 @@ function SwipeableCard({
   return (
     <motion.div
       className="absolute inset-x-3 touch-none"
+      role="article"
+      aria-roledescription="swipeable meal card"
+      aria-label={
+        isTop
+          ? `${suggestion.name}. ${suggestion.mealType}${suggestion.origin ? `, ${suggestion.origin}` : ""}. Swipe right or press Add to add to plan; swipe left or press Skip to pass.`
+          : suggestion.name
+      }
       style={{
         x: isTop ? x : 0,
         rotate: isTop ? rotate : 0,
@@ -147,9 +155,35 @@ function SwipeableCard({
           cursor: isTop ? "grab" : "default",
         }}
       >
+        {/* Food photo + colour-identity tint — both always appear together */}
+        {suggestion.imageUrl && (
+          <>
+            <Image
+              src={suggestion.imageUrl}
+              alt={suggestion.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 420px"
+              draggable={false}
+              priority={offset <= 1}
+            />
+            <div
+              className="absolute inset-0 z-[1]"
+              style={{
+                background: `linear-gradient(180deg, ${suggestion.gradientFrom}cc 0%, ${suggestion.gradientFrom}44 30%, transparent 55%)`,
+              }}
+            />
+          </>
+        )}
+
         {/* Dietitian pick badge */}
         {isTop && suggestion.dietitianPick && (
-          <DietitianTag name={dietitianName} note={suggestion.dietitianNote} />
+          <div className="relative z-20">
+            <DietitianTag
+              name={dietitianName}
+              note={suggestion.dietitianNote}
+            />
+          </div>
         )}
 
         {/* Swipe feedback overlays — only rendered on the top card */}
@@ -186,30 +220,32 @@ function SwipeableCard({
 
         {/* Noise texture overlay for depth */}
         <div
-          className="pointer-events-none absolute inset-0 rounded-[2.5rem] opacity-[0.04]"
+          className="pointer-events-none absolute inset-0 z-[2] rounded-[2.5rem] opacity-[0.04]"
           style={{
             backgroundImage:
               "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
           }}
         />
 
-        {/* Hero emoji */}
-        <div className="flex h-[52%] items-center justify-center">
-          <span
-            className="select-none drop-shadow-2xl"
-            style={{ fontSize: 100, lineHeight: 1 }}
-            aria-hidden="true"
-          >
-            {suggestion.emoji}
-          </span>
-        </div>
+        {/* Hero emoji — only when no photo */}
+        {!suggestion.imageUrl && (
+          <div className="flex h-[52%] items-center justify-center">
+            <span
+              className="select-none drop-shadow-2xl"
+              style={{ fontSize: 100, lineHeight: 1 }}
+              aria-hidden="true"
+            >
+              {suggestion.emoji}
+            </span>
+          </div>
+        )}
 
         {/* Bottom info overlay */}
         <div
-          className="absolute inset-x-0 bottom-0 px-6 pb-7 pt-16"
+          className="absolute inset-x-0 bottom-0 z-[3] px-6 pb-7 pt-20"
           style={{
             background:
-              "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0) 100%)",
+              "linear-gradient(to top, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.60) 45%, rgba(0,0,0,0) 100%)",
           }}
         >
           <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-white/50">
@@ -246,6 +282,11 @@ export function MealSwipeScreen({
   const [cards, setCards] = useState(MEAL_SUGGESTIONS);
   const [savedCount, setSavedCount] = useState(0);
   const done = cards.length === 0;
+  const doneRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (done) doneRef.current?.focus();
+  }, [done]);
 
   function handleSwipe(id: string, dir: "left" | "right") {
     if (dir === "right") setSavedCount((n) => n + 1);
@@ -266,12 +307,14 @@ export function MealSwipeScreen({
       <PatientAppHeader eyebrow="Meal ideas" title="What sounds good?" />
 
       {/* Card stack */}
-      <div className="relative flex-1">
+      <div className="relative flex-1" aria-live="polite" aria-atomic="true">
         <AnimatePresence>
           {done ? (
             <motion.div
               key="done"
-              className="flex h-full flex-col items-center justify-center px-10 text-center"
+              ref={doneRef}
+              tabIndex={-1}
+              className="flex h-full flex-col items-center justify-center px-10 text-center focus:outline-none"
               initial={{ opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ type: "spring", stiffness: 300, damping: 22 }}
@@ -317,7 +360,7 @@ export function MealSwipeScreen({
               </div>
             </motion.div>
           ) : (
-            <>
+            <React.Fragment key="cards">
               {/* Render cards back-to-front so front card sits on top in DOM */}
               {cards
                 .slice(0, 3)
@@ -337,7 +380,7 @@ export function MealSwipeScreen({
                     />
                   );
                 })}
-            </>
+            </React.Fragment>
           )}
         </AnimatePresence>
       </div>

@@ -12,7 +12,7 @@ import {
   Settings,
   Shield,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import { PersonaSwitcher } from "@/components/shared/persona-switcher";
 
@@ -65,13 +65,16 @@ export function AdminNav() {
                   : "text-[var(--measured-subtext)] hover:bg-[var(--measured-bg)] hover:text-[var(--measured-dark)]",
               )}
             >
-              {isActive && (
-                <motion.span
-                  layoutId="admin-nav-active"
-                  className="absolute inset-0 rounded-xl bg-[var(--measured-green)]/10"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
+              <AnimatePresence>
+                {isActive && (
+                  <motion.span
+                    key="admin-nav-active"
+                    layoutId="admin-nav-active"
+                    className="absolute inset-0 rounded-xl bg-[var(--measured-green)]/10"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </AnimatePresence>
               <t.Icon
                 size={16}
                 strokeWidth={2}
