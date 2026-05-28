@@ -214,6 +214,12 @@ function SwipeableCard({
         >
           <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-white/50">
             {suggestion.mealType}
+            {suggestion.origin ? (
+              <>
+                <span className="mx-1.5 opacity-40">·</span>
+                {suggestion.origin}
+              </>
+            ) : null}
           </p>
           <h2 className="mt-0.5 font-serif text-[30px] leading-tight tracking-tight text-white">
             {suggestion.name}
