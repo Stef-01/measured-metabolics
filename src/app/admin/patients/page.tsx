@@ -84,11 +84,17 @@ export default async function AdminPatientsPage() {
                 <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[12px] text-[var(--measured-subtext)]">
                   <span>{p.conditions.join(" · ")}</span>
                   <span>·</span>
-                  <span>HbA1c <span className="tnum">{p.hbA1cPct}%</span></span>
+                  <span>
+                    HbA1c <span className="tnum">{p.hbA1cPct}%</span>
+                  </span>
                   <span>·</span>
-                  <span>TIR <span className="tnum">{p.timeInRangePct}%</span></span>
+                  <span>
+                    TIR <span className="tnum">{p.timeInRangePct}%</span>
+                  </span>
                   <span>·</span>
-                  <span>Wk <span className="tnum">{p.weekNumber}</span></span>
+                  <span>
+                    Wk <span className="tnum">{p.weekNumber}</span>
+                  </span>
                 </div>
               </div>
             </li>

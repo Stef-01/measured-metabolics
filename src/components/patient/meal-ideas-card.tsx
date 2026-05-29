@@ -158,7 +158,9 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
                   type="button"
                   onClick={send}
                   disabled={!body.trim() || sending}
-                  whileTap={body.trim() && !sending ? { scale: 0.97 } : undefined}
+                  whileTap={
+                    body.trim() && !sending ? { scale: 0.97 } : undefined
+                  }
                   transition={{ type: "spring", stiffness: 400, damping: 20 }}
                   className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] py-2 text-[13px] font-semibold text-white disabled:bg-[var(--measured-cream)] disabled:text-[var(--measured-subtext)]"
                 >

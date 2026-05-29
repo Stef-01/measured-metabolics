@@ -1,10 +1,7 @@
 import { listReferrals, listPatients } from "@/server/services";
 import { StatusDot } from "@/components/shared/status-dot";
 
-const STATUS_DOT_TONE: Record<
-  string,
-  "low" | "medium" | "good" | "neutral"
-> = {
+const STATUS_DOT_TONE: Record<string, "low" | "medium" | "good" | "neutral"> = {
   new: "low",
   consent_pending: "medium",
   accepted: "good",
@@ -29,7 +26,6 @@ const STATUS_LABEL: Record<string, string> = {
   in_progress: "In progress",
   discharged: "Discharged",
 };
-
 
 export default async function AdminReferralsPage() {
   const [refs, patients] = await Promise.all([listReferrals(), listPatients()]);

@@ -120,9 +120,8 @@ export function PatientPlanScreen() {
                 <span className="tnum font-semibold text-[var(--measured-dark)]">
                   {weekTotals.eaten}
                 </span>{" "}
-                of{" "}
-                <span className="tnum">{weekTotals.planned}</span> meals eaten
-                this week
+                of <span className="tnum">{weekTotals.planned}</span> meals
+                eaten this week
               </div>
               <div className="tnum text-[12px] font-semibold text-[var(--measured-dark-green)]">
                 {Math.round((weekTotals.eaten / weekTotals.planned) * 100)}%

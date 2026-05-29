@@ -340,7 +340,11 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                         type="button"
                         onClick={() => copy(h)}
                         whileTap={{ scale: 0.96 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 20,
+                        }}
                         className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-2.5 py-2 text-[11px] font-semibold text-white hover:bg-[var(--measured-dark-green)] transition-colors"
                       >
                         <Receipt
@@ -354,7 +358,11 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                         type="button"
                         onClick={() => createTask(h)}
                         whileTap={{ scale: 0.96 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 20,
+                        }}
                         className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[var(--measured-border)] bg-white px-2.5 py-2 text-[11px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)] transition-colors"
                       >
                         <ClipboardList

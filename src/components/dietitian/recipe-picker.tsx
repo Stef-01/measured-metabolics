@@ -185,7 +185,11 @@ export function RecipePicker({
                         }}
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.98 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 22,
+                        }}
                         className="w-full rounded-xl border border-[var(--measured-border-soft)] bg-white p-3 text-left transition-shadow hover:shadow-[var(--shadow-card)]"
                       >
                         <div className="flex items-start justify-between gap-3">
@@ -223,7 +227,8 @@ export function RecipePicker({
                               strokeWidth={2.2}
                               aria-hidden="true"
                             />
-                            Used in <span className="tnum">{r.timesApplied}</span> plans
+                            Used in{" "}
+                            <span className="tnum">{r.timesApplied}</span> plans
                           </span>
                           <span className="font-semibold uppercase tracking-wider">
                             {r.defaultMealType}
