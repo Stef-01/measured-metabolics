@@ -56,7 +56,8 @@ export function DietitianReferralsScreen() {
           Inbox
         </h1>
         <p className="mt-1 text-[14px] text-[var(--measured-subtext)]">
-          {newOnes.length} new · {inProgress.length} in progress
+          <span className="tnum">{newOnes.length}</span> new ·{" "}
+          <span className="tnum">{inProgress.length}</span> in progress
         </p>
       </motion.div>
 
@@ -97,7 +98,7 @@ function Section<T>({
       <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
         <Icon size={14} strokeWidth={2} aria-hidden="true" />
         {title}
-        <span className="rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-subtext)]">
+        <span className="tnum rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-subtext)]">
           {items.length}
         </span>
       </div>

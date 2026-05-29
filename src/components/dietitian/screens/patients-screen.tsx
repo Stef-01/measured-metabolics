@@ -71,7 +71,8 @@ export function DietitianPatientsScreen() {
             Patient panel
           </h1>
           <p className="mt-1 text-[14px] text-[var(--measured-subtext)]">
-            {list.length} patients · {flagged.length} flagged
+            <span className="tnum">{list.length}</span> patients ·{" "}
+            <span className="tnum">{flagged.length}</span> flagged
           </p>
         </div>
       </motion.div>
@@ -117,10 +118,12 @@ export function DietitianPatientsScreen() {
         <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
           Cuisine
         </span>
-        <button
+        <motion.button
           type="button"
           onClick={() => setCuisine("all")}
           aria-pressed={cuisine === "all"}
+          whileTap={{ scale: 0.94 }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
           className={cn(
             "rounded-full px-3 py-1 text-[12px] font-semibold transition-colors",
             cuisine === "all"
@@ -129,13 +132,15 @@ export function DietitianPatientsScreen() {
           )}
         >
           All
-        </button>
+        </motion.button>
         {cuisineOptions.map((c) => (
-          <button
+          <motion.button
             type="button"
             key={c}
             onClick={() => setCuisine(c)}
             aria-pressed={cuisine === c}
+            whileTap={{ scale: 0.94 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className={cn(
               "rounded-full px-3 py-1 text-[12px] font-semibold transition-colors",
               cuisine === c
@@ -144,7 +149,7 @@ export function DietitianPatientsScreen() {
             )}
           >
             {cuisineLabel.get(c) ?? c}
-          </button>
+          </motion.button>
         ))}
       </div>
 
@@ -169,17 +174,19 @@ export function DietitianPatientsScreen() {
           <p className="max-w-xs text-[14px] leading-relaxed text-[var(--measured-subtext)]">
             Try clearing the search or adjusting the risk or cuisine filters.
           </p>
-          <button
+          <motion.button
             type="button"
             onClick={() => {
               setRisk("all");
               setCuisine("all");
               setQuery("");
             }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className="mt-1 rounded-xl bg-[var(--measured-green)] px-4 py-2 text-[13px] font-semibold text-white"
           >
             Clear filters
-          </button>
+          </motion.button>
         </motion.div>
       ) : (
         <>
@@ -208,7 +215,7 @@ function Section({
     <section className="mt-7">
       <div className="text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
         {title}
-        <span className="ml-2 rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
+        <span className="tnum ml-2 rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
           {items.length}
         </span>
       </div>
@@ -268,8 +275,8 @@ function PatientRow({ p, idx }: { p: Patient; idx: number }) {
             {p.cuisineLabel}
           </div>
         </div>
-        <div className="text-[12px] text-[var(--measured-subtext)]">
-          Week {p.weekNumber}
+        <div className="tnum text-[12px] text-[var(--measured-subtext)]">
+          Wk {p.weekNumber}
         </div>
         <ChevronRight
           size={16}
