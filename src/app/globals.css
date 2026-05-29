@@ -378,6 +378,20 @@ a,
   background: transparent;
 }
 
+/* === TYPOGRAPHY UTILITIES === */
+
+/* Tabular (fixed-width) numerals for aligned metric displays */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Lining numerals (sit on baseline — better in caps contexts) */
+.lnum {
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum";
+}
+
 /* === REDUCED MOTION === */
 @media (prefers-reduced-motion: reduce) {
   .shimmer,
