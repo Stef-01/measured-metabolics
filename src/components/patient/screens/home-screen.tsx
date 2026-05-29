@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
 import {
   Camera,
@@ -404,9 +404,11 @@ function GlucoseSparkCard({
 }
 
 function AnimatedCount({ target }: { target: number }) {
+  const reduceMotion = useReducedMotion();
   const [display, setDisplay] = useState(0);
   const raf = useRef<number>(0);
   useEffect(() => {
+    if (reduceMotion) return;
     const start = performance.now();
     const dur = 600;
     function tick(now: number) {
@@ -416,8 +418,8 @@ function AnimatedCount({ target }: { target: number }) {
     }
     raf.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf.current);
-  }, [target]);
-  return <>{display}</>;
+  }, [target, reduceMotion]);
+  return <>{reduceMotion ? target : display}</>;
 }
 
 function computeStreak(meals: MealLog[]): number {

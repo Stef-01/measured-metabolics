@@ -10,6 +10,7 @@ import {
   animate,
   AnimatePresence,
   useAnimate,
+  useReducedMotion,
 } from "framer-motion";
 import type { PanInfo } from "framer-motion";
 import { Check, X, RefreshCw, Camera, Leaf } from "lucide-react";
@@ -94,11 +95,13 @@ function SwipeableCard({
   const rotate = useTransform(x, [-220, 220], [-22, 22]);
   const addOpacity = useTransform(x, [40, 130], [0, 1]);
   const skipOpacity = useTransform(x, [-130, -40], [1, 0]);
+  const reduceMotion = useReducedMotion();
 
   // One-shot swipe affordance peek — reads localStorage inside the setTimeout
   // callback (not the synchronous effect body) so no setState is needed.
+  // Skipped entirely under prefers-reduced-motion.
   useEffect(() => {
-    if (!isTop) return;
+    if (!isTop || reduceMotion) return;
     const timeout = setTimeout(async () => {
       try {
         if (localStorage.getItem(HINT_KEY)) return;
@@ -111,7 +114,7 @@ function SwipeableCard({
       } catch {}
     }, 700);
     return () => clearTimeout(timeout);
-  }, [isTop, x]);
+  }, [isTop, x, reduceMotion]);
 
   async function handleDragEnd(_: PointerEvent, info: PanInfo) {
     if (
@@ -294,10 +297,12 @@ function SwipeableCard({
   );
 }
 
-// Animated count that springs up from 0
+// Animated count that springs up from 0 (renders target directly if reduced motion)
 function SpringCount({ target }: { target: number }) {
+  const reduceMotion = useReducedMotion();
   const [display, setDisplay] = useState(0);
   useEffect(() => {
+    if (reduceMotion) return;
     let frame: number;
     const start = performance.now();
     const duration = 900;
@@ -309,8 +314,8 @@ function SpringCount({ target }: { target: number }) {
     }
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [target]);
-  return <>{display}</>;
+  }, [target, reduceMotion]);
+  return <>{reduceMotion ? target : display}</>;
 }
 
 // Sparkle particles radiating outward on celebration
