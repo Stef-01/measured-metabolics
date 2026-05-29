@@ -133,7 +133,8 @@ export function DietitianReportsScreen() {
                       />
                     </div>
                     <div className="text-[12px] text-[var(--measured-subtext)]">
-                      Week {p.weekNumber} · {gp ? gp.name : p.referringGpId}
+                      Week <span className="tnum">{p.weekNumber}</span> ·{" "}
+                      {gp ? gp.name : p.referringGpId}
                     </div>
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       <StatChip
