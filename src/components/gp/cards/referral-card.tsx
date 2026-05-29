@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Send, Smartphone } from "lucide-react";
 import { toast } from "@/lib/hooks/use-toast";
 import type { Patient, ReferralPriority, Cuisine } from "@/lib/mock/types";
@@ -71,11 +72,13 @@ export function GpReferralCard({ patient }: { patient: Patient }) {
         </legend>
         <div className="mt-1 flex flex-wrap gap-1">
           {CUISINES.map((c) => (
-            <button
+            <motion.button
               type="button"
               key={c.id}
               onClick={() => setCuisine(c.id)}
               aria-pressed={cuisine === c.id}
+              whileTap={{ scale: 0.91 }}
+              transition={{ type: "spring", stiffness: 480, damping: 26 }}
               className={cn(
                 "rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-colors",
                 cuisine === c.id
@@ -84,7 +87,7 @@ export function GpReferralCard({ patient }: { patient: Patient }) {
               )}
             >
               {c.label}
-            </button>
+            </motion.button>
           ))}
         </div>
       </fieldset>
@@ -95,11 +98,13 @@ export function GpReferralCard({ patient }: { patient: Patient }) {
         </legend>
         <div className="mt-1 grid grid-cols-3 gap-1.5">
           {PRIORITIES.map((p) => (
-            <button
+            <motion.button
               type="button"
               key={p.id}
               onClick={() => setPriority(p.id)}
               aria-pressed={priority === p.id}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 480, damping: 26 }}
               className={cn(
                 "rounded-lg border px-2 py-1.5 text-[12px] font-semibold transition-colors",
                 priority === p.id
@@ -110,7 +115,7 @@ export function GpReferralCard({ patient }: { patient: Patient }) {
               )}
             >
               {p.label}
-            </button>
+            </motion.button>
           ))}
         </div>
       </fieldset>

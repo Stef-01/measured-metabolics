@@ -87,7 +87,7 @@ export function GpReportCard({ patient }: { patient: Patient }) {
                 className={tone.icon}
                 aria-hidden="true"
               />
-              <div className="font-serif text-[16px] leading-tight text-[var(--measured-dark)]">
+              <div className="tnum font-serif text-[16px] leading-tight text-[var(--measured-dark)]">
                 {s.value}
               </div>
               <div className="text-[9px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
@@ -105,10 +105,15 @@ export function GpReportCard({ patient }: { patient: Patient }) {
           30-second read
         </div>
         <p className="mt-1.5 text-[12px] leading-relaxed text-[var(--measured-dark)]">
-          Over 4 weeks, {patient.firstName} uploaded {mealCount} meals, logged{" "}
-          {symptomCount} symptom check-ins, and held {patient.timeInRangePct}%
+          Over 4 weeks, {patient.firstName} uploaded{" "}
+          <span className="tnum">{mealCount}</span> meals, logged{" "}
+          <span className="tnum">{symptomCount}</span> symptom check-ins, and
+          held <span className="tnum">{patient.timeInRangePct}%</span>{" "}
           time-in-range. Weight {patient.weightDeltaKg < 0 ? "down" : "up"}{" "}
-          {Math.abs(patient.weightDeltaKg).toFixed(1)} kg.{" "}
+          <span className="tnum">
+            {Math.abs(patient.weightDeltaKg).toFixed(1)} kg
+          </span>
+          .{" "}
           {patient.alerts.length > 0
             ? `Open alerts: ${patient.alerts.join(", ").toLowerCase()}.`
             : "No open alerts."}

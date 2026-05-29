@@ -241,15 +241,26 @@ export function PatientSymptomsScreen() {
           ) : !escalateBecauseOf ? (
             <motion.div
               key="confirmed"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ type: "spring", stiffness: 320, damping: 18 }}
+              initial={{ opacity: 0, scale: 0.92, y: 6 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 360, damping: 22 }}
               className="flex flex-col items-center gap-2 rounded-3xl bg-[var(--measured-green)] px-5 py-5 text-center text-white shadow-[0_4px_20px_-4px_rgba(45,90,61,0.35)]"
             >
-              <CheckCircle2 size={28} strokeWidth={2} aria-hidden="true" />
-              <div className="text-[15px] font-semibold">Check-in logged</div>
-              <div className="text-[12px] text-white/75">
-                Returning to home…
+              <motion.div
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 480,
+                  damping: 18,
+                  delay: 0.1,
+                }}
+              >
+                <CheckCircle2 size={32} strokeWidth={1.8} aria-hidden="true" />
+              </motion.div>
+              <div className="text-[16px] font-semibold">Check-in logged</div>
+              <div className="text-[13px] text-white/80">
+                Looks good — returning to home in a moment.
               </div>
             </motion.div>
           ) : null}

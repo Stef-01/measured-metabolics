@@ -185,7 +185,7 @@ export function GpTranscriptCard({ patient }: { patient: Patient }) {
                   Review required
                 </span>
               )}
-              <span className="rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-bold text-[var(--measured-subtext)]">
+              <span className="tnum rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-bold text-[var(--measured-subtext)]">
                 {Math.round(draft.confidence * 100)}%
               </span>
             </div>
