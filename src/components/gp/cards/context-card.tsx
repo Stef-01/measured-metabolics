@@ -112,7 +112,7 @@ export function GpContextCard({ patient }: { patient: Patient }) {
               <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
                 {t.label}
               </div>
-              <div className="font-serif text-[20px] leading-tight text-[var(--measured-dark)]">
+              <div className="tnum font-serif text-[20px] leading-tight text-[var(--measured-dark)]">
                 {t.value}
               </div>
               <TrendIcon

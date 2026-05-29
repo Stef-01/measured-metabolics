@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Sparkles, Copy, Check } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { toast } from "@/lib/hooks/use-toast";
@@ -157,10 +158,12 @@ export function GpTranscriptCard({ patient }: { patient: Patient }) {
         placeholder={`Paste transcript for ${patient.firstName}…`}
         className="w-full resize-y rounded-2xl border border-[var(--measured-border)] bg-white px-3 py-2.5 text-[13px] focus:border-[var(--measured-green)] focus:outline-none"
       />
-      <button
+      <motion.button
         type="button"
         onClick={analyze}
         disabled={analyzing || !text.trim()}
+        whileTap={analyzing || !text.trim() ? undefined : { scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 400, damping: 20 }}
         className={cn(
           "inline-flex w-full items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-[13px] font-semibold",
           analyzing || !text.trim()
@@ -170,7 +173,7 @@ export function GpTranscriptCard({ patient }: { patient: Patient }) {
       >
         <Sparkles size={14} strokeWidth={2.2} aria-hidden="true" />
         {analyzing ? "Analyzing…" : "Analyze transcript"}
-      </button>
+      </motion.button>
 
       {draft && (
         <div className="space-y-2 overflow-hidden rounded-xl border border-[var(--measured-border-soft)] bg-white shadow-[var(--shadow-card)]">
@@ -185,7 +188,7 @@ export function GpTranscriptCard({ patient }: { patient: Patient }) {
                   Review required
                 </span>
               )}
-              <span className="rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-bold text-[var(--measured-subtext)]">
+              <span className="tnum rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-bold text-[var(--measured-subtext)]">
                 {Math.round(draft.confidence * 100)}%
               </span>
             </div>
@@ -220,9 +223,11 @@ export function GpTranscriptCard({ patient }: { patient: Patient }) {
 
           {/* Copy button */}
           <div className="border-t border-[var(--measured-border-soft)] px-3 py-2">
-            <button
+            <motion.button
               type="button"
               onClick={copy}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
               className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-3 py-2 text-[12px] font-semibold text-white hover:bg-[var(--measured-dark-green)]"
             >
               {copied ? (
@@ -236,7 +241,7 @@ export function GpTranscriptCard({ patient }: { patient: Patient }) {
                   Copy SOAP note
                 </>
               )}
-            </button>
+            </motion.button>
           </div>
         </div>
       )}

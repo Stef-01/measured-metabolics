@@ -15,6 +15,7 @@ import {
   Send,
 } from "lucide-react";
 import { DietitianStatCard } from "@/components/dietitian/stat-card";
+import { StatusDot } from "@/components/shared/status-dot";
 import {
   PATIENTS,
   DEMO_QUEUE_MEALS,
@@ -22,12 +23,10 @@ import {
   newReferrals,
   CURRENT_DIETITIAN_ID,
 } from "@/lib/mock";
-import type { RiskLevel, ReferralPriority } from "@/lib/mock/types";
 import {
   patientStore,
   type MealConsultationRequest,
 } from "@/lib/storage/patient-store";
-import { cn } from "@/lib/utils/cn";
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -49,13 +48,6 @@ const patientCardContainer: Variants = {
 const patientCardItem: Variants = {
   hidden: { opacity: 0, y: 10 },
   show: { opacity: 1, y: 0, transition: { duration: 0.42, ease } },
-};
-
-const PRIORITY_TONE: Record<ReferralPriority, string> = {
-  high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
-  medium:
-    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
-  low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
 };
 
 export function DietitianDashboardScreen() {
@@ -82,8 +74,9 @@ export function DietitianDashboardScreen() {
             Good morning, Maya
           </h1>
           <p className="mt-1 text-[14px] text-[var(--measured-subtext)]">
-            {pendingMeals} meals to review · {newRefs.length} new referrals ·{" "}
-            {severe.length} severe-symptom flags
+            <span className="tnum">{pendingMeals}</span> meals to review ·{" "}
+            <span className="tnum">{newRefs.length}</span> new referrals ·{" "}
+            <span className="tnum">{severe.length}</span> severe-symptom flags
           </p>
         </div>
         <motion.div
@@ -245,14 +238,11 @@ export function DietitianDashboardScreen() {
                       <span>{r.referringGpName}</span>
                       <span>·</span>
                       <span>{r.cuisineLabel}</span>
-                      <span
-                        className={cn(
-                          "rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider",
-                          PRIORITY_TONE[r.priority],
-                        )}
-                      >
-                        {r.priority}
-                      </span>
+                      <StatusDot
+                        tone={r.priority}
+                        label={r.priority}
+                        size="sm"
+                      />
                     </div>
                   </div>
                   <Link
@@ -310,7 +300,7 @@ export function DietitianDashboardScreen() {
         <div className="flex items-center justify-between">
           <div className="text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
             Caseload
-            <span className="ml-2 rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
+            <span className="tnum ml-2 rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
               {myPatients.length}
             </span>
           </div>
@@ -364,13 +354,6 @@ function SymChip({
   );
 }
 
-const RISK_CHIP: Record<RiskLevel, string> = {
-  high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
-  medium:
-    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
-  low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
-};
-
 function PatientRequestsSection() {
   const [requests, setRequests] = useState<
     Array<MealConsultationRequest & { patientName: string }>
@@ -406,7 +389,7 @@ function PatientRequestsSection() {
       <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
         <MessageSquarePlus size={14} strokeWidth={2} aria-hidden="true" />
         Patient meal requests
-        <span className="rounded-full bg-[var(--measured-clinical-amber)]/15 px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-clinical-amber)]">
+        <span className="tnum rounded-full bg-[var(--measured-clinical-amber)]/15 px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-clinical-amber)]">
           {requests.length}
         </span>
       </div>
@@ -451,15 +434,17 @@ function PatientRequestsSection() {
                   }
                 }}
               />
-              <button
+              <motion.button
                 type="button"
                 onClick={() => reply(req)}
                 disabled={!replies[req.id]?.trim()}
+                whileTap={replies[req.id]?.trim() ? { scale: 0.95 } : undefined}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-3 py-2 text-[12px] font-semibold text-white disabled:bg-[var(--measured-cream)] disabled:text-[var(--measured-subtext)]"
               >
                 <Send size={13} strokeWidth={2.2} />
                 Reply
-              </button>
+              </motion.button>
             </div>
           </li>
         ))}
@@ -501,16 +486,9 @@ function PatientMiniCard({
             <span className="truncate text-[13px] font-semibold text-[var(--measured-dark)]">
               {p.firstName} {p.lastName}
             </span>
-            <span
-              className={cn(
-                "shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase",
-                RISK_CHIP[p.risk],
-              )}
-            >
-              {p.risk}
-            </span>
+            <StatusDot tone={p.risk} label={p.risk} size="sm" />
           </div>
-          <div className="mt-0.5 flex items-center gap-2 text-[11px] text-[var(--measured-subtext)]">
+          <div className="tnum mt-0.5 flex items-center gap-2 text-[11px] text-[var(--measured-subtext)]">
             <span>HbA1c {p.hbA1cPct}%</span>
             <span>·</span>
             <span>TIR {p.timeInRangePct}%</span>

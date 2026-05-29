@@ -17,37 +17,49 @@ const PERSONAS = [
     id: "patient",
     title: "Patient",
     tagline: "Capture meals, log symptoms, track your plan",
+    detail:
+      "Mobile-first PWA with swipe cards, CGM overlay, and direct dietitian messaging.",
     href: "/p/home",
     Icon: Smartphone,
     accent: "var(--measured-clinical-blue)",
     accentSoft: "rgba(44, 94, 138, 0.08)",
+    badge: "PWA",
   },
   {
     id: "dietitian",
     title: "Dietitian",
     tagline: "Queue, patient panel, plan and report builders",
+    detail:
+      "Review meal photos, annotate CGM spikes, bulk-approve, and generate GP reports.",
     href: "/d/dashboard",
     Icon: ClipboardList,
     accent: "var(--measured-green)",
     accentSoft: "rgba(45, 90, 61, 0.08)",
+    badge: "Web",
   },
   {
     id: "gp",
     title: "GP Sidebar",
-    tagline: "30-second patient context in a 360 px column",
+    tagline: "30-second patient context in 360 px",
+    detail:
+      "Embeds into Best Practice / Medical Director as a narrow sidebar. Context, transcript, billing, care plan, referral, and report — all tabbed.",
     href: "/gp/asha/context",
     Icon: PanelRightClose,
     accent: "#a07710",
     accentSoft: "rgba(212, 168, 75, 0.1)",
+    badge: "Sidebar",
   },
   {
     id: "admin",
     title: "Admin",
     tagline: "KPI dashboard, audit log, organisations",
+    detail:
+      "Platform health at a glance: enrolments, retention, referral pipeline, and an immutable audit trail.",
     href: "/admin/kpi",
     Icon: Shield,
     accent: "var(--measured-evaluate)",
     accentSoft: "rgba(140, 21, 21, 0.06)",
+    badge: "Internal",
   },
 ] as const;
 
@@ -157,21 +169,33 @@ export function Landing() {
                 href={p.href}
                 className="group flex h-full flex-col rounded-2xl border border-[var(--measured-border-soft)] bg-white p-6 shadow-[var(--shadow-card)]"
               >
-                <motion.div
-                  className="mb-5 flex h-10 w-10 items-center justify-center rounded-2xl"
-                  style={{ background: p.accentSoft, color: p.accent }}
-                  whileHover={{ scale: 1.12 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                >
-                  <p.Icon size={20} strokeWidth={2} aria-hidden="true" />
-                </motion.div>
+                <div className="mb-5 flex items-center justify-between">
+                  <motion.div
+                    className="flex h-10 w-10 items-center justify-center rounded-2xl"
+                    style={{ background: p.accentSoft, color: p.accent }}
+                    whileHover={{ scale: 1.12 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  >
+                    <p.Icon size={20} strokeWidth={2} aria-hidden="true" />
+                  </motion.div>
+                  <span
+                    className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
+                    style={{ background: p.accentSoft, color: p.accent }}
+                  >
+                    {p.badge}
+                  </span>
+                </div>
 
                 <div className="font-serif text-[20px] leading-tight tracking-tight text-[var(--measured-dark)]">
                   {p.title}
                 </div>
 
-                <p className="mt-2 flex-1 text-[13px] leading-relaxed text-[var(--measured-subtext)]">
+                <p className="mt-1 text-[13px] font-medium text-[var(--measured-dark)]">
                   {p.tagline}
+                </p>
+
+                <p className="mt-2 flex-1 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
+                  {p.detail}
                 </p>
 
                 <div

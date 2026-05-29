@@ -156,9 +156,11 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                 : t.patientId.slice(0, 2).toUpperCase();
               return (
                 <li key={t.id}>
-                  <button
+                  <motion.button
                     type="button"
                     onClick={() => setActiveId(t.id)}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 24 }}
                     className={cn(
                       "group flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors",
                       isActive
@@ -226,7 +228,7 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                         aria-hidden="true"
                       />
                     )}
-                  </button>
+                  </motion.button>
                 </li>
               );
             })}
@@ -261,7 +263,8 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                       </div>
                       {p && (
                         <div className="text-[11px] text-[var(--measured-subtext)]">
-                          {p.conditions.join(" · ")} · Week {p.weekNumber}
+                          {p.conditions.join(" · ")} · Wk{" "}
+                          <span className="tnum">{p.weekNumber}</span>
                         </div>
                       )}
                     </div>
@@ -290,10 +293,10 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                     >
                       <div
                         className={cn(
-                          "max-w-[70%] rounded-2xl px-4 py-2 text-[13px] leading-relaxed",
+                          "max-w-[70%] rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed",
                           mine
-                            ? "bg-[var(--measured-green)] text-white"
-                            : "bg-[var(--measured-cream)] text-[var(--measured-dark)]",
+                            ? "rounded-br-md bg-[var(--measured-green)] text-white"
+                            : "rounded-bl-md bg-[var(--measured-cream)] text-[var(--measured-dark)]",
                         )}
                       >
                         {!mine && (
@@ -304,7 +307,7 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                         {m.body}
                         <div
                           className={cn(
-                            "mt-1 text-[10px]",
+                            "tnum mt-1 text-[10px]",
                             mine
                               ? "text-white/70"
                               : "text-[var(--measured-subtext)]",
@@ -341,14 +344,16 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                   {suggesting ? "Suggesting…" : "AI suggest"}
                 </motion.button>
                 {TEMPLATES.map((t) => (
-                  <button
+                  <motion.button
                     type="button"
                     key={t}
                     onClick={() => setDrafts((d) => ({ ...d, [active.id]: t }))}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
                     className="rounded-full border border-[var(--measured-border)] bg-white px-3 py-1 text-[11px] text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]"
                   >
                     {t.length > 60 ? t.slice(0, 60) + "…" : t}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
               <div className="flex items-end gap-2">

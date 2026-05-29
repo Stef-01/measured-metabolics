@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   BrainCircuit,
   CheckCircle2,
@@ -179,10 +180,12 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
           <ScanPill Icon={Sparkles} label={`${items.length} candidates`} />
         </div>
         {!readOnly && (
-          <button
+          <motion.button
             type="button"
             onClick={triggerScan}
             disabled={scanning}
+            whileTap={scanning ? undefined : { scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className={cn(
               "mt-3 inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[11px] font-semibold",
               scanning
@@ -192,7 +195,7 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
           >
             <Sparkles size={11} strokeWidth={2.2} aria-hidden="true" />
             {scanning ? "Queuing…" : "Queue background scan"}
-          </button>
+          </motion.button>
         )}
       </section>
 
@@ -204,9 +207,11 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
               key={h.item}
               className="rounded-xl border border-[var(--measured-border-soft)] bg-white text-[12px]"
             >
-              <button
+              <motion.button
                 type="button"
                 onClick={() => setExpanded(isOpen ? null : h.item)}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 24 }}
                 className="flex w-full items-start justify-between gap-3 px-3 py-2.5 text-left"
                 aria-expanded={isOpen}
               >
@@ -234,7 +239,7 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                       {h.service}
                     </span>
                   </div>
-                  <div className="mt-0.5 text-[var(--measured-subtext)]">
+                  <div className="tnum mt-0.5 text-[var(--measured-subtext)]">
                     {Math.round(h.confidence * 100)}% confidence
                     {h.stance !== "defer" &&
                       h.estimatedRebateAud > 0 &&
@@ -255,7 +260,7 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                     aria-hidden="true"
                   />
                 )}
-              </button>
+              </motion.button>
               {isOpen && (
                 <div className="space-y-3 border-t border-[var(--measured-border-soft)] px-3 py-2.5">
                   <div>
@@ -333,9 +338,15 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
 
                   {!readOnly && (
                     <div className="grid grid-cols-2 gap-2">
-                      <button
+                      <motion.button
                         type="button"
                         onClick={() => copy(h)}
+                        whileTap={{ scale: 0.96 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 20,
+                        }}
                         className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-2.5 py-2 text-[11px] font-semibold text-white hover:bg-[var(--measured-dark-green)] transition-colors"
                       >
                         <Receipt
@@ -344,10 +355,16 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                           aria-hidden="true"
                         />
                         Copy clinic note
-                      </button>
-                      <button
+                      </motion.button>
+                      <motion.button
                         type="button"
                         onClick={() => createTask(h)}
+                        whileTap={{ scale: 0.96 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 20,
+                        }}
                         className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[var(--measured-border)] bg-white px-2.5 py-2 text-[11px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)] transition-colors"
                       >
                         <ClipboardList
@@ -356,7 +373,7 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                           aria-hidden="true"
                         />
                         Create task
-                      </button>
+                      </motion.button>
                     </div>
                   )}
                   {h.officialSourceUrl && (
@@ -387,9 +404,11 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
         })}
       </ul>
       <section className="rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)]">
-        <button
+        <motion.button
           type="button"
           onClick={() => setAiOpen((open) => !open)}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 400, damping: 24 }}
           className="flex w-full items-start gap-3 text-left"
           aria-expanded={aiOpen}
         >
@@ -431,7 +450,7 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
               aria-hidden="true"
             />
           )}
-        </button>
+        </motion.button>
 
         {aiOpen && (
           <div className="mt-3 space-y-2">
@@ -455,7 +474,7 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                       <span className="font-semibold text-[var(--measured-dark)]">
                         {s.serviceName}
                       </span>
-                      <span className="text-[var(--measured-subtext)]">
+                      <span className="tnum text-[var(--measured-subtext)]">
                         {Math.round(s.confidence_score * 100)}% AI confidence
                       </span>
                     </div>

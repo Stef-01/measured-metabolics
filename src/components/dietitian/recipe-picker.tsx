@@ -149,7 +149,7 @@ export function RecipePicker({
                   active={cuisineFilter === "all"}
                   onClick={() => setCuisineFilter("all")}
                 >
-                  All ({all.length})
+                  All (<span className="tnum">{all.length}</span>)
                 </FilterChip>
                 {cuisinesPresent.map((c) => (
                   <FilterChip
@@ -177,11 +177,18 @@ export function RecipePicker({
                 <ul className="space-y-2">
                   {filtered.map((r) => (
                     <li key={r.id}>
-                      <button
+                      <motion.button
                         type="button"
                         onClick={() => {
                           onPick(r);
                           onClose();
+                        }}
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 22,
                         }}
                         className="w-full rounded-xl border border-[var(--measured-border-soft)] bg-white p-3 text-left transition-shadow hover:shadow-[var(--shadow-card)]"
                       >
@@ -212,7 +219,7 @@ export function RecipePicker({
                               strokeWidth={2.2}
                               aria-hidden="true"
                             />
-                            {r.prepMinutes} min
+                            <span className="tnum">{r.prepMinutes}</span> min
                           </span>
                           <span className="inline-flex items-center gap-1">
                             <UsersIcon
@@ -220,13 +227,14 @@ export function RecipePicker({
                               strokeWidth={2.2}
                               aria-hidden="true"
                             />
-                            Used in {r.timesApplied} plans
+                            Used in{" "}
+                            <span className="tnum">{r.timesApplied}</span> plans
                           </span>
                           <span className="font-semibold uppercase tracking-wider">
                             {r.defaultMealType}
                           </span>
                         </div>
-                      </button>
+                      </motion.button>
                     </li>
                   ))}
                 </ul>
@@ -256,10 +264,12 @@ function FilterChip({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <motion.button
       type="button"
       onClick={onClick}
       aria-pressed={active}
+      whileTap={{ scale: 0.93 }}
+      transition={{ type: "spring", stiffness: 480, damping: 26 }}
       className={cn(
         "rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors",
         active
@@ -270,6 +280,6 @@ function FilterChip({
       )}
     >
       {children}
-    </button>
+    </motion.button>
   );
 }

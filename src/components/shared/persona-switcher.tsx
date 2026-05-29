@@ -103,12 +103,14 @@ export function PersonaSwitcher({ active, variant = "rail" }: Props) {
 
   return (
     <div ref={ref} className="relative">
-      <button
+      <motion.button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Switch persona — currently ${activePersona.name}`}
+        whileTap={{ scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 400, damping: 24 }}
         className={cn(
           "group flex w-full items-center gap-3 rounded-2xl text-left transition-colors",
           variant === "rail" &&
@@ -145,7 +147,7 @@ export function PersonaSwitcher({ active, variant = "rail" }: Props) {
             open ? "rotate-0" : "rotate-180",
           )}
         />
-      </button>
+      </motion.button>
 
       <AnimatePresence>
         {open && (
@@ -174,11 +176,17 @@ export function PersonaSwitcher({ active, variant = "rail" }: Props) {
                 const isActive = p.id === active;
                 return (
                   <li key={p.id}>
-                    <button
+                    <motion.button
                       type="button"
                       role="option"
                       aria-selected={isActive}
                       onClick={() => handlePick(p)}
+                      whileTap={{ scale: 0.97 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 24,
+                      }}
                       className={cn(
                         "group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-all duration-150",
                         isActive
@@ -211,7 +219,7 @@ export function PersonaSwitcher({ active, variant = "rail" }: Props) {
                           {p.role}
                         </span>
                       </span>
-                    </button>
+                    </motion.button>
                   </li>
                 );
               })}

@@ -11,6 +11,7 @@ import {
   Activity,
 } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import type { Patient } from "@/lib/mock/types";
 import { mealsForPatient } from "@/lib/mock/meals";
 import { symptomsForPatient } from "@/lib/mock/symptoms";
@@ -87,7 +88,7 @@ export function GpReportCard({ patient }: { patient: Patient }) {
                 className={tone.icon}
                 aria-hidden="true"
               />
-              <div className="font-serif text-[16px] leading-tight text-[var(--measured-dark)]">
+              <div className="tnum font-serif text-[16px] leading-tight text-[var(--measured-dark)]">
                 {s.value}
               </div>
               <div className="text-[9px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
@@ -105,10 +106,15 @@ export function GpReportCard({ patient }: { patient: Patient }) {
           30-second read
         </div>
         <p className="mt-1.5 text-[12px] leading-relaxed text-[var(--measured-dark)]">
-          Over 4 weeks, {patient.firstName} uploaded {mealCount} meals, logged{" "}
-          {symptomCount} symptom check-ins, and held {patient.timeInRangePct}%
+          Over 4 weeks, {patient.firstName} uploaded{" "}
+          <span className="tnum">{mealCount}</span> meals, logged{" "}
+          <span className="tnum">{symptomCount}</span> symptom check-ins, and
+          held <span className="tnum">{patient.timeInRangePct}%</span>{" "}
           time-in-range. Weight {patient.weightDeltaKg < 0 ? "down" : "up"}{" "}
-          {Math.abs(patient.weightDeltaKg).toFixed(1)} kg.{" "}
+          <span className="tnum">
+            {Math.abs(patient.weightDeltaKg).toFixed(1)} kg
+          </span>
+          .{" "}
           {patient.alerts.length > 0
             ? `Open alerts: ${patient.alerts.join(", ").toLowerCase()}.`
             : "No open alerts."}
@@ -139,13 +145,15 @@ export function GpReportCard({ patient }: { patient: Patient }) {
 
       {/* Action buttons */}
       <div className="grid grid-cols-2 gap-2">
-        <button
+        <motion.button
           type="button"
+          whileTap={{ scale: 0.97 }}
+          transition={{ type: "spring", stiffness: 400, damping: 24 }}
           className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[var(--measured-border)] bg-white px-2 py-2.5 text-[12px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)] transition-colors"
         >
           <ExternalLink size={12} strokeWidth={2.2} aria-hidden="true" />
           Open PDF
-        </button>
+        </motion.button>
         <Link
           href={`/gp/${patient.id}/billing`}
           className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-2 py-2.5 text-[12px] font-semibold text-white hover:bg-[var(--measured-dark-green)] transition-colors"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Send, Smartphone } from "lucide-react";
 import { toast } from "@/lib/hooks/use-toast";
 import type { Patient, ReferralPriority, Cuisine } from "@/lib/mock/types";
@@ -71,11 +72,13 @@ export function GpReferralCard({ patient }: { patient: Patient }) {
         </legend>
         <div className="mt-1 flex flex-wrap gap-1">
           {CUISINES.map((c) => (
-            <button
+            <motion.button
               type="button"
               key={c.id}
               onClick={() => setCuisine(c.id)}
               aria-pressed={cuisine === c.id}
+              whileTap={{ scale: 0.91 }}
+              transition={{ type: "spring", stiffness: 480, damping: 26 }}
               className={cn(
                 "rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-colors",
                 cuisine === c.id
@@ -84,7 +87,7 @@ export function GpReferralCard({ patient }: { patient: Patient }) {
               )}
             >
               {c.label}
-            </button>
+            </motion.button>
           ))}
         </div>
       </fieldset>
@@ -95,11 +98,13 @@ export function GpReferralCard({ patient }: { patient: Patient }) {
         </legend>
         <div className="mt-1 grid grid-cols-3 gap-1.5">
           {PRIORITIES.map((p) => (
-            <button
+            <motion.button
               type="button"
               key={p.id}
               onClick={() => setPriority(p.id)}
               aria-pressed={priority === p.id}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 480, damping: 26 }}
               className={cn(
                 "rounded-lg border px-2 py-1.5 text-[12px] font-semibold transition-colors",
                 priority === p.id
@@ -110,29 +115,33 @@ export function GpReferralCard({ patient }: { patient: Patient }) {
               )}
             >
               {p.label}
-            </button>
+            </motion.button>
           ))}
         </div>
       </fieldset>
 
-      <button
+      <motion.button
         type="button"
         onClick={() => setPreviewSms((s) => !s)}
+        whileTap={{ scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 400, damping: 20 }}
         className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--measured-border)] bg-white px-3 py-2 text-[12px] font-semibold text-[var(--measured-dark)]"
       >
         <Smartphone size={12} strokeWidth={2.2} aria-hidden="true" />
         {previewSms ? "Hide SMS preview" : "Preview consent SMS"}
-      </button>
+      </motion.button>
       {previewSms && (
         <div className="rounded-xl bg-[var(--measured-cream)] p-3 text-[12px] leading-relaxed text-[var(--measured-dark)]">
           {sms}
         </div>
       )}
 
-      <button
+      <motion.button
         type="button"
         onClick={send}
         disabled={sent}
+        whileTap={!sent ? { scale: 0.97 } : undefined}
+        transition={{ type: "spring", stiffness: 400, damping: 20 }}
         className={cn(
           "inline-flex w-full items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-[13px] font-semibold",
           sent
@@ -142,7 +151,7 @@ export function GpReferralCard({ patient }: { patient: Patient }) {
       >
         <Send size={14} strokeWidth={2.2} aria-hidden="true" />
         {sent ? "Referral sent" : "Send referral"}
-      </button>
+      </motion.button>
     </div>
   );
 }

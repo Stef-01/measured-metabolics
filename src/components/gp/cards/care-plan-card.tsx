@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Plus, Trash2, FileDown } from "lucide-react";
 import type { Patient } from "@/lib/mock/types";
 import { toast } from "@/lib/hooks/use-toast";
@@ -74,14 +75,16 @@ export function GpCarePlanCard({ patient }: { patient: Patient }) {
               <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
                 {s.label}
               </div>
-              <button
+              <motion.button
                 type="button"
                 onClick={() => setItems([...items, ""])}
+                whileTap={{ scale: 0.94 }}
+                transition={{ type: "spring", stiffness: 480, damping: 26 }}
                 className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--measured-dark-green)]"
               >
                 <Plus size={12} strokeWidth={2.4} aria-hidden="true" />
                 {s.add}
-              </button>
+              </motion.button>
             </div>
             <ul className="mt-2 space-y-1.5 text-[12px]">
               {items.map((item, idx) => (
@@ -123,14 +126,16 @@ export function GpCarePlanCard({ patient }: { patient: Patient }) {
         />
       </label>
 
-      <button
+      <motion.button
         type="button"
         onClick={exportPlan}
+        whileTap={{ scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 400, damping: 20 }}
         className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] px-3 py-2.5 text-[13px] font-semibold text-white hover:bg-[var(--measured-dark-green)]"
       >
         <FileDown size={14} strokeWidth={2.2} aria-hidden="true" />
         {exported ? "Exporting…" : "Export care plan"}
-      </button>
+      </motion.button>
     </div>
   );
 }

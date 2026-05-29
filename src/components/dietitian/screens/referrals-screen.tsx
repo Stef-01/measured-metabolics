@@ -12,16 +12,10 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { REFERRALS, PATIENTS, CURRENT_DIETITIAN_ID } from "@/lib/mock";
-import type { Referral, ReferralPriority } from "@/lib/mock/types";
+import type { Referral } from "@/lib/mock/types";
 import { cn } from "@/lib/utils/cn";
+import { StatusDot } from "@/components/shared/status-dot";
 import { toast } from "@/lib/hooks/use-toast";
-
-const PRIORITY_TONE: Record<ReferralPriority, string> = {
-  high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
-  medium:
-    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
-  low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
-};
 
 export function DietitianReferralsScreen() {
   const [referrals, setReferrals] = useState<Referral[]>(REFERRALS);
@@ -62,7 +56,8 @@ export function DietitianReferralsScreen() {
           Inbox
         </h1>
         <p className="mt-1 text-[14px] text-[var(--measured-subtext)]">
-          {newOnes.length} new · {inProgress.length} in progress
+          <span className="tnum">{newOnes.length}</span> new ·{" "}
+          <span className="tnum">{inProgress.length}</span> in progress
         </p>
       </motion.div>
 
@@ -103,7 +98,7 @@ function Section<T>({
       <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
         <Icon size={14} strokeWidth={2} aria-hidden="true" />
         {title}
-        <span className="rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-subtext)]">
+        <span className="tnum rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-subtext)]">
           {items.length}
         </span>
       </div>
@@ -154,14 +149,7 @@ function Row({
               {r.patientId}
             </div>
           )}
-          <span
-            className={cn(
-              "rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider",
-              PRIORITY_TONE[r.priority],
-            )}
-          >
-            {r.priority}
-          </span>
+          <StatusDot tone={r.priority} label={r.priority} size="sm" />
           {r.consentStatus === "signed" ? (
             <span className="inline-flex items-center gap-1 rounded-full bg-[var(--measured-green)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--measured-dark-green)]">
               <ShieldCheck size={11} strokeWidth={2.2} aria-hidden="true" />

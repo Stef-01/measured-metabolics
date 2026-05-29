@@ -1,4 +1,5 @@
 import { PATIENTS, GP_PROFILES, DIETITIAN_PROFILES } from "@/lib/mock";
+import { StatusDot } from "@/components/shared/status-dot";
 
 export default function AdminOrganizationsPage() {
   const practices = Object.values(GP_PROFILES).map((gp) => {
@@ -52,7 +53,7 @@ export default function AdminOrganizationsPage() {
               {s.label}
             </p>
             <p
-              className={`mt-1.5 font-serif text-[28px] leading-none ${s.accent ? "text-[var(--measured-dark-green)]" : "text-[var(--measured-dark)]"}`}
+              className={`tnum mt-1.5 font-serif text-[28px] leading-none ${s.accent ? "text-[var(--measured-dark-green)]" : "text-[var(--measured-dark)]"}`}
             >
               {s.value}
             </p>
@@ -76,8 +77,8 @@ export default function AdminOrganizationsPage() {
                     {gp.clinic}
                   </p>
                   <p className="mt-0.5 text-[13px] text-[var(--measured-subtext)]">
-                    {gp.name} · {patients.length} patient
-                    {patients.length !== 1 ? "s" : ""}
+                    {gp.name} · <span className="tnum">{patients.length}</span>{" "}
+                    patient{patients.length !== 1 ? "s" : ""}
                   </p>
                 </div>
                 <span className="rounded-full bg-[var(--measured-green)]/10 px-2.5 py-0.5 text-[11px] font-semibold text-[var(--measured-dark-green)]">
@@ -122,17 +123,7 @@ export default function AdminOrganizationsPage() {
                         </span>
                         <div className="flex items-center gap-3 text-[var(--measured-subtext)]">
                           <span>{p.conditions.join(", ")}</span>
-                          <span
-                            className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${
-                              p.risk === "high"
-                                ? "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]"
-                                : p.risk === "medium"
-                                  ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
-                                  : "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]"
-                            }`}
-                          >
-                            {p.risk}
-                          </span>
+                          <StatusDot tone={p.risk} label={p.risk} size="sm" />
                         </div>
                       </li>
                     ))}

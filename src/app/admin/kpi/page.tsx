@@ -1,5 +1,6 @@
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { supabaseServer } from "@/lib/supabase/server";
+import { StatusDot } from "@/components/shared/status-dot";
 
 interface KpiRow {
   patient_id: string;
@@ -90,14 +91,14 @@ export default async function AdminKpiPage() {
             <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
               Completion rate
             </div>
-            <div className="mt-1 font-serif text-[64px] leading-none tracking-tight text-[var(--measured-dark)]">
+            <div className="tnum mt-1 font-serif text-[64px] leading-none tracking-tight text-[var(--measured-dark)]">
               {rate}%
             </div>
           </div>
           <div className="mb-2 flex-1">
             <div className="mb-1 flex justify-between text-[11px] text-[var(--measured-subtext)]">
-              <span>{completed} completed</span>
-              <span>{total - completed} in progress</span>
+              <span className="tnum">{completed} completed</span>
+              <span className="tnum">{total - completed} in progress</span>
             </div>
             <div className="h-3 w-full overflow-hidden rounded-full bg-white shadow-inner">
               <div
@@ -152,7 +153,7 @@ export default async function AdminKpiPage() {
                 <td className="px-4 py-2.5 font-medium text-[var(--measured-text)]">
                   {r.patient_id}
                 </td>
-                <td className="px-4 py-2.5 text-[var(--measured-subtext)]">
+                <td className="tnum px-4 py-2.5 text-[var(--measured-subtext)]">
                   {new Date(r.started_at).toLocaleDateString([], {
                     day: "numeric",
                     month: "short",
@@ -160,15 +161,11 @@ export default async function AdminKpiPage() {
                   })}
                 </td>
                 <td className="px-4 py-2.5">
-                  {r.completed_loop ? (
-                    <span className="inline-flex rounded-full bg-[var(--measured-green)]/10 px-2.5 py-0.5 text-[11px] font-semibold text-[var(--measured-dark-green)]">
-                      Completed
-                    </span>
-                  ) : (
-                    <span className="inline-flex rounded-full bg-[var(--measured-clinical-amber)]/15 px-2.5 py-0.5 text-[11px] font-semibold text-[var(--measured-clinical-amber)]">
-                      In progress
-                    </span>
-                  )}
+                  <StatusDot
+                    tone={r.completed_loop ? "good" : "medium"}
+                    label={r.completed_loop ? "Completed" : "In progress"}
+                    size="sm"
+                  />
                 </td>
               </tr>
             ))}
@@ -194,7 +191,7 @@ function StatCard({
         {label}
       </p>
       <p
-        className={`mt-2 font-serif text-[28px] leading-none ${muted ? "text-[var(--measured-subtext)]" : "text-[var(--measured-dark)]"}`}
+        className={`tnum mt-2 font-serif text-[28px] leading-none ${muted ? "text-[var(--measured-subtext)]" : "text-[var(--measured-dark)]"}`}
       >
         {value}
       </p>

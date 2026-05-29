@@ -1,4 +1,13 @@
 import { listReferrals, listPatients } from "@/server/services";
+import { StatusDot } from "@/components/shared/status-dot";
+
+const STATUS_DOT_TONE: Record<string, "low" | "medium" | "good" | "neutral"> = {
+  new: "low",
+  consent_pending: "medium",
+  accepted: "good",
+  in_progress: "good",
+  discharged: "neutral",
+};
 
 const STATUS_TONE: Record<string, string> = {
   new: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
@@ -16,13 +25,6 @@ const STATUS_LABEL: Record<string, string> = {
   accepted: "Accepted",
   in_progress: "In progress",
   discharged: "Discharged",
-};
-
-const PRIORITY_TONE: Record<string, string> = {
-  high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
-  medium:
-    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
-  low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
 };
 
 export default async function AdminReferralsPage() {
@@ -77,26 +79,28 @@ export default async function AdminReferralsPage() {
                     <span className="text-[14px] font-semibold text-[var(--measured-text)]">
                       {displayName}
                     </span>
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${STATUS_TONE[r.status] ?? "bg-[var(--measured-cream)] text-[var(--measured-subtext)]"}`}
-                    >
-                      {STATUS_LABEL[r.status] ?? r.status}
-                    </span>
+                    <StatusDot
+                      tone={STATUS_DOT_TONE[r.status] ?? "neutral"}
+                      label={STATUS_LABEL[r.status] ?? r.status}
+                      size="sm"
+                    />
                     {r.priority && (
-                      <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${PRIORITY_TONE[r.priority] ?? "bg-[var(--measured-cream)] text-[var(--measured-subtext)]"}`}
-                      >
-                        {r.priority}
-                      </span>
+                      <StatusDot
+                        tone={r.priority as "high" | "medium" | "low"}
+                        label={`${r.priority} priority`}
+                        size="sm"
+                      />
                     )}
                   </div>
                   <div className="mt-0.5 text-[12px] text-[var(--measured-subtext)]">
                     {r.referringGpName} · {r.cuisineLabel} ·{" "}
-                    {new Date(r.createdAt).toLocaleDateString([], {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    })}
+                    <span className="tnum">
+                      {new Date(r.createdAt).toLocaleDateString([], {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
                   </div>
                   {r.reason && (
                     <p className="mt-1 text-[12px] italic text-[var(--measured-subtext)]">

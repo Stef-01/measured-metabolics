@@ -162,7 +162,7 @@ function NoteBody({
             })}`
           : "Meal note"}
         {peak !== undefined && (
-          <span className="ml-1 text-[var(--measured-evaluate)]">
+          <span className="tnum ml-1 text-[var(--measured-evaluate)]">
             · peak Δ {peak.toFixed(1)} mmol/L
           </span>
         )}
@@ -187,14 +187,16 @@ function NoteBody({
             minute: "2-digit",
           })}
         </div>
-        <button
+        <motion.button
           type="button"
           onClick={() => patientStore.acknowledgeAnnotation(patientId, ann.id)}
+          whileTap={{ scale: 0.93 }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
           className="inline-flex items-center gap-1 rounded-full border border-[var(--measured-border)] bg-white px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark-green)] hover:bg-[var(--measured-cream)]"
         >
           <CheckCircle2 size={11} strokeWidth={2.2} aria-hidden="true" />
           Got it
-        </button>
+        </motion.button>
       </div>
     </>
   );

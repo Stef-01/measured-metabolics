@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import { cn } from "@/lib/utils/cn";
 
@@ -101,16 +102,18 @@ function Row(props: {
         </button>
       </div>
       {props.on && (
-        <button
+        <motion.button
           type="button"
           onClick={props.onWithdraw}
+          whileTap={{ scale: 0.96 }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
           className="mt-3 rounded-xl border border-[var(--measured-evaluate)]/30 bg-[var(--measured-evaluate)]/5 px-3 py-1.5 text-[12px] font-semibold text-[var(--measured-evaluate)] transition-colors hover:bg-[var(--measured-evaluate)]/10"
         >
           Withdraw consent
-        </button>
+        </motion.button>
       )}
       {!props.on && props.withdrawnAt && (
-        <p className="mt-2 text-[11px] text-[var(--measured-subtext)]">
+        <p className="tnum mt-2 text-[11px] text-[var(--measured-subtext)]">
           Withdrawn{" "}
           {new Date(props.withdrawnAt).toLocaleString([], {
             dateStyle: "medium",

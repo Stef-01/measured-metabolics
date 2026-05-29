@@ -85,7 +85,7 @@ export function DietitianStatCard({
           />
         )}
       </div>
-      <div className="mt-2 font-serif text-[34px] leading-tight text-[var(--measured-dark)]">
+      <div className="tnum mt-2 font-serif text-[34px] leading-tight text-[var(--measured-dark)]">
         {typeof value === "number" ? <AnimatedCount target={value} /> : value}
       </div>
       {hint && (

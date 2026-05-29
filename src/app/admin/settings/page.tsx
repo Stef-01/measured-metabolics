@@ -86,13 +86,13 @@ export default function AdminSettingsPage() {
             >
               System health
             </div>
-            <div className="mt-0.5 font-serif text-[28px] leading-none text-[var(--measured-dark)]">
+            <div className="tnum mt-0.5 font-serif text-[28px] leading-none text-[var(--measured-dark)]">
               {configuredCount}
               <span className="text-[18px] text-[var(--measured-subtext)]">
                 /{total}
               </span>
             </div>
-            <div className="mt-0.5 text-[12px] text-[var(--measured-subtext)]">
+            <div className="tnum mt-0.5 text-[12px] text-[var(--measured-subtext)]">
               {pct}% of integrations configured
             </div>
           </div>

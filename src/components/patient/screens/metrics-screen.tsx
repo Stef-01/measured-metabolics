@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
@@ -116,7 +117,7 @@ export function PatientMetricsScreen() {
         title="Metrics"
         trailing={
           <div className="flex h-12 w-12 flex-col items-center justify-center rounded-full bg-[var(--measured-green)]/10 text-center text-[var(--measured-dark-green)]">
-            <div className="text-[14px] font-bold leading-none">
+            <div className="tnum text-[14px] font-bold leading-none">
               {me.timeInRangePct}%
             </div>
             <div className="text-[8px] uppercase tracking-wider">in range</div>
@@ -390,7 +391,7 @@ function StatPill({
       <div className="text-[10px] font-semibold uppercase tracking-wider opacity-70">
         {label}
       </div>
-      <div className="font-serif text-[18px] leading-none">{value}</div>
+      <div className="tnum font-serif text-[18px] leading-none">{value}</div>
       <TrendIcon
         size={11}
         strokeWidth={2.4}
@@ -453,15 +454,30 @@ function AdherencePanel({ planEaten }: { planEaten: Record<string, true> }) {
         <div className="font-serif text-[18px] text-[var(--measured-dark)]">
           Plan adherence
         </div>
-        <div className="text-[13px] font-semibold text-[var(--measured-dark-green)]">
+        <div className="tnum text-[13px] font-semibold text-[var(--measured-dark-green)]">
           {pct}%
         </div>
       </div>
 
       {weekTotals.eaten === 0 ? (
-        <p className="py-6 text-center text-[13px] text-[var(--measured-subtext)]">
-          Mark meals as eaten on the Plan tab to track adherence.
-        </p>
+        <div className="flex flex-col items-center gap-3 py-8 text-center">
+          <span className="text-[40px]" aria-hidden="true">
+            📋
+          </span>
+          <p className="font-serif text-[17px] text-[var(--measured-dark)]">
+            Nothing tracked yet
+          </p>
+          <p className="max-w-[220px] text-[12px] leading-relaxed text-[var(--measured-subtext)]">
+            Mark meals eaten on the Plan tab and your weekly grid will appear
+            here.
+          </p>
+          <Link
+            href="/p/plan"
+            className="mt-1 rounded-xl bg-[var(--measured-green)] px-4 py-2 text-[12px] font-semibold text-white"
+          >
+            Open Plan
+          </Link>
+        </div>
       ) : (
         <>
           {/* Progress bar */}
@@ -538,8 +554,10 @@ function AdherencePanel({ planEaten }: { planEaten: Record<string, true> }) {
           </div>
 
           <p className="mt-4 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
-            {weekTotals.eaten} of {weekTotals.planned} planned meals eaten this
-            week. Maya can see this when reviewing your next check-in.
+            <span className="tnum">{weekTotals.eaten}</span> of{" "}
+            <span className="tnum">{weekTotals.planned}</span> planned meals
+            eaten this week. Maya can see this when reviewing your next
+            check-in.
           </p>
         </>
       )}

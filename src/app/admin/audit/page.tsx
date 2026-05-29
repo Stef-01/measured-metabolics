@@ -94,7 +94,7 @@ export default async function AdminAuditPage({
             ).
           </p>
         </div>
-        <p className="text-[12px] text-[var(--measured-subtext)]">
+        <p className="tnum text-[12px] text-[var(--measured-subtext)]">
           {rows.length} rows
         </p>
       </header>
@@ -117,7 +117,7 @@ export default async function AdminAuditPage({
                 key={r.id}
                 className="border-t border-[var(--measured-border-soft)] align-top"
               >
-                <td className="px-4 py-2 text-[var(--measured-text)]">
+                <td className="tnum px-4 py-2 text-[var(--measured-text)]">
                   {new Date(r.occurred_at).toLocaleString()}
                 </td>
                 <td className="px-4 py-2 text-[var(--measured-text)]">

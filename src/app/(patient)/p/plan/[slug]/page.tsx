@@ -85,13 +85,13 @@ export default async function PatientRecipePage({ params }: Props) {
           {(recipe.prepMinutes || recipe.kcalEstimate) && (
             <div className="absolute bottom-3 left-3 flex gap-2">
               {recipe.prepMinutes && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
+                <span className="tnum inline-flex items-center gap-1 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
                   <Clock size={11} strokeWidth={2.4} aria-hidden="true" />
                   {recipe.prepMinutes} min
                 </span>
               )}
               {recipe.kcalEstimate && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
+                <span className="tnum inline-flex items-center gap-1 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
                   <Flame size={11} strokeWidth={2.4} aria-hidden="true" />~
                   {recipe.kcalEstimate} kcal
                 </span>

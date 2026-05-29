@@ -295,13 +295,15 @@ export function PatientMealCaptureScreen() {
         )}
 
         {photoDataUrl && stream && (
-          <button
+          <motion.button
             type="button"
             onClick={capture}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className="cta-shadow inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] px-4 py-3.5 font-semibold text-white"
           >
             Capture
-          </button>
+          </motion.button>
         )}
 
         <fieldset>

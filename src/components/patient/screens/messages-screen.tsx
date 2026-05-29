@@ -45,9 +45,25 @@ export function PatientMessagesScreen() {
           className="flex-1 space-y-3 overflow-y-auto py-3 scrollbar-hide"
         >
           {messages.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-[var(--measured-border)] bg-white p-6 text-center text-[13px] text-[var(--measured-subtext)]">
-              Maya will message after your next review.
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-[var(--measured-border)] bg-white p-8 text-center"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]">
+                <Send size={20} strokeWidth={1.8} aria-hidden="true" />
+              </div>
+              <div>
+                <p className="font-semibold text-[14px] text-[var(--measured-dark)]">
+                  No messages yet
+                </p>
+                <p className="mt-1 text-[12px] text-[var(--measured-subtext)]">
+                  Maya will reach out after your next check-in. You can message
+                  her any time.
+                </p>
+              </div>
+            </motion.div>
           )}
           <AnimatePresence initial={false}>
             {messages.map((m) => {
@@ -79,7 +95,7 @@ export function PatientMessagesScreen() {
                     {m.body}
                     <div
                       className={cn(
-                        "mt-1 text-[10px]",
+                        "tnum mt-1 text-[10px]",
                         mine
                           ? "text-white/70"
                           : "text-[var(--measured-subtext)]",
