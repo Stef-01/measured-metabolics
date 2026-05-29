@@ -7,12 +7,13 @@ import {
   AreaChart,
   CartesianGrid,
   ReferenceArea,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import { Pencil, MessageSquare, Sparkles } from "lucide-react";
+import { Pencil, MessageSquare, Sparkles, Sunrise } from "lucide-react";
 import { mealImageBySlug } from "@/lib/images";
 import { nearestMealForSpike } from "@/lib/engine/cgm-spike-meal";
 import { CHART } from "@/lib/chart-tokens";
@@ -36,6 +37,14 @@ interface PointDatum {
 
 const SPIKE_THRESHOLD_DELTA = 1.5;
 const FILL_GRADIENT_ID = "cgm-meal-grad";
+
+type SpikeContext = "dawn" | "unknown";
+
+function classifySpikeContext(timestampMs: number): SpikeContext {
+  const hour = new Date(timestampMs).getHours();
+  if (hour >= 3 && hour < 8) return "dawn";
+  return "unknown";
+}
 
 /**
  * Glucose graph that pops out the causal meal photo on hover and (optionally)
@@ -134,6 +143,22 @@ export function CgmMealChart({
             cursor={{ stroke: "rgba(45,90,61,0.4)", strokeDasharray: "3 3" }}
             content={() => null}
           />
+          {meals.map((m) => (
+            <ReferenceLine
+              key={m.id}
+              x={new Date(m.eatenAt).getTime()}
+              stroke={CHART.green}
+              strokeDasharray="3 5"
+              strokeWidth={1.5}
+              strokeOpacity={0.55}
+              label={{
+                value: m.photoEmoji,
+                position: "insideTopRight",
+                fontSize: 13,
+                offset: 4,
+              }}
+            />
+          ))}
           <Area
             type="monotone"
             dataKey="mmolL"
@@ -207,14 +232,25 @@ function SpikeMealCallout({
   });
 
   if (!match) {
+    const ctx = classifySpikeContext(hoveredAt);
     return (
       <div className="pointer-events-none absolute right-2 top-2 max-w-[240px] rounded-2xl border border-[var(--measured-border-soft)] bg-white/95 px-3 py-2 text-[12px] shadow-[var(--shadow-card)] backdrop-blur">
         <div className="tnum font-semibold text-[var(--measured-dark)]">
           {hoveredMmol.toFixed(1)} mmol/L
         </div>
-        <div className="text-[var(--measured-subtext)]">
-          {time} · No meal logged within 3 h
-        </div>
+        {ctx === "dawn" ? (
+          <div className="mt-0.5 flex items-center gap-1 text-[var(--measured-gold)]">
+            <Sunrise size={11} strokeWidth={2.2} aria-hidden="true" />
+            <span className="font-semibold">Dawn rise</span>
+            <span className="text-[var(--measured-subtext)]">
+              · cortisol, expected 3–7 am
+            </span>
+          </div>
+        ) : (
+          <div className="text-[var(--measured-subtext)]">
+            {time} · No meal logged within 3 h
+          </div>
+        )}
       </div>
     );
   }
