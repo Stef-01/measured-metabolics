@@ -261,7 +261,8 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                       </div>
                       {p && (
                         <div className="text-[11px] text-[var(--measured-subtext)]">
-                          {p.conditions.join(" · ")} · Week {p.weekNumber}
+                          {p.conditions.join(" · ")} · Wk{" "}
+                          <span className="tnum">{p.weekNumber}</span>
                         </div>
                       )}
                     </div>
@@ -341,14 +342,16 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                   {suggesting ? "Suggesting…" : "AI suggest"}
                 </motion.button>
                 {TEMPLATES.map((t) => (
-                  <button
+                  <motion.button
                     type="button"
                     key={t}
                     onClick={() => setDrafts((d) => ({ ...d, [active.id]: t }))}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
                     className="rounded-full border border-[var(--measured-border)] bg-white px-3 py-1 text-[11px] text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]"
                   >
                     {t.length > 60 ? t.slice(0, 60) + "…" : t}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
               <div className="flex items-end gap-2">

@@ -405,10 +405,12 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
             },
           ] as const
         ).map((f) => (
-          <button
+          <motion.button
             key={f.id}
             type="button"
             onClick={() => setQueueFilter(f.id)}
+            whileTap={{ scale: 0.93 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold transition-colors",
               queueFilter === f.id
@@ -419,7 +421,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
             {f.label}
             <span
               className={cn(
-                "rounded-full px-1.5 py-0.5 text-[10px] font-bold",
+                "tnum rounded-full px-1.5 py-0.5 text-[10px] font-bold",
                 queueFilter === f.id
                   ? "bg-white/20 text-white"
                   : "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
@@ -427,7 +429,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
             >
               {f.count}
             </span>
-          </button>
+          </motion.button>
         ))}
       </div>
 
@@ -602,7 +604,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                           edited
                         </span>
                       )}
-                      <span className="ml-auto rounded-full bg-white px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-subtext)]">
+                      <span className="tnum ml-auto rounded-full bg-white px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-subtext)]">
                         {Math.round(current.analysis.confidence * 100)}%
                       </span>
                     </div>
@@ -713,7 +715,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                           <div className="flex flex-col gap-1">
                             {(["low", "moderate", "high"] as MacroLevel[]).map(
                               (level) => (
-                                <button
+                                <motion.button
                                   type="button"
                                   key={level}
                                   onClick={() =>
@@ -726,6 +728,12 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                                         : d,
                                     )
                                   }
+                                  whileTap={{ scale: 0.9 }}
+                                  transition={{
+                                    type: "spring",
+                                    stiffness: 400,
+                                    damping: 20,
+                                  }}
                                   className={cn(
                                     "rounded-md py-1 text-[10px] font-semibold capitalize transition-colors",
                                     editDraft.macros[k] === level
@@ -738,7 +746,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                                   )}
                                 >
                                   {level}
-                                </button>
+                                </motion.button>
                               ),
                             )}
                           </div>
@@ -748,7 +756,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                   )}
                 </div>
                 <div className="mt-3 flex gap-2">
-                  <button
+                  <motion.button
                     type="button"
                     onClick={() => {
                       setSavedEdits((prev) => ({
@@ -764,20 +772,24 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                         dedupKey: "edit-save",
                       });
                     }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
                     className="flex-1 rounded-xl bg-[var(--measured-clinical-blue)] py-2 text-[13px] font-semibold text-white"
                   >
                     Save edits
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
                     type="button"
                     onClick={() => {
                       setEditDraft(null);
                       toggleEditing();
                     }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
                     className="rounded-xl border border-[var(--measured-border)] bg-white px-4 py-2 text-[13px] font-semibold text-[var(--measured-dark)]"
                   >
                     Cancel
-                  </button>
+                  </motion.button>
                 </div>
               </div>
             )}
@@ -843,32 +855,38 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
             className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2"
           >
             <div className="flex items-center gap-2 rounded-2xl border border-[var(--measured-border-soft)] bg-[var(--measured-dark)] px-4 py-3 shadow-[0_8px_32px_-4px_rgba(0,0,0,0.35)]">
-              <span className="mr-1 text-[13px] font-semibold text-white/80">
+              <span className="tnum mr-1 text-[13px] font-semibold text-white/80">
                 {selected.size} selected
               </span>
-              <button
+              <motion.button
                 type="button"
                 onClick={() => bulkAct("approved")}
+                whileTap={{ scale: 0.94 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-3 py-1.5 text-[12px] font-semibold text-white hover:bg-[var(--measured-dark-green)]"
               >
                 <Check size={13} strokeWidth={2.4} aria-hidden="true" />
                 Approve all
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 type="button"
                 onClick={() => bulkAct("flagged")}
+                whileTap={{ scale: 0.94 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--measured-evaluate)] px-3 py-1.5 text-[12px] font-semibold text-white hover:bg-[var(--measured-evaluate-hover)]"
               >
                 <Flag size={13} strokeWidth={2.2} aria-hidden="true" />
                 Flag all
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 type="button"
                 onClick={() => setSelected(new Set())}
+                whileTap={{ scale: 0.94 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 className="rounded-xl px-2.5 py-1.5 text-[12px] font-semibold text-white/60 hover:text-white"
               >
                 Cancel
-              </button>
+              </motion.button>
             </div>
           </motion.div>
         )}
