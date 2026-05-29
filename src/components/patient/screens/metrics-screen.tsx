@@ -18,10 +18,14 @@ import { PatientAppHeader } from "@/components/patient/app-header";
 import {
   CGM_BY_PATIENT,
   CURRENT_PATIENT_ID,
+  MEALS,
   PATIENTS,
   ASHA_PLAN,
+  SYMPTOMS,
+  THREADS,
 } from "@/lib/mock";
 import {
+  useSeedPatientStore,
   useStoredAnnotations,
   useStoredMeals,
   useStoredSymptoms,
@@ -81,6 +85,13 @@ const pillItem: Variants = {
 export function PatientMetricsScreen() {
   const [tab, setTab] = useState<TabId>("glucose");
   const me = PATIENTS.find((p) => p.id === CURRENT_PATIENT_ID)!;
+
+  useSeedPatientStore(me.id, {
+    meals: MEALS.filter((m) => m.patientId === me.id),
+    symptoms: SYMPTOMS.filter((s) => s.patientId === me.id),
+    thread: THREADS.find((t) => t.patientId === me.id)?.messages ?? [],
+  });
+
   const cgm = CGM_BY_PATIENT[me.id];
   const symptoms = useStoredSymptoms(me.id);
   const meals = useStoredMeals(me.id);
