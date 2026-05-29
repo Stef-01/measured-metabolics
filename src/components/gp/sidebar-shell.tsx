@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { gpSidebarTabs, type GpTabId } from "@/lib/hooks/use-navigation";
 import { PersonaSwitcher } from "@/components/shared/persona-switcher";
+import { StatusDot } from "@/components/shared/status-dot";
 import { cn } from "@/lib/utils/cn";
 import type { Patient } from "@/lib/mock/types";
 
@@ -49,12 +50,6 @@ export function GpSidebarShell({ patient, children }: Props) {
         ? "bg-[var(--measured-clinical-amber)]"
         : "bg-[var(--measured-green)]";
 
-  const riskChip =
-    patient.risk === "high"
-      ? "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]"
-      : patient.risk === "medium"
-        ? "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
-        : "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]";
 
   return (
     <div className="gp-sidebar mx-auto flex flex-col" data-gp-sidebar>
@@ -85,14 +80,7 @@ export function GpSidebarShell({ patient, children }: Props) {
               {patient.conditions.join(", ")}
             </div>
           </div>
-          <span
-            className={cn(
-              "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize",
-              riskChip,
-            )}
-          >
-            {patient.risk} risk
-          </span>
+          <StatusDot tone={patient.risk} label={`${patient.risk} risk`} size="sm" />
         </div>
       </motion.header>
 

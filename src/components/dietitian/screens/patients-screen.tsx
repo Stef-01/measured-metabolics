@@ -3,20 +3,14 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Search, AlertTriangle, ChevronRight } from "lucide-react";
+import { Search, AlertTriangle, ChevronRight, Users } from "lucide-react";
 import { PATIENTS } from "@/lib/mock";
 import type { Cuisine, Patient, RiskLevel } from "@/lib/mock/types";
 import { cn } from "@/lib/utils/cn";
+import { StatusDot } from "@/components/shared/status-dot";
 
 type RiskFilter = "all" | RiskLevel;
 type CuisineFilter = "all" | Cuisine;
-
-const RISK_TONE: Record<RiskLevel, string> = {
-  high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
-  medium:
-    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
-  low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
-};
 
 const RISK_FILTERS: { id: RiskFilter; label: string }[] = [
   { id: "all", label: "All" },
@@ -154,12 +148,38 @@ export function DietitianPatientsScreen() {
         ))}
       </div>
 
-      <Section
-        title="Flagged"
-        items={flagged}
-        empty="No patients flagged today."
-      />
-      <Section title="Stable" items={calm} empty="No matches." />
+      {list.length === 0 ? (
+        <motion.div
+          className="mt-16 flex flex-col items-center gap-3 text-center"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--measured-cream)]">
+            <Users size={24} strokeWidth={1.8} className="text-[var(--measured-subtext)]" aria-hidden="true" />
+          </div>
+          <p className="font-serif text-[22px] text-[var(--measured-dark)]">No patients match</p>
+          <p className="max-w-xs text-[14px] leading-relaxed text-[var(--measured-subtext)]">
+            Try clearing the search or adjusting the risk or cuisine filters.
+          </p>
+          <button
+            type="button"
+            onClick={() => { setRisk("all"); setCuisine("all"); setQuery(""); }}
+            className="mt-1 rounded-xl bg-[var(--measured-green)] px-4 py-2 text-[13px] font-semibold text-white"
+          >
+            Clear filters
+          </button>
+        </motion.div>
+      ) : (
+        <>
+          <Section
+            title="Flagged"
+            items={flagged}
+            empty="No patients flagged today."
+          />
+          <Section title="Stable" items={calm} empty="No matches." />
+        </>
+      )}
     </div>
   );
 }
@@ -216,14 +236,11 @@ function PatientRow({ p, idx }: { p: Patient; idx: number }) {
             <div className="text-[15px] font-semibold text-[var(--measured-dark)]">
               {p.firstName} {p.lastName}
             </div>
-            <span
-              className={cn(
-                "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
-                RISK_TONE[p.risk],
-              )}
-            >
-              {p.risk}
-            </span>
+            <StatusDot
+              tone={p.risk}
+              label={`${p.risk} risk`}
+              size="sm"
+            />
             <span className="text-[12px] text-[var(--measured-subtext)]">
               {p.age}
               {p.sex.toLowerCase()}
@@ -238,10 +255,10 @@ function PatientRow({ p, idx }: { p: Patient; idx: number }) {
           <div className="mt-0.5 text-[13px] text-[var(--measured-dark)]">
             {p.conditions.join(" · ")}
           </div>
-          <div className="mt-0.5 text-[12px] text-[var(--measured-subtext)]">
-            HbA1c {p.hbA1cPct}% · weight Δ {p.weightDeltaKg > 0 ? "+" : ""}
-            {p.weightDeltaKg.toFixed(1)} kg · TIR {p.timeInRangePct}% ·{" "}
-            {p.cuisineLabel}
+          <div className="tnum mt-0.5 text-[12px] text-[var(--measured-subtext)]">
+            HbA1c {p.hbA1cPct}% · Δ {p.weightDeltaKg > 0 ? "+" : ""}
+            {p.weightDeltaKg.toFixed(1)} kg · TIR {p.timeInRangePct}%{" "}
+            · {p.cuisineLabel}
           </div>
         </div>
         <div className="text-[12px] text-[var(--measured-subtext)]">
