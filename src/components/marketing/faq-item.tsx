@@ -14,8 +14,10 @@ export function FaqItem({ q, a }: FaqItemProps) {
 
   return (
     <div className="py-5">
-      <button
+      <motion.button
         onClick={() => setOpen((o) => !o)}
+        whileTap={{ scale: 0.99 }}
+        transition={{ type: "spring", stiffness: 400, damping: 24 }}
         className="flex w-full cursor-pointer items-start justify-between gap-6 text-left text-[16px] font-medium text-[var(--measured-dark)]"
         aria-expanded={open}
       >
@@ -27,7 +29,7 @@ export function FaqItem({ q, a }: FaqItemProps) {
         >
           <ChevronDown size={18} strokeWidth={2} aria-hidden="true" />
         </motion.span>
-      </button>
+      </motion.button>
 
       <AnimatePresence initial={false}>
         {open && (
