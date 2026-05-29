@@ -15,6 +15,7 @@ import {
   Send,
 } from "lucide-react";
 import { DietitianStatCard } from "@/components/dietitian/stat-card";
+import { StatusDot } from "@/components/shared/status-dot";
 import {
   PATIENTS,
   DEMO_QUEUE_MEALS,
@@ -22,12 +23,10 @@ import {
   newReferrals,
   CURRENT_DIETITIAN_ID,
 } from "@/lib/mock";
-import type { RiskLevel, ReferralPriority } from "@/lib/mock/types";
 import {
   patientStore,
   type MealConsultationRequest,
 } from "@/lib/storage/patient-store";
-import { cn } from "@/lib/utils/cn";
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -49,13 +48,6 @@ const patientCardContainer: Variants = {
 const patientCardItem: Variants = {
   hidden: { opacity: 0, y: 10 },
   show: { opacity: 1, y: 0, transition: { duration: 0.42, ease } },
-};
-
-const PRIORITY_TONE: Record<ReferralPriority, string> = {
-  high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
-  medium:
-    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
-  low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
 };
 
 export function DietitianDashboardScreen() {
@@ -245,14 +237,11 @@ export function DietitianDashboardScreen() {
                       <span>{r.referringGpName}</span>
                       <span>·</span>
                       <span>{r.cuisineLabel}</span>
-                      <span
-                        className={cn(
-                          "rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider",
-                          PRIORITY_TONE[r.priority],
-                        )}
-                      >
-                        {r.priority}
-                      </span>
+                      <StatusDot
+                        tone={r.priority}
+                        label={r.priority}
+                        size="sm"
+                      />
                     </div>
                   </div>
                   <Link
@@ -363,13 +352,6 @@ function SymChip({
     </span>
   );
 }
-
-const RISK_CHIP: Record<RiskLevel, string> = {
-  high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
-  medium:
-    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
-  low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
-};
 
 function PatientRequestsSection() {
   const [requests, setRequests] = useState<
@@ -501,16 +483,9 @@ function PatientMiniCard({
             <span className="truncate text-[13px] font-semibold text-[var(--measured-dark)]">
               {p.firstName} {p.lastName}
             </span>
-            <span
-              className={cn(
-                "shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase",
-                RISK_CHIP[p.risk],
-              )}
-            >
-              {p.risk}
-            </span>
+            <StatusDot tone={p.risk} label={p.risk} size="sm" />
           </div>
-          <div className="mt-0.5 flex items-center gap-2 text-[11px] text-[var(--measured-subtext)]">
+          <div className="tnum mt-0.5 flex items-center gap-2 text-[11px] text-[var(--measured-subtext)]">
             <span>HbA1c {p.hbA1cPct}%</span>
             <span>·</span>
             <span>TIR {p.timeInRangePct}%</span>

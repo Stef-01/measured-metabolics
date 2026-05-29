@@ -12,16 +12,10 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { REFERRALS, PATIENTS, CURRENT_DIETITIAN_ID } from "@/lib/mock";
-import type { Referral, ReferralPriority } from "@/lib/mock/types";
+import type { Referral } from "@/lib/mock/types";
 import { cn } from "@/lib/utils/cn";
+import { StatusDot } from "@/components/shared/status-dot";
 import { toast } from "@/lib/hooks/use-toast";
-
-const PRIORITY_TONE: Record<ReferralPriority, string> = {
-  high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
-  medium:
-    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
-  low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
-};
 
 export function DietitianReferralsScreen() {
   const [referrals, setReferrals] = useState<Referral[]>(REFERRALS);
@@ -154,14 +148,7 @@ function Row({
               {r.patientId}
             </div>
           )}
-          <span
-            className={cn(
-              "rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider",
-              PRIORITY_TONE[r.priority],
-            )}
-          >
-            {r.priority}
-          </span>
+          <StatusDot tone={r.priority} label={r.priority} size="sm" />
           {r.consentStatus === "signed" ? (
             <span className="inline-flex items-center gap-1 rounded-full bg-[var(--measured-green)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--measured-dark-green)]">
               <ShieldCheck size={11} strokeWidth={2.2} aria-hidden="true" />
