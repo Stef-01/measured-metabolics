@@ -119,10 +119,12 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
             <div className="space-y-3 p-4">
               <div className="flex gap-1.5">
                 {REQUEST_TYPES.map((t) => (
-                  <button
+                  <motion.button
                     type="button"
                     key={t.id}
                     onClick={() => setType(t.id)}
+                    whileTap={{ scale: 0.94 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
                     className={cn(
                       "flex-1 rounded-xl border py-2 text-[11px] font-semibold transition-colors",
                       type === t.id
@@ -131,7 +133,7 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
                     )}
                   >
                     {t.label}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
               <textarea
@@ -152,15 +154,17 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
                 >
                   <X size={12} strokeWidth={2.2} /> Cancel
                 </button>
-                <button
+                <motion.button
                   type="button"
                   onClick={send}
                   disabled={!body.trim() || sending}
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] py-2 text-[13px] font-semibold text-white disabled:bg-[var(--measured-cream)] disabled:text-[var(--measured-subtext)]"
+                  whileTap={body.trim() && !sending ? { scale: 0.97 } : undefined}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[var(--measured-green)] py-2 text-[13px] font-semibold text-white disabled:bg-[var(--measured-cream)] disabled:text-[var(--measured-subtext)]"
                 >
                   <Send size={13} strokeWidth={2.2} />
                   Send to {dietitianName}
-                </button>
+                </motion.button>
               </div>
             </div>
           </motion.div>

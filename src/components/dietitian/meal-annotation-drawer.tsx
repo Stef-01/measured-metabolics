@@ -178,7 +178,7 @@ function DrawerForm({
               .map((f) => f.name)
               .join(" + ")}
           </h3>
-          <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[11px] font-semibold backdrop-blur">
+          <div className="tnum mt-1 inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[11px] font-semibold backdrop-blur">
             Peak Δ {meal.analysis.cgmPeakDeltaMmol?.toFixed(1) ?? "?"} mmol/L
             {meal.analysis.cgmPeakAtMin
               ? ` · +${meal.analysis.cgmPeakAtMin} min`
@@ -306,15 +306,17 @@ function DrawerForm({
             ) : (
               <span />
             )}
-            <button
+            <motion.button
               type="button"
               onClick={save}
               disabled={!canSave}
+              whileTap={canSave ? { scale: 0.96 } : undefined}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
               className="inline-flex items-center gap-2 rounded-2xl bg-[var(--measured-green)] px-4 py-2 text-[13px] font-semibold text-white hover:bg-[var(--measured-dark-green)] disabled:cursor-not-allowed disabled:bg-[var(--measured-cream)] disabled:text-[var(--measured-subtext)]"
             >
               <Send size={14} strokeWidth={2.2} aria-hidden="true" />
               {existing ? "Update note" : `Send to ${patientFirstName}`}
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>

@@ -162,7 +162,7 @@ function NoteBody({
             })}`
           : "Meal note"}
         {peak !== undefined && (
-          <span className="ml-1 text-[var(--measured-evaluate)]">
+          <span className="tnum ml-1 text-[var(--measured-evaluate)]">
             · peak Δ {peak.toFixed(1)} mmol/L
           </span>
         )}
