@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
 import {
@@ -143,17 +143,29 @@ export function PatientHomeScreen() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="text-[11px] font-semibold uppercase tracking-wider text-white/70">
-                Today · {todayLogged}/{todayPlan.length} logged
+                <span className="tnum">Today · {todayLogged}/{todayPlan.length}</span> logged
               </div>
               <div className="mt-1 font-serif text-[24px] leading-tight">
                 {nextMeal !== null ? "Log your next meal" : "All meals logged!"}
               </div>
             </div>
             {streak > 0 && (
-              <div className="flex shrink-0 items-center gap-1 rounded-full bg-white/15 px-2.5 py-1">
-                <Flame size={13} strokeWidth={2.2} aria-hidden="true" />
-                <span className="text-[12px] font-bold">{streak}d</span>
-              </div>
+              <motion.div
+                className="flex shrink-0 items-center gap-1 rounded-full bg-white/15 px-2.5 py-1"
+                initial={{ scale: 0.7, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 18, delay: 0.2 }}
+              >
+                <motion.span
+                  animate={{ scale: [1, 1.25, 1] }}
+                  transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+                >
+                  <Flame size={13} strokeWidth={2.2} aria-hidden="true" />
+                </motion.span>
+                <span className="tnum text-[12px] font-bold" aria-label={`${streak} day streak`}>
+                  <AnimatedCount target={streak} />d
+                </span>
+              </motion.div>
             )}
           </div>
 
@@ -378,6 +390,23 @@ function GlucoseSparkCard({
       )}
     </Link>
   );
+}
+
+function AnimatedCount({ target }: { target: number }) {
+  const [display, setDisplay] = useState(0);
+  const raf = useRef<number>(0);
+  useEffect(() => {
+    const start = performance.now();
+    const dur = 600;
+    function tick(now: number) {
+      const t = Math.min((now - start) / dur, 1);
+      setDisplay(Math.round((1 - Math.pow(1 - t, 3)) * target));
+      if (t < 1) raf.current = requestAnimationFrame(tick);
+    }
+    raf.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf.current);
+  }, [target]);
+  return <>{display}</>;
 }
 
 function computeStreak(meals: MealLog[]): number {
