@@ -156,15 +156,26 @@ export function DietitianPatientsScreen() {
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--measured-cream)]">
-            <Users size={24} strokeWidth={1.8} className="text-[var(--measured-subtext)]" aria-hidden="true" />
+            <Users
+              size={24}
+              strokeWidth={1.8}
+              className="text-[var(--measured-subtext)]"
+              aria-hidden="true"
+            />
           </div>
-          <p className="font-serif text-[22px] text-[var(--measured-dark)]">No patients match</p>
+          <p className="font-serif text-[22px] text-[var(--measured-dark)]">
+            No patients match
+          </p>
           <p className="max-w-xs text-[14px] leading-relaxed text-[var(--measured-subtext)]">
             Try clearing the search or adjusting the risk or cuisine filters.
           </p>
           <button
             type="button"
-            onClick={() => { setRisk("all"); setCuisine("all"); setQuery(""); }}
+            onClick={() => {
+              setRisk("all");
+              setCuisine("all");
+              setQuery("");
+            }}
             className="mt-1 rounded-xl bg-[var(--measured-green)] px-4 py-2 text-[13px] font-semibold text-white"
           >
             Clear filters
@@ -236,11 +247,7 @@ function PatientRow({ p, idx }: { p: Patient; idx: number }) {
             <div className="text-[15px] font-semibold text-[var(--measured-dark)]">
               {p.firstName} {p.lastName}
             </div>
-            <StatusDot
-              tone={p.risk}
-              label={`${p.risk} risk`}
-              size="sm"
-            />
+            <StatusDot tone={p.risk} label={`${p.risk} risk`} size="sm" />
             <span className="text-[12px] text-[var(--measured-subtext)]">
               {p.age}
               {p.sex.toLowerCase()}
@@ -257,8 +264,8 @@ function PatientRow({ p, idx }: { p: Patient; idx: number }) {
           </div>
           <div className="tnum mt-0.5 text-[12px] text-[var(--measured-subtext)]">
             HbA1c {p.hbA1cPct}% · Δ {p.weightDeltaKg > 0 ? "+" : ""}
-            {p.weightDeltaKg.toFixed(1)} kg · TIR {p.timeInRangePct}%{" "}
-            · {p.cuisineLabel}
+            {p.weightDeltaKg.toFixed(1)} kg · TIR {p.timeInRangePct}% ·{" "}
+            {p.cuisineLabel}
           </div>
         </div>
         <div className="text-[12px] text-[var(--measured-subtext)]">

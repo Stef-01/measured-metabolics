@@ -17,7 +17,8 @@ const PERSONAS = [
     id: "patient",
     title: "Patient",
     tagline: "Capture meals, log symptoms, track your plan",
-    detail: "Mobile-first PWA with swipe cards, CGM overlay, and direct dietitian messaging.",
+    detail:
+      "Mobile-first PWA with swipe cards, CGM overlay, and direct dietitian messaging.",
     href: "/p/home",
     Icon: Smartphone,
     accent: "var(--measured-clinical-blue)",
@@ -28,7 +29,8 @@ const PERSONAS = [
     id: "dietitian",
     title: "Dietitian",
     tagline: "Queue, patient panel, plan and report builders",
-    detail: "Review meal photos, annotate CGM spikes, bulk-approve, and generate GP reports.",
+    detail:
+      "Review meal photos, annotate CGM spikes, bulk-approve, and generate GP reports.",
     href: "/d/dashboard",
     Icon: ClipboardList,
     accent: "var(--measured-green)",
@@ -39,7 +41,8 @@ const PERSONAS = [
     id: "gp",
     title: "GP Sidebar",
     tagline: "30-second patient context in 360 px",
-    detail: "Embeds into Best Practice / Medical Director as a narrow sidebar. Context, transcript, billing, care plan, referral, and report — all tabbed.",
+    detail:
+      "Embeds into Best Practice / Medical Director as a narrow sidebar. Context, transcript, billing, care plan, referral, and report — all tabbed.",
     href: "/gp/asha/context",
     Icon: PanelRightClose,
     accent: "#a07710",
@@ -50,7 +53,8 @@ const PERSONAS = [
     id: "admin",
     title: "Admin",
     tagline: "KPI dashboard, audit log, organisations",
-    detail: "Platform health at a glance: enrolments, retention, referral pipeline, and an immutable audit trail.",
+    detail:
+      "Platform health at a glance: enrolments, retention, referral pipeline, and an immutable audit trail.",
     href: "/admin/kpi",
     Icon: Shield,
     accent: "var(--measured-evaluate)",

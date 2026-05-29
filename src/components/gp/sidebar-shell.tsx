@@ -50,7 +50,6 @@ export function GpSidebarShell({ patient, children }: Props) {
         ? "bg-[var(--measured-clinical-amber)]"
         : "bg-[var(--measured-green)]";
 
-
   return (
     <div className="gp-sidebar mx-auto flex flex-col" data-gp-sidebar>
       {/* Risk-level accent bar */}
@@ -80,7 +79,11 @@ export function GpSidebarShell({ patient, children }: Props) {
               {patient.conditions.join(", ")}
             </div>
           </div>
-          <StatusDot tone={patient.risk} label={`${patient.risk} risk`} size="sm" />
+          <StatusDot
+            tone={patient.risk}
+            label={`${patient.risk} risk`}
+            size="sm"
+          />
         </div>
       </motion.header>
 

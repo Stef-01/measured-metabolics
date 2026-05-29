@@ -143,7 +143,10 @@ export function PatientHomeScreen() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="text-[11px] font-semibold uppercase tracking-wider text-white/70">
-                <span className="tnum">Today · {todayLogged}/{todayPlan.length}</span> logged
+                <span className="tnum">
+                  Today · {todayLogged}/{todayPlan.length}
+                </span>{" "}
+                logged
               </div>
               <div className="mt-1 font-serif text-[24px] leading-tight">
                 {nextMeal !== null ? "Log your next meal" : "All meals logged!"}
@@ -154,7 +157,12 @@ export function PatientHomeScreen() {
                 className="flex shrink-0 items-center gap-1 rounded-full bg-white/15 px-2.5 py-1"
                 initial={{ scale: 0.7, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 18, delay: 0.2 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 18,
+                  delay: 0.2,
+                }}
               >
                 <motion.span
                   animate={{ scale: [1, 1.25, 1] }}
@@ -162,7 +170,10 @@ export function PatientHomeScreen() {
                 >
                   <Flame size={13} strokeWidth={2.2} aria-hidden="true" />
                 </motion.span>
-                <span className="tnum text-[12px] font-bold" aria-label={`${streak} day streak`}>
+                <span
+                  className="tnum text-[12px] font-bold"
+                  aria-label={`${streak} day streak`}
+                >
                   <AnimatedCount target={streak} />d
                 </span>
               </motion.div>

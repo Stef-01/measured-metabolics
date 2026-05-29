@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
@@ -460,19 +461,22 @@ function AdherencePanel({ planEaten }: { planEaten: Record<string, true> }) {
 
       {weekTotals.eaten === 0 ? (
         <div className="flex flex-col items-center gap-3 py-8 text-center">
-          <span className="text-[40px]" aria-hidden="true">📋</span>
+          <span className="text-[40px]" aria-hidden="true">
+            📋
+          </span>
           <p className="font-serif text-[17px] text-[var(--measured-dark)]">
             Nothing tracked yet
           </p>
           <p className="max-w-[220px] text-[12px] leading-relaxed text-[var(--measured-subtext)]">
-            Mark meals eaten on the Plan tab and your weekly grid will appear here.
+            Mark meals eaten on the Plan tab and your weekly grid will appear
+            here.
           </p>
-          <a
+          <Link
             href="/p/plan"
             className="mt-1 rounded-xl bg-[var(--measured-green)] px-4 py-2 text-[12px] font-semibold text-white"
           >
             Open Plan
-          </a>
+          </Link>
         </div>
       ) : (
         <>

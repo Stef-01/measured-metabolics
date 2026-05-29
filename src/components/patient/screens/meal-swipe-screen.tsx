@@ -12,7 +12,7 @@ import {
   useAnimate,
 } from "framer-motion";
 import type { PanInfo } from "framer-motion";
-import { Check, X, RefreshCw, Camera, Leaf, Sparkles } from "lucide-react";
+import { Check, X, RefreshCw, Camera, Leaf } from "lucide-react";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import {
   MEAL_SUGGESTIONS,
@@ -81,8 +81,6 @@ interface SwipeableCardProps {
   isTop: boolean;
   offset: number;
   dietitianName: string;
-  runHint: boolean;
-  onHintDone: () => void;
 }
 
 function SwipeableCard({
@@ -91,29 +89,29 @@ function SwipeableCard({
   isTop,
   offset,
   dietitianName,
-  runHint,
-  onHintDone,
 }: SwipeableCardProps) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-220, 220], [-22, 22]);
   const addOpacity = useTransform(x, [40, 130], [0, 1]);
   const skipOpacity = useTransform(x, [-130, -40], [1, 0]);
 
-  // One-shot swipe affordance peek — animates right then snaps back
+  // One-shot swipe affordance peek — reads localStorage inside the setTimeout
+  // callback (not the synchronous effect body) so no setState is needed.
   useEffect(() => {
-    if (!isTop || !runHint) return;
+    if (!isTop) return;
     const timeout = setTimeout(async () => {
+      try {
+        if (localStorage.getItem(HINT_KEY)) return;
+      } catch {}
       await animate(x, 18, { duration: 0.28, ease: [0.22, 1, 0.36, 1] });
       await animate(x, -8, { duration: 0.18, ease: "easeOut" });
-      await animate(x, 0, {
-        type: "spring",
-        stiffness: 380,
-        damping: 28,
-      });
-      onHintDone();
+      await animate(x, 0, { type: "spring", stiffness: 380, damping: 28 });
+      try {
+        localStorage.setItem(HINT_KEY, "1");
+      } catch {}
     }, 700);
     return () => clearTimeout(timeout);
-  }, [isTop, runHint, x, onHintDone]);
+  }, [isTop, x]);
 
   async function handleDragEnd(_: PointerEvent, info: PanInfo) {
     if (
@@ -354,7 +352,11 @@ function ActionButton({
   const handleClick = useCallback(async () => {
     onClick();
     if (scope.current) {
-      await animateEl(scope.current, { scale: [1, 1.22, 0.88, 1] }, { duration: 0.32, ease: "easeOut" });
+      await animateEl(
+        scope.current,
+        { scale: [1, 1.22, 0.88, 1] },
+        { duration: 0.32, ease: "easeOut" },
+      );
     }
   }, [onClick, scope, animateEl]);
 
@@ -384,30 +386,13 @@ export function MealSwipeScreen({
 }) {
   const [cards, setCards] = useState(MEAL_SUGGESTIONS);
   const [savedCount, setSavedCount] = useState(0);
-  const [showBurst, setShowBurst] = useState(false);
   const done = cards.length === 0;
+  const showBurst = done && savedCount > 0; // derived — no separate state needed
   const doneRef = useRef<HTMLDivElement>(null);
 
-  // Swipe hint: only show once per browser, SSR-safe
-  const [hintSeen, setHintSeen] = useState(true); // default true = no hint
   useEffect(() => {
-    try {
-      const seen = localStorage.getItem(HINT_KEY);
-      if (!seen) setHintSeen(false);
-    } catch {}
-  }, []);
-
-  const markHintSeen = useCallback(() => {
-    try { localStorage.setItem(HINT_KEY, "1"); } catch {}
-    setHintSeen(true);
-  }, []);
-
-  useEffect(() => {
-    if (done) {
-      doneRef.current?.focus();
-      if (savedCount > 0) setShowBurst(true);
-    }
-  }, [done, savedCount]);
+    if (done) doneRef.current?.focus();
+  }, [done]);
 
   function handleSwipe(id: string, dir: "left" | "right") {
     if (dir === "right") setSavedCount((n) => n + 1);
@@ -460,7 +445,12 @@ export function MealSwipeScreen({
               <motion.div
                 initial={{ scale: 0.6, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 20, delay: 0.05 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 20,
+                  delay: 0.05,
+                }}
               >
                 <span
                   className="select-none"
@@ -477,7 +467,11 @@ export function MealSwipeScreen({
                     className="mt-5 font-serif text-[32px] leading-tight tracking-tight text-[var(--measured-dark)]"
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.18, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{
+                      delay: 0.18,
+                      duration: 0.45,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
                   >
                     <span className="tnum text-[var(--measured-dark-green)]">
                       <SpringCount target={savedCount} />
@@ -508,15 +502,17 @@ export function MealSwipeScreen({
                 className="mt-8 flex flex-col items-center gap-3"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                transition={{
+                  delay: 0.4,
+                  duration: 0.4,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
               >
                 <motion.button
                   type="button"
                   onClick={() => {
                     setCards(MEAL_SUGGESTIONS);
                     setSavedCount(0);
-                    setShowBurst(false);
-                    setHintSeen(true); // don't re-hint after restart
                   }}
                   className="flex items-center gap-2 rounded-2xl bg-[var(--measured-green)] px-6 py-3.5 text-[14px] font-semibold text-white shadow-[0_4px_14px_-4px_rgba(45,90,61,0.4)]"
                   whileHover={{ scale: 1.02 }}
@@ -551,8 +547,6 @@ export function MealSwipeScreen({
                       isTop={offset === 0}
                       offset={offset}
                       dietitianName={dietitianName}
-                      runHint={offset === 0 && !hintSeen}
-                      onHintDone={markHintSeen}
                     />
                   );
                 })}
