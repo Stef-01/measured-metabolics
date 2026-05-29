@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -9,9 +9,10 @@ import {
   useTransform,
   animate,
   AnimatePresence,
+  useAnimate,
 } from "framer-motion";
 import type { PanInfo } from "framer-motion";
-import { Check, X, RefreshCw, Camera, Leaf } from "lucide-react";
+import { Check, X, RefreshCw, Camera, Leaf, Sparkles } from "lucide-react";
 import { PatientAppHeader } from "@/components/patient/app-header";
 import {
   MEAL_SUGGESTIONS,
@@ -20,6 +21,7 @@ import {
 
 const SWIPE_THRESHOLD = 80;
 const VELOCITY_THRESHOLD = 350;
+const HINT_KEY = "meal-swipe-hint-v1";
 
 const MACRO_LABELS: Record<string, string> = {
   low: "Low",
@@ -79,6 +81,8 @@ interface SwipeableCardProps {
   isTop: boolean;
   offset: number;
   dietitianName: string;
+  runHint: boolean;
+  onHintDone: () => void;
 }
 
 function SwipeableCard({
@@ -87,11 +91,29 @@ function SwipeableCard({
   isTop,
   offset,
   dietitianName,
+  runHint,
+  onHintDone,
 }: SwipeableCardProps) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-220, 220], [-22, 22]);
   const addOpacity = useTransform(x, [40, 130], [0, 1]);
   const skipOpacity = useTransform(x, [-130, -40], [1, 0]);
+
+  // One-shot swipe affordance peek — animates right then snaps back
+  useEffect(() => {
+    if (!isTop || !runHint) return;
+    const timeout = setTimeout(async () => {
+      await animate(x, 18, { duration: 0.28, ease: [0.22, 1, 0.36, 1] });
+      await animate(x, -8, { duration: 0.18, ease: "easeOut" });
+      await animate(x, 0, {
+        type: "spring",
+        stiffness: 380,
+        damping: 28,
+      });
+      onHintDone();
+    }, 700);
+    return () => clearTimeout(timeout);
+  }, [isTop, runHint, x, onHintDone]);
 
   async function handleDragEnd(_: PointerEvent, info: PanInfo) {
     if (
@@ -155,7 +177,7 @@ function SwipeableCard({
           cursor: isTop ? "grab" : "default",
         }}
       >
-        {/* Food photo + colour-identity tint — both always appear together */}
+        {/* Food photo + colour-identity tint */}
         {suggestion.imageUrl && (
           <>
             <Image
@@ -186,7 +208,7 @@ function SwipeableCard({
           </div>
         )}
 
-        {/* Swipe feedback overlays — only rendered on the top card */}
+        {/* Swipe feedback overlays */}
         {isTop && (
           <>
             <motion.div
@@ -218,7 +240,7 @@ function SwipeableCard({
           </>
         )}
 
-        {/* Noise texture overlay for depth */}
+        {/* Noise texture overlay */}
         <div
           className="pointer-events-none absolute inset-0 z-[2] rounded-[2.5rem] opacity-[0.04]"
           style={{
@@ -274,6 +296,87 @@ function SwipeableCard({
   );
 }
 
+// Animated count that springs up from 0
+function SpringCount({ target }: { target: number }) {
+  const [display, setDisplay] = useState(0);
+  useEffect(() => {
+    let frame: number;
+    const start = performance.now();
+    const duration = 900;
+    function tick(now: number) {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      setDisplay(Math.round(ease * target));
+      if (t < 1) frame = requestAnimationFrame(tick);
+    }
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [target]);
+  return <>{display}</>;
+}
+
+// Sparkle particles radiating outward on celebration
+function CelebrationBurst() {
+  const angles = [0, 45, 90, 135, 180, 225, 270, 315];
+  return (
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      {angles.map((angle) => (
+        <motion.div
+          key={angle}
+          className="absolute h-2 w-2 rounded-full bg-[var(--measured-green)]"
+          initial={{ scale: 0, x: 0, y: 0, opacity: 1 }}
+          animate={{
+            scale: [0, 1, 0],
+            x: Math.cos((angle * Math.PI) / 180) * 60,
+            y: Math.sin((angle * Math.PI) / 180) * 60,
+            opacity: [0, 1, 0],
+          }}
+          transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// Action button with a brief scale-pulse on press
+function ActionButton({
+  onClick,
+  ariaLabel,
+  variant,
+  children,
+}: {
+  onClick: () => void;
+  ariaLabel: string;
+  variant: "skip" | "add";
+  children: React.ReactNode;
+}) {
+  const [scope, animateEl] = useAnimate();
+  const handleClick = useCallback(async () => {
+    onClick();
+    if (scope.current) {
+      await animateEl(scope.current, { scale: [1, 1.22, 0.88, 1] }, { duration: 0.32, ease: "easeOut" });
+    }
+  }, [onClick, scope, animateEl]);
+
+  return (
+    <motion.button
+      ref={scope}
+      type="button"
+      aria-label={ariaLabel}
+      onClick={handleClick}
+      className={
+        variant === "add"
+          ? "flex h-[56px] w-[56px] items-center justify-center rounded-full bg-[var(--measured-green)] shadow-[0_4px_20px_-4px_rgba(45,90,61,0.5)]"
+          : "flex h-[56px] w-[56px] items-center justify-center rounded-full border-2 border-[var(--measured-border)] bg-white shadow-[var(--shadow-card)]"
+      }
+      whileHover={{ scale: 1.08 }}
+      transition={{ type: "spring", stiffness: 400, damping: 20 }}
+    >
+      {children}
+    </motion.button>
+  );
+}
+
 export function MealSwipeScreen({
   dietitianName = "Maya",
 }: {
@@ -281,12 +384,30 @@ export function MealSwipeScreen({
 }) {
   const [cards, setCards] = useState(MEAL_SUGGESTIONS);
   const [savedCount, setSavedCount] = useState(0);
+  const [showBurst, setShowBurst] = useState(false);
   const done = cards.length === 0;
-  const doneRef = React.useRef<HTMLDivElement>(null);
+  const doneRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
-    if (done) doneRef.current?.focus();
-  }, [done]);
+  // Swipe hint: only show once per browser, SSR-safe
+  const [hintSeen, setHintSeen] = useState(true); // default true = no hint
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem(HINT_KEY);
+      if (!seen) setHintSeen(false);
+    } catch {}
+  }, []);
+
+  const markHintSeen = useCallback(() => {
+    try { localStorage.setItem(HINT_KEY, "1"); } catch {}
+    setHintSeen(true);
+  }, []);
+
+  useEffect(() => {
+    if (done) {
+      doneRef.current?.focus();
+      if (savedCount > 0) setShowBurst(true);
+    }
+  }, [done, savedCount]);
 
   function handleSwipe(id: string, dir: "left" | "right") {
     if (dir === "right") setSavedCount((n) => n + 1);
@@ -298,13 +419,28 @@ export function MealSwipeScreen({
     handleSwipe(cards[0].id, dir);
   }
 
+  // Progress: how many of 12 have been decided
+  const decided = MEAL_SUGGESTIONS.length - cards.length;
+  const total = MEAL_SUGGESTIONS.length;
+
   return (
     <div
       className="flex flex-col overflow-hidden"
       style={{ height: "calc(100dvh - 6rem)" }}
     >
-      {/* Header */}
       <PatientAppHeader eyebrow="Meal ideas" title="What sounds good?" />
+
+      {/* Progress strip */}
+      {!done && (
+        <div className="mx-5 mb-1 mt-0.5 h-0.5 overflow-hidden rounded-full bg-[var(--measured-border-soft)]">
+          <motion.div
+            className="h-full rounded-full bg-[var(--measured-green)]"
+            initial={{ width: 0 }}
+            animate={{ width: `${(decided / total) * 100}%` }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          />
+        </div>
+      )}
 
       {/* Card stack */}
       <div className="relative flex-1" aria-live="polite" aria-atomic="true">
@@ -314,36 +450,75 @@ export function MealSwipeScreen({
               key="done"
               ref={doneRef}
               tabIndex={-1}
-              className="flex h-full flex-col items-center justify-center px-10 text-center focus:outline-none"
-              initial={{ opacity: 0, scale: 0.94 }}
+              className="relative flex h-full flex-col items-center justify-center px-10 text-center focus:outline-none"
+              initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ type: "spring", stiffness: 300, damping: 22 }}
             >
-              <span
-                className="select-none"
-                style={{ fontSize: 64 }}
-                aria-hidden="true"
+              {showBurst && <CelebrationBurst />}
+
+              <motion.div
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20, delay: 0.05 }}
               >
-                🌿
-              </span>
-              <h2 className="mt-4 font-serif text-[26px] leading-tight tracking-tight text-[var(--measured-dark)]">
-                {savedCount > 0
-                  ? `${savedCount} idea${savedCount > 1 ? "s" : ""} saved`
-                  : "All done for now"}
-              </h2>
-              <p className="mt-2.5 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
-                {savedCount > 0
-                  ? `${dietitianName} will see these before your next session.`
-                  : "Check back after your next session for new suggestions."}
-              </p>
-              <div className="mt-6 flex flex-col items-center gap-3">
+                <span
+                  className="select-none"
+                  style={{ fontSize: 72 }}
+                  aria-hidden="true"
+                >
+                  {savedCount > 0 ? "🌿" : "✨"}
+                </span>
+              </motion.div>
+
+              {savedCount > 0 ? (
+                <>
+                  <motion.h2
+                    className="mt-5 font-serif text-[32px] leading-tight tracking-tight text-[var(--measured-dark)]"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.18, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <span className="tnum text-[var(--measured-dark-green)]">
+                      <SpringCount target={savedCount} />
+                    </span>{" "}
+                    idea{savedCount > 1 ? "s" : ""} saved
+                  </motion.h2>
+                  <motion.p
+                    className="mt-2 text-[14px] leading-relaxed text-[var(--measured-subtext)]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.32 }}
+                  >
+                    {dietitianName} will see these before your next session.
+                  </motion.p>
+                </>
+              ) : (
+                <>
+                  <h2 className="mt-5 font-serif text-[28px] leading-tight tracking-tight text-[var(--measured-dark)]">
+                    All done for now
+                  </h2>
+                  <p className="mt-2 text-[14px] leading-relaxed text-[var(--measured-subtext)]">
+                    Check back after your next session for new suggestions.
+                  </p>
+                </>
+              )}
+
+              <motion.div
+                className="mt-8 flex flex-col items-center gap-3"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              >
                 <motion.button
                   type="button"
                   onClick={() => {
                     setCards(MEAL_SUGGESTIONS);
                     setSavedCount(0);
+                    setShowBurst(false);
+                    setHintSeen(true); // don't re-hint after restart
                   }}
-                  className="flex items-center gap-2 rounded-2xl bg-[var(--measured-green)] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_4px_14px_-4px_rgba(45,90,61,0.4)]"
+                  className="flex items-center gap-2 rounded-2xl bg-[var(--measured-green)] px-6 py-3.5 text-[14px] font-semibold text-white shadow-[0_4px_14px_-4px_rgba(45,90,61,0.4)]"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.96 }}
                 >
@@ -357,11 +532,10 @@ export function MealSwipeScreen({
                   <Camera size={13} strokeWidth={2} aria-hidden="true" />
                   Log what I actually ate
                 </Link>
-              </div>
+              </motion.div>
             </motion.div>
           ) : (
             <React.Fragment key="cards">
-              {/* Render cards back-to-front so front card sits on top in DOM */}
               {cards
                 .slice(0, 3)
                 .slice()
@@ -377,6 +551,8 @@ export function MealSwipeScreen({
                       isTop={offset === 0}
                       offset={offset}
                       dietitianName={dietitianName}
+                      runHint={offset === 0 && !hintSeen}
+                      onHintDone={markHintSeen}
                     />
                   );
                 })}
@@ -388,22 +564,18 @@ export function MealSwipeScreen({
       {/* Action row */}
       {!done && (
         <div className="flex items-center justify-center gap-6 py-3">
-          <motion.button
-            type="button"
-            aria-label="Skip this meal"
+          <ActionButton
+            ariaLabel="Skip this meal"
+            variant="skip"
             onClick={() => programmaticSwipe("left")}
-            className="flex h-[52px] w-[52px] items-center justify-center rounded-full border-2 border-[var(--measured-border)] bg-white shadow-[var(--shadow-card)]"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.88 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
           >
             <X
-              size={20}
+              size={22}
               strokeWidth={2.5}
               className="text-[var(--measured-subtext)]"
               aria-hidden="true"
             />
-          </motion.button>
+          </ActionButton>
 
           <Link
             href="/p/meal/log"
@@ -413,14 +585,10 @@ export function MealSwipeScreen({
             Log a meal
           </Link>
 
-          <motion.button
-            type="button"
-            aria-label="Add to meal plan"
+          <ActionButton
+            ariaLabel="Add to meal plan"
+            variant="add"
             onClick={() => programmaticSwipe("right")}
-            className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-[var(--measured-green)] shadow-[0_4px_16px_-4px_rgba(45,90,61,0.45)]"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.88 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
           >
             <Check
               size={22}
@@ -428,8 +596,15 @@ export function MealSwipeScreen({
               className="text-white"
               aria-hidden="true"
             />
-          </motion.button>
+          </ActionButton>
         </div>
+      )}
+
+      {/* Card counter */}
+      {!done && (
+        <p className="tnum pb-2 text-center text-[11px] text-[var(--measured-subtext)]">
+          {cards.length} of {total} remaining
+        </p>
       )}
     </div>
   );
