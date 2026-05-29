@@ -1,4 +1,5 @@
 import { listPatients } from "@/server/services";
+import { StatusDot } from "@/components/shared/status-dot";
 
 const RISK_TONE: Record<string, string> = {
   high: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
@@ -7,11 +8,10 @@ const RISK_TONE: Record<string, string> = {
   low: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
 };
 
-const CONSENT_TONE: Record<string, string> = {
-  signed: "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
-  pending:
-    "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]",
-  withdrawn: "bg-[var(--measured-evaluate)]/10 text-[var(--measured-evaluate)]",
+const CONSENT_DOT_TONE: Record<string, "good" | "medium" | "high"> = {
+  signed: "good",
+  pending: "medium",
+  withdrawn: "high",
 };
 
 export default async function AdminPatientsPage() {
@@ -72,27 +72,23 @@ export default async function AdminPatientsPage() {
                   <span className="text-[14px] font-semibold text-[var(--measured-text)]">
                     {p.firstName} {p.lastName}
                   </span>
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${RISK_TONE[p.risk]}`}
-                  >
-                    {p.risk}
-                  </span>
-                  {p.consentStatus && (
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${CONSENT_TONE[p.consentStatus] ?? ""}`}
-                    >
-                      {p.consentStatus}
-                    </span>
+                  <StatusDot tone={p.risk} label={`${p.risk} risk`} size="sm" />
+                  {p.consentStatus && CONSENT_DOT_TONE[p.consentStatus] && (
+                    <StatusDot
+                      tone={CONSENT_DOT_TONE[p.consentStatus]}
+                      label={p.consentStatus}
+                      size="sm"
+                    />
                   )}
                 </div>
                 <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[12px] text-[var(--measured-subtext)]">
                   <span>{p.conditions.join(" · ")}</span>
                   <span>·</span>
-                  <span>HbA1c {p.hbA1cPct}%</span>
+                  <span>HbA1c <span className="tnum">{p.hbA1cPct}%</span></span>
                   <span>·</span>
-                  <span>TIR {p.timeInRangePct}%</span>
+                  <span>TIR <span className="tnum">{p.timeInRangePct}%</span></span>
                   <span>·</span>
-                  <span>Wk {p.weekNumber}</span>
+                  <span>Wk <span className="tnum">{p.weekNumber}</span></span>
                 </div>
               </div>
             </li>
