@@ -69,9 +69,11 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
   // Don't render at all if empty and not composing
   if (requests.length === 0 && !open) {
     return (
-      <button
+      <motion.button
         type="button"
         onClick={() => setOpen(true)}
+        whileTap={{ scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 400, damping: 24 }}
         className="flex w-full items-center gap-3 rounded-2xl border border-[var(--measured-border-soft)] bg-white px-4 py-3 text-left transition-colors hover:bg-[var(--measured-green)]/5"
       >
         <Sparkles
@@ -88,7 +90,7 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
             Swap ideas, alternatives, or any food question
           </div>
         </div>
-      </button>
+      </motion.button>
     );
   }
 
@@ -98,13 +100,15 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
         <div className="text-[13px] font-semibold text-[var(--measured-dark)]">
           Meal ideas from {dietitianName}
         </div>
-        <button
+        <motion.button
           type="button"
           onClick={() => setOpen((o) => !o)}
+          whileTap={{ scale: 0.93 }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
           className="rounded-full bg-[var(--measured-green)] px-3 py-1 text-[11px] font-semibold text-white"
         >
           Ask question
-        </button>
+        </motion.button>
       </header>
 
       <AnimatePresence>
@@ -144,16 +148,18 @@ export function MealIdeasCard({ patientId, dietitianName = "Maya" }: Props) {
                 className="w-full resize-none rounded-2xl border border-[var(--measured-border)] bg-white p-3 text-[13px] leading-relaxed placeholder:text-[var(--measured-subtext)] focus:border-[var(--measured-green)] focus:outline-none"
               />
               <div className="flex gap-2">
-                <button
+                <motion.button
                   type="button"
                   onClick={() => {
                     setOpen(false);
                     setBody("");
                   }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
                   className="inline-flex items-center gap-1 px-3 py-2 text-[12px] font-semibold text-[var(--measured-subtext)]"
                 >
                   <X size={12} strokeWidth={2.2} /> Cancel
-                </button>
+                </motion.button>
                 <motion.button
                   type="button"
                   onClick={send}

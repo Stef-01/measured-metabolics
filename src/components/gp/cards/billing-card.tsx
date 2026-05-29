@@ -207,9 +207,11 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
               key={h.item}
               className="rounded-xl border border-[var(--measured-border-soft)] bg-white text-[12px]"
             >
-              <button
+              <motion.button
                 type="button"
                 onClick={() => setExpanded(isOpen ? null : h.item)}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 24 }}
                 className="flex w-full items-start justify-between gap-3 px-3 py-2.5 text-left"
                 aria-expanded={isOpen}
               >
@@ -258,7 +260,7 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                     aria-hidden="true"
                   />
                 )}
-              </button>
+              </motion.button>
               {isOpen && (
                 <div className="space-y-3 border-t border-[var(--measured-border-soft)] px-3 py-2.5">
                   <div>
@@ -402,9 +404,11 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
         })}
       </ul>
       <section className="rounded-2xl border border-[var(--measured-border-soft)] bg-white p-4 shadow-[var(--shadow-card)]">
-        <button
+        <motion.button
           type="button"
           onClick={() => setAiOpen((open) => !open)}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 400, damping: 24 }}
           className="flex w-full items-start gap-3 text-left"
           aria-expanded={aiOpen}
         >
@@ -446,7 +450,7 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
               aria-hidden="true"
             />
           )}
-        </button>
+        </motion.button>
 
         {aiOpen && (
           <div className="mt-3 space-y-2">

@@ -202,11 +202,13 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
         {TABS.map((t) => {
           const isActive = tab === t.id;
           return (
-            <button
+            <motion.button
               type="button"
               key={t.id}
               onClick={() => setTab(t.id)}
               aria-pressed={isActive}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 24 }}
               className={cn(
                 "relative inline-flex items-center gap-1.5 px-3 py-2.5 text-[13px] font-semibold transition-colors",
                 isActive
@@ -223,7 +225,7 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
                   transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 />
               )}
-            </button>
+            </motion.button>
           );
         })}
       </div>
@@ -355,9 +357,16 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
                           key={m.id}
                           className="overflow-hidden rounded-2xl border border-[var(--measured-border-soft)] bg-white shadow-[var(--shadow-card)]"
                         >
-                          <button
+                          <motion.button
                             type="button"
                             onClick={() => setAnnotateMeal(m)}
+                            whileHover={{ y: -2 }}
+                            whileTap={{ scale: 0.98 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 22,
+                            }}
                             className="block w-full text-left transition-shadow hover:shadow-[var(--shadow-raised)] focus:outline-none focus:ring-2 focus:ring-[var(--measured-green)]/40"
                           >
                             <div className="relative h-44 w-full bg-[var(--measured-cream)]">
@@ -427,7 +436,7 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
                                 {m.analysis.dietitianSummary}
                               </p>
                             </div>
-                          </button>
+                          </motion.button>
                         </li>
                       );
                     })}
@@ -1068,19 +1077,23 @@ function PlanBuilder({ patient }: { patient: Patient }) {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <button
+          <motion.button
             type="button"
             onClick={reset}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className="inline-flex items-center gap-1 rounded-xl border border-[var(--measured-border)] bg-white px-3 py-1.5 text-[12px] font-semibold text-[var(--measured-subtext)] hover:bg-[var(--measured-cream)]"
           >
             <RotateCcw size={12} strokeWidth={2.2} aria-hidden="true" />
             Reset
-          </button>
+          </motion.button>
           {!approved && !isEmpty && (
-            <button
+            <motion.button
               type="button"
               onClick={saveDraft}
               disabled={isDraftSaved}
+              whileTap={!isDraftSaved ? { scale: 0.95 } : undefined}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
               className={cn(
                 "inline-flex items-center gap-1 rounded-xl px-3 py-1.5 text-[12px] font-semibold",
                 isDraftSaved
@@ -1089,7 +1102,7 @@ function PlanBuilder({ patient }: { patient: Patient }) {
               )}
             >
               Save draft
-            </button>
+            </motion.button>
           )}
           <motion.button
             type="button"
@@ -1173,24 +1186,28 @@ function PlanBuilder({ patient }: { patient: Patient }) {
           {isGenerating ? "Generating…" : "Generate AI draft"}
         </motion.button>
         {sibling && (
-          <button
+          <motion.button
             type="button"
             onClick={cloneFromSibling}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--measured-border)] bg-white px-3 py-2 text-[12px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]"
           >
             <PlusCircle size={13} strokeWidth={2.2} aria-hidden="true" />
             Copy {sibling.sourcePatientName.split(" ")[0]}&apos;s plan
-          </button>
+          </motion.button>
         )}
         {isDayOverride && (
-          <button
+          <motion.button
             type="button"
             onClick={resetDay}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--measured-border)] bg-white px-3 py-2 text-[12px] font-semibold text-[var(--measured-dark)] hover:bg-[var(--measured-cream)]"
           >
             <RotateCcw size={13} strokeWidth={2.2} aria-hidden="true" />
             Reset day
-          </button>
+          </motion.button>
         )}
         <span className="text-[11px] text-[var(--measured-subtext)]">
           {!isDayOverride && "Using week template · "}
@@ -1209,14 +1226,16 @@ function PlanBuilder({ patient }: { patient: Patient }) {
               <div className="text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
                 {MEAL_LABEL[it.mealType]}
               </div>
-              <button
+              <motion.button
                 type="button"
                 onClick={() => setPickerSlot(idx)}
+                whileTap={{ scale: 0.93 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 className="inline-flex items-center gap-1 rounded-lg bg-[var(--measured-cream)] px-2.5 py-1 text-[11px] font-semibold text-[var(--measured-dark-green)] hover:bg-[var(--measured-green)]/10"
               >
                 <Library size={11} strokeWidth={2.2} aria-hidden="true" />
                 Library
-              </button>
+              </motion.button>
             </div>
             <input
               type="text"

@@ -156,9 +156,11 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                 : t.patientId.slice(0, 2).toUpperCase();
               return (
                 <li key={t.id}>
-                  <button
+                  <motion.button
                     type="button"
                     onClick={() => setActiveId(t.id)}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 24 }}
                     className={cn(
                       "group flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors",
                       isActive
@@ -226,7 +228,7 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                         aria-hidden="true"
                       />
                     )}
-                  </button>
+                  </motion.button>
                 </li>
               );
             })}
