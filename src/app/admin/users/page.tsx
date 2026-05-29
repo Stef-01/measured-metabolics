@@ -1,4 +1,5 @@
 import { PATIENTS, GP_PROFILES, DIETITIAN_PROFILES } from "@/lib/mock";
+import { StatusDot } from "@/components/shared/status-dot";
 
 type UserRole = "patient" | "dietitian" | "gp";
 
@@ -41,11 +42,16 @@ export default function AdminUsersPage() {
     })),
   ];
 
-  const ROLE_BADGE: Record<UserRole, string> = {
-    dietitian:
-      "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]",
-    gp: "bg-[var(--measured-clinical-blue)]/10 text-[var(--measured-clinical-blue)]",
-    patient: "bg-[var(--measured-cream)] text-[var(--measured-subtext)]",
+  const ROLE_DOT_TONE: Record<UserRole, "good" | "low" | "neutral"> = {
+    dietitian: "good",
+    gp: "low",
+    patient: "neutral",
+  };
+
+  const CONSENT_DOT_TONE: Record<string, "good" | "medium" | "high"> = {
+    signed: "good",
+    pending: "medium",
+    withdrawn: "high",
   };
 
   const byRole: Record<UserRole, UserRow[]> = {
@@ -74,7 +80,7 @@ export default function AdminUsersPage() {
             {role === "gp"
               ? "GPs"
               : role.charAt(0).toUpperCase() + role.slice(1) + "s"}
-            <span className="ml-2 rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
+            <span className="tnum ml-2 rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
               {byRole[role].length}
             </span>
           </h2>
@@ -93,22 +99,18 @@ export default function AdminUsersPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  {u.consentStatus && (
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                        u.consentStatus === "signed"
-                          ? "bg-[var(--measured-green)]/10 text-[var(--measured-dark-green)]"
-                          : "bg-[var(--measured-clinical-amber)]/15 text-[var(--measured-clinical-amber)]"
-                      }`}
-                    >
-                      {u.consentStatus}
-                    </span>
+                  {u.consentStatus && CONSENT_DOT_TONE[u.consentStatus] && (
+                    <StatusDot
+                      tone={CONSENT_DOT_TONE[u.consentStatus]}
+                      label={u.consentStatus}
+                      size="sm"
+                    />
                   )}
-                  <span
-                    className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${ROLE_BADGE[u.role]}`}
-                  >
-                    {u.role}
-                  </span>
+                  <StatusDot
+                    tone={ROLE_DOT_TONE[u.role]}
+                    label={u.role === "gp" ? "GP" : u.role}
+                    size="sm"
+                  />
                 </div>
               </li>
             ))}

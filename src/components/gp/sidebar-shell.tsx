@@ -74,8 +74,9 @@ export function GpSidebarShell({ patient, children }: Props) {
               {patient.firstName} {patient.lastName}
             </div>
             <div className="mt-0.5 text-[12px] text-[var(--measured-subtext)]">
-              {patient.age}
-              {patient.sex.toLowerCase()} · wk {patient.weekNumber} ·{" "}
+              <span className="tnum">{patient.age}</span>
+              {patient.sex.toLowerCase()} · wk{" "}
+              <span className="tnum">{patient.weekNumber}</span> ·{" "}
               {patient.conditions.join(", ")}
             </div>
           </div>
