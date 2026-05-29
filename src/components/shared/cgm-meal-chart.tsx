@@ -7,6 +7,7 @@ import {
   AreaChart,
   CartesianGrid,
   ReferenceArea,
+  ReferenceDot,
   ReferenceLine,
   ResponsiveContainer,
   Tooltip,
@@ -37,6 +38,16 @@ interface PointDatum {
 
 const SPIKE_THRESHOLD_DELTA = 1.5;
 const FILL_GRADIENT_ID = "cgm-meal-grad";
+const MEAL_WINDOW_MS = 150 * 60 * 1000; // 2.5h post-prandial arc, matches buildDay spike duration
+const PRE_MEAL_OFFSET_MS = 15 * 60 * 1000; // 15 min before eatenAt
+
+// Hex values required for SVG fill attributes — CSS vars don't resolve in SVG context.
+const MEAL_COLOR: Record<string, string> = {
+  breakfast: "#2c5e8a",
+  lunch: "#2d5a3d",
+  dinner: "#d4a84b",
+  snack: "#b8860b",
+};
 
 type SpikeContext = "dawn" | "unknown";
 
@@ -44,6 +55,24 @@ function classifySpikeContext(timestampMs: number): SpikeContext {
   const hour = new Date(timestampMs).getHours();
   if (hour >= 3 && hour < 8) return "dawn";
   return "unknown";
+}
+
+/** Nearest CGM reading within `toleranceMs` of `timestampMs`. */
+function glucoseAt(
+  data: PointDatum[],
+  timestampMs: number,
+  toleranceMs = 10 * 60 * 1000,
+): number | null {
+  let best: PointDatum | null = null;
+  let bestDiff = Infinity;
+  for (const d of data) {
+    const diff = Math.abs(d.time - timestampMs);
+    if (diff < bestDiff) {
+      bestDiff = diff;
+      best = d;
+    }
+  }
+  return best && bestDiff <= toleranceMs ? best.mmolL : null;
 }
 
 /**
@@ -75,6 +104,16 @@ export function CgmMealChart({
     for (const ann of annotations) map.set(ann.mealId, ann);
     return map;
   }, [annotations]);
+
+  const preMealGlucose = useMemo(() => {
+    const map = new Map<string, number>(); // meal.id → glucose 15 min before eatenAt
+    for (const m of meals) {
+      const preTs = new Date(m.eatenAt).getTime() - PRE_MEAL_OFFSET_MS;
+      const val = glucoseAt(data, preTs);
+      if (val !== null) map.set(m.id, val);
+    }
+    return map;
+  }, [meals, data]);
 
   const interactive = Boolean(onAnnotateMeal);
 
@@ -143,14 +182,29 @@ export function CgmMealChart({
             cursor={{ stroke: "rgba(45,90,61,0.4)", strokeDasharray: "3 3" }}
             content={() => null}
           />
+          {/* Stage 2: post-prandial window shading — 2.5h arc per meal */}
+          {meals.map((m) => {
+            const x1 = new Date(m.eatenAt).getTime();
+            const color = MEAL_COLOR[m.mealType] ?? CHART.green;
+            return (
+              <ReferenceArea
+                key={`window-${m.id}`}
+                x1={x1}
+                x2={x1 + MEAL_WINDOW_MS}
+                fill={color}
+                fillOpacity={0.04}
+              />
+            );
+          })}
+          {/* Stage 1: meal-time tick markers */}
           {meals.map((m) => (
             <ReferenceLine
               key={m.id}
               x={new Date(m.eatenAt).getTime()}
-              stroke={CHART.green}
+              stroke={MEAL_COLOR[m.mealType] ?? CHART.green}
               strokeDasharray="3 5"
               strokeWidth={1.5}
-              strokeOpacity={0.55}
+              strokeOpacity={0.6}
               label={{
                 value: m.photoEmoji,
                 position: "insideTopRight",
@@ -166,6 +220,24 @@ export function CgmMealChart({
             strokeWidth={2}
             fill={`url(#${FILL_GRADIENT_ID})`}
           />
+          {/* Stage 3: pre-meal glucose dots at T−15 min */}
+          {meals.map((m) => {
+            const preTs = new Date(m.eatenAt).getTime() - PRE_MEAL_OFFSET_MS;
+            const preVal = glucoseAt(data, preTs);
+            if (preVal === null) return null;
+            const color = MEAL_COLOR[m.mealType] ?? CHART.green;
+            return (
+              <ReferenceDot
+                key={`pre-${m.id}`}
+                x={preTs}
+                y={preVal}
+                r={3.5}
+                fill={color}
+                stroke="white"
+                strokeWidth={1.5}
+              />
+            );
+          })}
         </AreaChart>
       </ResponsiveContainer>
 
@@ -178,6 +250,9 @@ export function CgmMealChart({
           const isSpike =
             match?.meal.analysis.cgmPeakDeltaMmol !== undefined &&
             match.meal.analysis.cgmPeakDeltaMmol >= SPIKE_THRESHOLD_DELTA;
+          const preMealMmol = match
+            ? preMealGlucose.get(match.meal.id)
+            : undefined;
           return (
             <SpikeMealCallout
               hoveredAt={hovered.time}
@@ -186,6 +261,7 @@ export function CgmMealChart({
               annotation={annotation}
               isSpike={isSpike}
               showAnnotateCta={interactive}
+              preMealMmol={preMealMmol}
             />
           );
         })()}
@@ -215,6 +291,7 @@ interface CalloutProps {
   annotation?: MealAnnotation;
   isSpike: boolean;
   showAnnotateCta: boolean;
+  preMealMmol?: number;
 }
 
 function SpikeMealCallout({
@@ -224,6 +301,7 @@ function SpikeMealCallout({
   annotation,
   isSpike,
   showAnnotateCta,
+  preMealMmol,
 }: CalloutProps) {
   const time = new Date(hoveredAt).toLocaleString([], {
     weekday: "short",
@@ -299,6 +377,26 @@ function SpikeMealCallout({
             )}
           </span>
         </div>
+        {preMealMmol !== undefined && (
+          <div className="mt-1.5 flex items-center justify-between rounded-xl bg-[var(--measured-cream)] px-2.5 py-1.5 text-[11px]">
+            <span className="text-[var(--measured-subtext)]">Pre-meal</span>
+            <span
+              className={cn(
+                "tnum font-semibold",
+                preMealMmol > 7.0
+                  ? "text-[var(--measured-clinical-amber)]"
+                  : "text-[var(--measured-dark-green)]",
+              )}
+            >
+              {preMealMmol.toFixed(1)} mmol/L
+              {preMealMmol > 7.0 && (
+                <span className="ml-1 font-normal text-[var(--measured-subtext)]">
+                  · elevated baseline
+                </span>
+              )}
+            </span>
+          </div>
+        )}
         <p className="mt-1 leading-snug">
           {match.meal.analysis.dietitianSummary}
         </p>
