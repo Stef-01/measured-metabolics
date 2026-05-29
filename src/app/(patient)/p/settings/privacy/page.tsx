@@ -110,7 +110,7 @@ function Row(props: {
         </button>
       )}
       {!props.on && props.withdrawnAt && (
-        <p className="mt-2 text-[11px] text-[var(--measured-subtext)]">
+        <p className="tnum mt-2 text-[11px] text-[var(--measured-subtext)]">
           Withdrawn{" "}
           {new Date(props.withdrawnAt).toLocaleString([], {
             dateStyle: "medium",

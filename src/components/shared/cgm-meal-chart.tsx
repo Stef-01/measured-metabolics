@@ -209,7 +209,7 @@ function SpikeMealCallout({
   if (!match) {
     return (
       <div className="pointer-events-none absolute right-2 top-2 max-w-[240px] rounded-2xl border border-[var(--measured-border-soft)] bg-white/95 px-3 py-2 text-[12px] shadow-[var(--shadow-card)] backdrop-blur">
-        <div className="font-semibold text-[var(--measured-dark)]">
+        <div className="tnum font-semibold text-[var(--measured-dark)]">
           {hoveredMmol.toFixed(1)} mmol/L
         </div>
         <div className="text-[var(--measured-subtext)]">
@@ -240,7 +240,7 @@ function SpikeMealCallout({
           className="object-cover"
         />
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/65 to-transparent px-3 pt-6 pb-2 text-white">
-          <div className="text-[10px] font-semibold uppercase tracking-wider opacity-90">
+          <div className="tnum text-[10px] font-semibold uppercase tracking-wider opacity-90">
             {match.meal.mealType} · +{match.minutesAfter} min after eating
           </div>
           <div className="text-[14px] font-semibold leading-tight">
@@ -254,7 +254,7 @@ function SpikeMealCallout({
       <div className="px-3 py-2 text-[12px] text-[var(--measured-dark)]">
         <div className="flex items-center justify-between text-[11px] text-[var(--measured-subtext)]">
           <span>{time}</span>
-          <span>
+          <span className="tnum">
             {hoveredMmol.toFixed(1)} mmol/L
             {peak !== undefined && (
               <span className="ml-1 text-[var(--measured-evaluate)]">
