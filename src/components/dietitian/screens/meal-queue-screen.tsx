@@ -371,14 +371,14 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
               className="rounded-2xl border border-[var(--measured-border-soft)] bg-white px-4 py-2 text-[12px] text-[var(--measured-dark)]"
             >
-              <span className="font-semibold">{sessionInfo.count}</span>{" "}
+              <span className="tnum font-semibold">{sessionInfo.count}</span>{" "}
               reviewed ·{" "}
               <Clock
                 size={11}
                 strokeWidth={2}
                 className="inline -mt-0.5 mx-1 text-[var(--measured-subtext)]"
               />
-              {sessionInfo.elapsed}
+              <span className="tnum">{sessionInfo.elapsed}</span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -483,8 +483,10 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                         {p ? p.firstName : m.patientId}
                       </span>
                       <span className="block text-[10px] text-[var(--measured-subtext)]">
-                        {m.mealType} · Δ
-                        {m.analysis.cgmPeakDeltaMmol?.toFixed(1) ?? "?"} mmol
+                        <span className="tnum">
+                          {m.mealType} · Δ
+                          {m.analysis.cgmPeakDeltaMmol?.toFixed(1) ?? "?"} mmol
+                        </span>
                       </span>
                     </span>
                     {m.analysis.clinicalFlags.length > 0 && (
@@ -567,7 +569,7 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                     </div>
                   )}
                 </div>
-                <div className="rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold backdrop-blur">
+                <div className="tnum rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold backdrop-blur">
                   Peak Δ {current.analysis.cgmPeakDeltaMmol?.toFixed(1) ?? "?"}{" "}
                   mmol/L
                 </div>
@@ -636,12 +638,15 @@ export function DietitianMealQueueScreen({ pool }: Props = {}) {
                     </div>
                     <p className="mt-1.5 leading-relaxed text-[var(--measured-dark)]">
                       Peak Δ{" "}
-                      <span className="font-semibold">
+                      <span className="tnum font-semibold">
                         {current.analysis.cgmPeakDeltaMmol?.toFixed(1) ?? "?"}{" "}
                         mmol/L
                       </span>{" "}
-                      at +{current.analysis.cgmPeakAtMin ?? 60} min after
-                      eating.
+                      at{" "}
+                      <span className="tnum">
+                        +{current.analysis.cgmPeakAtMin ?? 60}
+                      </span>{" "}
+                      min after eating.
                     </p>
                     <div className="mt-2 grid grid-cols-4 gap-1.5 text-center text-[10px] uppercase tracking-wider text-[var(--measured-subtext)]">
                       {(["carb", "protein", "fibre", "fat"] as const).map(

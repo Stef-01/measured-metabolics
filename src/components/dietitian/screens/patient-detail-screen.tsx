@@ -189,7 +189,7 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
                 className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${tone}`}
               >
                 <span className="opacity-70">{s.label}</span>
-                <span>{s.value}</span>
+                <span className="tnum">{s.value}</span>
                 <TrendIcon size={10} strokeWidth={2.4} aria-hidden="true" />
               </div>
             );
@@ -614,7 +614,7 @@ function Item({ k, v }: { k: string; v: string }) {
       <dt className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
         {k}
       </dt>
-      <dd className="text-[var(--measured-dark)]">{v}</dd>
+      <dd className="tnum text-[var(--measured-dark)]">{v}</dd>
     </div>
   );
 }

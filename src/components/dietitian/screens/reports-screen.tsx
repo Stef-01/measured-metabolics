@@ -53,7 +53,7 @@ function StatChip({
     >
       <TrendIcon size={10} strokeWidth={2.5} aria-hidden="true" />
       <span>
-        {label} {value}
+        {label} <span className="tnum">{value}</span>
       </span>
     </div>
   );

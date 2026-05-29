@@ -234,7 +234,7 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                       {h.service}
                     </span>
                   </div>
-                  <div className="mt-0.5 text-[var(--measured-subtext)]">
+                  <div className="tnum mt-0.5 text-[var(--measured-subtext)]">
                     {Math.round(h.confidence * 100)}% confidence
                     {h.stance !== "defer" &&
                       h.estimatedRebateAud > 0 &&
@@ -455,7 +455,7 @@ export function GpBillingCard({ patient, variant = "gp" }: GpBillingCardProps) {
                       <span className="font-semibold text-[var(--measured-dark)]">
                         {s.serviceName}
                       </span>
-                      <span className="text-[var(--measured-subtext)]">
+                      <span className="tnum text-[var(--measured-subtext)]">
                         {Math.round(s.confidence_score * 100)}% AI confidence
                       </span>
                     </div>

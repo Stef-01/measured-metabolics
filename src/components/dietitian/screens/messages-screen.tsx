@@ -290,10 +290,10 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                     >
                       <div
                         className={cn(
-                          "max-w-[70%] rounded-2xl px-4 py-2 text-[13px] leading-relaxed",
+                          "max-w-[70%] rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed",
                           mine
-                            ? "bg-[var(--measured-green)] text-white"
-                            : "bg-[var(--measured-cream)] text-[var(--measured-dark)]",
+                            ? "rounded-br-md bg-[var(--measured-green)] text-white"
+                            : "rounded-bl-md bg-[var(--measured-cream)] text-[var(--measured-dark)]",
                         )}
                       >
                         {!mine && (
@@ -304,7 +304,7 @@ export function DietitianComposerScreen({ initialPatientId }: Props = {}) {
                         {m.body}
                         <div
                           className={cn(
-                            "mt-1 text-[10px]",
+                            "tnum mt-1 text-[10px]",
                             mine
                               ? "text-white/70"
                               : "text-[var(--measured-subtext)]",

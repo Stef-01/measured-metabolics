@@ -117,12 +117,14 @@ export function PatientPlanScreen() {
           <div className="mx-auto max-w-md px-5 py-3">
             <div className="flex items-center justify-between gap-3">
               <div className="text-[12px] text-[var(--measured-subtext)]">
-                <span className="font-semibold text-[var(--measured-dark)]">
+                <span className="tnum font-semibold text-[var(--measured-dark)]">
                   {weekTotals.eaten}
                 </span>{" "}
-                of {weekTotals.planned} meals eaten this week
+                of{" "}
+                <span className="tnum">{weekTotals.planned}</span> meals eaten
+                this week
               </div>
-              <div className="text-[12px] font-semibold text-[var(--measured-dark-green)]">
+              <div className="tnum text-[12px] font-semibold text-[var(--measured-dark-green)]">
                 {Math.round((weekTotals.eaten / weekTotals.planned) * 100)}%
               </div>
             </div>
@@ -152,10 +154,13 @@ export function PatientPlanScreen() {
               ).length;
               const allEaten = dayEaten === meals.length && dayEaten > 0;
               return (
-                <button
+                <motion.button
                   key={label}
                   type="button"
                   onClick={() => setSelectedDay(idx)}
+                  whileHover={!isSelected ? { y: -2 } : undefined}
+                  whileTap={{ scale: 0.92 }}
+                  transition={{ type: "spring", stiffness: 480, damping: 26 }}
                   className={cn(
                     "relative flex min-w-[44px] flex-col items-center gap-0.5 rounded-xl px-2 py-1.5 text-center transition-colors",
                     isSelected
@@ -195,7 +200,7 @@ export function PatientPlanScreen() {
                           : "bg-transparent",
                     )}
                   />
-                </button>
+                </motion.button>
               );
             })}
           </div>
@@ -238,7 +243,10 @@ export function PatientPlanScreen() {
           {dayEatenCount > 0 && dayEatenCount < dayMeals.length && (
             <div className="flex items-center gap-1 text-[12px] font-semibold text-[var(--measured-dark-green)]">
               <CheckCheck size={14} strokeWidth={2.2} aria-hidden="true" />
-              {dayEatenCount}/{dayMeals.length} eaten
+              <span className="tnum">
+                {dayEatenCount}/{dayMeals.length}
+              </span>{" "}
+              eaten
             </div>
           )}
         </div>
