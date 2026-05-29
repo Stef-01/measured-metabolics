@@ -102,7 +102,7 @@ export function DietitianPatientDetailScreen({ patient }: Props) {
       >
         <div>
           <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
-            Patient · Week {patient.weekNumber}
+            Patient · Wk <span className="tnum">{patient.weekNumber}</span>
           </div>
           <h1 className="mt-1 font-serif text-[36px] leading-tight tracking-tight text-[var(--measured-dark)]">
             {patient.firstName} {patient.lastName}
