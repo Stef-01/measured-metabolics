@@ -117,7 +117,7 @@ export function PatientMetricsScreen() {
         title="Metrics"
         trailing={
           <div className="flex h-12 w-12 flex-col items-center justify-center rounded-full bg-[var(--measured-green)]/10 text-center text-[var(--measured-dark-green)]">
-            <div className="text-[14px] font-bold leading-none">
+            <div className="tnum text-[14px] font-bold leading-none">
               {me.timeInRangePct}%
             </div>
             <div className="text-[8px] uppercase tracking-wider">in range</div>
@@ -554,8 +554,10 @@ function AdherencePanel({ planEaten }: { planEaten: Record<string, true> }) {
           </div>
 
           <p className="mt-4 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
-            {weekTotals.eaten} of {weekTotals.planned} planned meals eaten this
-            week. Maya can see this when reviewing your next check-in.
+            <span className="tnum">{weekTotals.eaten}</span> of{" "}
+            <span className="tnum">{weekTotals.planned}</span> planned meals
+            eaten this week. Maya can see this when reviewing your next
+            check-in.
           </p>
         </>
       )}

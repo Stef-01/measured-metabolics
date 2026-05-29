@@ -74,8 +74,9 @@ export function DietitianDashboardScreen() {
             Good morning, Maya
           </h1>
           <p className="mt-1 text-[14px] text-[var(--measured-subtext)]">
-            {pendingMeals} meals to review · {newRefs.length} new referrals ·{" "}
-            {severe.length} severe-symptom flags
+            <span className="tnum">{pendingMeals}</span> meals to review ·{" "}
+            <span className="tnum">{newRefs.length}</span> new referrals ·{" "}
+            <span className="tnum">{severe.length}</span> severe-symptom flags
           </p>
         </div>
         <motion.div
@@ -299,7 +300,7 @@ export function DietitianDashboardScreen() {
         <div className="flex items-center justify-between">
           <div className="text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
             Caseload
-            <span className="ml-2 rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
+            <span className="tnum ml-2 rounded-full bg-[var(--measured-cream)] px-2 py-0.5 text-[10px] normal-case tracking-normal">
               {myPatients.length}
             </span>
           </div>
@@ -388,7 +389,7 @@ function PatientRequestsSection() {
       <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-[var(--measured-subtext)]">
         <MessageSquarePlus size={14} strokeWidth={2} aria-hidden="true" />
         Patient meal requests
-        <span className="rounded-full bg-[var(--measured-clinical-amber)]/15 px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-clinical-amber)]">
+        <span className="tnum rounded-full bg-[var(--measured-clinical-amber)]/15 px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--measured-clinical-amber)]">
           {requests.length}
         </span>
       </div>
@@ -433,15 +434,17 @@ function PatientRequestsSection() {
                   }
                 }}
               />
-              <button
+              <motion.button
                 type="button"
                 onClick={() => reply(req)}
                 disabled={!replies[req.id]?.trim()}
+                whileTap={replies[req.id]?.trim() ? { scale: 0.95 } : undefined}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--measured-green)] px-3 py-2 text-[12px] font-semibold text-white disabled:bg-[var(--measured-cream)] disabled:text-[var(--measured-subtext)]"
               >
                 <Send size={13} strokeWidth={2.2} />
                 Reply
-              </button>
+              </motion.button>
             </div>
           </li>
         ))}

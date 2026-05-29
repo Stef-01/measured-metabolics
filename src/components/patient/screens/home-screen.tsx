@@ -352,10 +352,10 @@ function GlucoseSparkCard({
               Glucose this week
             </div>
             <div className="text-[12px] text-[var(--measured-subtext)]">
-              <span style={{ color: tirColor }} className="font-semibold">
+              <span style={{ color: tirColor }} className="tnum font-semibold">
                 {tir}% in range
               </span>{" "}
-              · {mealCount} meals logged
+              · <span className="tnum">{mealCount}</span> meals logged
             </div>
           </div>
         </div>
