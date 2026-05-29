@@ -292,10 +292,12 @@ function ToggleRow({
 }) {
   const isDanger = dangerOnTrue && checked;
   return (
-    <button
+    <motion.button
       type="button"
       onClick={() => onChange(!checked)}
       aria-pressed={checked}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 400, damping: 22 }}
       className={cn(
         "flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left text-[14px] transition-colors",
         isDanger
@@ -318,6 +320,6 @@ function ToggleRow({
       >
         {checked ? "Yes" : "No"}
       </span>
-    </button>
+    </motion.button>
   );
 }
