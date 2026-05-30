@@ -18,10 +18,14 @@ import { PatientAppHeader } from "@/components/patient/app-header";
 import {
   CGM_BY_PATIENT,
   CURRENT_PATIENT_ID,
+  MEALS,
   PATIENTS,
   ASHA_PLAN,
+  SYMPTOMS,
+  THREADS,
 } from "@/lib/mock";
 import {
+  useSeedPatientStore,
   useStoredAnnotations,
   useStoredMeals,
   useStoredSymptoms,
@@ -81,6 +85,28 @@ const pillItem: Variants = {
 export function PatientMetricsScreen() {
   const [tab, setTab] = useState<TabId>("glucose");
   const me = PATIENTS.find((p) => p.id === CURRENT_PATIENT_ID)!;
+  const pid = me.id;
+
+  // Stable references so useSeedPatientStore's effect doesn't re-run on every render.
+  // MEALS/SYMPTOMS/THREADS are module-level constants so pid is the only real dep.
+  const seedMeals = useMemo(
+    () => MEALS.filter((m) => m.patientId === pid),
+    [pid],
+  );
+  const seedSymptoms = useMemo(
+    () => SYMPTOMS.filter((s) => s.patientId === pid),
+    [pid],
+  );
+  const seedThread = useMemo(
+    () => THREADS.find((t) => t.patientId === pid)?.messages ?? [],
+    [pid],
+  );
+  useSeedPatientStore(pid, {
+    meals: seedMeals,
+    symptoms: seedSymptoms,
+    thread: seedThread,
+  });
+
   const cgm = CGM_BY_PATIENT[me.id];
   const symptoms = useStoredSymptoms(me.id);
   const meals = useStoredMeals(me.id);

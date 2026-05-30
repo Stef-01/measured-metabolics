@@ -7,17 +7,19 @@ import {
   AreaChart,
   CartesianGrid,
   ReferenceArea,
+  ReferenceDot,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import { Pencil, MessageSquare, Sparkles } from "lucide-react";
+import { Pencil, MessageSquare, Sparkles, Sunrise } from "lucide-react";
 import { mealImageBySlug } from "@/lib/images";
 import { nearestMealForSpike } from "@/lib/engine/cgm-spike-meal";
 import { CHART } from "@/lib/chart-tokens";
 import { cn } from "@/lib/utils/cn";
-import type { CgmReading, MealLog } from "@/lib/mock/types";
+import type { CgmReading, MealLog, MealType } from "@/lib/mock/types";
 import type { MealAnnotation } from "@/lib/storage/patient-store";
 
 interface Props {
@@ -36,6 +38,42 @@ interface PointDatum {
 
 const SPIKE_THRESHOLD_DELTA = 1.5;
 const FILL_GRADIENT_ID = "cgm-meal-grad";
+const MEAL_WINDOW_MS = 150 * 60 * 1000; // 2.5h post-prandial arc, matches buildDay spike duration
+const PRE_MEAL_OFFSET_MS = 15 * 60 * 1000; // 15 min before eatenAt
+
+// Hex values required for SVG fill attributes — CSS vars don't resolve in SVG context.
+const MEAL_COLOR: Record<MealType, string> = {
+  breakfast: CHART.clinical, // #2c5e8a
+  lunch: CHART.green, // #2d5a3d
+  dinner: "#d4a84b",
+  snack: "#b8860b",
+};
+
+type SpikeContext = "dawn" | "unknown";
+
+function classifySpikeContext(timestampMs: number): SpikeContext {
+  const hour = new Date(timestampMs).getHours();
+  if (hour >= 3 && hour < 8) return "dawn";
+  return "unknown";
+}
+
+/** Nearest CGM reading within `toleranceMs` of `timestampMs`. */
+function glucoseAt(
+  data: PointDatum[],
+  timestampMs: number,
+  toleranceMs = 10 * 60 * 1000,
+): number | null {
+  let best: PointDatum | null = null;
+  let bestDiff = Infinity;
+  for (const d of data) {
+    const diff = Math.abs(d.time - timestampMs);
+    if (diff < bestDiff) {
+      bestDiff = diff;
+      best = d;
+    }
+  }
+  return best && bestDiff <= toleranceMs ? best.mmolL : null;
+}
 
 /**
  * Glucose graph that pops out the causal meal photo on hover and (optionally)
@@ -66,6 +104,16 @@ export function CgmMealChart({
     for (const ann of annotations) map.set(ann.mealId, ann);
     return map;
   }, [annotations]);
+
+  const preMealGlucose = useMemo(() => {
+    const map = new Map<string, number>(); // meal.id → glucose 15 min before eatenAt
+    for (const m of meals) {
+      const preTs = new Date(m.eatenAt).getTime() - PRE_MEAL_OFFSET_MS;
+      const val = glucoseAt(data, preTs);
+      if (val !== null) map.set(m.id, val);
+    }
+    return map;
+  }, [meals, data]);
 
   const interactive = Boolean(onAnnotateMeal);
 
@@ -134,6 +182,37 @@ export function CgmMealChart({
             cursor={{ stroke: "rgba(45,90,61,0.4)", strokeDasharray: "3 3" }}
             content={() => null}
           />
+          {/* Stage 2: post-prandial window shading — 2.5h arc per meal */}
+          {meals.map((m) => {
+            const x1 = new Date(m.eatenAt).getTime();
+            const color = MEAL_COLOR[m.mealType];
+            return (
+              <ReferenceArea
+                key={`window-${m.id}`}
+                x1={x1}
+                x2={x1 + MEAL_WINDOW_MS}
+                fill={color}
+                fillOpacity={0.04}
+              />
+            );
+          })}
+          {/* Stage 1: meal-time tick markers */}
+          {meals.map((m) => (
+            <ReferenceLine
+              key={m.id}
+              x={new Date(m.eatenAt).getTime()}
+              stroke={MEAL_COLOR[m.mealType]}
+              strokeDasharray="3 5"
+              strokeWidth={1.5}
+              strokeOpacity={0.6}
+              label={{
+                value: m.photoEmoji,
+                position: "insideTopRight",
+                fontSize: 13,
+                offset: 4,
+              }}
+            />
+          ))}
           <Area
             type="monotone"
             dataKey="mmolL"
@@ -141,6 +220,20 @@ export function CgmMealChart({
             strokeWidth={2}
             fill={`url(#${FILL_GRADIENT_ID})`}
           />
+          {/* Stage 3: pre-meal glucose dots at T−15 min — use memo to avoid redundant scan */}
+          {meals
+            .filter((m) => preMealGlucose.has(m.id))
+            .map((m) => (
+              <ReferenceDot
+                key={`pre-${m.id}`}
+                x={new Date(m.eatenAt).getTime() - PRE_MEAL_OFFSET_MS}
+                y={preMealGlucose.get(m.id)!}
+                r={3.5}
+                fill={MEAL_COLOR[m.mealType]}
+                stroke="white"
+                strokeWidth={1.5}
+              />
+            ))}
         </AreaChart>
       </ResponsiveContainer>
 
@@ -153,6 +246,9 @@ export function CgmMealChart({
           const isSpike =
             match?.meal.analysis.cgmPeakDeltaMmol !== undefined &&
             match.meal.analysis.cgmPeakDeltaMmol >= SPIKE_THRESHOLD_DELTA;
+          const preMealMmol = match
+            ? preMealGlucose.get(match.meal.id)
+            : undefined;
           return (
             <SpikeMealCallout
               hoveredAt={hovered.time}
@@ -161,6 +257,7 @@ export function CgmMealChart({
               annotation={annotation}
               isSpike={isSpike}
               showAnnotateCta={interactive}
+              preMealMmol={preMealMmol}
             />
           );
         })()}
@@ -190,6 +287,7 @@ interface CalloutProps {
   annotation?: MealAnnotation;
   isSpike: boolean;
   showAnnotateCta: boolean;
+  preMealMmol?: number;
 }
 
 function SpikeMealCallout({
@@ -199,6 +297,7 @@ function SpikeMealCallout({
   annotation,
   isSpike,
   showAnnotateCta,
+  preMealMmol,
 }: CalloutProps) {
   const time = new Date(hoveredAt).toLocaleString([], {
     weekday: "short",
@@ -207,14 +306,25 @@ function SpikeMealCallout({
   });
 
   if (!match) {
+    const ctx = classifySpikeContext(hoveredAt);
     return (
       <div className="pointer-events-none absolute right-2 top-2 max-w-[240px] rounded-2xl border border-[var(--measured-border-soft)] bg-white/95 px-3 py-2 text-[12px] shadow-[var(--shadow-card)] backdrop-blur">
         <div className="tnum font-semibold text-[var(--measured-dark)]">
           {hoveredMmol.toFixed(1)} mmol/L
         </div>
-        <div className="text-[var(--measured-subtext)]">
-          {time} · No meal logged within 3 h
-        </div>
+        {ctx === "dawn" ? (
+          <div className="mt-0.5 flex items-center gap-1 text-[var(--measured-gold)]">
+            <Sunrise size={11} strokeWidth={2.2} aria-hidden="true" />
+            <span className="font-semibold">Dawn rise</span>
+            <span className="text-[var(--measured-subtext)]">
+              · cortisol, expected 3–7 am
+            </span>
+          </div>
+        ) : (
+          <div className="text-[var(--measured-subtext)]">
+            {time} · No meal logged within 3 h
+          </div>
+        )}
       </div>
     );
   }
@@ -263,6 +373,26 @@ function SpikeMealCallout({
             )}
           </span>
         </div>
+        {preMealMmol !== undefined && (
+          <div className="mt-1.5 flex items-center justify-between rounded-xl bg-[var(--measured-cream)] px-2.5 py-1.5 text-[11px]">
+            <span className="text-[var(--measured-subtext)]">Pre-meal</span>
+            <span
+              className={cn(
+                "tnum font-semibold",
+                preMealMmol > 7.0
+                  ? "text-[var(--measured-clinical-amber)]"
+                  : "text-[var(--measured-dark-green)]",
+              )}
+            >
+              {preMealMmol.toFixed(1)} mmol/L
+              {preMealMmol > 7.0 && (
+                <span className="ml-1 font-normal text-[var(--measured-subtext)]">
+                  · elevated baseline
+                </span>
+              )}
+            </span>
+          </div>
+        )}
         <p className="mt-1 leading-snug">
           {match.meal.analysis.dietitianSummary}
         </p>
