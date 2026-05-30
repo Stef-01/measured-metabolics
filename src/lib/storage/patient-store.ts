@@ -316,8 +316,40 @@ export function useStoredRequests(pid: string): MealConsultationRequest[] {
 }
 
 /**
- * Hook to seed localStorage from the mock fixtures on first mount. Idempotent —
- * only seeds when the corresponding key is empty so user-added entries survive.
+ * Reconcile fresh fixture meals into whatever is already persisted.
+ *
+ * Fixture meals carry time-relative `eatenAt` values (e.g. "yesterday 7:30pm")
+ * that are recomputed on every page load so they stay aligned with the CGM
+ * trace, which is itself regenerated relative to `now`. A seed-once-when-empty
+ * strategy freezes the first session's timestamps in localStorage forever, so a
+ * returning user's stored meals drift away from the regenerated CGM and every
+ * spike renders as an orphan "No meal logged within 3 h" callout. New fixtures
+ * (meals.ts growing 5→12) are likewise never picked up once a stale seed exists.
+ *
+ * This merge replaces any persisted fixture (matched by id) with the latest
+ * fixture object — refreshing its timestamp and content — while preserving
+ * meals the user logged themselves (ids absent from the fixture set). Returns
+ * `null` when the result is identical to what's stored so the caller can skip a
+ * redundant write + notify, which also makes repeated calls a no-op (no loop).
+ */
+export function reconcileSeedMeals(
+  stored: MealLog[],
+  fixtures: MealLog[],
+): MealLog[] | null {
+  const fixtureIds = new Set(fixtures.map((m) => m.id));
+  const userMeals = stored.filter((m) => !fixtureIds.has(m.id));
+  const next = [...userMeals, ...fixtures];
+  return JSON.stringify(next) === JSON.stringify(stored) ? null : next;
+}
+
+/**
+ * Hook to seed localStorage from the mock fixtures on mount.
+ *
+ * Meals are *reconciled* on every mount (see `reconcileSeedMeals`) so their
+ * time-relative timestamps stay aligned with the regenerated CGM trace and any
+ * newly-added fixtures appear, while user-logged meals survive. Symptoms and
+ * the message thread are seeded only when empty — they aren't matched against
+ * the CGM by absolute time, so freezing them is harmless and keeps user entries.
  */
 export function useSeedPatientStore(
   pid: string,
@@ -329,8 +361,9 @@ export function useSeedPatientStore(
 ) {
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (seed.meals && patientStore.getMeals(pid).length === 0) {
-      writeJSON(MEALS_KEY(pid), seed.meals);
+    if (seed.meals) {
+      const next = reconcileSeedMeals(patientStore.getMeals(pid), seed.meals);
+      if (next) writeJSON(MEALS_KEY(pid), next);
     }
     if (seed.symptoms && patientStore.getSymptoms(pid).length === 0) {
       writeJSON(SYMPTOMS_KEY(pid), seed.symptoms);
