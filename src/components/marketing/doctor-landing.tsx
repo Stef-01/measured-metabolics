@@ -113,7 +113,8 @@ function LandingNav() {
       <header
         className="sticky top-0 z-50 border-b"
         style={{
-          background: "color-mix(in srgb, var(--measured-cream) 86%, transparent)",
+          background:
+            "color-mix(in srgb, var(--measured-cream) 86%, transparent)",
           backdropFilter: "blur(14px) saturate(1.1)",
           WebkitBackdropFilter: "blur(14px) saturate(1.1)",
           borderColor: "var(--measured-line-soft)",
@@ -191,10 +192,7 @@ function LandingNav() {
 function FaqEntry({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div
-      className="border-b"
-      style={{ borderColor: "var(--measured-line)" }}
-    >
+    <div className="border-b" style={{ borderColor: "var(--measured-line)" }}>
       <button
         onClick={() => setOpen((o) => !o)}
         className="flex w-full cursor-pointer items-center justify-between gap-6 py-6 text-left"
@@ -218,13 +216,17 @@ function FaqEntry({ q, a }: { q: string; a: string }) {
           <span
             className="absolute h-[1.5px] w-[11px]"
             style={{
-              background: open ? "var(--measured-cream)" : "var(--measured-ink)",
+              background: open
+                ? "var(--measured-cream)"
+                : "var(--measured-ink)",
             }}
           />
           <span
             className="absolute h-[11px] w-[1.5px] transition-all"
             style={{
-              background: open ? "var(--measured-cream)" : "var(--measured-ink)",
+              background: open
+                ? "var(--measured-cream)"
+                : "var(--measured-ink)",
               transform: open ? "rotate(90deg) scaleY(0)" : undefined,
               opacity: open ? 0 : 1,
             }}
@@ -835,9 +837,7 @@ export function DoctorLanding() {
                     style={{
                       gridTemplateColumns: "auto 1fr",
                       borderTop:
-                        i === 0
-                          ? "none"
-                          : "1px solid var(--measured-line)",
+                        i === 0 ? "none" : "1px solid var(--measured-line)",
                       paddingTop: i === 0 ? 0 : undefined,
                     }}
                   >
@@ -928,8 +928,7 @@ export function DoctorLanding() {
                     className="z-10 ml-[17px] h-[14px] w-[14px] shrink-0 rounded-full"
                     style={{
                       background: "var(--measured-green)",
-                      boxShadow:
-                        "0 0 0 5px rgba(45, 90, 61, 0.16)",
+                      boxShadow: "0 0 0 5px rgba(45, 90, 61, 0.16)",
                     }}
                   />
                   <span
@@ -1018,8 +1017,7 @@ export function DoctorLanding() {
                     className="z-10 ml-[17px] h-[14px] w-[14px] shrink-0 rounded-full"
                     style={{
                       background: "var(--measured-gold-dark)",
-                      boxShadow:
-                        "0 0 0 5px rgba(154, 122, 44, 0.18)",
+                      boxShadow: "0 0 0 5px rgba(154, 122, 44, 0.18)",
                     }}
                   />
                   <span
@@ -1037,10 +1035,7 @@ export function DoctorLanding() {
         {/* ══════════════════════════════════════════════════════
             Your doctor
             ══════════════════════════════════════════════════════ */}
-        <section
-          id="doctor"
-          className="py-[clamp(5rem,9vw,9rem)]"
-        >
+        <section id="doctor" className="py-[clamp(5rem,9vw,9rem)]">
           <div className="mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-[clamp(2rem,5vw,4.5rem)] px-[clamp(1.25rem,4vw,3rem)] md:grid-cols-[0.85fr_1.15fr]">
             <Reveal className="relative">
               <div className="relative max-w-[420px]">
@@ -1070,9 +1065,7 @@ export function DoctorLanding() {
                     boxShadow: "0 18px 40px -18px rgba(16,38,25,.4)",
                   }}
                 >
-                  <b
-                    className="block font-serif text-[1.1rem] font-semibold leading-[1.1]"
-                  >
+                  <b className="block font-serif text-[1.1rem] font-semibold leading-[1.1]">
                     Dr Anubhav Saxena
                   </b>
                   <span
@@ -1263,8 +1256,8 @@ export function DoctorLanding() {
                   color: "var(--measured-subtext)",
                 }}
               >
-                Still unsure if Measured is right for you? The intro call is
-                the easiest way to find out.
+                Still unsure if Measured is right for you? The intro call is the
+                easiest way to find out.
               </p>
               <div className="mt-[1.8rem]">
                 <BtnPrimary href={BOOKING_URL} external>
@@ -1390,7 +1383,10 @@ export function DoctorLanding() {
           ══════════════════════════════════════════════════════ */}
       <footer
         className="py-[clamp(3.5rem,6vw,5rem)]"
-        style={{ background: "var(--measured-ink)", color: "rgba(250,249,246,.62)" }}
+        style={{
+          background: "var(--measured-ink)",
+          color: "rgba(250,249,246,.62)",
+        }}
       >
         <div className="mx-auto max-w-[1180px] px-[clamp(1.25rem,4vw,3rem)]">
           <div
