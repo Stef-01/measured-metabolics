@@ -85,11 +85,26 @@ const pillItem: Variants = {
 export function PatientMetricsScreen() {
   const [tab, setTab] = useState<TabId>("glucose");
   const me = PATIENTS.find((p) => p.id === CURRENT_PATIENT_ID)!;
+  const pid = me.id;
 
-  useSeedPatientStore(me.id, {
-    meals: MEALS.filter((m) => m.patientId === me.id),
-    symptoms: SYMPTOMS.filter((s) => s.patientId === me.id),
-    thread: THREADS.find((t) => t.patientId === me.id)?.messages ?? [],
+  // Stable references so useSeedPatientStore's effect doesn't re-run on every render.
+  // MEALS/SYMPTOMS/THREADS are module-level constants so pid is the only real dep.
+  const seedMeals = useMemo(
+    () => MEALS.filter((m) => m.patientId === pid),
+    [pid],
+  );
+  const seedSymptoms = useMemo(
+    () => SYMPTOMS.filter((s) => s.patientId === pid),
+    [pid],
+  );
+  const seedThread = useMemo(
+    () => THREADS.find((t) => t.patientId === pid)?.messages ?? [],
+    [pid],
+  );
+  useSeedPatientStore(pid, {
+    meals: seedMeals,
+    symptoms: seedSymptoms,
+    thread: seedThread,
   });
 
   const cgm = CGM_BY_PATIENT[me.id];

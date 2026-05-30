@@ -19,7 +19,7 @@ import { mealImageBySlug } from "@/lib/images";
 import { nearestMealForSpike } from "@/lib/engine/cgm-spike-meal";
 import { CHART } from "@/lib/chart-tokens";
 import { cn } from "@/lib/utils/cn";
-import type { CgmReading, MealLog } from "@/lib/mock/types";
+import type { CgmReading, MealLog, MealType } from "@/lib/mock/types";
 import type { MealAnnotation } from "@/lib/storage/patient-store";
 
 interface Props {
@@ -42,9 +42,9 @@ const MEAL_WINDOW_MS = 150 * 60 * 1000; // 2.5h post-prandial arc, matches build
 const PRE_MEAL_OFFSET_MS = 15 * 60 * 1000; // 15 min before eatenAt
 
 // Hex values required for SVG fill attributes — CSS vars don't resolve in SVG context.
-const MEAL_COLOR: Record<string, string> = {
-  breakfast: "#2c5e8a",
-  lunch: "#2d5a3d",
+const MEAL_COLOR: Record<MealType, string> = {
+  breakfast: CHART.clinical, // #2c5e8a
+  lunch: CHART.green, // #2d5a3d
   dinner: "#d4a84b",
   snack: "#b8860b",
 };
@@ -185,7 +185,7 @@ export function CgmMealChart({
           {/* Stage 2: post-prandial window shading — 2.5h arc per meal */}
           {meals.map((m) => {
             const x1 = new Date(m.eatenAt).getTime();
-            const color = MEAL_COLOR[m.mealType] ?? CHART.green;
+            const color = MEAL_COLOR[m.mealType];
             return (
               <ReferenceArea
                 key={`window-${m.id}`}
@@ -201,7 +201,7 @@ export function CgmMealChart({
             <ReferenceLine
               key={m.id}
               x={new Date(m.eatenAt).getTime()}
-              stroke={MEAL_COLOR[m.mealType] ?? CHART.green}
+              stroke={MEAL_COLOR[m.mealType]}
               strokeDasharray="3 5"
               strokeWidth={1.5}
               strokeOpacity={0.6}
@@ -220,24 +220,20 @@ export function CgmMealChart({
             strokeWidth={2}
             fill={`url(#${FILL_GRADIENT_ID})`}
           />
-          {/* Stage 3: pre-meal glucose dots at T−15 min */}
-          {meals.map((m) => {
-            const preTs = new Date(m.eatenAt).getTime() - PRE_MEAL_OFFSET_MS;
-            const preVal = glucoseAt(data, preTs);
-            if (preVal === null) return null;
-            const color = MEAL_COLOR[m.mealType] ?? CHART.green;
-            return (
+          {/* Stage 3: pre-meal glucose dots at T−15 min — use memo to avoid redundant scan */}
+          {meals
+            .filter((m) => preMealGlucose.has(m.id))
+            .map((m) => (
               <ReferenceDot
                 key={`pre-${m.id}`}
-                x={preTs}
-                y={preVal}
+                x={new Date(m.eatenAt).getTime() - PRE_MEAL_OFFSET_MS}
+                y={preMealGlucose.get(m.id)!}
                 r={3.5}
-                fill={color}
+                fill={MEAL_COLOR[m.mealType]}
                 stroke="white"
                 strokeWidth={1.5}
               />
-            );
-          })}
+            ))}
         </AreaChart>
       </ResponsiveContainer>
 
