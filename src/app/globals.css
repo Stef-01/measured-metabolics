@@ -36,6 +36,15 @@
   --measured-accent: #2d5a3d;
   --measured-accent-soft: rgba(45, 90, 61, 0.08);
 
+  /* Extended palette for editorial landing */
+  --measured-sand-deep: #ebe6dd;
+  --measured-green-deep: #102619;
+  --measured-gold-dark: #9a7a2c;
+  --measured-gold-bright: #c79a3f;
+  --measured-line: rgba(22, 21, 15, 0.11);
+  --measured-line-soft: rgba(22, 21, 15, 0.06);
+  --measured-ink: #16150f;
+
   /* Borders — three tiers for subtle → emphatic hierarchy */
   --measured-border-soft: rgba(10, 10, 8, 0.06);
   --measured-border: rgba(10, 10, 8, 0.1);
@@ -108,6 +117,11 @@
   --font-sans: "Inter", sans-serif;
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --color-measured-sand: var(--measured-sand);
+  --color-measured-sand-deep: var(--measured-sand-deep);
+  --color-measured-green-deep: var(--measured-green-deep);
+  --color-measured-gold-dark: var(--measured-gold-dark);
+  --color-measured-gold-bright: var(--measured-gold-bright);
+  --color-measured-ink: var(--measured-ink);
 }
 
 /* === LANDING PAGE ANIMATIONS === */
