@@ -35,7 +35,11 @@ function Reveal({
       ref={ref}
       initial={{ opacity: 0, y: 22 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: delay / 1000 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1],
+        delay: delay / 1000,
+      }}
       className={className}
     >
       {children}
@@ -44,7 +48,13 @@ function Reveal({
 }
 
 // ── Eyebrow ───────────────────────────────────────────────────────────────────
-function Eyebrow({ children, center }: { children: React.ReactNode; center?: boolean }) {
+function Eyebrow({
+  children,
+  center,
+}: {
+  children: React.ReactNode;
+  center?: boolean;
+}) {
   return (
     <span
       className={
@@ -190,8 +200,8 @@ function Hero() {
         </Reveal>
         <Reveal delay={80}>
           <h1 className="font-disp font-extrabold tracking-[-.035em] leading-[.99] text-[clamp(2.7rem,6vw,5rem)] mt-6 mx-auto max-w-[15ch] text-brand-ink">
-            The most precise way to{" "}
-            <span className="text-lav">optimise</span> your metabolism.
+            The most precise way to <span className="text-lav">optimise</span>{" "}
+            your metabolism.
           </h1>
         </Reveal>
         <Reveal delay={160}>
@@ -242,8 +252,8 @@ function Difference() {
         </Reveal>
         <Reveal delay={80}>
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4 text-brand-ink">
-            Weight and metabolism are{" "}
-            <span className="text-lav">biology</span> — not willpower.
+            Weight and metabolism are <span className="text-lav">biology</span>{" "}
+            — not willpower.
           </h2>
         </Reveal>
         <Reveal delay={140}>
@@ -255,9 +265,9 @@ function Difference() {
             </p>
             <p>
               Measured was built to change that. We pair pathology-validated
-              testing and continuous glucose data with a registered clinician who
-              prescribes evidence-based therapy where appropriate — and a plan
-              that adapts as your body responds.
+              testing and continuous glucose data with a registered clinician
+              who prescribes evidence-based therapy where appropriate — and a
+              plan that adapts as your body responds.
             </p>
             <p className="text-brand-ink font-semibold">
               Not a fad. Not a crash diet. A genuine medical approach, built
@@ -366,7 +376,8 @@ function ProgressTracked() {
       <div
         className="absolute inset-0 opacity-[0.12]"
         style={{
-          background: "radial-gradient(600px circle at 80% 20%, #fff, transparent)",
+          background:
+            "radial-gradient(600px circle at 80% 20%, #fff, transparent)",
         }}
       />
       <div className="relative z-[1] max-w-[1200px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] grid lg:grid-cols-2 gap-[clamp(2rem,5vw,4.5rem)] items-center">
@@ -381,8 +392,8 @@ function ProgressTracked() {
           </h2>
           <p className="mt-5 text-[1.08rem] leading-[1.6] text-white/80 max-w-[34rem]">
             Weigh-ins, dose, appetite and measurements flow into one place — so
-            you and your clinician can see exactly what&apos;s working, and adjust
-            before anything stalls.
+            you and your clinician can see exactly what&apos;s working, and
+            adjust before anything stalls.
           </p>
           <div className="mt-8">
             <Btn lg variant="white" onClick={openFunnel}>
@@ -482,16 +493,25 @@ function PhotoCard({
         (tall ? "row-span-2" : "")
       }
     >
-      <Image src={src} alt={alt} fill className="object-cover z-0" sizes="300px" />
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className="object-cover z-0"
+        sizes="300px"
+      />
       <div
         className="absolute inset-0 z-[1]"
         style={{
-          background: "linear-gradient(180deg,rgba(10,10,20,.15),rgba(10,10,20,.72))",
+          background:
+            "linear-gradient(180deg,rgba(10,10,20,.15),rgba(10,10,20,.72))",
         }}
       />
       <div className="relative z-[2] p-[1.1rem]">
         <div className="font-bold text-base">{title}</div>
-        <div className="text-[0.78rem] opacity-85 mt-0.5 leading-snug">{sub}</div>
+        <div className="text-[0.78rem] opacity-85 mt-0.5 leading-snug">
+          {sub}
+        </div>
       </div>
       {children}
     </div>
@@ -502,7 +522,9 @@ function PlainCard({ title, sub }: { title: string; sub: string }) {
   return (
     <div className="rounded-2xl border border-brand-line bg-white p-[1.1rem]">
       <div className="font-bold text-base text-brand-ink">{title}</div>
-      <div className="text-[0.78rem] text-brand-muted mt-0.5 leading-snug">{sub}</div>
+      <div className="text-[0.78rem] text-brand-muted mt-0.5 leading-snug">
+        {sub}
+      </div>
     </div>
   );
 }
@@ -534,8 +556,8 @@ function JourneyPanel({ idx }: { idx: number }) {
             Medical History
           </h4>
           <p className="text-[0.84rem] text-brand-muted mt-1">
-            Share your medical history so your clinician can assess safety, risks,
-            and suitability.
+            Share your medical history so your clinician can assess safety,
+            risks, and suitability.
           </p>
           <div className="flex gap-2.5 items-start bg-emerald-50 border border-emerald-200 rounded-xl px-3.5 py-3 mt-4">
             <span className="text-emerald-600 font-bold">✓</span>
@@ -578,7 +600,8 @@ function JourneyPanel({ idx }: { idx: number }) {
                 <span
                   className="w-4 h-4 rounded-full border-[1.5px] border-lav inline-block"
                   style={{
-                    background: "radial-gradient(circle,var(--lav) 40%,transparent 45%)",
+                    background:
+                      "radial-gradient(circle,var(--lav) 40%,transparent 45%)",
                   }}
                 />
                 No
@@ -637,7 +660,10 @@ function JourneyPanel({ idx }: { idx: number }) {
           title="Telehealth Consultation"
           sub="Every result, explained — your protocol, designed with you."
         />
-        <PlainCard title="Your clinician" sub="Dr Anubhav Saxena · MBBS, FRACGP, MPhil" />
+        <PlainCard
+          title="Your clinician"
+          sub="Dr Anubhav Saxena · MBBS, FRACGP, MPhil"
+        />
         <PlainCard
           title="Booked"
           sub="45-minute review · telehealth or in person, your choice."
@@ -650,12 +676,17 @@ function JourneyPanel({ idx }: { idx: number }) {
       <div className="grid grid-cols-2 gap-4">
         <div className="grad-blue text-white rounded-2xl p-5 col-span-2 min-h-[150px] flex flex-col">
           <div className="font-bold">Biological age — trending down</div>
-          <div className="text-[0.8rem] opacity-85">Tracked across repeat panels</div>
+          <div className="text-[0.8rem] opacity-85">
+            Tracked across repeat panels
+          </div>
           <div className="font-disp font-extrabold text-[2.6rem] mt-auto leading-none">
             −2.5<span className="text-base font-semibold opacity-80"> yrs</span>
           </div>
         </div>
-        <PlainCard title="Repeat panel" sub="Due in 6 weeks · keeps your protocol optimised." />
+        <PlainCard
+          title="Repeat panel"
+          sub="Due in 6 weeks · keeps your protocol optimised."
+        />
         <PlainCard title="Visceral fat" sub="↓ 14% since baseline DEXA" />
       </div>
     );
@@ -699,7 +730,9 @@ function JourneyPanel({ idx }: { idx: number }) {
       </div>
       <div className="rounded-2xl border border-brand-line bg-white p-[1.1rem]">
         <div className="font-bold text-brand-ink">Action Plan</div>
-        <div className="text-[0.78rem] text-brand-muted mb-1">Your current protocol</div>
+        <div className="text-[0.78rem] text-brand-muted mb-1">
+          Your current protocol
+        </div>
         {(
           [
             ["Oral therapy", "Daily · review in 4 weeks"],
@@ -713,7 +746,9 @@ function JourneyPanel({ idx }: { idx: number }) {
           >
             <span className="w-[30px] h-9 rounded-md shrink-0 bg-gradient-to-b from-[#eceaf6] to-[#d9d4ee]" />
             <div>
-              <div className="text-[0.82rem] font-semibold text-brand-ink">{n}</div>
+              <div className="text-[0.82rem] font-semibold text-brand-ink">
+                {n}
+              </div>
               <div className="text-[0.66rem] text-brand-muted">{p}</div>
             </div>
           </div>
@@ -774,10 +809,14 @@ function Journey() {
                 <div
                   className={
                     "col-start-2 overflow-hidden transition-all duration-300 " +
-                    (active === i ? "max-h-[220px] opacity-100 mt-3" : "max-h-0 opacity-0")
+                    (active === i
+                      ? "max-h-[220px] opacity-100 mt-3"
+                      : "max-h-0 opacity-0")
                   }
                 >
-                  <p className="text-brand-ink2 text-base leading-relaxed">{body}</p>
+                  <p className="text-brand-ink2 text-base leading-relaxed">
+                    {body}
+                  </p>
                   {active === i && (
                     <div className="h-0.5 mt-5 rounded-full overflow-hidden bg-brand-line2">
                       <div className="h-full w-full bg-gradient-to-r from-lav to-brand-blue jbar-fill" />
@@ -825,8 +864,7 @@ const ICONS: Record<string, string> = {
   tag: "M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.58a2 2 0 0 1 0 2.83zM7 7h.01",
   refresh:
     "M23 4v6h-6M1 20v-6h6M3.5 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.5 15",
-  shield:
-    "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM9 12l2 2 4-4",
+  shield: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM9 12l2 2 4-4",
 };
 
 function Ico({ d }: { d: string }) {
@@ -912,8 +950,8 @@ function EverythingIncluded() {
           </h2>
           <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-brand-ink2 leading-[1.55]">
             Every plan combines medication, clinical oversight and real human
-            support — so you&apos;re guided from your first dose to your goal, and
-            beyond.
+            support — so you&apos;re guided from your first dose to your goal,
+            and beyond.
           </p>
         </Reveal>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -976,8 +1014,7 @@ function Program() {
         <Reveal className="max-w-[680px] mb-[clamp(2.5rem,4vw,3.4rem)]">
           <Eyebrow>The Health Optimisation Protocol</Eyebrow>
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4 text-brand-ink">
-            Your six months,{" "}
-            <span className="text-lav">step by step</span>.
+            Your six months, <span className="text-lav">step by step</span>.
           </h2>
           <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-brand-ink2 leading-[1.55]">
             A structured, physician-led program built on continuous data — not
@@ -992,7 +1029,9 @@ function Program() {
               className="grid grid-cols-[90px_1.1fr] md:grid-cols-[90px_1.1fr_1fr] bg-white border border-brand-line rounded-[18px] overflow-hidden shadow-lav-soft hover:shadow-lav-card hover:-translate-y-1 transition-all duration-300"
             >
               <div className="bg-lavtint text-lav flex flex-col items-center justify-center text-center gap-0.5 p-4">
-                <span className="font-disp text-[2rem] font-extrabold">{num}</span>
+                <span className="font-disp text-[2rem] font-extrabold">
+                  {num}
+                </span>
                 <span className="text-[0.58rem] tracking-widest uppercase text-lav2">
                   {lab}
                 </span>
@@ -1001,7 +1040,9 @@ function Program() {
                 <h3 className="font-disp text-[clamp(1.25rem,1.8vw,1.6rem)] font-bold tracking-tight text-brand-ink">
                   {h}
                 </h3>
-                <p className="mt-2 text-brand-ink2 text-[0.98rem] leading-relaxed">{p}</p>
+                <p className="mt-2 text-brand-ink2 text-[0.98rem] leading-relaxed">
+                  {p}
+                </p>
               </div>
               <div className="hidden md:block overflow-hidden min-h-[170px] relative">
                 <Image
@@ -1068,7 +1109,10 @@ function Pricing() {
             </div>
             <ul className="space-y-2.5">
               {includes.map((t) => (
-                <li key={t} className="grid grid-cols-[auto_1fr] gap-2.5 text-[0.96rem] text-brand-ink">
+                <li
+                  key={t}
+                  className="grid grid-cols-[auto_1fr] gap-2.5 text-[0.96rem] text-brand-ink"
+                >
                   <span className="text-lav font-bold">✦</span>
                   <span>{t}</span>
                 </li>
@@ -1102,7 +1146,10 @@ function Pricing() {
         </Reveal>
         <div className="grid sm:grid-cols-2 gap-x-8 gap-y-2 mt-8 max-w-[920px]">
           {notes.map((n) => (
-            <p key={n} className="text-[0.8rem] text-brand-muted leading-relaxed">
+            <p
+              key={n}
+              className="text-[0.8rem] text-brand-muted leading-relaxed"
+            >
               <span className="text-lav">✦</span> {n}
             </p>
           ))}
@@ -1131,9 +1178,7 @@ function Doctor() {
               sizes="(min-width: 820px) 35vw, 420px"
             />
           </div>
-          <div
-            className="absolute -left-4 bottom-7 bg-white border border-brand-line rounded-2xl px-[1.15rem] py-[0.85rem] shadow-lav-card"
-          >
+          <div className="absolute -left-4 bottom-7 bg-white border border-brand-line rounded-2xl px-[1.15rem] py-[0.85rem] shadow-lav-card">
             <b className="font-disp text-[1.1rem] font-extrabold block leading-tight tracking-tight text-brand-ink">
               Dr Anubhav Saxena
             </b>
@@ -1341,7 +1386,10 @@ function FAQ() {
 function CTA() {
   const openFunnel = useOpenFunnel();
   return (
-    <section id="start" className="relative overflow-hidden grad-lav text-center">
+    <section
+      id="start"
+      className="relative overflow-hidden grad-lav text-center"
+    >
       <div className="absolute -top-[30%] -right-[5%] w-[380px] h-[380px] rounded-full bg-white/10" />
       <div className="absolute -bottom-[40%] -left-[5%] w-[420px] h-[420px] rounded-full bg-white/10" />
       <div className="relative z-[1] max-w-[820px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] py-[clamp(5rem,9vw,8rem)]">
@@ -1458,7 +1506,10 @@ function LandingFooter() {
               <br />
               via telehealth
             </p>
-            <p className="text-[0.9rem]" style={{ color: "rgba(255,255,255,.62)" }}>
+            <p
+              className="text-[0.9rem]"
+              style={{ color: "rgba(255,255,255,.62)" }}
+            >
               In-person by appointment
             </p>
           </div>
@@ -1548,6 +1599,23 @@ function bookingDates(): Date[] {
   return out;
 }
 
+function FunnelField({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="mb-4">
+      <label className="text-[0.82rem] font-semibold text-brand-ink2 block mb-1.5">
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
+
 function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<FunnelData>({
@@ -1562,15 +1630,13 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
     date: null,
     slot: null,
   });
-  const dates = useMemo(bookingDates, []);
-
-  useEffect(() => {
-    if (open) setStep(0);
-  }, [open]);
+  const dates = useMemo(() => bookingDates(), []);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [open]);
 
   const set = <K extends keyof FunnelData>(k: K, v: FunnelData[K]) =>
@@ -1597,21 +1663,6 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
 
   const inputCls =
     "w-full border border-brand-line2 rounded-xl bg-brand-bgsoft px-4 py-3 text-[0.95rem] outline-none focus:border-lav focus:bg-white transition-colors";
-
-  const Field = ({
-    label,
-    children,
-  }: {
-    label: string;
-    children: React.ReactNode;
-  }) => (
-    <div className="mb-4">
-      <label className="text-[0.82rem] font-semibold text-brand-ink2 block mb-1.5">
-        {label}
-      </label>
-      {children}
-    </div>
-  );
 
   if (!open) return null;
 
@@ -1641,8 +1692,8 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
                     (i < step
                       ? "bg-white text-lav"
                       : i === step
-                      ? "bg-white text-lav"
-                      : "bg-white/20 text-white")
+                        ? "bg-white text-lav"
+                        : "bg-white/20 text-white")
                   }
                 >
                   {i < step ? "✓" : i + 1}
@@ -1686,22 +1737,22 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
                   your plan.
                 </p>
                 <div className="grid grid-cols-2 gap-3">
-                  <Field label="First name">
+                  <FunnelField label="First name">
                     <input
                       className={inputCls}
                       value={data.first}
                       onChange={(e) => set("first", e.target.value)}
                       placeholder="James"
                     />
-                  </Field>
-                  <Field label="Last name">
+                  </FunnelField>
+                  <FunnelField label="Last name">
                     <input
                       className={inputCls}
                       value={data.last}
                       onChange={(e) => set("last", e.target.value)}
                       placeholder="Wilson"
                     />
-                  </Field>
+                  </FunnelField>
                 </div>
                 <div className="flex justify-end mt-4">
                   <Btn onClick={next}>Continue →</Btn>
@@ -1721,7 +1772,7 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
                   Your email receives the calendar invite. Your mobile for
                   appointment reminders.
                 </p>
-                <Field label="Email address">
+                <FunnelField label="Email address">
                   <input
                     type="email"
                     className={inputCls}
@@ -1729,8 +1780,8 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
                     onChange={(e) => set("email", e.target.value)}
                     placeholder="james@example.com"
                   />
-                </Field>
-                <Field label="Mobile number">
+                </FunnelField>
+                <FunnelField label="Mobile number">
                   <input
                     type="tel"
                     className={inputCls}
@@ -1738,7 +1789,7 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
                     onChange={(e) => set("mobile", e.target.value)}
                     placeholder="04XX XXX XXX"
                   />
-                </Field>
+                </FunnelField>
                 <div className="flex justify-between items-center mt-4">
                   <button
                     onClick={back}
@@ -1763,7 +1814,7 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
                   Age and biological sex help your clinician assess eligibility
                   and tailor your plan.
                 </p>
-                <Field label="Your age">
+                <FunnelField label="Your age">
                   <div className="font-disp text-[2.6rem] font-extrabold text-lav leading-none mb-2">
                     {data.age}
                   </div>
@@ -1779,8 +1830,8 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
                     <span>18</span>
                     <span>85</span>
                   </div>
-                </Field>
-                <Field label="Biological sex">
+                </FunnelField>
+                <FunnelField label="Biological sex">
                   <div className="grid grid-cols-3 gap-2.5">
                     {["Male", "Female", "Prefer not to say"].map((g) => (
                       <button
@@ -1797,7 +1848,7 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
                       </button>
                     ))}
                   </div>
-                </Field>
+                </FunnelField>
                 <div className="flex justify-between items-center mt-4">
                   <button
                     onClick={back}
@@ -1950,8 +2001,8 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
                   </div>
                 </div>
                 <p className="text-[0.78rem] text-brand-muted mt-5 leading-relaxed">
-                  ✦ A calendar invite will be sent to your email on confirmation.
-                  ✦ SMS reminder 24 hours before your call.
+                  ✦ A calendar invite will be sent to your email on
+                  confirmation. ✦ SMS reminder 24 hours before your call.
                 </p>
                 <div className="flex justify-between items-center mt-5">
                   <button
@@ -1960,10 +2011,7 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
                   >
                     ← Back
                   </button>
-                  <Btn
-                    disabled={!data.date || !data.slot}
-                    onClick={next}
-                  >
+                  <Btn disabled={!data.date || !data.slot} onClick={next}>
                     Confirm booking →
                   </Btn>
                 </div>
@@ -2013,9 +2061,15 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
 // ══════════════════════════════════════════════════════════════════════════════
 export function DoctorLanding() {
   const [funnelOpen, setFunnelOpen] = useState(false);
+  const [funnelKey, setFunnelKey] = useState(0);
 
   return (
-    <FunnelCtx.Provider value={() => setFunnelOpen(true)}>
+    <FunnelCtx.Provider
+      value={() => {
+        setFunnelKey((k) => k + 1);
+        setFunnelOpen(true);
+      }}
+    >
       <div
         className="min-h-dvh overflow-x-hidden"
         style={{ background: "#ffffff", color: "#0e0e14" }}
@@ -2036,7 +2090,11 @@ export function DoctorLanding() {
           <CTA />
         </main>
         <LandingFooter />
-        <Funnel open={funnelOpen} onClose={() => setFunnelOpen(false)} />
+        <Funnel
+          key={funnelKey}
+          open={funnelOpen}
+          onClose={() => setFunnelOpen(false)}
+        />
       </div>
     </FunnelCtx.Provider>
   );

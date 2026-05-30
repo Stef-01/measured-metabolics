@@ -17,10 +17,10 @@
   --brand-line: #eceaf3;
   --brand-line2: #e2e0ec;
   --brand-bgsoft: #f7f6fc;
-  --shadow-lav-card: 0 2px 4px rgba(20, 18, 40, 0.04),
-    0 18px 40px -22px rgba(40, 32, 90, 0.22);
-  --shadow-lav-soft: 0 1px 2px rgba(20, 18, 40, 0.04),
-    0 8px 24px -14px rgba(40, 32, 90, 0.18);
+  --shadow-lav-card:
+    0 2px 4px rgba(20, 18, 40, 0.04), 0 18px 40px -22px rgba(40, 32, 90, 0.22);
+  --shadow-lav-soft:
+    0 1px 2px rgba(20, 18, 40, 0.04), 0 8px 24px -14px rgba(40, 32, 90, 0.18);
 }
 
 :root {
@@ -488,16 +488,36 @@ a,
 }
 
 /* Chip icon gradients */
-.g1 { background: radial-gradient(circle at 30% 30%, #ffd1e0, #ff7eb3); }
-.g2 { background: radial-gradient(circle at 30% 30%, #ffe0b8, #f2994a); }
-.g3 { background: radial-gradient(circle at 30% 30%, #ffc0c0, #e23b3b); }
-.g4 { background: radial-gradient(circle at 30% 30%, #c9b6ff, #6c5ce7); }
-.g5 { background: radial-gradient(circle at 30% 30%, #bfe0ff, #2f6bff); }
-.g6 { background: radial-gradient(circle at 30% 30%, #bff0d8, #1f9d63); }
-.g7 { background: radial-gradient(circle at 30% 30%, #ffe9a8, #d9a521); }
-.g8 { background: radial-gradient(circle at 30% 30%, #d6c2ff, #8a5cf0); }
-.g9 { background: radial-gradient(circle at 30% 30%, #bdeaff, #2bb3d4); }
-.g10 { background: radial-gradient(circle at 30% 30%, #ffd0c2, #ff6b4a); }
+.g1 {
+  background: radial-gradient(circle at 30% 30%, #ffd1e0, #ff7eb3);
+}
+.g2 {
+  background: radial-gradient(circle at 30% 30%, #ffe0b8, #f2994a);
+}
+.g3 {
+  background: radial-gradient(circle at 30% 30%, #ffc0c0, #e23b3b);
+}
+.g4 {
+  background: radial-gradient(circle at 30% 30%, #c9b6ff, #6c5ce7);
+}
+.g5 {
+  background: radial-gradient(circle at 30% 30%, #bfe0ff, #2f6bff);
+}
+.g6 {
+  background: radial-gradient(circle at 30% 30%, #bff0d8, #1f9d63);
+}
+.g7 {
+  background: radial-gradient(circle at 30% 30%, #ffe9a8, #d9a521);
+}
+.g8 {
+  background: radial-gradient(circle at 30% 30%, #d6c2ff, #8a5cf0);
+}
+.g9 {
+  background: radial-gradient(circle at 30% 30%, #bdeaff, #2bb3d4);
+}
+.g10 {
+  background: radial-gradient(circle at 30% 30%, #ffd0c2, #ff6b4a);
+}
 
 /* Ring progress */
 .ring-prog {
@@ -506,8 +526,12 @@ a,
 
 /* Marquee */
 @keyframes mqscroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 .mq-row {
   display: flex;
@@ -515,25 +539,53 @@ a,
   width: max-content;
   animation: mqscroll 46s linear infinite;
 }
-.mq-row.r2 { animation-duration: 60s; animation-direction: reverse; }
-.mq-row.r3 { animation-duration: 52s; }
-.mq-row:hover { animation-play-state: paused; }
+.mq-row.r2 {
+  animation-duration: 60s;
+  animation-direction: reverse;
+}
+.mq-row.r3 {
+  animation-duration: 52s;
+}
+.mq-row:hover {
+  animation-play-state: paused;
+}
 
 .marquee-mask {
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 9%,
+    #000 91%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 9%,
+    #000 91%,
+    transparent
+  );
 }
 
 /* Journey progress bar fill */
 @keyframes jbarfill {
-  from { transform: translateX(-100%); }
-  to   { transform: translateX(0); }
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 .jbar-fill {
   animation: jbarfill 6s linear;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mq-row { animation: none; }
-  .jbar-fill { animation: none; transform: none; }
+  .mq-row {
+    animation: none;
+  }
+  .jbar-fill {
+    animation: none;
+    transform: none;
+  }
 }
