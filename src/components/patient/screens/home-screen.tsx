@@ -53,10 +53,23 @@ export function PatientHomeScreen() {
   const me = PATIENTS.find((p) => p.id === CURRENT_PATIENT_ID)!;
   const [planBannerDismissed, setPlanBannerDismissed] = useState(false);
 
+  // Stable references so the seed/reconcile effect doesn't re-run every render.
+  const seedMeals = useMemo(
+    () => MEALS.filter((m) => m.patientId === me.id),
+    [me.id],
+  );
+  const seedSymptoms = useMemo(
+    () => SYMPTOMS.filter((s) => s.patientId === me.id),
+    [me.id],
+  );
+  const seedThread = useMemo(
+    () => THREADS.find((t) => t.patientId === me.id)?.messages ?? [],
+    [me.id],
+  );
   useSeedPatientStore(me.id, {
-    meals: MEALS.filter((m) => m.patientId === me.id),
-    symptoms: SYMPTOMS.filter((s) => s.patientId === me.id),
-    thread: THREADS.find((t) => t.patientId === me.id)?.messages ?? [],
+    meals: seedMeals,
+    symptoms: seedSymptoms,
+    thread: seedThread,
   });
 
   const meals = useStoredMeals(me.id);
