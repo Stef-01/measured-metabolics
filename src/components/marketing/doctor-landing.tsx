@@ -270,6 +270,7 @@ function ContactForm() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!e.currentTarget.reportValidity()) return;
     setStatus("submitting");
     const formData = new FormData(e.currentTarget);
     const payload = {
@@ -399,7 +400,7 @@ function ContactForm() {
               </button>
             </motion.div>
           ) : (
-            <form onSubmit={handleSubmit} className="grid gap-5" noValidate>
+            <form onSubmit={handleSubmit} className="grid gap-5">
               {/* Name + Email row */}
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div className="flex flex-col gap-2">
