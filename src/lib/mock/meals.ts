@@ -153,8 +153,8 @@ export const MEALS: MealLog[] = [
       cgmPeakAtMin: 80,
       confidence: 0.85,
       dietitianSummary:
-        "Wholegrain pasta is good; 9 pm eating amplifies the spike — consider moving dinner earlier.",
-      clinicalFlags: ["late evening meal"],
+        "Wholegrain pasta is a solid choice; the 9 pm timing nudges the spike up a little — no concern, but earlier dinners settle faster.",
+      clinicalFlags: [],
     },
   },
   {
