@@ -13,6 +13,8 @@ import {
 
 const BOOKING_URL =
   "https://healthengine.com.au/doctor/nsw/beecroft/dr-anubhav-saxena/p123180";
+const CONTACT_EMAIL = "anubhav.saxena@qs2000.com.au";
+const FORMSUBMIT_URL = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 
 // ── Scroll reveal ─────────────────────────────────────────────────────────────
 function Reveal({
@@ -257,6 +259,247 @@ function FaqEntry({ q, a }: { q: string; a: string }) {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+// ── Contact form ──────────────────────────────────────────────────────────────
+type FormStatus = "idle" | "submitting" | "success" | "error";
+
+function ContactForm() {
+  const [status, setStatus] = useState<FormStatus>("idle");
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatus("submitting");
+    const formData = new FormData(e.currentTarget);
+    const payload = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      phone: formData.get("phone") || undefined,
+      message: formData.get("message") || undefined,
+      _subject: "New enquiry — Measured Metabolics",
+      _template: "table",
+      _captcha: "false",
+    };
+    try {
+      const res = await fetch(FORMSUBMIT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("failed");
+      setStatus("success");
+      (e.target as HTMLFormElement).reset();
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  const inputCls =
+    "w-full rounded-xl border bg-transparent px-4 py-3 text-[0.95rem] outline-none transition-colors placeholder:text-[var(--measured-subtext)]/50 focus:border-[var(--measured-green)]";
+  const inputStyle = { borderColor: "var(--measured-line)" };
+  const labelCls =
+    "block text-[0.72rem] font-semibold uppercase tracking-[0.14em]";
+  const labelStyle = { color: "var(--measured-subtext)" };
+
+  return (
+    <section
+      id="contact"
+      className="mx-auto max-w-[1180px] px-[clamp(1.25rem,4vw,3rem)] py-[clamp(5rem,9vw,9rem)]"
+    >
+      <div className="grid grid-cols-1 items-start gap-[clamp(2rem,5vw,5rem)] md:grid-cols-[0.85fr_1.15fr]">
+        {/* Left: intro */}
+        <Reveal>
+          <Eyebrow>Get in touch</Eyebrow>
+          <h2
+            className="mt-[1.2rem] font-serif font-medium leading-[1.04]"
+            style={{
+              fontSize: "clamp(2.1rem, 4.2vw, 3.5rem)",
+              textWrap: "balance",
+            }}
+          >
+            Have a question?{" "}
+            <em style={{ fontStyle: "italic", color: "var(--measured-green)" }}>
+              We&rsquo;d love to hear from you.
+            </em>
+          </h2>
+          <p
+            className="mt-[1.2rem] leading-[1.6]"
+            style={{
+              fontSize: "clamp(1.05rem, 1.3vw, 1.22rem)",
+              color: "var(--measured-subtext)",
+            }}
+          >
+            Send us a message and Dr Saxena&rsquo;s team will be in touch within
+            one business day. Or skip straight to booking a free intro call.
+          </p>
+          <div className="mt-6">
+            <BtnPrimary href={BOOKING_URL} external>
+              Book a free call →
+            </BtnPrimary>
+          </div>
+          <p
+            className="mt-5 text-[0.82rem]"
+            style={{ color: "var(--measured-subtext)" }}
+          >
+            Or email us directly at{" "}
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="font-semibold transition-opacity hover:opacity-70"
+              style={{ color: "var(--measured-green)" }}
+            >
+              {CONTACT_EMAIL}
+            </a>
+          </p>
+        </Reveal>
+
+        {/* Right: form */}
+        <Reveal delay={0.08}>
+          {status === "success" ? (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col items-start gap-4 rounded-2xl border p-8"
+              style={{
+                borderColor: "var(--measured-line-soft)",
+                background: "var(--measured-sand)",
+              }}
+            >
+              <span
+                className="grid h-12 w-12 place-items-center rounded-full text-xl"
+                style={{
+                  background: "var(--measured-green)",
+                  color: "var(--measured-cream)",
+                }}
+              >
+                ✓
+              </span>
+              <h3
+                className="font-serif text-[1.6rem] font-semibold"
+                style={{ color: "var(--measured-green)" }}
+              >
+                Message sent!
+              </h3>
+              <p
+                className="text-[0.98rem] leading-[1.6]"
+                style={{ color: "var(--measured-subtext)" }}
+              >
+                Thank you — we&rsquo;ll be in touch within one business day.
+              </p>
+              <button
+                onClick={() => setStatus("idle")}
+                className="mt-2 text-[0.88rem] font-semibold underline underline-offset-2 transition-opacity hover:opacity-70"
+                style={{ color: "var(--measured-green)" }}
+              >
+                Send another message
+              </button>
+            </motion.div>
+          ) : (
+            <form onSubmit={handleSubmit} className="grid gap-5" noValidate>
+              {/* Name + Email row */}
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <div className="flex flex-col gap-2">
+                  <label className={labelCls} style={labelStyle}>
+                    Full name{" "}
+                    <span style={{ color: "var(--measured-green)" }}>*</span>
+                  </label>
+                  <input
+                    name="name"
+                    type="text"
+                    required
+                    placeholder="Jane Smith"
+                    className={inputCls}
+                    style={inputStyle}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className={labelCls} style={labelStyle}>
+                    Email{" "}
+                    <span style={{ color: "var(--measured-green)" }}>*</span>
+                  </label>
+                  <input
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="jane@example.com"
+                    className={inputCls}
+                    style={inputStyle}
+                  />
+                </div>
+              </div>
+
+              {/* Phone */}
+              <div className="flex flex-col gap-2">
+                <label className={labelCls} style={labelStyle}>
+                  Phone{" "}
+                  <span className="font-normal normal-case tracking-normal">
+                    (optional)
+                  </span>
+                </label>
+                <input
+                  name="phone"
+                  type="tel"
+                  placeholder="+61 4xx xxx xxx"
+                  className={inputCls}
+                  style={inputStyle}
+                />
+              </div>
+
+              {/* Message */}
+              <div className="flex flex-col gap-2">
+                <label className={labelCls} style={labelStyle}>
+                  Message{" "}
+                  <span className="font-normal normal-case tracking-normal">
+                    (optional)
+                  </span>
+                </label>
+                <textarea
+                  name="message"
+                  rows={4}
+                  placeholder="Any questions about the program, eligibility, or pricing…"
+                  className={`${inputCls} resize-none`}
+                  style={inputStyle}
+                />
+              </div>
+
+              {/* Error */}
+              {status === "error" && (
+                <p className="text-[0.88rem]" style={{ color: "#a85a37" }}>
+                  Something went wrong — please try again or email us directly.
+                </p>
+              )}
+
+              {/* Submit */}
+              <div>
+                <button
+                  type="submit"
+                  disabled={status === "submitting"}
+                  className="inline-flex items-center gap-2 rounded-full px-[1.6rem] py-[0.95rem] text-[0.92rem] font-semibold tracking-[0.01em] transition-all hover:-translate-y-0.5 disabled:opacity-60"
+                  style={{
+                    background: "var(--measured-green)",
+                    color: "var(--measured-cream)",
+                    boxShadow:
+                      "0 1px 2px rgba(16,38,25,.18), 0 8px 24px -10px rgba(16,38,25,.5)",
+                  }}
+                >
+                  {status === "submitting" ? "Sending…" : "Send enquiry →"}
+                </button>
+                <p
+                  className="mt-3 text-[0.78rem]"
+                  style={{ color: "var(--measured-subtext)" }}
+                >
+                  We reply within one business day.
+                </p>
+              </div>
+            </form>
+          )}
+        </Reveal>
+      </div>
+    </section>
   );
 }
 
@@ -1302,6 +1545,11 @@ export function DoctorLanding() {
         </section>
 
         {/* ══════════════════════════════════════════════════════
+            Contact form
+            ══════════════════════════════════════════════════════ */}
+        <ContactForm />
+
+        {/* ══════════════════════════════════════════════════════
             Final CTA
             ══════════════════════════════════════════════════════ */}
         <section
@@ -1466,6 +1714,13 @@ export function DoctorLanding() {
                 style={{ color: "rgba(250,249,246,.62)" }}
               >
                 FAQ
+              </a>
+              <a
+                href="#contact"
+                className="mb-[0.6rem] block text-[0.9rem] transition-colors hover:text-[var(--measured-cream)]"
+                style={{ color: "rgba(250,249,246,.62)" }}
+              >
+                Contact
               </a>
             </div>
           </div>
