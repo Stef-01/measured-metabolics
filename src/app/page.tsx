@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { DoctorLanding } from "@/components/marketing/doctor-landing";
 
 export const metadata: Metadata = {
-  title: "Dr Anubhav Saxena — Health Optimisation Protocol",
+  title: "Measured Metabolics — Concierge Metabolic Care",
   description:
-    "A medically supervised 6-month metabolic health program. GLP-1 therapy, DEXA body composition scanning, and personalised dietitian meal planning. Book via HealthEngine.",
+    "Physician-led, personalised metabolic care. CGM-monitored GLP-1 therapy, bespoke meal planning, and DEXA body composition — a structured six-month protocol with Dr Anubhav Saxena.",
 };
 
 export default function HomePage() {
