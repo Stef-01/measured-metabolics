@@ -1,16 +1,22 @@
 import "server-only";
-import { isSupabaseServiceConfigured } from "@/lib/supabase/env";
-import { supabaseService } from "@/lib/supabase/server";
+import {
+  isSupabaseConfigured,
+  isSupabaseServiceConfigured,
+} from "@/lib/supabase/env";
+import { supabaseServer, supabaseService } from "@/lib/supabase/server";
 import type { DiscoveryTimeBlock } from "@/types/db";
 
 /**
  * Discovery-call lead capture (PRD — public funnel).
  *
  * The website assessment funnel pre-screens eligibility entirely client-side.
- * Only the contact fields + chosen slot reach this service — deliberately NO
+ * Only the contact fields + chosen slot reach this service. Deliberately NO
  * health information (height, weight, BMI, age, activity, goals) is sent or
- * stored. Writes use the service role so the public anon key never touches the
- * `discovery_bookings` table (RLS denies anon by default).
+ * stored.
+ *
+ * Write path: the service role (bypasses RLS) when its key is configured,
+ * otherwise the anon server client, which RLS permits to insert via the locked
+ * down `discovery_bookings public insert` policy (insert-only, source-pinned).
  */
 
 export interface DiscoveryBookingInput {
@@ -31,17 +37,20 @@ export type DiscoveryBookingResult =
 export async function createDiscoveryBooking(
   input: DiscoveryBookingInput,
 ): Promise<DiscoveryBookingResult> {
-  // Vibe / demo mode — accept the booking so the funnel completes, but make it
-  // clear nothing was persisted. Surfacing config gaps beats silently dropping
-  // a real lead.
-  if (!isSupabaseServiceConfigured()) {
+  // Prefer the service role (bypasses RLS); fall back to the anon server client
+  // (allowed insert-only by RLS). When neither is configured, accept the booking
+  // so the funnel completes but flag that nothing was persisted.
+  let sb: Awaited<ReturnType<typeof supabaseServer>>;
+  if (isSupabaseServiceConfigured()) {
+    sb = supabaseService();
+  } else if (isSupabaseConfigured()) {
+    sb = await supabaseServer();
+  } else {
     console.warn(
-      "[discovery-booking] Supabase service role not configured — booking not persisted.",
+      "[discovery-booking] Supabase not configured — booking not persisted.",
     );
     return { ok: true, persisted: false };
   }
-
-  const sb = supabaseService();
   // `as never` mirrors the repo-wide insert convention: the hand-mirrored
   // Database type omits Relationships, so supabase-js infers payloads as never.
   const { data, error } = await sb

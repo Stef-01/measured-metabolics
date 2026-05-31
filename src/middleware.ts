@@ -7,6 +7,7 @@ const PUBLIC_PATHS = [
   "/demo",
   "/sign-in",
   "/auth/callback",
+  "/api/discovery-booking",
   "/_next",
   "/favicon.ico",
 ];

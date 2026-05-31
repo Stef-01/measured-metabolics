@@ -37,12 +37,6 @@ export function Nav() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <a
-            href="#"
-            className="hidden sm:block bg-[rgba(15,15,22,.5)] hover:bg-[rgba(15,15,22,.8)] text-white px-5 py-2.5 rounded-full text-[0.88rem] font-semibold transition-colors whitespace-nowrap"
-          >
-            Login
-          </a>
           <button
             type="button"
             onClick={openFunnel}
@@ -223,9 +217,9 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.59, ease: EASE }}
             >
-              Pathology-validated testing, CGM-guided GLP-1 therapy, and a
-              doctor who turns your data into a plan built around the life you
-              actually live — medication delivered, Australia-wide.
+              Advanced biomarker testing, CGM-guided GLP-1 therapy, and a doctor
+              who turns your data into a plan built around the life you actually
+              live. Medication delivered, Australia-wide.
             </motion.p>
             <motion.div
               className="mt-9 flex gap-3.5 flex-wrap"

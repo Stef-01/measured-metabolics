@@ -15,11 +15,11 @@ const FUNNEL_STEPS = [
   "Book your call",
 ];
 const ACTIVITY = [
-  "Sedentary — mostly desk-based, little regular exercise",
-  "Lightly active — 1–2 sessions per week",
-  "Moderately active — 3–4 sessions per week",
-  "Very active — 5+ sessions per week",
-  "Athlete — competitive or high-performance training",
+  "Sedentary, mostly desk-based, little regular exercise",
+  "Lightly active, 1–2 sessions per week",
+  "Moderately active, 3–4 sessions per week",
+  "Very active, 5+ sessions per week",
+  "Athlete, competitive or high-performance training",
 ];
 const PRIORITIES: [string, string][] = [
   ["⚖️", "Lose Weight"],
@@ -335,7 +335,7 @@ export function Funnel() {
             ></div>
           </div>
           <div className="p-[clamp(1.75rem,4vw,2.75rem)] flex-1">
-            {/* Soft decline — never references the metabolic threshold */}
+            {/* Soft decline, never references the metabolic threshold */}
             {declined ? (
               <div className="text-center py-6">
                 <div className="w-16 h-16 rounded-full bg-bgsoft text-ink grid place-items-center text-2xl mx-auto">
@@ -354,7 +354,7 @@ export function Funnel() {
                   point you toward something that won't serve you.
                 </p>
                 <p className="text-ink2 mt-3 text-[0.92rem] max-w-[44ch] mx-auto leading-relaxed">
-                  If your circumstances change, we'd love to hear from you —
+                  If your circumstances change, we'd love to hear from you,
                   reach our team any time at{" "}
                   <a
                     href="mailto:hello@measured.au"
@@ -699,7 +699,7 @@ export function Funnel() {
                       </div>
                     </div>
                     <p className="text-[0.78rem] text-muted mt-5 leading-relaxed">
-                      ✦ Pick the window that suits you — we'll confirm an exact
+                      ✦ Pick the window that suits you, we'll confirm an exact
                       start time by email. ✦ SMS reminder 24 hours before your
                       call.
                     </p>

@@ -33,9 +33,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Measured Metabolics — Patient + Dietitian + GP, one care loop",
+  title: "Measured Metabolics: Patient + Dietitian + GP, one care loop",
   description:
-    "A metabolic chronic care platform. Patients capture meals and symptoms; dietitians review and plan; GPs see a 30-second sidebar — all on one Supabase data model.",
+    "A metabolic chronic care platform. Patients capture meals and symptoms; dietitians review and plan; GPs see a 30-second sidebar, all on one Supabase data model.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://measured.vercel.app",
   ),

@@ -19,7 +19,7 @@ export function Difference() {
           as="h2"
           className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4"
         >
-          Weight and metabolism are <span className="text-lav">biology</span> —
+          Weight and metabolism are <span className="text-lav">biology</span>,
           not willpower.
         </Reveal>
         <Reveal
@@ -27,15 +27,15 @@ export function Difference() {
           className="mt-7 space-y-5 text-[1.05rem] leading-[1.7] text-ink2"
         >
           <p>
-            For most people, appetite, energy and weight are driven by biology —
+            For most people, appetite, energy and weight are driven by biology,
             and for years the only options were generic diet advice or long
             waits to see someone who could actually help.
           </p>
           <p>
-            Measured was built to change that. We pair pathology-validated
+            Measured was built to change that. We pair advanced biomarker
             testing and continuous glucose data with a registered clinician who
-            prescribes evidence-based therapy where appropriate — and a plan
-            that adapts as your body responds.
+            prescribes evidence-based therapy where appropriate, and a plan that
+            adapts as your body responds.
           </p>
           <p className="text-ink font-semibold">
             Not a fad. Not a crash diet. A genuine medical approach, built
@@ -92,7 +92,7 @@ export function WhatWeTest() {
           as="h2"
           className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4"
         >
-          Pathology-validated testing across{" "}
+          Advanced biomarker testing across{" "}
           <span className="text-lav">every key system</span>.
         </Reveal>
         <Reveal
@@ -100,7 +100,7 @@ export function WhatWeTest() {
           as="p"
           className="mt-5 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2"
         >
-          Not a one-off snapshot — a personalised baseline, tracked over time.
+          Not a one-off snapshot, a personalised baseline, tracked over time.
         </Reveal>
       </div>
       <div className="marquee-mask flex flex-col gap-4">
@@ -158,7 +158,7 @@ export function ProgressTracked() {
             <span className="text-white/70 italic">part of your story</span>.
           </h2>
           <p className="mt-5 text-[1.08rem] leading-[1.6] text-white/80 max-w-[34rem]">
-            Weigh-ins, dose, appetite and measurements flow into one place — so
+            Weigh-ins, dose, appetite and measurements flow into one place, so
             you and your clinician can see exactly what's working, and adjust
             before anything stalls.
           </p>
@@ -171,7 +171,7 @@ export function ProgressTracked() {
         <Reveal delay={120}>
           <div className="bg-white/[0.07] backdrop-blur-md border border-white/15 rounded-xl2 p-5 shadow-card">
             <div className="flex items-center justify-between text-white/85 text-[0.82rem] font-semibold pb-3 border-b border-white/15">
-              <span>Your Plan — Active</span>
+              <span>Your Plan, Active</span>
               <span className="text-white/55 font-normal">
                 Updated today · 08:42 AEST
               </span>
@@ -208,19 +208,19 @@ export function ProgressTracked() {
 const JOURNEY_STEPS: [string, string][] = [
   [
     "Health Assessment",
-    "A guided intake captures your history, goals, and baseline — so your clinician can assess safety, suitability, and where to focus.",
+    "A guided intake captures your history, goals, and baseline, so your clinician can assess safety, suitability, and where to focus.",
   ],
   [
-    "Pathology Testing",
-    "Pathology-validated bloods, CGM, and DEXA build a complete, objective picture of your metabolism — not a single snapshot.",
+    "Advanced Biomarker Testing",
+    "Advanced biomarker blood panels, CGM, and DEXA build a complete, objective picture of your metabolism, not a single snapshot.",
   ],
   [
     "Telehealth Consultation",
-    "Your doctor walks you through every result and what it means — then designs your protocol with you, over telehealth or in person.",
+    "Your doctor walks you through every result and what it means, then designs your protocol with you, over telehealth or in person.",
   ],
   [
     "Personalised Care Plan",
-    "Biomarker tracking, platform access, and enrolment in the Health Optimisation Protocol — with therapy and meals adapted to you.",
+    "Biomarker tracking, platform access, and enrolment in the Health Optimisation Protocol, with therapy and meals adapted to you.",
   ],
   [
     "Ongoing Review",
@@ -403,11 +403,11 @@ function JourneyPanel({ idx }: { idx: number }) {
           tall
           src="/landing/hiker-point.jpg"
           title="Telehealth Consultation"
-          sub="Every result, explained — your protocol, designed with you."
+          sub="Every result, explained, your protocol, designed with you."
         />
         <PlainCard
           title="Your clinician"
-          sub="Dr Anubhav Saxena · MBBS, FRACGP, MPhil"
+          sub="AHPRA-registered GP · MBBS, FRACGP, MPhil"
         />
         <PlainCard
           title="Booked"
@@ -419,7 +419,7 @@ function JourneyPanel({ idx }: { idx: number }) {
     return (
       <div className="grid grid-cols-2 gap-4">
         <div className="grad-blue text-white rounded-2xl p-5 col-span-2 min-h-[150px] flex flex-col">
-          <div className="font-bold">Biological age — trending down</div>
+          <div className="font-bold">Biological age, trending down</div>
           <div className="text-[0.8rem] opacity-85">
             Tracked across repeat panels
           </div>
@@ -588,20 +588,20 @@ export function Program() {
       "Months",
       "CGM-monitored GLP-1 therapy",
       "Six months of clinically guided GLP-1 receptor agonist therapy, titrated to your response with continuous glucose monitoring at every step.",
-      "/landing/cgm.jpg",
+      "/landing/cgm-therapy.jpg",
     ],
     [
       "∞",
       "Throughout",
       "Personalised meal planning",
-      "Your doctor builds a plan around your cuisine, preferences, and metabolic targets — with recipes adapted specifically for you.",
-      "/landing/poha-grain-bowl.jpg",
+      "Your doctor builds a plan around your cuisine, preferences, and metabolic targets, with recipes adapted specifically for you.",
+      "/landing/meal-planning.jpg",
     ],
     [
       "2",
       "Scans",
       "DEXA body composition",
-      "Baseline and completion DEXA scans measure fat mass, lean mass, and visceral fat — giving you objective before-and-after data.",
+      "Baseline and completion DEXA scans measure fat mass, lean mass, and visceral fat, giving you objective before-and-after data.",
       "/landing/dexa.jpg",
     ],
   ];
@@ -614,7 +614,7 @@ export function Program() {
             Your six months, <span className="text-lav">step by step</span>.
           </h2>
           <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            A structured, physician-led program built on continuous data — not
+            A structured, physician-led program built on continuous data, not
             guesswork. From baseline to before-and-after.
           </p>
         </Reveal>
@@ -696,49 +696,49 @@ export function EverythingIncluded() {
       "pill",
       "Prescription GLP-1 therapy",
       "Semaglutide · Tirzepatide · clinician-titrated",
-      "Where clinically appropriate, your doctor prescribes an evidence-based GLP-1 medication and adjusts your dose over time — shipped discreetly to your door.",
+      "Where clinically appropriate, your doctor prescribes an evidence-based GLP-1 medication and adjusts your dose over time, shipped discreetly to your door.",
       "/landing/cgm.jpg",
     ],
     [
       "cross",
       "Clinician oversight",
       "Eligibility · dose management · monitoring",
-      "An AHPRA-registered doctor oversees your care from start to finish — confirming eligibility, managing your dose, and monitoring how you respond.",
+      "An AHPRA-registered doctor oversees your care from start to finish, confirming eligibility, managing your dose, and monitoring how you respond.",
       "/landing/calm-woman.jpg",
     ],
     [
       "leaf",
       "Personalised nutrition",
       "Protein-first · muscle preservation · your cuisine",
-      "Nutrition built for GLP-1 treatment and your CGM response — losing fat while preserving muscle, with recipes around foods you actually enjoy.",
+      "Nutrition built for GLP-1 treatment and your CGM response, losing fat while preserving muscle, with recipes around foods you actually enjoy.",
       "/landing/salad-bowl.jpg",
     ],
     [
       "chart",
       "Progress tracking",
       "Weekly weigh-ins · CGM trends · DEXA",
-      "Log weight, glucose and measurements in your portal and watch the trend over time — so you and your doctor can see what's working.",
+      "Log weight, glucose and measurements in your portal and watch the trend over time, so you and your doctor can see what's working.",
       "/landing/dexa.jpg",
     ],
     [
       "chat",
       "24/7 messaging support",
       "Ask anytime · real people · discreet",
-      "Message your care team whenever you need — a question about your medication, a side effect, or your plan. Real support, whenever it matters.",
+      "Message your care team whenever you need, a question about your medication, a side effect, or your plan. Real support, whenever it matters.",
       "/landing/runner.jpg",
     ],
     [
       "heart",
       "Metabolic health benefits",
       "Blood sugar · blood pressure · cholesterol",
-      "Beyond the scales, treatment can support healthier blood sugar, blood pressure and cholesterol — your doctor keeps an eye on the whole picture.",
+      "Beyond the scales, treatment can support healthier blood sugar, blood pressure and cholesterol, your doctor keeps an eye on the whole picture.",
       "/landing/green-smoothie.jpg",
     ],
     [
       "truck",
       "Discreet home delivery",
       "Plain packaging · Australia-wide · refills",
-      "Your medication arrives in discreet, plain packaging, shipped Australia-wide — with refills coordinated so you never miss a dose.",
+      "Your medication arrives in discreet, plain packaging, shipped Australia-wide, with refills coordinated so you never miss a dose.",
       "/landing/lake-calm.jpg",
     ],
     [
@@ -752,7 +752,7 @@ export function EverythingIncluded() {
       "tag",
       "Transparent pricing",
       "One monthly price · medication included",
-      "One simple monthly price covers your consultations, clinical support and medication. No surprise fees — pause or cancel anytime.",
+      "One simple monthly price covers your consultations, clinical support and medication. No surprise fees, pause or cancel anytime.",
       "/landing/mtn-light.jpg",
     ],
   ];
@@ -769,7 +769,7 @@ export function EverythingIncluded() {
           </h2>
           <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
             Every plan combines medication, clinical oversight and real human
-            support — so you're guided from your first dose to your goal, and
+            support, so you're guided from your first dose to your goal, and
             beyond.
           </p>
         </Reveal>
@@ -821,7 +821,7 @@ export function Pricing() {
   const includes = [
     "Prescription GLP-1 medication included",
     "Online clinician assessment & ongoing reviews",
-    "Pathology, CGM & DEXA baseline testing",
+    "Advanced biomarker, CGM & DEXA baseline testing",
     "Personalised dose plan, adjusted over time",
     "1:1 care coaching & nutrition support",
     "24/7 messaging with your care team",
@@ -829,8 +829,8 @@ export function Pricing() {
   ];
   const notes = [
     "Prescription medication is only issued after an online consultation with a registered clinician.",
-    "GLP-1 treatment is not suitable for everyone — eligibility is determined by your clinician.",
-    "Not covered by Medicare or private health insurance — a fully private telehealth service.",
+    "GLP-1 treatment is not suitable for everyone, eligibility is determined by your clinician.",
+    "Not covered by Medicare or private health insurance, a fully private telehealth service.",
     "Results vary and depend on your starting point, treatment plan and lifestyle changes.",
   ];
   return (
@@ -844,8 +844,8 @@ export function Pricing() {
           </h2>
           <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
             No tiers to decode, no surprise add-ons. One monthly price covers
-            your clinician, your support team and your GLP-1 medication —
-            shipped to your door.
+            your clinician, your support team and your GLP-1 medication, shipped
+            to your door.
           </p>
         </Reveal>
         <Reveal className="grid lg:grid-cols-[1.4fr_1fr] gap-0 rounded-xl2 overflow-hidden border border-line shadow-card">
@@ -910,36 +910,28 @@ export function Pricing() {
   );
 }
 
-/* ---------------- Doctor ---------------- */
+/* ---------------- Precision (CGM-led) ---------------- */
 export function Doctor() {
   return (
     <section id="doctor" className="sec-pad bg-bgsoft">
-      <div className="max-w-[1200px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] grid lg:grid-cols-[0.82fr_1.18fr] gap-[clamp(2rem,5vw,4.5rem)] items-center">
+      <div className="max-w-[1200px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] grid lg:grid-cols-[1.1fr_0.9fr] gap-[clamp(2rem,5vw,4.5rem)] items-center">
         <Reveal className="relative">
-          <div className="rounded-xl2 overflow-hidden aspect-[0.84] shadow-card">
+          <div className="rounded-xl2 overflow-hidden aspect-[3/2] shadow-card bg-[#0a0e0c]">
             <img
-              src="/images/dr-saxena.jpeg"
-              alt="Dr Anubhav Saxena"
+              src="/landing/cgm-anatomy.jpg"
+              alt="How a continuous glucose monitor reads your metabolism in real time"
               loading="lazy"
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="absolute -left-4 bottom-7 bg-white border border-line rounded-2xl px-[1.15rem] py-[0.85rem] shadow-card">
-            <b className="font-disp text-[1.1rem] font-extrabold block leading-tight tracking-tight">
-              Dr Anubhav Saxena
-            </b>
-            <span className="text-[0.66rem] tracking-widest uppercase text-muted">
-              Your doctor
-            </span>
-          </div>
         </Reveal>
         <Reveal delay={120}>
-          <Eyebrow>About us · Your doctor</Eyebrow>
+          <Eyebrow>Precision metabolic medicine</Eyebrow>
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
             Medicine that actually <span className="text-lav">knows you</span>.
           </h2>
           <div className="flex gap-2 flex-wrap mt-5">
-            {["MBBS", "FRACGP", "MPhil"].map((c) => (
+            {["CGM-guided", "Biomarker-led", "Personalised"].map((c) => (
               <span
                 key={c}
                 className="text-[0.68rem] font-semibold tracking-wide uppercase text-ink2 bg-lavsoft rounded-full px-3.5 py-1.5"
@@ -949,14 +941,21 @@ export function Doctor() {
             ))}
           </div>
           <p className="mt-5 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            Fellow of the Royal Australian College of General Practitioners with
-            a research background in metabolic medicine. Dr Saxena designed the
-            Health Optimisation Protocol to give patients a structured,
-            evidence-based path to lasting weight and metabolic improvement.
+            Most care guesses. We measure. An ultra-thin continuous glucose
+            monitor reads your metabolism in real time, around the clock, while
+            advanced biomarker testing and DEXA map the full picture. Your
+            therapy and nutrition are tuned to how your body actually responds,
+            not to population averages.
+          </p>
+          <p className="mt-4 text-ink2 leading-[1.6]">
+            That is precision medicine: every dose, every meal and every
+            adjustment driven by your own data. As your glucose trends and labs
+            change, your plan changes with them, so nothing is left to chance
+            between visits.
           </p>
           <div className="mt-8">
             <Btn lg onClick={openFunnel}>
-              Book with Dr Saxena <span>→</span>
+              Take the assessment <span>→</span>
             </Btn>
           </div>
         </Reveal>
@@ -1005,7 +1004,7 @@ export function VideoBand() {
           className="font-disp font-extrabold tracking-[-.03em] leading-[1.08] text-[clamp(1.9rem,4vw,3.2rem)] mt-7 text-balance"
         >
           Weight is biology, not willpower. We pair the data with a doctor who
-          actually reads it — and a plan that{" "}
+          actually reads it, and a plan that{" "}
           <span className="text-white">adapts as you do</span>.
         </Reveal>
         <Reveal
@@ -1025,7 +1024,7 @@ export function VideoBand() {
 export function Quotes() {
   const qs: [string, string, string, string][] = [
     [
-      "For the first time, my labs and how I actually feel were finally connected. I understand my own body now — and exactly what to do with it.",
+      "For the first time, my labs and how I actually feel were finally connected. I understand my own body now, and exactly what to do with it.",
       "SM",
       "Sarah M.",
       "Brisbane · 6-month program",
@@ -1088,7 +1087,7 @@ export function FAQ() {
   const items: [string, string][] = [
     [
       "How is Measured different from standard care?",
-      "Every plan is built around the individual — your CGM response, your labs, and the foods you actually enjoy. Your doctor knows your history before you arrive, builds and adjusts every plan personally, and there are no rushed, ten-minute visits or rotating providers.",
+      "Every plan is built around the individual, your CGM response, your labs, and the foods you actually enjoy. Your doctor knows your history before you arrive, builds and adjusts every plan personally, and there are no rushed, ten-minute visits or rotating providers.",
     ],
     [
       "Do I need a referral to start?",
@@ -1104,11 +1103,11 @@ export function FAQ() {
     ],
     [
       "Do I have to come into the office?",
-      "Your first visit is in person, so we can run your labs, fit your CGM, and complete your baseline DEXA. After that, regular check-ins happen over telehealth — or in person whenever you'd prefer.",
+      "Your first visit is in person, so we can run your labs, fit your CGM, and complete your baseline DEXA. After that, regular check-ins happen over telehealth, or in person whenever you'd prefer.",
     ],
     [
       "How closely will my doctor follow my progress?",
-      "Closely. You stay in regular contact with your doctor throughout the six months, and as your CGM and labs change, your therapy and meals are adjusted — not left until the next quarterly visit.",
+      "Closely. You stay in regular contact with your doctor throughout the six months, and as your CGM and labs change, your therapy and meals are adjusted, not left until the next quarterly visit.",
     ],
   ];
   return (
@@ -1179,7 +1178,7 @@ export function CTA() {
           className="text-white/90 mt-6 mx-auto max-w-[34rem] text-[clamp(1.05rem,1.25vw,1.3rem)] leading-[1.55]"
         >
           We take on a limited number of patients so every plan gets the
-          attention it deserves. Start with a short online assessment — no
+          attention it deserves. Start with a short online assessment, no
           commitment required.
         </Reveal>
         <Reveal
@@ -1232,7 +1231,7 @@ export function Footer() {
               Measured
             </span>
             <p className="mt-4 text-[0.92rem] leading-relaxed max-w-[32ch]">
-              Precision metabolic medicine. Pathology-validated testing,
+              Precision metabolic medicine. Advanced biomarker testing,
               CGM-guided therapy, and a doctor who personalises every step.
             </p>
           </div>

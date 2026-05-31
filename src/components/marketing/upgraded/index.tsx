@@ -19,7 +19,7 @@ import {
 import { Funnel } from "./funnel";
 
 /**
- * UpgradedLanding — the warm-paper / charcoal precision redesign.
+ * UpgradedLanding, the warm-paper / charcoal precision redesign.
  *
  * Everything is scoped under `.measured-upgraded`, which retunes the shared
  * `lav` accent + gradients to charcoal without affecting the rest of the app.
