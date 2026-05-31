@@ -3,6 +3,26 @@
 /* Custom variant for hover-capable devices */
 @custom-variant hover-hover (@media (hover: hover));
 
+/* ===== MARKETING / LAVENDER DESIGN TOKENS ===== */
+:root {
+  --lav: #6c5ce7;
+  --lav-2: #8a7bf0;
+  --lav-soft: #efeafe;
+  --lav-tint: #f6f3ff;
+  --brand-blue: #2f6bff;
+  --brand-blue-deep: #16245f;
+  --brand-ink: #0e0e14;
+  --brand-ink2: #46464f;
+  --brand-muted: #8d8d99;
+  --brand-line: #eceaf3;
+  --brand-line2: #e2e0ec;
+  --brand-bgsoft: #f7f6fc;
+  --shadow-lav-card:
+    0 2px 4px rgba(20, 18, 40, 0.04), 0 18px 40px -22px rgba(40, 32, 90, 0.22);
+  --shadow-lav-soft:
+    0 1px 2px rgba(20, 18, 40, 0.04), 0 8px 24px -14px rgba(40, 32, 90, 0.18);
+}
+
 :root {
   --background: #ffffff;
   --foreground: #0d0d0d;
@@ -97,6 +117,22 @@
 }
 
 @theme inline {
+  /* Marketing lavender palette */
+  --color-lav: var(--lav);
+  --color-lav2: var(--lav-2);
+  --color-lavsoft: var(--lav-soft);
+  --color-lavtint: var(--lav-tint);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-ink2: var(--brand-ink2);
+  --color-brand-muted: var(--brand-muted);
+  --color-brand-line: var(--brand-line);
+  --color-brand-line2: var(--brand-line2);
+  --color-brand-bgsoft: var(--brand-bgsoft);
+  --font-disp: "Hanken Grotesk", "Inter", system-ui, sans-serif;
+  --shadow-lav-card: var(--shadow-lav-card);
+  --shadow-lav-soft: var(--shadow-lav-soft);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-measured-green: var(--measured-green);
@@ -425,5 +461,131 @@ a,
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== MARKETING PAGE UTILITIES ===== */
+
+.sec-pad {
+  padding-block: clamp(4.5rem, 8vw, 8rem);
+}
+
+.grad-dot {
+  background: linear-gradient(135deg, #b7a8ff, #ffc3df);
+}
+.grad-blue {
+  background: linear-gradient(150deg, #3a2f8f 0%, #2f6bff 60%, #7aa5ff 100%);
+}
+.grad-lav {
+  background: linear-gradient(135deg, #7b6cf0, #a78bff);
+}
+
+.shadow-lav-card {
+  box-shadow: var(--shadow-lav-card);
+}
+.shadow-lav-soft {
+  box-shadow: var(--shadow-lav-soft);
+}
+
+/* Chip icon gradients */
+.g1 {
+  background: radial-gradient(circle at 30% 30%, #ffd1e0, #ff7eb3);
+}
+.g2 {
+  background: radial-gradient(circle at 30% 30%, #ffe0b8, #f2994a);
+}
+.g3 {
+  background: radial-gradient(circle at 30% 30%, #ffc0c0, #e23b3b);
+}
+.g4 {
+  background: radial-gradient(circle at 30% 30%, #c9b6ff, #6c5ce7);
+}
+.g5 {
+  background: radial-gradient(circle at 30% 30%, #bfe0ff, #2f6bff);
+}
+.g6 {
+  background: radial-gradient(circle at 30% 30%, #bff0d8, #1f9d63);
+}
+.g7 {
+  background: radial-gradient(circle at 30% 30%, #ffe9a8, #d9a521);
+}
+.g8 {
+  background: radial-gradient(circle at 30% 30%, #d6c2ff, #8a5cf0);
+}
+.g9 {
+  background: radial-gradient(circle at 30% 30%, #bdeaff, #2bb3d4);
+}
+.g10 {
+  background: radial-gradient(circle at 30% 30%, #ffd0c2, #ff6b4a);
+}
+
+/* Ring progress */
+.ring-prog {
+  background: conic-gradient(#2f6bff 0 25%, #e2e0ec 0);
+}
+
+/* Marquee */
+@keyframes mqscroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.mq-row {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+  animation: mqscroll 46s linear infinite;
+}
+.mq-row.r2 {
+  animation-duration: 60s;
+  animation-direction: reverse;
+}
+.mq-row.r3 {
+  animation-duration: 52s;
+}
+.mq-row:hover {
+  animation-play-state: paused;
+}
+
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 9%,
+    #000 91%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 9%,
+    #000 91%,
+    transparent
+  );
+}
+
+/* Journey progress bar fill */
+@keyframes jbarfill {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.jbar-fill {
+  animation: jbarfill 6s linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mq-row {
+    animation: none;
+  }
+  .jbar-fill {
+    animation: none;
+    transform: none;
   }
 }
