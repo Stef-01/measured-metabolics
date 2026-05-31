@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { DoctorLanding } from "@/components/marketing/doctor-landing";
+import { UpgradedLanding } from "@/components/marketing/upgraded";
 
 export const metadata: Metadata = {
-  title: "Measured Metabolics — Concierge Metabolic Care",
+  title: "Measured — Precision Metabolic Medicine, Australia",
   description:
-    "Physician-led, personalised metabolic care. CGM-monitored GLP-1 therapy, bespoke meal planning, and DEXA body composition — a structured six-month protocol with Dr Anubhav Saxena.",
+    "Pathology-validated testing, CGM-guided GLP-1 therapy, and a doctor who turns your data into a plan built around the life you actually live — medication delivered, Australia-wide.",
 };
 
 export default function HomePage() {
-  return <DoctorLanding />;
+  return <UpgradedLanding />;
 }

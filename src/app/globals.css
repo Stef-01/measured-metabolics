@@ -589,3 +589,168 @@ a,
     transform: none;
   }
 }
+
+/* ============================================================
+   UPGRADED LANDING — warm-paper / charcoal precision system
+   Scoped to `.measured-upgraded` so the rest of the app
+   (admin, patient, dietitian, GP, /demo) keeps its own palette.
+   ============================================================ */
+
+/* New design tokens used by the upgraded landing utilities. The names
+   (ink, paper, bgsoft…) are not used elsewhere, so they are safe to
+   declare globally; the shared `lav` family is overridden in-scope below. */
+:root {
+  --ink: #1b1b16;
+  --ink2: #52504a;
+  --u-muted: #928d83;
+  --u-line: #e9e3d4;
+  --line2: #d8d1bf;
+  --paper: #faf8f2;
+  --bgsoft: #eee8d8;
+  --bgsoft2: #e5ddca;
+  --blue: #23231e;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink2: var(--ink2);
+  --color-muted: var(--u-muted);
+  --color-line: var(--u-line);
+  --color-line2: var(--line2);
+  --color-paper: var(--paper);
+  --color-bgsoft: var(--bgsoft);
+  --color-bgsoft2: var(--bgsoft2);
+  --color-blue: var(--blue);
+  --radius-xl2: 22px;
+  --shadow-card:
+    0 2px 4px rgba(24, 20, 12, 0.04), 0 18px 40px -22px rgba(42, 34, 18, 0.2);
+  --shadow-soft:
+    0 1px 2px rgba(24, 20, 12, 0.04), 0 8px 24px -14px rgba(42, 34, 18, 0.16);
+}
+
+/* In-scope overrides: retune the shared accent + gradients to charcoal,
+   and refine display weights to the editorial look from the design. */
+.measured-upgraded {
+  --lav: #23231e;
+  --lav-2: #3c3c35;
+  --lav-soft: #edeae1;
+  --lav-tint: #f3f0e8;
+}
+.measured-upgraded ::selection {
+  background: var(--lav);
+  color: #fff;
+}
+.measured-upgraded .sec-pad {
+  padding-block: clamp(5rem, 9vw, 9.5rem);
+}
+.measured-upgraded h1.font-disp {
+  font-weight: 500;
+  letter-spacing: -0.018em;
+}
+.measured-upgraded h2.font-disp {
+  font-weight: 400;
+  letter-spacing: -0.012em;
+}
+.measured-upgraded h3.font-disp {
+  font-weight: 500;
+  letter-spacing: -0.006em;
+}
+.measured-upgraded .grad-dot {
+  background: linear-gradient(135deg, #3a3a33, #5e5d53);
+}
+.measured-upgraded .grad-blue {
+  background: linear-gradient(162deg, #1a1a17 0%, #27271f 58%, #3a3a30 100%);
+}
+.measured-upgraded .grad-lav {
+  background: linear-gradient(135deg, #22221c, #39392f);
+}
+.measured-upgraded .ring-prog {
+  background: conic-gradient(#23231e 0 25%, #d8d1bf 0);
+}
+.measured-upgraded .g1 {
+  background: radial-gradient(circle at 30% 30%, #dcebc7, #9cc47a);
+}
+.measured-upgraded .g2 {
+  background: radial-gradient(circle at 30% 30%, #f0dcb0, #cf9f4c);
+}
+.measured-upgraded .g3 {
+  background: radial-gradient(circle at 30% 30%, #e6d6bd, #c0a675);
+}
+.measured-upgraded .g4 {
+  background: radial-gradient(circle at 30% 30%, #bcdcc4, #5aa97a);
+}
+.measured-upgraded .g5 {
+  background: radial-gradient(circle at 30% 30%, #cfe6d6, #7bb894);
+}
+.measured-upgraded .g6 {
+  background: radial-gradient(circle at 30% 30%, #bff0d8, #1f8a5a);
+}
+.measured-upgraded .g7 {
+  background: radial-gradient(circle at 30% 30%, #f0e2a8, #c5a03f);
+}
+.measured-upgraded .g8 {
+  background: radial-gradient(circle at 30% 30%, #cbe0c6, #6fae84);
+}
+.measured-upgraded .g9 {
+  background: radial-gradient(circle at 30% 30%, #dcebe1, #8fc4a6);
+}
+.measured-upgraded .g10 {
+  background: radial-gradient(circle at 30% 30%, #eedac2, #c98f5a);
+}
+
+/* Liquid-glass nav + cards */
+.glass-dark {
+  position: relative;
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.13),
+    rgba(255, 255, 255, 0.035) 58%
+  );
+  backdrop-filter: blur(22px) saturate(185%);
+  -webkit-backdrop-filter: blur(22px) saturate(185%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.24),
+    inset 0 0 22px rgba(255, 255, 255, 0.045),
+    0 24px 50px -26px rgba(0, 0, 0, 0.85);
+}
+.glass-dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    130% 90% at 14% -10%,
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0) 46%
+  );
+}
+
+/* Cinematic film grain */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.sec-pad-xl {
+  padding-block: clamp(7rem, 13vw, 12.5rem);
+}
+
+/* Hero cinematic line reveal (driven by framer-motion) */
+.hero-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
+}
+.hero-rise {
+  display: block;
+}
