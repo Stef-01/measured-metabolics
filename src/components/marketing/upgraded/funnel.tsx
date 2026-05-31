@@ -3,6 +3,7 @@
 /* eslint-disable react/no-unescaped-entities */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { motion } from "framer-motion";
 import type { DiscoveryTimeBlock } from "@/types/db";
 import { isDiscoveryEligible } from "@/lib/eligibility";
 
@@ -154,7 +155,7 @@ function NextBtn({
       disabled={disabled}
       onClick={onClick}
       className={
-        "inline-flex items-center gap-2 bg-lav text-white font-semibold rounded-full px-6 py-3 transition-all " +
+        "press inline-flex items-center gap-2 bg-lav text-white font-semibold rounded-full px-6 py-3 " +
         (disabled ? "opacity-40 cursor-not-allowed" : "hover:-translate-y-0.5")
       }
     >
@@ -278,11 +279,19 @@ export function Funnel() {
   if (!open) return null;
 
   return (
-    <div
+    <motion.div
       className="fixed inset-0 z-[200] flex items-stretch md:items-center justify-center p-0 md:p-6"
       style={{ background: "rgba(14,14,20,.55)", backdropFilter: "blur(6px)" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
     >
-      <div className="bg-white w-full max-w-[940px] md:rounded-[24px] overflow-hidden grid md:grid-cols-[300px_1fr] max-h-screen md:max-h-[88vh]">
+      <motion.div
+        className="bg-white w-full max-w-[940px] md:rounded-[24px] overflow-hidden grid md:grid-cols-[300px_1fr] max-h-screen md:max-h-[88vh]"
+        initial={{ opacity: 0, scale: 0.965, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 26, mass: 0.9 }}
+      >
         {/* Left rail */}
         <div className="hidden md:flex flex-col grad-lav text-white p-8">
           <span className="font-disp text-[1.3rem] font-extrabold">
@@ -540,7 +549,7 @@ export function Funnel() {
                             type="button"
                             onClick={() => set("gender", g)}
                             className={
-                              "rounded-xl border px-3 py-2.5 text-[0.88rem] transition-colors " +
+                              "press rounded-xl border px-3 py-2.5 text-[0.88rem] transition-colors " +
                               (data.gender === g
                                 ? "border-lav bg-lavtint text-ink font-semibold"
                                 : "border-line2 text-ink2 hover:border-lav")
@@ -577,7 +586,7 @@ export function Funnel() {
                           type="button"
                           onClick={() => set("activity", a)}
                           className={
-                            "text-left rounded-xl border px-4 py-3.5 text-[0.92rem] transition-colors " +
+                            "press text-left rounded-xl border px-4 py-3.5 text-[0.92rem] transition-colors " +
                             (data.activity === a
                               ? "border-lav bg-lavtint font-semibold"
                               : "border-line2 text-ink2 hover:border-lav")
@@ -615,7 +624,7 @@ export function Funnel() {
                             type="button"
                             onClick={() => togglePri(label)}
                             className={
-                              "flex flex-col items-center gap-2 rounded-xl border px-2 py-4 text-[0.82rem] font-medium transition-colors " +
+                              "press flex flex-col items-center gap-2 rounded-xl border px-2 py-4 text-[0.82rem] font-medium transition-colors " +
                               (on
                                 ? "border-lav bg-lavtint"
                                 : "border-line2 text-ink2 hover:border-lav")
@@ -658,7 +667,7 @@ export function Funnel() {
                               type="button"
                               onClick={() => set("date", dt)}
                               className={
-                                "text-left rounded-xl border px-4 py-2.5 text-[0.9rem] transition-colors " +
+                                "press text-left rounded-xl border px-4 py-2.5 text-[0.9rem] transition-colors " +
                                 (data.date &&
                                 data.date.getTime() === dt.getTime()
                                   ? "border-lav bg-lavtint font-semibold"
@@ -681,7 +690,7 @@ export function Funnel() {
                               type="button"
                               onClick={() => set("block", b.id)}
                               className={
-                                "text-left rounded-xl border px-3 py-3 transition-colors " +
+                                "press text-left rounded-xl border px-3 py-3 transition-colors " +
                                 (data.block === b.id
                                   ? "border-lav bg-lavtint"
                                   : "border-line2 hover:border-lav")
@@ -724,7 +733,7 @@ export function Funnel() {
             )}
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

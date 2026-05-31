@@ -885,14 +885,14 @@ export function Pricing() {
             <button
               type="button"
               onClick={openFunnel}
-              className="mt-7 w-full justify-center inline-flex items-center gap-2 bg-white text-ink font-bold text-base rounded-full py-[1.05rem] hover:-translate-y-0.5 transition-transform"
+              className="press mt-7 w-full justify-center inline-flex items-center gap-2 bg-white text-ink font-bold text-base rounded-full py-[1.05rem] hover:-translate-y-0.5"
             >
               Take the assessment →
             </button>
             <button
               type="button"
               onClick={openFunnel}
-              className="mt-2.5 w-full justify-center inline-flex items-center gap-2 bg-white/15 border border-white/30 text-white font-semibold text-base rounded-full py-[1.05rem] hover:bg-white/25 transition-colors"
+              className="press mt-2.5 w-full justify-center inline-flex items-center gap-2 bg-white/15 border border-white/30 text-white font-semibold text-base rounded-full py-[1.05rem] hover:bg-white/25"
             >
               See if you qualify
             </button>
@@ -1188,7 +1188,7 @@ export function CTA() {
           <button
             type="button"
             onClick={openFunnel}
-            className="inline-flex items-center gap-2 bg-white text-ink font-semibold rounded-full text-base px-7 py-[1.05rem] hover:-translate-y-0.5 transition-transform"
+            className="press inline-flex items-center gap-2 bg-white text-ink font-semibold rounded-full text-base px-7 py-[1.05rem] hover:-translate-y-0.5"
           >
             Take the assessment <span>→</span>
           </button>

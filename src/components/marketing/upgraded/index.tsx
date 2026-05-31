@@ -1,5 +1,6 @@
 "use client";
 
+import { MotionConfig } from "framer-motion";
 import { Nav, Hero } from "./hero";
 import {
   Difference,
@@ -26,25 +27,27 @@ import { Funnel } from "./funnel";
  */
 export function UpgradedLanding() {
   return (
-    <div className="measured-upgraded bg-paper text-ink font-sans antialiased">
-      <Nav />
-      <main>
-        <Hero />
-        <Difference />
-        <WhatWeTest />
-        <ProgressTracked />
-        <Journey />
-        <EverythingIncluded />
-        <Program />
-        <Pricing />
-        <Doctor />
-        <VideoBand />
-        <Quotes />
-        <FAQ />
-        <CTA />
-      </main>
-      <Footer />
-      <Funnel />
-    </div>
+    <MotionConfig reducedMotion="user">
+      <div className="measured-upgraded bg-paper text-ink font-sans antialiased">
+        <Nav />
+        <main>
+          <Hero />
+          <Difference />
+          <WhatWeTest />
+          <ProgressTracked />
+          <Journey />
+          <EverythingIncluded />
+          <Program />
+          <Pricing />
+          <Doctor />
+          <VideoBand />
+          <Quotes />
+          <FAQ />
+          <CTA />
+        </main>
+        <Footer />
+        <Funnel />
+      </div>
+    </MotionConfig>
   );
 }

@@ -40,7 +40,7 @@ export function Nav() {
           <button
             type="button"
             onClick={openFunnel}
-            className="bg-white text-ink px-6 py-2.5 rounded-full text-[0.88rem] font-bold hover:-translate-y-0.5 transition-transform whitespace-nowrap"
+            className="press bg-white text-ink px-6 py-2.5 rounded-full text-[0.88rem] font-bold hover:-translate-y-0.5 whitespace-nowrap"
           >
             Get Started
           </button>
@@ -230,7 +230,7 @@ export function Hero() {
               <button
                 type="button"
                 onClick={openFunnel}
-                className="group inline-flex items-center gap-2 rounded-full bg-white text-ink font-bold text-base px-7 py-[1.05rem] shadow-[0_18px_40px_-18px_rgba(0,0,0,.8)] hover:-translate-y-0.5 transition-transform"
+                className="group press inline-flex items-center gap-2 rounded-full bg-white text-ink font-bold text-base px-7 py-[1.05rem] shadow-[0_18px_40px_-18px_rgba(0,0,0,.8)] hover:-translate-y-0.5"
               >
                 Take the assessment{" "}
                 <span className="transition-transform duration-300 group-hover:translate-x-1">
@@ -239,7 +239,7 @@ export function Hero() {
               </button>
               <a
                 href="#journey"
-                className="inline-flex items-center gap-2 rounded-full font-semibold text-base px-7 py-[1.05rem] text-white bg-white/10 border border-white/25 backdrop-blur-md hover:bg-white/[0.18] transition-colors"
+                className="press inline-flex items-center gap-2 rounded-full font-semibold text-base px-7 py-[1.05rem] text-white bg-white/10 border border-white/25 backdrop-blur-md hover:bg-white/[0.18]"
               >
                 How it works
               </a>

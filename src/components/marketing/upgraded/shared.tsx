@@ -97,7 +97,7 @@ export function Btn({
   className?: string;
 }) {
   const base =
-    "inline-flex items-center gap-2 font-semibold rounded-full border transition-all duration-200 whitespace-nowrap cursor-pointer " +
+    "press inline-flex items-center gap-2 font-semibold rounded-full border whitespace-nowrap cursor-pointer " +
     (lg
       ? "text-base px-7 py-[1.05rem] "
       : "text-[0.95rem] px-[1.6rem] py-[0.95rem] ");

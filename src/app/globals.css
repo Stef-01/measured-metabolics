@@ -640,6 +640,55 @@ a,
   background: var(--lav);
   color: #fff;
 }
+
+/* ── Apple-grade polish: typographic balancing, focus, anchor offset, press ──
+   text-wrap removes orphans/widows on headings + ragged paragraph endings;
+   the double-ring focus style reads on both the warm-paper and charcoal
+   sections; scroll-margin keeps the fixed nav from covering anchor targets. */
+.measured-upgraded :is(h1, h2, h3) {
+  text-wrap: balance;
+}
+.measured-upgraded p {
+  text-wrap: pretty;
+}
+.measured-upgraded section[id] {
+  scroll-margin-top: 88px;
+}
+.measured-upgraded
+  :where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    summary,
+    [role="switch"]
+  ):focus-visible {
+  outline: 2px solid transparent; /* forced-colors mode fallback */
+  box-shadow:
+    0 0 0 2px var(--paper),
+    0 0 0 4px var(--ink);
+}
+/* Tactile press feedback. `scale` is its own property in Tailwind v4, so this
+   composes cleanly with hover translate utilities instead of fighting them. */
+.measured-upgraded .press {
+  transition:
+    scale 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    translate 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.measured-upgraded .press:active {
+  scale: 0.975;
+}
+@media (prefers-reduced-motion: reduce) {
+  .measured-upgraded .press:active {
+    scale: 1;
+  }
+}
+
 .measured-upgraded .sec-pad {
   padding-block: clamp(5rem, 9vw, 9.5rem);
 }
