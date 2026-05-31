@@ -186,10 +186,10 @@ const ICONS: Record<string, ReactNode> = {
 };
 
 const TRUST: [string, string][] = [
-  ["shield", "AHPRA-registered"],
-  ["clock", "24–48h doctor review"],
-  ["pulse", "CGM-guided therapy"],
-  ["video", "Telehealth Australia-wide"],
+  ["shield", "Specialist doctors only"],
+  ["clock", "Consult within 24 hours"],
+  ["pulse", "Advanced diagnostic options"],
+  ["video", "Australia-wide"],
 ];
 
 export function Hero() {
@@ -203,7 +203,7 @@ export function Hero() {
   const copyY = useTransform(scrollYProgress, [0, 1], [0, 150]);
   const copyOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
-  const lines = ["Lose weight with", "precision medicine."];
+  const lines = ["The Complete", "Weight Loss Method"];
 
   return (
     <section
@@ -281,9 +281,9 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.59, ease: EASE }}
             >
-              The only program that reads your bloods, glucose and body
-              composition together, so you lose fat, not muscle. Specialist-led,
-              medication delivered Australia-wide.
+              The complete approach, designed to give you real, sustainable
+              results. We find out all the unknowns, then optimise, refine,
+              support and deliver a weight solution that lasts.
             </motion.p>
             <motion.div
               className="mt-9 flex gap-3.5 flex-wrap"
