@@ -6,6 +6,7 @@ import { Nav, Hero } from "./hero";
 import {
   TrustBar,
   Difference,
+  Capabilities,
   ProgressTracked,
   Journey,
   EverythingIncluded,
@@ -37,8 +38,9 @@ export function UpgradedLanding() {
           <Hero />
           <TrustBar />
           <Difference />
-          <ProgressTracked />
+          <Capabilities />
           <Journey />
+          <ProgressTracked />
           <EverythingIncluded />
           <Program />
           <Medications />

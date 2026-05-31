@@ -12,35 +12,34 @@ export function Difference() {
   return (
     <section className="sec-pad-xl bg-paper relative overflow-hidden">
       <div className="max-w-[820px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] text-center">
-        <Reveal>
-          <Eyebrow center>The CLOVE difference</Eyebrow>
-        </Reveal>
         <Reveal
-          delay={80}
           as="h2"
-          className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4"
+          className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02]"
         >
-          Weight and metabolism are <span className="text-lav">biology</span>,
-          not willpower.
+          The CLOVE difference
         </Reveal>
         <Reveal
           delay={140}
           className="mt-7 space-y-5 text-[1.05rem] leading-[1.7] text-ink2"
         >
           <p>
-            For most people, appetite, energy and weight are driven by biology,
-            and for years the only options were generic diet advice or long
-            waits to see someone who could actually help.
+            Most weight loss programs skip the steps that make results last. You
+            get a prescription, you're out the door, and that's rarely enough.
+            CLOVE was built to do the opposite.
           </p>
           <p>
-            CLOVE was built to change that. We pair advanced biomarker testing
-            and continuous glucose data with a registered clinician who
-            prescribes evidence-based therapy where appropriate, and a plan that
-            adapts as your body responds.
+            Your Specialist Doctor starts with an in-depth consult to understand
+            what's really driving your weight, then arranges the right
+            investigations, including a DEXA scan and CGM where appropriate.
+            From there, you'll start effective, evidence-based treatment,
+            supported by a complete food diary and an exercise plan tailored to
+            your goals. Monthly reviews keep you progressing, and once your
+            results are stable, we'll guide you through a clear plan to step
+            down treatment.
           </p>
-          <p className="text-ink font-bold text-[1.3rem] leading-snug">
-            Three readings. <span className="text-lav">One clinician.</span> A
-            plan that proves it.
+          <p>
+            And we don't disappear once you're set up. For as long as you're a
+            member of CLOVE, your team is here whenever you need us.
           </p>
         </Reveal>
       </div>
@@ -625,6 +624,69 @@ function Ico({ d }: { d: string }) {
   );
 }
 
+/* ---------------- Capabilities (horizontal scroll) ---------------- */
+const CAPABILITIES: [string, string, string][] = [
+  [
+    "chart",
+    "DEXA body composition",
+    "Lean mass vs fat mass on a scan, so you can see you're losing fat, not muscle.",
+  ],
+  [
+    "cross",
+    "Blood & biomarker panels",
+    "Comprehensive bloods reveal what's really driving your weight and energy.",
+  ],
+  [
+    "refresh",
+    "Continuous glucose (CGM)",
+    "See how your body responds to food in real time.",
+  ],
+  [
+    "leaf",
+    "Complete food diary",
+    "Your nutrition tracked and supported, not guessed.",
+  ],
+  [
+    "heart",
+    "Proven exercise methods",
+    "A tailored plan that protects muscle and builds momentum.",
+  ],
+];
+
+export function Capabilities() {
+  return (
+    <section className="sec-pad bg-paper">
+      <div className="max-w-[1200px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
+        <Reveal className="max-w-[680px] mb-[clamp(2.5rem,4vw,3.4rem)]">
+          <Eyebrow>Inside your program</Eyebrow>
+          <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
+            What your program <span className="text-lav">looks at</span>.
+          </h2>
+        </Reveal>
+        <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-webkit-overflow-scrolling:touch]">
+          {CAPABILITIES.map(([icon, title, desc], i) => (
+            <Reveal
+              key={title}
+              delay={(i % 3) * 80}
+              className="min-w-[300px] max-w-[320px] shrink-0 snap-start rounded-2xl border border-line bg-white p-6 shadow-soft"
+            >
+              <span className="w-12 h-12 rounded-2xl border border-line2 bg-paper grid place-items-center text-lav">
+                <Ico d={II[icon]} />
+              </span>
+              <h3 className="font-disp text-[1.15rem] font-bold tracking-tight mt-4">
+                {title}
+              </h3>
+              <p className="mt-1.5 text-[0.94rem] text-ink2 leading-relaxed">
+                {desc}
+              </p>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function EverythingIncluded() {
   const items: [string, string, string, string, string][] = [
     [
@@ -636,7 +698,7 @@ export function EverythingIncluded() {
     ],
     [
       "cross",
-      "Clinician oversight",
+      "Only specialist doctors review your care.",
       "Eligibility · dose management · monitoring",
       "An AHPRA-registered doctor oversees your care from start to finish, confirming eligibility, managing your dose, and monitoring how you respond.",
       "/landing/calm-woman.jpg",
@@ -656,22 +718,8 @@ export function EverythingIncluded() {
       "/landing/dexa.jpg",
     ],
     [
-      "chat",
-      "24/7 messaging support",
-      "Ask anytime · real people · discreet",
-      "Message your care team whenever you need, a question about your medication, a side effect, or your plan. Real support, whenever it matters.",
-      "/landing/runner.jpg",
-    ],
-    [
-      "heart",
-      "Metabolic health benefits",
-      "Blood sugar · blood pressure · cholesterol",
-      "Beyond the scales, treatment can support healthier blood sugar, blood pressure and cholesterol, your doctor keeps an eye on the whole picture.",
-      "/landing/green-smoothie.jpg",
-    ],
-    [
       "truck",
-      "Discreet home delivery",
+      "Convenient home delivery.",
       "Plain packaging · Australia-wide · refills",
       "Your medication arrives in discreet, plain packaging, shipped Australia-wide, with refills coordinated so you never miss a dose.",
       "/landing/lake-calm.jpg",
@@ -683,13 +731,6 @@ export function EverythingIncluded() {
       "Reaching your goal is the start, not the finish. Your doctor helps you transition to a maintenance plan designed to keep results for good.",
       "/landing/hiker-trail.jpg",
     ],
-    [
-      "tag",
-      "Transparent pricing",
-      "One monthly price · medication included",
-      "One simple monthly price covers your consultations, clinical support and medication. No surprise fees, pause or cancel anytime.",
-      "/landing/mtn-light.jpg",
-    ],
   ];
   return (
     <section
@@ -700,7 +741,7 @@ export function EverythingIncluded() {
         <Reveal className="max-w-[720px] mb-[clamp(2.5rem,5vw,4rem)]">
           <Eyebrow>Everything included</Eyebrow>
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
-            More than a prescription.
+            Every step covered.
           </h2>
           <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
             Every plan combines medication, clinical oversight and real human
@@ -818,53 +859,50 @@ export function Medications() {
 
 /* ---------------- Pricing ---------------- */
 export function Pricing() {
-  const includes = [
-    "Prescription medication included, if appropriate",
-    "Online clinician assessment & ongoing reviews",
-    "Advanced biomarker, CGM & DEXA baseline testing",
-    "Personalised dose plan, adjusted over time",
-    "1:1 care coaching & nutrition support",
-    "24/7 messaging with your care team",
-    "Discreet home delivery & refills, Australia-wide",
-  ];
   const notes = [
-    "Prescription medication is only issued after an online consultation with a registered clinician.",
-    "Prescription treatment is not suitable for everyone, and eligibility is determined by your clinician.",
-    "Not covered by Medicare or private health insurance, a fully private telehealth service.",
-    "Results vary and depend on your starting point, treatment plan and lifestyle changes.",
+    "Medication, if prescribed, is dispensed and delivered by a partner pharmacy.",
+    "No lock-in contracts. Pause or cancel your plan anytime.",
+    "Prices in AUD. GST included where applicable.",
+    "Discovery call is obligation-free and covered by CLOVE.",
   ];
   return (
     <section id="pricing" className="sec-pad-xl bg-paper border-t border-line">
-      <div className="max-w-[1100px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
-        <Reveal className="max-w-[680px] mb-[clamp(2.5rem,4vw,3.4rem)]">
-          <Eyebrow>Pricing</Eyebrow>
+      <div className="max-w-[980px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
+        <Reveal className="text-center max-w-[680px] mx-auto mb-[clamp(2.5rem,5vw,3.5rem)]">
+          <Eyebrow center>Pricing</Eyebrow>
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
-            One simple plan.{" "}
-            <span className="text-lav">Medication included</span>.
+            No hidden costs. <span className="text-lav">Real care.</span>
           </h2>
-          <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            No tiers to decode, no surprise add-ons. One monthly price covers
-            your clinician, your support team and any prescription medication,
-            shipped to your door.
+          <p className="mt-5 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
+            Everything is priced upfront and clearly displayed: CGM, DEXA,
+            biomarker testing, clinician consults and medication. You'll always
+            know exactly what you're paying for. And the care itself is never
+            rushed. Need more time in your consult? Want extra support along the
+            way? That's part of your care, not an added cost.
           </p>
         </Reveal>
-        <Reveal className="grid lg:grid-cols-[1.4fr_1fr] gap-0 rounded-xl2 overflow-hidden border border-line shadow-card">
-          <div className="p-[clamp(1.8rem,3vw,2.6rem)] bg-white">
-            <div className="font-disp text-[1.5rem] font-extrabold tracking-tight">
+        <Reveal
+          delay={120}
+          className="grid md:grid-cols-[1.4fr_1fr] rounded-xl2 overflow-hidden border border-line shadow-card bg-white"
+        >
+          <div className="p-[clamp(1.8rem,3vw,2.6rem)]">
+            <div className="font-disp text-[1.4rem] font-bold">
               CLOVE Weight Care Plan
             </div>
-            <div className="text-[0.92rem] text-muted mt-1">
+            <div className="text-muted mt-1 text-[0.95rem]">
               Clinician-led · medication included · 100% online · cancel anytime
             </div>
-            <div className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-muted mt-7 mb-3">
-              What's included
-            </div>
-            <ul className="space-y-2.5">
-              {includes.map((t) => (
-                <li
-                  key={t}
-                  className="grid grid-cols-[auto_1fr] gap-2.5 text-[0.96rem]"
-                >
+            <ul className="mt-6 space-y-3">
+              {[
+                "Prescription medication included, if appropriate",
+                "Online clinician assessment & ongoing reviews",
+                "Advanced biomarker, CGM & DEXA baseline testing",
+                "Personalised dose plan, adjusted over time",
+                "1:1 care coaching & nutrition support",
+                "Complete food diary & tailored exercise plan",
+                "Convenient home delivery & refills, Australia-wide",
+              ].map((t) => (
+                <li key={t} className="flex items-start gap-2.5 text-[0.98rem]">
                   <span className="text-muted font-bold">✦</span>
                   <span>{t}</span>
                 </li>
@@ -1010,20 +1048,17 @@ export function VideoBand() {
           as="p"
           className="font-disp font-extrabold tracking-[-.03em] leading-[1.08] text-[clamp(1.9rem,4vw,3.2rem)] mt-7 text-balance"
         >
-          Most weight programs guess with one number. CLOVE measures three: your
-          bloods, your glucose and your body composition, so you{" "}
-          <span className="text-white">
-            lose fat, keep muscle, and prove it
-          </span>
-          .
+          Most weight loss programs focus on the number on the scale. CLOVE
+          looks deeper, your health, habits, medication options and long-term
+          progress, so your plan is built around you, not just your weight.
         </Reveal>
         <Reveal
           delay={170}
           as="p"
           className="mt-7 mx-auto max-w-[40rem] text-[clamp(1rem,1.15vw,1.18rem)] leading-[1.6] text-white/70"
         >
-          No fads. No crash diets. A genuine medical approach to metabolic
-          health, built around the life you actually live.
+          No fads. No crash diets. Just doctor-led weight loss care designed for
+          real life.
         </Reveal>
       </div>
     </section>
@@ -1031,6 +1066,14 @@ export function VideoBand() {
 }
 
 /* ---------------- Quotes ---------------- */
+const AFFILIATIONS = [
+  "Monash University",
+  "University of Sydney",
+  "RACGP",
+  "University of Melbourne",
+  "AHPRA",
+];
+
 export function Quotes() {
   const qs: [string, string, string, string][] = [
     [
@@ -1051,6 +1094,24 @@ export function Quotes() {
       "Aisha W.",
       "Perth · Protocol patient",
     ],
+    [
+      "The food diary and exercise plan made the medication actually stick. Down 11kg and it finally feels sustainable.",
+      "JR",
+      "James R.",
+      "Sydney",
+    ],
+    [
+      "Everything was clear from day one, no surprises on cost, just steady, measurable progress every month.",
+      "PN",
+      "Priya N.",
+      "Adelaide",
+    ],
+    [
+      "Having a specialist a message away made the whole thing feel safe. I never felt rushed or like just another number.",
+      "TH",
+      "Tom H.",
+      "Gold Coast",
+    ],
   ];
   return (
     <section className="sec-pad bg-paper">
@@ -1061,11 +1122,15 @@ export function Quotes() {
             Care people <span className="text-lav">actually feel</span>.
           </h2>
         </Reveal>
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-webkit-overflow-scrolling:touch]">
           {qs.map(([quote, ini, name, role], i) => (
-            <Tilt key={i} max={6} className="h-full">
+            <Tilt
+              key={i}
+              max={6}
+              className="min-w-[300px] max-w-[340px] shrink-0 snap-start"
+            >
               <Reveal
-                delay={i * 90}
+                delay={(i % 3) * 90}
                 className="h-full bg-white rounded-[20px] p-8 flex flex-col shadow-soft hover:shadow-card hover:-translate-y-1 transition-all duration-300"
               >
                 <div className="inline-flex items-center gap-1.5 text-[0.64rem] font-semibold tracking-[0.16em] uppercase text-lav mb-5">
@@ -1088,6 +1153,26 @@ export function Quotes() {
             </Tilt>
           ))}
         </div>
+
+        {/* Affiliations marquee */}
+        <Reveal className="mt-[clamp(3rem,6vw,4.5rem)]">
+          <div className="text-center text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-muted">
+            Aligned with
+          </div>
+          <div className="marquee-mask mt-5 overflow-hidden">
+            <div className="mq-row">
+              {[...AFFILIATIONS, ...AFFILIATIONS].map((name, i) => (
+                <span
+                  key={i}
+                  aria-hidden={i >= AFFILIATIONS.length}
+                  className="whitespace-nowrap px-6 text-[0.95rem] font-semibold uppercase tracking-[0.12em] text-muted/70 grayscale"
+                >
+                  {name}
+                </span>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -1097,28 +1182,24 @@ export function Quotes() {
 export function FAQ() {
   const items: [string, string][] = [
     [
-      "How is CLOVE different from standard care?",
-      "Every plan is built around the individual, your CGM response, your labs, and the foods you actually enjoy. Your doctor knows your history before you arrive, builds and adjusts every plan personally, and there are no rushed, ten-minute visits or rotating providers.",
-    ],
-    [
       "Do I need a referral to start?",
-      "No referral needed. You start by completing a short online assessment, and a registered clinician reviews it to decide whether treatment is appropriate. If anything needs further input, your clinician will guide you on next steps.",
-    ],
-    [
-      "What medications does CLOVE prescribe?",
-      "Medication is not always needed, and it is never the whole plan. When it is the right fit, our specialists prescribe evidence-based options such as Wegovy, Ozempic, Saxenda, Rybelsus and Mounjaro. The right choice, dose and titration are decided by your clinician based on your assessment, history and how you respond.",
-    ],
-    [
-      "What does the program involve?",
-      "The Health Optimisation Protocol is a six-month, specialist-led program: continuous monitoring with therapy titrated to your response where appropriate, personalised meal planning built by your clinician, and baseline and completion DEXA scans for objective before-and-after data.",
+      "No referral is needed. You can begin with an online assessment, and our specialist doctors take it from there.",
     ],
     [
       "Do I have to come into the office?",
-      "Your first visit is in person, so we can run your labs, fit your CGM, and complete your baseline DEXA. After that, regular check-ins happen over telehealth, or in person whenever you'd prefer.",
+      "No. Everything can be done digitally, from your assessment to your consults and ongoing reviews, with close monitoring and regular follow-up. In-person options are available if you prefer.",
     ],
     [
-      "How closely will my doctor follow my progress?",
-      "Closely. You stay in regular contact with your doctor throughout the six months, and as your CGM and labs change, your therapy and meals are adjusted, not left until the next quarterly visit.",
+      "Is CLOVE covered by health insurance?",
+      "Some elements, such as certain consults or investigations, may be eligible for Medicare or private health rebates depending on your circumstances and provider. Your clinician can talk you through what may apply to you.",
+    ],
+    [
+      "Is medical weight loss safe?",
+      "Medical weight loss can be safe when it is properly assessed, prescribed and monitored by qualified clinicians. The treatments and clinical approaches used in the CLOVE program have established safety profiles and are commonly used in weight management care. However, all treatments carry potential risks and side effects, which is why medical supervision is important. Your CLOVE practitioner will review your health history, assess whether treatment is appropriate for you, discuss the benefits and risks, and provide ongoing monitoring throughout your program.",
+    ],
+    [
+      "What medications does CLOVE prescribe?",
+      "All treatments offered through the CLOVE program are approved for use in Australia and are commonly used by Australian healthcare professionals to support weight management. Australian regulations limit the information we can provide about prescription treatment options before a consultation. Your practitioner will talk you through the available options, answer your questions, and ensure you have the information you need before making any decisions about medical treatment.",
     ],
   ];
   return (
@@ -1181,7 +1262,7 @@ export function CTA() {
           as="h2"
           className="font-disp font-extrabold tracking-[-.03em] text-white text-[clamp(2.4rem,5vw,4rem)] leading-[1.02] mt-4"
         >
-          Begin your strongest decade.
+          The wait is over. The best way to lose weight is here.
         </Reveal>
         <Reveal
           delay={140}
