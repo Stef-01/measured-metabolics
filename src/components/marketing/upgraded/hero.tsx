@@ -257,16 +257,7 @@ export function Hero() {
       >
         <div className="w-full max-w-[1320px] mx-auto px-[clamp(1.25rem,4vw,2.75rem)] pt-[clamp(8.5rem,18vh,10.5rem)] pb-8">
           <div className="max-w-[47rem]">
-            <motion.span
-              className="inline-flex items-center gap-2.5 text-[0.74rem] font-semibold tracking-[0.2em] uppercase text-white/70"
-              initial={{ opacity: 0, y: 22 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.5, ease: EASE }}
-            >
-              <span className="w-2 h-2 rounded-full grad-dot"></span>
-              Precision metabolic medicine
-            </motion.span>
-            <h1 className="font-disp tracking-[-.04em] leading-[.98] text-[clamp(2.2rem,4.8vw,4rem)] mt-6">
+            <h1 className="font-disp tracking-[-.04em] leading-[.98] text-[clamp(2.2rem,4.8vw,4rem)]">
               {lines.map((line, i) => (
                 <span key={line} className="hero-mask">
                   <motion.span
