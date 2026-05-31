@@ -33,22 +33,22 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Measured Metabolics: Patient + Dietitian + GP, one care loop",
+  title: "CLOVE: Patient + Dietitian + GP, one care loop",
   description:
     "A metabolic chronic care platform. Patients capture meals and symptoms; dietitians review and plan; GPs see a 30-second sidebar, all on one Supabase data model.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://measured.vercel.app",
   ),
   openGraph: {
-    title: "Measured Metabolics",
+    title: "CLOVE",
     description:
       "Metabolic chronic care made easier to deliver, easier to follow, and easier to coordinate.",
-    siteName: "Measured",
+    siteName: "CLOVE",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Measured Metabolics",
+    title: "CLOVE",
     description:
       "Metabolic chronic care made easier to deliver, easier to follow, and easier to coordinate.",
   },

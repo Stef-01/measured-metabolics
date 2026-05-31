@@ -143,7 +143,7 @@ function LandingNav() {
           href="#top"
           className="font-disp text-[1.35rem] font-extrabold tracking-tight text-white leading-none"
         >
-          Measured<span className="text-white/60 font-bold">Rx</span>
+          CLOVE<span className="text-white/60 font-bold">Rx</span>
         </a>
         <nav className="hidden lg:flex items-center gap-7">
           {links.map(([label, href]) => (
@@ -248,7 +248,7 @@ function Difference() {
     <section className="sec-pad bg-white relative overflow-hidden">
       <div className="max-w-[820px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] text-center">
         <Reveal>
-          <Eyebrow center>The Measured difference</Eyebrow>
+          <Eyebrow center>The CLOVE difference</Eyebrow>
         </Reveal>
         <Reveal delay={80}>
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4 text-brand-ink">
@@ -264,7 +264,7 @@ function Difference() {
               waits to see someone who could actually help.
             </p>
             <p>
-              Measured was built to change that. We pair pathology-validated
+              CLOVE was built to change that. We pair pathology-validated
               testing and continuous glucose data with a registered clinician
               who prescribes evidence-based therapy where appropriate — and a
               plan that adapts as your body responds.
@@ -779,7 +779,7 @@ function Journey() {
         <Reveal className="max-w-[760px] mb-[clamp(2.5rem,4vw,3.5rem)]">
           <Eyebrow>How it works</Eyebrow>
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4 text-brand-ink">
-            Your journey with <span className="text-lav">Measured</span>.
+            Your journey with <span className="text-lav">CLOVE</span>.
           </h2>
         </Reveal>
         <div className="grid lg:grid-cols-[0.82fr_1.18fr] gap-[clamp(2rem,4vw,3.5rem)] items-start">
@@ -1099,7 +1099,7 @@ function Pricing() {
         <Reveal className="grid lg:grid-cols-[1.4fr_1fr] rounded-[22px] overflow-hidden border border-brand-line shadow-lav-card">
           <div className="p-[clamp(1.8rem,3vw,2.6rem)] bg-white">
             <div className="font-disp text-[1.5rem] font-extrabold tracking-tight text-brand-ink">
-              Measured Weight Care Plan
+              CLOVE Weight Care Plan
             </div>
             <div className="text-[0.92rem] text-brand-muted mt-1">
               Clinician-led · medication included · 100% online · cancel anytime
@@ -1231,7 +1231,7 @@ function Quotes() {
       "Metabolic program",
     ],
     [
-      "Measured advice and a genuinely personable approach. The most practical way I've ever worked with a doctor.",
+      "CLOVE advice and a genuinely personable approach. The most practical way I've ever worked with a doctor.",
       "DE",
       "D. E.",
       "Patient since 2024",
@@ -1292,7 +1292,7 @@ function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const items: [string, string][] = [
     [
-      "How is Measured different from standard care?",
+      "How is CLOVE different from standard care?",
       "Every plan is built around the individual — your CGM response, your labs, and the foods you actually enjoy. Your doctor knows your history before you arrive, builds and adjusts every plan personally, and there are no rushed, ten-minute visits or rotating providers.",
     ],
     [
@@ -1300,7 +1300,7 @@ function FAQ() {
       "No referral needed. You start by completing a short online assessment, and a registered clinician reviews it to decide whether treatment is appropriate. If anything needs further input, your clinician will guide you on next steps.",
     ],
     [
-      "What medications does Measured prescribe?",
+      "What medications does CLOVE prescribe?",
       "Where clinically appropriate, our clinicians prescribe evidence-based GLP-1 medications such as semaglutide and tirzepatide. The right option, dose and titration are decided by your doctor based on your assessment, history and how you respond.",
     ],
     [
@@ -1325,7 +1325,7 @@ function FAQ() {
             Questions, answered.
           </h2>
           <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-brand-ink2 leading-[1.55]">
-            Still unsure if Measured is right for you? The assessment is the
+            Still unsure if CLOVE is right for you? The assessment is the
             easiest way to find out.
           </p>
           <div className="mt-7">
@@ -1461,7 +1461,7 @@ function LandingFooter() {
         >
           <div>
             <span className="font-disp text-[1.35rem] font-extrabold text-white">
-              Measured<span className="text-lav2">Rx</span>
+              CLOVE<span className="text-lav2">Rx</span>
             </span>
             <p
               className="mt-4 text-[0.92rem] leading-relaxed"
@@ -1518,7 +1518,7 @@ function LandingFooter() {
           className="flex items-center justify-between gap-4 flex-wrap pt-7 text-[0.8rem]"
           style={{ color: "rgba(255,255,255,.45)" }}
         >
-          <span>© 2026 Measured · Precision Metabolic Medicine</span>
+          <span>© 2026 CLOVE · Precision Metabolic Medicine</span>
           <div className="flex gap-5">
             <a href="#" className="hover:text-white transition-colors">
               Privacy
@@ -1675,7 +1675,7 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
         {/* Left rail */}
         <div className="hidden md:flex flex-col grad-lav text-white p-8">
           <span className="font-disp text-[1.3rem] font-extrabold">
-            Measured<span className="text-white/60">Rx</span>
+            CLOVE<span className="text-white/60">Rx</span>
           </span>
           <div className="mt-10 flex flex-col gap-1">
             {FUNNEL_STEPS.map((s, i) => (
@@ -1703,8 +1703,8 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
             ))}
           </div>
           <p className="mt-auto text-[0.78rem] text-white/70 leading-relaxed">
-            15 minutes with a Measured clinician. No commitment required. All
-            times AEST.
+            15 minutes with a CLOVE clinician. No commitment required. All times
+            AEST.
           </p>
         </div>
 
@@ -1733,7 +1733,7 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
                   Let&apos;s start with your name.
                 </h2>
                 <p className="text-brand-ink2 mb-7">
-                  Your dedicated Measured clinician will use this to personalise
+                  Your dedicated CLOVE clinician will use this to personalise
                   your plan.
                 </p>
                 <div className="grid grid-cols-2 gap-3">
@@ -1953,8 +1953,8 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
                   Book your discovery call.
                 </h2>
                 <p className="text-brand-ink2 mb-6">
-                  15 minutes with a Measured clinician. No commitment required.
-                  All times AEST.
+                  15 minutes with a CLOVE clinician. No commitment required. All
+                  times AEST.
                 </p>
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
@@ -2045,7 +2045,7 @@ function Funnel({ open, onClose }: { open: boolean; onClose: () => void }) {
                   onClick={onClose}
                   className="mt-8 inline-flex items-center gap-2 bg-lav text-white font-semibold rounded-full px-7 py-3 hover:-translate-y-0.5 transition-transform"
                 >
-                  Back to Measured
+                  Back to CLOVE
                 </button>
               </div>
             )}

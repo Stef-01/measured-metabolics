@@ -102,7 +102,7 @@ export function Landing() {
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--measured-green)] text-white shadow-[var(--shadow-card)]">
             <Stethoscope size={16} strokeWidth={2.2} aria-hidden="true" />
           </div>
-          <div className="font-serif text-[19px] tracking-tight">Measured</div>
+          <div className="font-serif text-[19px] tracking-tight">CLOVE</div>
         </div>
         <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--measured-subtext)]">
           Demo
@@ -228,7 +228,7 @@ export function Landing() {
       {/* ── Footer ── */}
       <footer className="border-t border-[var(--measured-border-soft)]">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6 text-[12px] text-[var(--measured-subtext)]">
-          <span>Measured Metabolics · Demo</span>
+          <span>CLOVE · Demo</span>
           <Link
             href="/"
             className="transition-colors hover:text-[var(--measured-dark)]"

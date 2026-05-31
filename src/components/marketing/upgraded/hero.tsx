@@ -1,8 +1,14 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useState, type ReactNode } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+} from "framer-motion";
 import { openFunnel } from "./shared";
+import { Magnetic } from "./motion-fx";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
@@ -16,14 +22,26 @@ const NAV_LINKS: [string, string][] = [
 ];
 
 export function Nav() {
+  // Apple-style condensing nav: the pill narrows and tightens once the page
+  // scrolls past the hero fold.
+  const [scrolled, setScrolled] = useState(false);
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 32));
   return (
     <header className="fixed top-3.5 inset-x-0 z-[100] flex justify-center px-3.5">
-      <div className="w-full max-w-[1320px] flex items-center justify-between gap-6 rounded-full px-2.5 py-2 pl-6 glass-dark">
+      <div
+        className={
+          "glass-dark flex w-full items-center justify-between gap-6 rounded-full pl-6 transition-all duration-[450ms] ease-[cubic-bezier(0.16,1,0.3,1)] " +
+          (scrolled
+            ? "max-w-[1080px] px-2 py-1.5"
+            : "max-w-[1320px] px-2.5 py-2")
+        }
+      >
         <a
           href="#top"
           className="font-disp text-[1.35rem] font-extrabold tracking-tight text-white leading-none"
         >
-          Measured
+          CLOVE
         </a>
         <nav className="hidden lg:flex items-center gap-7">
           {NAV_LINKS.map(([label, href]) => (
@@ -37,13 +55,15 @@ export function Nav() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={openFunnel}
-            className="press bg-white text-ink px-6 py-2.5 rounded-full text-[0.88rem] font-bold hover:-translate-y-0.5 whitespace-nowrap"
-          >
-            Get Started
-          </button>
+          <Magnetic strength={0.4}>
+            <button
+              type="button"
+              onClick={openFunnel}
+              className="press bg-white text-ink px-6 py-2.5 rounded-full text-[0.88rem] font-bold hover:-translate-y-0.5 whitespace-nowrap"
+            >
+              Get Started
+            </button>
+          </Magnetic>
         </div>
       </div>
     </header>
@@ -227,16 +247,18 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.68, ease: EASE }}
             >
-              <button
-                type="button"
-                onClick={openFunnel}
-                className="group press inline-flex items-center gap-2 rounded-full bg-white text-ink font-bold text-base px-7 py-[1.05rem] shadow-[0_18px_40px_-18px_rgba(0,0,0,.8)] hover:-translate-y-0.5"
-              >
-                Take the assessment{" "}
-                <span className="transition-transform duration-300 group-hover:translate-x-1">
-                  →
-                </span>
-              </button>
+              <Magnetic strength={0.45}>
+                <button
+                  type="button"
+                  onClick={openFunnel}
+                  className="group press inline-flex items-center gap-2 rounded-full bg-white text-ink font-bold text-base px-7 py-[1.05rem] shadow-[0_18px_40px_-18px_rgba(0,0,0,.8)] hover:-translate-y-0.5"
+                >
+                  Take the assessment{" "}
+                  <span className="transition-transform duration-300 group-hover:translate-x-1">
+                    →
+                  </span>
+                </button>
+              </Magnetic>
               <a
                 href="#journey"
                 className="press inline-flex items-center gap-2 rounded-full font-semibold text-base px-7 py-[1.05rem] text-white bg-white/10 border border-white/25 backdrop-blur-md hover:bg-white/[0.18]"

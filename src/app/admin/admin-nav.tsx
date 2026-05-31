@@ -41,7 +41,7 @@ export function AdminNav() {
         </div>
         <div>
           <div className="font-serif text-[16px] leading-tight tracking-tight text-[var(--measured-dark)]">
-            Measured
+            CLOVE
           </div>
           <div className="text-[10px] uppercase tracking-wider text-[var(--measured-subtext)]">
             Admin

@@ -5,6 +5,7 @@
 
 import { useState, type ReactNode } from "react";
 import { Reveal, Eyebrow, Btn, openFunnel } from "./shared";
+import { Tilt, Parallax, CountUp, Magnetic } from "./motion-fx";
 
 /* ---------------- The Difference ---------------- */
 export function Difference() {
@@ -12,7 +13,7 @@ export function Difference() {
     <section className="sec-pad-xl bg-paper relative overflow-hidden">
       <div className="max-w-[820px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] text-center">
         <Reveal>
-          <Eyebrow center>The Measured difference</Eyebrow>
+          <Eyebrow center>The CLOVE difference</Eyebrow>
         </Reveal>
         <Reveal
           delay={80}
@@ -32,8 +33,8 @@ export function Difference() {
             waits to see someone who could actually help.
           </p>
           <p>
-            Measured was built to change that. We pair advanced biomarker
-            testing and continuous glucose data with a registered clinician who
+            CLOVE was built to change that. We pair advanced biomarker testing
+            and continuous glucose data with a registered clinician who
             prescribes evidence-based therapy where appropriate, and a plan that
             adapts as your body responds.
           </p>
@@ -381,7 +382,9 @@ function JourneyPanel({ idx }: { idx: number }) {
             </div>
             <div className="flex justify-between items-baseline mt-1.5 font-bold">
               <span>Total</span>
-              <b className="text-[1.3rem]">97</b>
+              <b className="text-[1.3rem]">
+                <CountUp to={97} />
+              </b>
             </div>
           </div>
         </PhotoCard>
@@ -424,7 +427,8 @@ function JourneyPanel({ idx }: { idx: number }) {
             Tracked across repeat panels
           </div>
           <div className="font-disp font-extrabold text-[2.6rem] mt-auto leading-none">
-            −2.5<span className="text-base font-semibold opacity-80"> yrs</span>
+            <CountUp to={-2.5} decimals={1} />
+            <span className="text-base font-semibold opacity-80"> yrs</span>
           </div>
         </div>
         <PlainCard
@@ -449,7 +453,9 @@ function JourneyPanel({ idx }: { idx: number }) {
           </div>
           <div className="flex justify-between items-baseline mt-2 font-bold">
             <span>Total</span>
-            <b className="text-[1.3rem]">97</b>
+            <b className="text-[1.3rem]">
+              <CountUp to={97} />
+            </b>
           </div>
         </div>
       </PhotoCard>
@@ -459,7 +465,7 @@ function JourneyPanel({ idx }: { idx: number }) {
           2.5 years younger than your calendar age
         </div>
         <div className="font-disp font-extrabold text-[3.2rem] mt-auto leading-none tracking-tight">
-          27.5
+          <CountUp to={27.5} decimals={1} />
         </div>
         <div className="h-[5px] rounded-full bg-white/30 relative mt-3">
           <span className="absolute left-[46%] top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white shadow"></span>
@@ -519,7 +525,7 @@ export function Journey() {
         <Reveal className="max-w-[760px] mb-[clamp(2.5rem,4vw,3.5rem)]">
           <Eyebrow>How it works</Eyebrow>
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
-            Your journey with <span className="text-lav">Measured</span>.
+            Your journey with <span className="text-lav">CLOVE</span>.
           </h2>
         </Reveal>
         <div className="grid lg:grid-cols-[0.82fr_1.18fr] gap-[clamp(2rem,4vw,3.5rem)] items-start">
@@ -642,12 +648,14 @@ export function Program() {
                 </p>
               </div>
               <div className="hidden md:block overflow-hidden min-h-[170px]">
-                <img
-                  src={img}
-                  alt=""
-                  loading="lazy"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                />
+                <Parallax amount={28} className="h-full w-full">
+                  <img
+                    src={img}
+                    alt=""
+                    loading="lazy"
+                    className="h-full w-full scale-[1.32] object-cover"
+                  />
+                </Parallax>
               </div>
             </Reveal>
           ))}
@@ -851,7 +859,7 @@ export function Pricing() {
         <Reveal className="grid lg:grid-cols-[1.4fr_1fr] gap-0 rounded-xl2 overflow-hidden border border-line shadow-card">
           <div className="p-[clamp(1.8rem,3vw,2.6rem)] bg-white">
             <div className="font-disp text-[1.5rem] font-extrabold tracking-tight">
-              Measured Weight Care Plan
+              CLOVE Weight Care Plan
             </div>
             <div className="text-[0.92rem] text-muted mt-1">
               Clinician-led · medication included · 100% online · cancel anytime
@@ -921,7 +929,7 @@ export function Doctor() {
               src="/landing/cgm-anatomy.jpg"
               alt="How a continuous glucose monitor reads your metabolism in real time"
               loading="lazy"
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
             />
           </div>
         </Reveal>
@@ -994,7 +1002,7 @@ export function VideoBand() {
       <div className="relative z-[2] max-w-[960px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] py-[clamp(6rem,13vw,11rem)] text-center text-white">
         <Reveal>
           <span className="inline-flex items-center gap-2.5 text-[0.72rem] font-semibold tracking-[0.2em] uppercase text-white/65">
-            <span className="w-2 h-2 rounded-full grad-dot"></span>Why Measured
+            <span className="w-2 h-2 rounded-full grad-dot"></span>Why CLOVE
             exists
           </span>
         </Reveal>
@@ -1053,28 +1061,29 @@ export function Quotes() {
         </Reveal>
         <div className="grid md:grid-cols-3 gap-5">
           {qs.map(([quote, ini, name, role], i) => (
-            <Reveal
-              key={i}
-              delay={i * 90}
-              className="bg-white rounded-[20px] p-8 flex flex-col shadow-soft hover:shadow-card hover:-translate-y-1 transition-all duration-300"
-            >
-              <div className="inline-flex items-center gap-1.5 text-[0.64rem] font-semibold tracking-[0.16em] uppercase text-lav mb-5">
-                <span className="w-1.5 h-1.5 rounded-full grad-dot"></span>
-                Verified patient
-              </div>
-              <blockquote className="text-[1.08rem] leading-relaxed text-ink font-medium flex-1 tracking-[-.01em]">
-                {quote}
-              </blockquote>
-              <figcaption className="mt-6 flex items-center gap-3">
-                <span className="w-9 h-9 rounded-full grad-dot text-white font-bold text-[0.76rem] grid place-items-center">
-                  {ini}
-                </span>
-                <span>
-                  <b className="block text-[0.88rem] font-bold">{name}</b>
-                  <span className="text-[0.8rem] text-muted">{role}</span>
-                </span>
-              </figcaption>
-            </Reveal>
+            <Tilt key={i} max={6} className="h-full">
+              <Reveal
+                delay={i * 90}
+                className="h-full bg-white rounded-[20px] p-8 flex flex-col shadow-soft hover:shadow-card hover:-translate-y-1 transition-all duration-300"
+              >
+                <div className="inline-flex items-center gap-1.5 text-[0.64rem] font-semibold tracking-[0.16em] uppercase text-lav mb-5">
+                  <span className="w-1.5 h-1.5 rounded-full grad-dot"></span>
+                  Verified patient
+                </div>
+                <blockquote className="text-[1.08rem] leading-relaxed text-ink font-medium flex-1 tracking-[-.01em]">
+                  {quote}
+                </blockquote>
+                <figcaption className="mt-6 flex items-center gap-3">
+                  <span className="w-9 h-9 rounded-full grad-dot text-white font-bold text-[0.76rem] grid place-items-center">
+                    {ini}
+                  </span>
+                  <span>
+                    <b className="block text-[0.88rem] font-bold">{name}</b>
+                    <span className="text-[0.8rem] text-muted">{role}</span>
+                  </span>
+                </figcaption>
+              </Reveal>
+            </Tilt>
           ))}
         </div>
       </div>
@@ -1086,7 +1095,7 @@ export function Quotes() {
 export function FAQ() {
   const items: [string, string][] = [
     [
-      "How is Measured different from standard care?",
+      "How is CLOVE different from standard care?",
       "Every plan is built around the individual, your CGM response, your labs, and the foods you actually enjoy. Your doctor knows your history before you arrive, builds and adjusts every plan personally, and there are no rushed, ten-minute visits or rotating providers.",
     ],
     [
@@ -1094,7 +1103,7 @@ export function FAQ() {
       "No referral needed. You start by completing a short online assessment, and a registered clinician reviews it to decide whether treatment is appropriate. If anything needs further input, your clinician will guide you on next steps.",
     ],
     [
-      "What medications does Measured prescribe?",
+      "What medications does CLOVE prescribe?",
       "Where clinically appropriate, our clinicians prescribe evidence-based GLP-1 medications such as semaglutide and tirzepatide. The right option, dose and titration are decided by your doctor based on your assessment, history and how you respond.",
     ],
     [
@@ -1119,7 +1128,7 @@ export function FAQ() {
             Questions, answered.
           </h2>
           <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            Still unsure if Measured is right for you? The assessment is the
+            Still unsure if CLOVE is right for you? The assessment is the
             easiest way to find out.
           </p>
           <div className="mt-7">
@@ -1185,13 +1194,15 @@ export function CTA() {
           delay={200}
           className="mt-9 flex gap-3.5 justify-center flex-wrap"
         >
-          <button
-            type="button"
-            onClick={openFunnel}
-            className="press inline-flex items-center gap-2 bg-white text-ink font-semibold rounded-full text-base px-7 py-[1.05rem] hover:-translate-y-0.5"
-          >
-            Take the assessment <span>→</span>
-          </button>
+          <Magnetic strength={0.45}>
+            <button
+              type="button"
+              onClick={openFunnel}
+              className="press inline-flex items-center gap-2 bg-white text-ink font-semibold rounded-full text-base px-7 py-[1.05rem] hover:-translate-y-0.5"
+            >
+              Take the assessment <span>→</span>
+            </button>
+          </Magnetic>
           <Btn lg variant="dark" href="#journey">
             See how it works
           </Btn>
@@ -1228,7 +1239,7 @@ export function Footer() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-[1.7fr_1fr_1fr_1.1fr] gap-8 pb-10 border-b border-white/10">
           <div>
             <span className="font-disp text-[1.35rem] font-extrabold text-white">
-              Measured
+              CLOVE
             </span>
             <p className="mt-4 text-[0.92rem] leading-relaxed max-w-[32ch]">
               Precision metabolic medicine. Advanced biomarker testing,
@@ -1266,7 +1277,7 @@ export function Footer() {
           </div>
         </div>
         <div className="flex items-center justify-between gap-4 flex-wrap pt-7 text-[0.8rem] text-white/45">
-          <span>© 2026 Measured · Precision Metabolic Medicine</span>
+          <span>© 2026 CLOVE · Precision Metabolic Medicine</span>
           <div className="flex gap-5">
             <a href="#" className="hover:text-white">
               Privacy

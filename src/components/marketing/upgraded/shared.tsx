@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
 
 /** Opens the assessment funnel modal (listened for by <Funnel/>). */
@@ -37,11 +37,20 @@ export function Reveal({
   className?: string;
 }) {
   const MotionTag = MOTION_TAGS[as] as React.ElementType;
+  const reduce = useReducedMotion();
+  // Refined blur-rise entrance (2026 kinetic reveal); collapses to a plain
+  // fade when the visitor prefers reduced motion.
+  const hidden = reduce
+    ? { opacity: 0 }
+    : { opacity: 0, y: 24, filter: "blur(8px)" };
+  const shown = reduce
+    ? { opacity: 1 }
+    : { opacity: 1, y: 0, filter: "blur(0px)" };
   return (
     <MotionTag
       className={className}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={hidden}
+      whileInView={shown}
       viewport={{ once: true, margin: "0px 0px -7% 0px" }}
       transition={{ duration: 0.8, delay: delay / 1000, ease: EASE }}
     >

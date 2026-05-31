@@ -64,7 +64,7 @@ export function GpSidebarShell({ patient, children }: Props) {
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-[var(--measured-subtext)]">
             <Stethoscope size={14} strokeWidth={2.2} aria-hidden="true" />
-            Measured · GP sidebar
+            CLOVE · GP sidebar
           </div>
           <PersonaSwitcher active="gp" variant="compact" />
         </div>

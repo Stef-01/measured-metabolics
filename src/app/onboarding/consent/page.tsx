@@ -27,7 +27,7 @@ const TIERS: Array<{
     title: "Care provision",
     required: true,
     blurb:
-      "Required to use Measured. Lets your dietitian and GP see your meals, CGM, symptoms, plan, and reports so they can provide care.",
+      "Required to use CLOVE. Lets your dietitian and GP see your meals, CGM, symptoms, plan, and reports so they can provide care.",
   },
   {
     kind: "rwe",

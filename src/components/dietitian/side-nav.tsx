@@ -58,7 +58,7 @@ export function DietitianSideNav() {
           <Stethoscope size={18} strokeWidth={2.2} aria-hidden="true" />
         </div>
         <div className="font-serif text-[18px] tracking-tight text-[var(--measured-dark)]">
-          Measured
+          CLOVE
         </div>
       </motion.div>
 

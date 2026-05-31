@@ -41,7 +41,7 @@ export function NavBar({ bookingUrl }: { bookingUrl: string }) {
       >
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <div className="font-serif text-[20px] tracking-tight text-[var(--measured-dark)]">
-            Measured
+            CLOVE
           </div>
           <nav className="hidden items-center gap-7 md:flex">
             <a

@@ -1,6 +1,7 @@
 "use client";
 
 import { MotionConfig } from "framer-motion";
+import { ScrollProgress } from "./motion-fx";
 import { Nav, Hero } from "./hero";
 import {
   Difference,
@@ -29,6 +30,7 @@ export function UpgradedLanding() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="measured-upgraded bg-paper text-ink font-sans antialiased">
+        <ScrollProgress />
         <Nav />
         <main>
           <Hero />

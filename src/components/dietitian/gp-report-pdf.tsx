@@ -116,7 +116,7 @@ function ReportDocument({ d }: { d: GpReportData }) {
       <Page size="A4" style={s.page}>
         <View style={s.header}>
           <View>
-            <Text style={s.brand}>Measured Metabolics</Text>
+            <Text style={s.brand}>CLOVE</Text>
             <Text style={s.brandSub}>Dietitian progress report</Text>
           </View>
           <View style={s.dateBlock}>
@@ -207,7 +207,7 @@ function ReportDocument({ d }: { d: GpReportData }) {
 
         <View style={s.footer} fixed>
           <Text style={s.footerText}>
-            Prepared by {d.dietitianName} · Measured Metabolics
+            Prepared by {d.dietitianName} · CLOVE
           </Text>
           <Text style={s.footerText}>Addressed to {d.gpName}</Text>
         </View>

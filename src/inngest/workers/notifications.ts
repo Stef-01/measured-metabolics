@@ -65,7 +65,7 @@ export const notifications = inngest.createFunction(
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "Measured Metabolics <noreply@measured.health>",
+            from: "CLOVE <noreply@measured.health>",
             to: [recipient_email],
             subject,
             text: body,

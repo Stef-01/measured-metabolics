@@ -7,5 +7,5 @@ import { Inngest } from "inngest";
  */
 export const inngest = new Inngest({
   id: "measured",
-  name: "Measured Metabolics",
+  name: "CLOVE",
 });

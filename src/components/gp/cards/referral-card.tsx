@@ -45,7 +45,7 @@ export function GpReferralCard({ patient }: { patient: Patient }) {
     });
   };
 
-  const sms = `Hi ${patient.firstName}, Dr Lee has referred you to dietitian Maya Singh, APD via Measured. Reply YES to consent: measured.app/c/abc123`;
+  const sms = `Hi ${patient.firstName}, Dr Lee has referred you to dietitian Maya Singh, APD via CLOVE. Reply YES to consent: measured.app/c/abc123`;
 
   return (
     <div className="space-y-3">

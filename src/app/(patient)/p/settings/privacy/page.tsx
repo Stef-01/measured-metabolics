@@ -47,8 +47,8 @@ export default function PatientPrivacyPage() {
         </section>
 
         <p className="mt-8 text-[12px] leading-relaxed text-[var(--measured-subtext)]">
-          Care provision consent is required to use Measured. To revoke it,
-          contact your care team.
+          Care provision consent is required to use CLOVE. To revoke it, contact
+          your care team.
         </p>
       </div>
     </>

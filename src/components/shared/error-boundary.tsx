@@ -27,7 +27,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: { componentStack: string }) {
-    console.error("[Measured ErrorBoundary]", error, info.componentStack);
+    console.error("[CLOVE ErrorBoundary]", error, info.componentStack);
   }
 
   handleReset = () => {
@@ -61,7 +61,7 @@ export class ErrorBoundary extends Component<Props, State> {
               Something went wrong
             </p>
             <p className="text-[12px] text-[var(--measured-subtext)] max-w-[240px]">
-              Measured hit an unexpected error. Tap below to try again.
+              CLOVE hit an unexpected error. Tap below to try again.
             </p>
           </div>
           <button

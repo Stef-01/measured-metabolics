@@ -12,7 +12,7 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("[Measured] Global error:", error);
+    console.error("[CLOVE] Global error:", error);
   }, [error]);
 
   const router = useRouter();

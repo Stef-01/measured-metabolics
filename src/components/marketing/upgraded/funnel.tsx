@@ -295,7 +295,7 @@ export function Funnel() {
         {/* Left rail */}
         <div className="hidden md:flex flex-col grad-lav text-white p-8">
           <span className="font-disp text-[1.3rem] font-extrabold">
-            Measured<span className="text-white/60">Rx</span>
+            CLOVE<span className="text-white/60">Rx</span>
           </span>
           <div className="mt-10 flex flex-col gap-1">
             {FUNNEL_STEPS.map((s, i) => (
@@ -321,8 +321,8 @@ export function Funnel() {
             ))}
           </div>
           <p className="mt-auto text-[0.78rem] text-white/70 leading-relaxed">
-            15 minutes with a Measured clinician. No commitment required. All
-            times AEST.
+            15 minutes with a CLOVE clinician. No commitment required. All times
+            AEST.
           </p>
         </div>
 
@@ -378,7 +378,7 @@ export function Funnel() {
                   onClick={() => setOpen(false)}
                   className="mt-8 inline-flex items-center gap-2 bg-lav text-white font-semibold rounded-full px-7 py-3 hover:-translate-y-0.5 transition-transform"
                 >
-                  Back to Measured
+                  Back to CLOVE
                 </button>
               </div>
             ) : confirmed ? (
@@ -409,7 +409,7 @@ export function Funnel() {
                   onClick={() => setOpen(false)}
                   className="mt-8 inline-flex items-center gap-2 bg-lav text-white font-semibold rounded-full px-7 py-3 hover:-translate-y-0.5 transition-transform"
                 >
-                  Back to Measured
+                  Back to CLOVE
                 </button>
               </div>
             ) : (
@@ -423,7 +423,7 @@ export function Funnel() {
                       Let's start with your name.
                     </h2>
                     <p className="text-ink2 mb-7">
-                      Your dedicated Measured clinician will use this to
+                      Your dedicated CLOVE clinician will use this to
                       personalise your plan.
                     </p>
                     <div className="grid grid-cols-2 gap-3">
@@ -652,8 +652,8 @@ export function Funnel() {
                       Book your discovery call.
                     </h2>
                     <p className="text-ink2 mb-6">
-                      15 minutes with a Measured clinician. No commitment
-                      required. All times AEST.
+                      15 minutes with a CLOVE clinician. No commitment required.
+                      All times AEST.
                     </p>
                     <div className="grid sm:grid-cols-2 gap-5">
                       <div>

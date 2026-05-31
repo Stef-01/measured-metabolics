@@ -9,7 +9,7 @@ import type { SymptomSeverity } from "@/types/db";
  * patient app shows, *plus* a side-effect path that alerts the dietitian and
  * writes an audit row. The copy is intentionally non-emergency:
  *   "If this is a medical emergency, call 000."
- * Measured never claims real-time emergency capacity.
+ * CLOVE never claims real-time emergency capacity.
  */
 
 export interface EscalationContext {
@@ -29,7 +29,7 @@ export interface EscalationOutcome {
 const SAFE_COPY =
   "Thank you for telling us. Your dietitian has been alerted and will reach out within one business day. " +
   "If this is a medical emergency, call 000 or go to your nearest emergency department. " +
-  "Measured does not provide real-time emergency care.";
+  "CLOVE does not provide real-time emergency care.";
 
 interface Rule {
   id: string;

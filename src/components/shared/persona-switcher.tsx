@@ -58,7 +58,7 @@ const PERSONAS: Persona[] = [
   {
     id: "admin",
     name: "Org Admin",
-    role: "Measured operations",
+    role: "CLOVE operations",
     href: "/admin/kpi",
     initials: "OA",
     accent: "var(--measured-evaluate)",

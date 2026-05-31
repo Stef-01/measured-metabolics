@@ -54,7 +54,7 @@ export default function SignInPage() {
             <Mail size={18} strokeWidth={2.2} aria-hidden="true" />
           </div>
           <span className="font-serif text-[18px] tracking-tight text-[var(--measured-dark)]">
-            Measured
+            CLOVE
           </span>
         </div>
         <h1 className="font-serif text-[28px] leading-tight tracking-tight text-[var(--measured-dark)]">
