@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Cormorant_Garamond } from "next/font/google";
+import { Inter, Cormorant_Garamond, Hanken_Grotesk } from "next/font/google";
 import { DeviceFrame } from "@/components/shared/device-frame";
 import { ErrorBoundary } from "@/components/shared/error-boundary";
 import { ToastHost } from "@/components/shared/toast-host";
@@ -9,6 +9,13 @@ import "./globals.css";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+});
+
+const hanken = Hanken_Grotesk({
+  variable: "--font-hanken",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 const cormorant = Cormorant_Garamond({
@@ -55,7 +62,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${cormorant.variable} antialiased font-sans min-h-dvh`}
+        className={`${inter.variable} ${hanken.variable} ${cormorant.variable} antialiased font-sans min-h-dvh`}
       >
         <ErrorBoundary>
           <QueryProvider>
