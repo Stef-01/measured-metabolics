@@ -8,6 +8,8 @@ const PUBLIC_PATHS = [
   "/sign-in",
   "/auth/callback",
   "/api/discovery-booking",
+  "/privacy",
+  "/terms",
   "/_next",
   "/favicon.ico",
 ];

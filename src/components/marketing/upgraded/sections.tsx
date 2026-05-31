@@ -754,11 +754,18 @@ export function EverythingIncluded() {
 /* ---------------- Medications ---------------- */
 export function Medications() {
   const meds: [string, string, string][] = [
-    ["Wegovy", "semaglutide", "GLP-1"],
-    ["Ozempic", "semaglutide", "GLP-1"],
-    ["Saxenda", "liraglutide", "GLP-1"],
-    ["Rybelsus", "semaglutide, oral", "GLP-1"],
-    ["Mounjaro", "tirzepatide", "GIP + GLP-1"],
+    [
+      "GLP-1 therapy",
+      "Reduces appetite and slows gastric emptying",
+      "Weekly or daily",
+    ],
+    ["GIP + GLP-1 therapy", "Dual-incretin action, the newest class", "Weekly"],
+    ["Oral options", "For those who would rather not inject", "Daily tablet"],
+    [
+      "Supportive adjuncts",
+      "Other prescription support where suitable",
+      "As indicated",
+    ],
   ];
   return (
     <section id="medication" className="sec-pad bg-bgsoft">
@@ -777,30 +784,31 @@ export function Medications() {
           </p>
         </Reveal>
         <Reveal delay={120} className="mt-[clamp(2rem,4vw,3rem)]">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {meds.map(([brand, generic, cls]) => (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {meds.map(([name, desc, freq]) => (
               <div
-                key={brand}
+                key={name}
                 className="rounded-2xl border border-line bg-white p-5 shadow-soft transition-shadow duration-300 hover:shadow-card"
               >
                 <div className="font-disp text-[1.15rem] font-bold tracking-tight">
-                  {brand}
+                  {name}
                 </div>
-                <div className="mt-0.5 text-[0.82rem] text-muted">
-                  {generic}
+                <div className="mt-1 text-[0.85rem] leading-snug text-muted">
+                  {desc}
                 </div>
                 <span className="mt-3 inline-block rounded-full bg-lavtint px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-wider text-lav">
-                  {cls}
+                  {freq}
                 </span>
               </div>
             ))}
           </div>
           <p className="mt-6 max-w-[72ch] text-[0.8rem] leading-relaxed text-muted">
-            <span className="text-muted">✦</span> The right option, if any, plus
-            dose and titration are always decided by your clinician.
-            Prescription medicines carry risks and side effects, which your
-            specialist will discuss with you. Availability depends on assessment
-            and supply.
+            <span className="text-muted">✦</span> We don&apos;t advertise
+            specific prescription medicines here, the right option is a clinical
+            decision made with your doctor, not a product you pick off a page.
+            Where a medicine is appropriate, your clinician decides the option,
+            dose and titration, and discusses the risks and side effects with
+            you.
           </p>
         </Reveal>
       </div>
@@ -890,6 +898,11 @@ export function Pricing() {
             >
               See if you qualify
             </button>
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[0.74rem] font-medium text-white/80">
+              <span>✓ No lock-in</span>
+              <span>✓ Cancel anytime</span>
+              <span>✓ No hidden fees</span>
+            </div>
           </div>
         </Reveal>
         <div className="grid sm:grid-cols-2 gap-x-8 gap-y-2 mt-8 max-w-[920px]">
@@ -1204,9 +1217,9 @@ export function Footer() {
     [
       "Practice",
       [
-        ["What we test", "#test"],
         ["How it works", "#journey"],
         ["Programs", "#program"],
+        ["Medication", "#medication"],
         ["About us", "#doctor"],
       ],
     ],
@@ -1260,20 +1273,67 @@ export function Footer() {
             <p className="text-[0.9rem] text-white/60">
               In-person by appointment
             </p>
+            <a
+              href="mailto:care@clove.au"
+              className="mt-2.5 block text-[0.9rem] text-white/60 transition-colors hover:text-white"
+            >
+              care@clove.au
+            </a>
           </div>
         </div>
-        <div className="flex items-center justify-between gap-4 flex-wrap pt-7 text-[0.8rem] text-white/45">
-          <span>© 2026 CLOVE · Precision Metabolic Medicine</span>
-          <div className="flex gap-5">
-            <a href="#" className="hover:text-white">
-              Privacy
-            </a>
-            <a href="#" className="hover:text-white">
-              Terms
-            </a>
+        <div className="space-y-4 pt-7">
+          {/* TODO: replace ABN, registered address and legal entity name with CLOVE's real details before launch. */}
+          <p className="max-w-[88ch] text-[0.72rem] leading-relaxed text-white/40">
+            CLOVE is an Australian telehealth service. Consultations are
+            provided by AHPRA-registered practitioners, and any treatment,
+            including prescription medicine, is provided only where clinically
+            appropriate and is not suitable for everyone. Weight-loss results
+            vary and depend on your starting point, treatment and lifestyle
+            changes. This site is general information, not medical advice.
+          </p>
+          <div className="flex flex-wrap items-center justify-between gap-4 text-[0.8rem] text-white/45">
+            <span>© 2026 CLOVE · ABN 00 000 000 000</span>
+            <div className="flex gap-5">
+              <a href="/privacy" className="hover:text-white">
+                Privacy
+              </a>
+              <a href="/terms" className="hover:text-white">
+                Terms
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </footer>
+  );
+}
+
+/* ---------------- Trust bar ---------------- */
+const TRUST_ITEMS: [string, string][] = [
+  [II.shield, "AHPRA-registered clinicians"],
+  [
+    "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM14 2v6h6M9 13h6M9 17h4",
+    "Australian eScript prescribing",
+  ],
+  ["M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4", "Private & encrypted"],
+  [II.truck, "Medication delivered Australia-wide"],
+];
+export function TrustBar() {
+  return (
+    <section className="border-y border-line bg-paper">
+      <div className="mx-auto grid max-w-[1200px] grid-cols-2 gap-x-6 gap-y-4 px-[clamp(1.25rem,4vw,2.5rem)] py-5 sm:flex sm:items-center sm:justify-between">
+        {TRUST_ITEMS.map(([d, label]) => (
+          <div
+            key={label}
+            className="flex items-center gap-2.5 text-[0.85rem] font-medium text-ink2"
+          >
+            <span className="shrink-0 text-lav [&_svg]:h-[18px] [&_svg]:w-[18px]">
+              <Ico d={d} />
+            </span>
+            {label}
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
