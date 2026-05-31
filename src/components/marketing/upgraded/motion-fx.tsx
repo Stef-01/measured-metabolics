@@ -11,6 +11,7 @@
 
 import {
   motion,
+  AnimatePresence,
   useScroll,
   useSpring,
   useTransform,
@@ -26,6 +27,7 @@ import {
   type ReactNode,
   type PointerEvent,
 } from "react";
+import { openFunnel } from "./shared";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
@@ -66,7 +68,8 @@ export function Magnetic({
   const sy = useSpring(y, { stiffness: 220, damping: 18, mass: 0.6 });
 
   function onMove(e: PointerEvent<HTMLDivElement>) {
-    if (reduce || !ref.current) return;
+    // Mouse only: skip on touch/pen so taps and scrolls stay rock-steady.
+    if (reduce || e.pointerType !== "mouse" || !ref.current) return;
     const r = ref.current.getBoundingClientRect();
     x.set((e.clientX - (r.left + r.width / 2)) * strength);
     y.set((e.clientY - (r.top + r.height / 2)) * strength);
@@ -107,7 +110,8 @@ export function Tilt({
   const sry = useSpring(ry, { stiffness: 200, damping: 20, mass: 0.5 });
 
   function onMove(e: PointerEvent<HTMLDivElement>) {
-    if (reduce || !ref.current) return;
+    // Mouse only: 3D tilt would fight touch scrolling on phones.
+    if (reduce || e.pointerType !== "mouse" || !ref.current) return;
     const r = ref.current.getBoundingClientRect();
     const px = (e.clientX - r.left) / r.width - 0.5;
     const py = (e.clientY - r.top) / r.height - 0.5;
@@ -202,5 +206,39 @@ export function CountUp({
       {shown.toFixed(decimals)}
       {suffix}
     </span>
+  );
+}
+
+/* ── MobileCtaBar — thumb-reachable persistent CTA on phones ──
+   Slides up once the hero scrolls away; clears the home-indicator safe area
+   and hides at lg where the inline CTAs are always in view. */
+export function MobileCtaBar() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > 560);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          className="fixed inset-x-0 bottom-0 z-[120] border-t border-line2 bg-paper/85 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),14px)] backdrop-blur-md lg:hidden"
+          initial={{ y: "120%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "120%" }}
+          transition={{ type: "spring", stiffness: 360, damping: 32 }}
+        >
+          <button
+            type="button"
+            onClick={openFunnel}
+            className="press flex w-full items-center justify-center gap-2 rounded-full bg-lav py-4 text-[0.95rem] font-bold text-white"
+          >
+            Take the assessment <span aria-hidden>→</span>
+          </button>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

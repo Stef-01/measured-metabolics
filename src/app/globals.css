@@ -654,6 +654,10 @@ a,
 .measured-upgraded section[id] {
   scroll-margin-top: 88px;
 }
+/* Crisp taps on touch (no 300ms delay, no accidental double-tap zoom). */
+.measured-upgraded :where(a, button, summary, [role="switch"]) {
+  touch-action: manipulation;
+}
 .measured-upgraded
   :where(
     a,

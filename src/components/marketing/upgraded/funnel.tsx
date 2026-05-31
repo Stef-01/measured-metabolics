@@ -169,7 +169,7 @@ function BackBtn({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="text-[0.9rem] font-semibold text-muted hover:text-ink transition-colors"
+      className="-ml-2 inline-flex min-h-[44px] items-center px-2 text-[0.9rem] font-semibold text-muted transition-colors hover:text-ink"
     >
       ← Back
     </button>

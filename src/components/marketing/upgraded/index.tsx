@@ -1,7 +1,7 @@
 "use client";
 
 import { MotionConfig } from "framer-motion";
-import { ScrollProgress } from "./motion-fx";
+import { ScrollProgress, MobileCtaBar } from "./motion-fx";
 import { Nav, Hero } from "./hero";
 import {
   Difference,
@@ -49,6 +49,7 @@ export function UpgradedLanding() {
         </main>
         <Footer />
         <Funnel />
+        <MobileCtaBar />
       </div>
     </MotionConfig>
   );

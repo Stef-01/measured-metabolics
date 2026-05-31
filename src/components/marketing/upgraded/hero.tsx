@@ -3,10 +3,12 @@
 import { useRef, useState, type ReactNode } from "react";
 import {
   motion,
+  AnimatePresence,
   useScroll,
   useTransform,
   useMotionValueEvent,
 } from "framer-motion";
+import { Menu, X } from "lucide-react";
 import { openFunnel } from "./shared";
 import { Magnetic } from "./motion-fx";
 
@@ -25,13 +27,17 @@ export function Nav() {
   // Apple-style condensing nav: the pill narrows and tightens once the page
   // scrolls past the hero fold.
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const { scrollY } = useScroll();
-  useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 32));
+  useMotionValueEvent(scrollY, "change", (v) => {
+    setScrolled(v > 32);
+    if (v > 80) setMenuOpen(false); // tuck the mobile menu away on scroll
+  });
   return (
-    <header className="fixed top-3.5 inset-x-0 z-[100] flex justify-center px-3.5">
+    <header className="fixed top-3.5 inset-x-0 z-[100] flex flex-col items-center px-3.5">
       <div
         className={
-          "glass-dark flex w-full items-center justify-between gap-6 rounded-full pl-6 transition-all duration-[450ms] ease-[cubic-bezier(0.16,1,0.3,1)] " +
+          "glass-dark flex w-full items-center justify-between gap-4 rounded-full pl-6 transition-all duration-[450ms] ease-[cubic-bezier(0.16,1,0.3,1)] " +
           (scrolled
             ? "max-w-[1080px] px-2 py-1.5"
             : "max-w-[1320px] px-2.5 py-2")
@@ -54,18 +60,65 @@ export function Nav() {
             </a>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <Magnetic strength={0.4}>
             <button
               type="button"
               onClick={openFunnel}
-              className="press bg-white text-ink px-6 py-2.5 rounded-full text-[0.88rem] font-bold hover:-translate-y-0.5 whitespace-nowrap"
+              className="press rounded-full bg-white px-5 py-2.5 text-[0.88rem] font-bold whitespace-nowrap text-ink hover:-translate-y-0.5 sm:px-6"
             >
               Get Started
             </button>
           </Magnetic>
+          <button
+            type="button"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+            className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-white hover:bg-white/10 lg:hidden"
+          >
+            {menuOpen ? (
+              <X size={22} strokeWidth={2} aria-hidden="true" />
+            ) : (
+              <Menu size={22} strokeWidth={2} aria-hidden="true" />
+            )}
+          </button>
         </div>
       </div>
+
+      {/* Mobile / tablet menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.nav
+            className="mt-2 w-full max-w-[1320px] overflow-hidden rounded-3xl border border-white/12 bg-[rgba(16,16,13,0.95)] p-2 shadow-[0_24px_50px_-26px_rgba(0,0,0,0.85)] backdrop-blur-xl lg:hidden"
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.28, ease: EASE }}
+          >
+            {NAV_LINKS.map(([label, href]) => (
+              <a
+                key={label}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className="block rounded-2xl px-4 py-3 text-[0.98rem] font-medium text-white/85 transition-colors hover:bg-white/10"
+              >
+                {label}
+              </a>
+            ))}
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                openFunnel();
+              }}
+              className="press mt-1 w-full rounded-2xl bg-white py-3 text-[0.95rem] font-bold text-ink"
+            >
+              Take the assessment
+            </button>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
