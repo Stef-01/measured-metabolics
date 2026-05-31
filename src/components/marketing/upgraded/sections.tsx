@@ -882,8 +882,10 @@ export function Pricing() {
           <div className="p-[clamp(1.8rem,3vw,2.6rem)] grad-lav text-white flex flex-col justify-center">
             <div className="text-center">
               <div className="font-disp font-extrabold leading-none flex items-start justify-center gap-1">
-                <span className="text-2xl mt-2">$</span>
-                <span className="text-[4rem] tracking-tight">299</span>
+                <span className="mt-2 text-2xl">$</span>
+                <span className="text-[4rem] tracking-tight tabular-nums">
+                  299
+                </span>
               </div>
               <div className="font-semibold mt-1">per month</div>
               <div className="text-[0.8rem] text-white/80 mt-1">

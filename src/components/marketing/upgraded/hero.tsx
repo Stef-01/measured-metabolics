@@ -203,7 +203,7 @@ export function Hero() {
   const copyY = useTransform(scrollYProgress, [0, 1], [0, 150]);
   const copyOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
-  const lines = ["The most precise way to", "optimise your metabolism."];
+  const lines = ["Lose weight with", "precision medicine."];
 
   return (
     <section
@@ -264,7 +264,7 @@ export function Hero() {
               transition={{ duration: 0.7, delay: 0.5, ease: EASE }}
             >
               <span className="w-2 h-2 rounded-full grad-dot"></span>
-              Detect · Prevent · Optimise
+              Precision metabolic medicine
             </motion.span>
             <h1 className="font-disp tracking-[-.04em] leading-[.98] text-[clamp(2.2rem,4.8vw,4rem)] mt-6">
               {lines.map((line, i) => (
@@ -290,9 +290,9 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.59, ease: EASE }}
             >
-              Advanced biomarker testing, CGM-guided GLP-1 therapy, and a doctor
-              who turns your data into a plan built around the life you actually
-              live. Medication delivered, Australia-wide.
+              A specialist-clinician-led program that turns your bloods, CGM and
+              DEXA into a plan built around your biology. Medication delivered,
+              Australia-wide.
             </motion.p>
             <motion.div
               className="mt-9 flex gap-3.5 flex-wrap"
@@ -306,7 +306,7 @@ export function Hero() {
                   onClick={openFunnel}
                   className="group press inline-flex items-center gap-2 rounded-full bg-white text-ink font-bold text-base px-7 py-[1.05rem] shadow-[0_18px_40px_-18px_rgba(0,0,0,.8)] hover:-translate-y-0.5"
                 >
-                  Take the assessment{" "}
+                  Check your eligibility{" "}
                   <span className="transition-transform duration-300 group-hover:translate-x-1">
                     →
                   </span>

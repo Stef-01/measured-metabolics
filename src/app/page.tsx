@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { UpgradedLanding } from "@/components/marketing/upgraded";
 
 export const metadata: Metadata = {
-  title: "CLOVE: Precision Metabolic Medicine, Australia",
+  title: "CLOVE: Specialist-Led Precision Weight Loss, Australia",
   description:
-    "Advanced biomarker testing, CGM-guided GLP-1 therapy, and a doctor who turns your data into a plan built around the life you actually live. Medication delivered, Australia-wide.",
+    "A specialist-clinician-led precision weight loss program. Bloods, CGM and DEXA turned into a plan built around your biology, with GLP-1 medication delivered Australia-wide.",
 };
 
 export default function HomePage() {

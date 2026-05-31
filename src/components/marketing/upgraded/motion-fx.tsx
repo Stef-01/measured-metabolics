@@ -201,7 +201,10 @@ export function CountUp({
   // Reduced-motion shows the final figure outright (no synchronous setState).
   const shown = reduce ? to : val;
   return (
-    <span ref={ref} className={className}>
+    <span
+      ref={ref}
+      className={"tabular-nums" + (className ? " " + className : "")}
+    >
       {prefix}
       {shown.toFixed(decimals)}
       {suffix}
