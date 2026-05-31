@@ -5,11 +5,11 @@ import { ScrollProgress, MobileCtaBar } from "./motion-fx";
 import { Nav, Hero } from "./hero";
 import {
   Difference,
-  WhatWeTest,
   ProgressTracked,
   Journey,
   EverythingIncluded,
   Program,
+  Medications,
   Pricing,
   Doctor,
   VideoBand,
@@ -35,11 +35,11 @@ export function UpgradedLanding() {
         <main>
           <Hero />
           <Difference />
-          <WhatWeTest />
           <ProgressTracked />
           <Journey />
           <EverythingIncluded />
           <Program />
+          <Medications />
           <Pricing />
           <Doctor />
           <VideoBand />

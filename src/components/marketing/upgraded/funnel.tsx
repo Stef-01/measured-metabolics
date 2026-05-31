@@ -280,20 +280,20 @@ export function Funnel() {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[200] flex items-stretch md:items-center justify-center p-0 md:p-6"
+      className="fixed inset-0 z-[200] flex items-end justify-center p-0 md:items-center md:p-6"
       style={{ background: "rgba(14,14,20,.55)", backdropFilter: "blur(6px)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
     >
       <motion.div
-        className="bg-white w-full max-w-[940px] md:rounded-[24px] overflow-hidden grid md:grid-cols-[300px_1fr] max-h-screen md:max-h-[88vh]"
+        className="grid max-h-[93dvh] w-full max-w-[940px] grid-rows-1 overflow-hidden rounded-t-[26px] bg-white md:max-h-[88dvh] md:grid-cols-[300px_1fr] md:rounded-[24px]"
         initial={{ opacity: 0, scale: 0.965, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 260, damping: 26, mass: 0.9 }}
       >
         {/* Left rail */}
-        <div className="hidden md:flex flex-col grad-lav text-white p-8">
+        <div className="grad-lav hidden min-h-0 flex-col overflow-y-auto p-8 text-white md:flex">
           <span className="font-disp text-[1.3rem] font-extrabold">
             CLOVE<span className="text-white/60">Rx</span>
           </span>
@@ -327,15 +327,22 @@ export function Funnel() {
         </div>
 
         {/* Right content */}
-        <div className="relative flex flex-col overflow-y-auto">
+        <div className="relative flex min-h-0 flex-col overflow-hidden">
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-bgsoft hover:bg-line2 grid place-items-center text-ink text-lg z-10"
+            aria-label="Close"
+            className="absolute top-4 right-4 z-10 grid h-10 w-10 place-items-center rounded-full bg-bgsoft text-lg text-ink hover:bg-line2"
           >
             ✕
           </button>
-          <div className="h-1 bg-line2">
+          <div className="flex shrink-0 justify-center pt-2.5 md:hidden">
+            <span
+              className="h-1.5 w-10 rounded-full bg-line2"
+              aria-hidden="true"
+            ></span>
+          </div>
+          <div className="h-1 shrink-0 bg-line2">
             <div
               className="h-full grad-lav transition-all duration-500"
               style={{
@@ -343,7 +350,7 @@ export function Funnel() {
               }}
             ></div>
           </div>
-          <div className="p-[clamp(1.75rem,4vw,2.75rem)] flex-1">
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-[clamp(1.5rem,4vw,2.75rem)] pt-[clamp(1.75rem,4vw,2.75rem)] pb-[max(2.25rem,env(safe-area-inset-bottom))]">
             {/* Soft decline, never references the metabolic threshold */}
             {declined ? (
               <div className="text-center py-6">
@@ -660,7 +667,7 @@ export function Funnel() {
                         <div className="text-[0.72rem] font-semibold uppercase tracking-widest text-muted mb-2">
                           Select a date
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
                           {dates.map((dt, i) => (
                             <button
                               key={i}

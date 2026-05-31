@@ -48,80 +48,6 @@ export function Difference() {
   );
 }
 
-/* ---------------- What We Test ---------------- */
-export function WhatWeTest() {
-  const rows: [string, string][][] = [
-    [
-      ["g4", "Hormonal Health"],
-      ["g2", "Metabolic Health"],
-      ["g3", "Cardiovascular Health"],
-      ["g5", "Glucose & Insulin"],
-      ["g8", "Body Composition"],
-    ],
-    [
-      ["g3", "Blood & Immune Health"],
-      ["g4", "Thyroid Function"],
-      ["g7", "Nutrient Status"],
-      ["g9", "Liver & Kidney"],
-      ["g10", "Inflammation"],
-    ],
-    [
-      ["g10", "Inflammation & Recovery"],
-      ["g3", "Muscle Function"],
-      ["g5", "Genetic & Tolerance"],
-      ["g6", "Gut & Microbiome"],
-      ["g1", "Sleep & Stress"],
-    ],
-  ];
-  const Chip = ({ g, label }: { g: string; label: string }) => (
-    <span className="inline-flex items-center gap-2.5 bg-white border border-line rounded-full pl-2 pr-5 py-2 shadow-soft whitespace-nowrap">
-      <span className={"w-8 h-8 rounded-full shrink-0 " + g}></span>
-      <b className="font-semibold text-[0.98rem]">{label}</b>
-    </span>
-  );
-  return (
-    <section
-      id="test"
-      className="sec-pad bg-paper overflow-hidden border-t border-line"
-    >
-      <div className="max-w-[900px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] text-center mb-[clamp(2.5rem,5vw,3.8rem)]">
-        <Reveal>
-          <Eyebrow center>What we test</Eyebrow>
-        </Reveal>
-        <Reveal
-          delay={80}
-          as="h2"
-          className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4"
-        >
-          Advanced biomarker testing across{" "}
-          <span className="text-lav">every key system</span>.
-        </Reveal>
-        <Reveal
-          delay={140}
-          as="p"
-          className="mt-5 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2"
-        >
-          Not a one-off snapshot, a personalised baseline, tracked over time.
-        </Reveal>
-      </div>
-      <div className="marquee-mask flex flex-col gap-4">
-        {rows.map((row, i) => (
-          <div key={i} className={"mq-row r" + (i + 1)}>
-            {row.concat(row).map(([g, label], j) => (
-              <Chip key={j} g={g} label={label} />
-            ))}
-          </div>
-        ))}
-      </div>
-      <p className="text-center mt-[clamp(2.2rem,4vw,3rem)] text-[0.85rem] text-muted max-w-[680px] mx-auto px-6">
-        <span className="text-muted">✦</span> Testing depth varies by program
-        tier. Metabolic precision and genetic &amp; tolerance markers are
-        reviewed by AHPRA-registered practitioners.
-      </p>
-    </section>
-  );
-}
-
 /* ---------------- Progress, Tracked ---------------- */
 export function ProgressTracked() {
   const rows: [string, string, string, string][] = [
@@ -484,7 +410,7 @@ function JourneyPanel({ idx }: { idx: number }) {
         {(
           [
             ["Oral therapy", "Daily · review in 4 weeks"],
-            ["GLP-1 (titrated)", "Weekly · CGM-monitored"],
+            ["Therapy (titrated)", "Weekly · CGM-monitored"],
             ["Nutrient support", "Daily · personalised"],
           ] as [string, string][]
         ).map(([n, p]) => (
@@ -592,22 +518,22 @@ export function Program() {
     [
       "6",
       "Months",
-      "CGM-monitored GLP-1 therapy",
-      "Six months of clinically guided GLP-1 receptor agonist therapy, titrated to your response with continuous glucose monitoring at every step.",
+      "Care that adapts to you",
+      "Your plan is reviewed and adjusted continuously, never set-and-forget. As your body responds, your specialist changes course with it.",
       "/landing/cgm-therapy.jpg",
     ],
     [
       "∞",
       "Throughout",
-      "Personalised meal planning",
-      "Your doctor builds a plan around your cuisine, preferences, and metabolic targets, with recipes adapted specifically for you.",
+      "Built around your real life",
+      "Food you enjoy and a routine you can keep. We shape everything around how you actually live, so the results outlast the program.",
       "/landing/meal-planning.jpg",
     ],
     [
       "2",
       "Scans",
-      "DEXA body composition",
-      "Baseline and completion DEXA scans measure fat mass, lean mass, and visceral fat, giving you objective before-and-after data.",
+      "Progress you can prove",
+      "Objective body-composition data, not just the bathroom scales, so you can see exactly what changed and trust that it is working.",
       "/landing/dexa.jpg",
     ],
   ];
@@ -620,8 +546,9 @@ export function Program() {
             Your six months, <span className="text-lav">step by step</span>.
           </h2>
           <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            A structured, physician-led program built on continuous data, not
-            guesswork. From baseline to before-and-after.
+            Six months of genuinely personal care. Every decision is led by a
+            specialist clinician and shaped by your own data, never a fixed
+            template.
           </p>
         </Reveal>
         <div className="grid gap-4">
@@ -702,9 +629,9 @@ export function EverythingIncluded() {
   const items: [string, string, string, string, string][] = [
     [
       "pill",
-      "Prescription GLP-1 therapy",
-      "Semaglutide · Tirzepatide · clinician-titrated",
-      "Where clinically appropriate, your doctor prescribes an evidence-based GLP-1 medication and adjusts your dose over time, shipped discreetly to your door.",
+      "Prescriptions provided (if necessary)",
+      "Prescribed only when appropriate · clinician-managed",
+      "If medication is the right fit, your specialist prescribes and manages it end to end, shipped discreetly to your door. It is one tool in the plan, never the whole plan.",
       "/landing/cgm.jpg",
     ],
     [
@@ -718,7 +645,7 @@ export function EverythingIncluded() {
       "leaf",
       "Personalised nutrition",
       "Protein-first · muscle preservation · your cuisine",
-      "Nutrition built for GLP-1 treatment and your CGM response, losing fat while preserving muscle, with recipes around foods you actually enjoy.",
+      "Nutrition built around your treatment and your CGM response, losing fat while preserving muscle, with recipes around foods you actually enjoy.",
       "/landing/salad-bowl.jpg",
     ],
     [
@@ -824,10 +751,67 @@ export function EverythingIncluded() {
   );
 }
 
+/* ---------------- Medications ---------------- */
+export function Medications() {
+  const meds: [string, string, string][] = [
+    ["Wegovy", "semaglutide", "GLP-1"],
+    ["Ozempic", "semaglutide", "GLP-1"],
+    ["Saxenda", "liraglutide", "GLP-1"],
+    ["Rybelsus", "semaglutide, oral", "GLP-1"],
+    ["Mounjaro", "tirzepatide", "GIP + GLP-1"],
+  ];
+  return (
+    <section id="medication" className="sec-pad bg-bgsoft">
+      <div className="max-w-[1100px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
+        <Reveal className="max-w-[700px]">
+          <Eyebrow>Medication, used wisely</Eyebrow>
+          <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
+            The right tool, <span className="text-lav">not the only tool</span>.
+          </h2>
+          <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
+            Medication is not always the best option, and on its own it is never
+            the answer. But for the right person, modern weight medicines can be
+            genuinely effective. If your specialist decides it is appropriate,
+            your prescription is provided and managed as one part of a complete
+            plan.
+          </p>
+        </Reveal>
+        <Reveal delay={120} className="mt-[clamp(2rem,4vw,3rem)]">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {meds.map(([brand, generic, cls]) => (
+              <div
+                key={brand}
+                className="rounded-2xl border border-line bg-white p-5 shadow-soft transition-shadow duration-300 hover:shadow-card"
+              >
+                <div className="font-disp text-[1.15rem] font-bold tracking-tight">
+                  {brand}
+                </div>
+                <div className="mt-0.5 text-[0.82rem] text-muted">
+                  {generic}
+                </div>
+                <span className="mt-3 inline-block rounded-full bg-lavtint px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-wider text-lav">
+                  {cls}
+                </span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-6 max-w-[72ch] text-[0.8rem] leading-relaxed text-muted">
+            <span className="text-muted">✦</span> The right option, if any, plus
+            dose and titration are always decided by your clinician.
+            Prescription medicines carry risks and side effects, which your
+            specialist will discuss with you. Availability depends on assessment
+            and supply.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 /* ---------------- Pricing ---------------- */
 export function Pricing() {
   const includes = [
-    "Prescription GLP-1 medication included",
+    "Prescription medication included, if appropriate",
     "Online clinician assessment & ongoing reviews",
     "Advanced biomarker, CGM & DEXA baseline testing",
     "Personalised dose plan, adjusted over time",
@@ -837,7 +821,7 @@ export function Pricing() {
   ];
   const notes = [
     "Prescription medication is only issued after an online consultation with a registered clinician.",
-    "GLP-1 treatment is not suitable for everyone, eligibility is determined by your clinician.",
+    "Prescription treatment is not suitable for everyone, and eligibility is determined by your clinician.",
     "Not covered by Medicare or private health insurance, a fully private telehealth service.",
     "Results vary and depend on your starting point, treatment plan and lifestyle changes.",
   ];
@@ -852,8 +836,8 @@ export function Pricing() {
           </h2>
           <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
             No tiers to decode, no surprise add-ons. One monthly price covers
-            your clinician, your support team and your GLP-1 medication, shipped
-            to your door.
+            your clinician, your support team and any prescription medication,
+            shipped to your door.
           </p>
         </Reveal>
         <Reveal className="grid lg:grid-cols-[1.4fr_1fr] gap-0 rounded-xl2 overflow-hidden border border-line shadow-card">
@@ -1106,11 +1090,11 @@ export function FAQ() {
     ],
     [
       "What medications does CLOVE prescribe?",
-      "Where clinically appropriate, our clinicians prescribe evidence-based GLP-1 medications such as semaglutide and tirzepatide. The right option, dose and titration are decided by your doctor based on your assessment, history and how you respond.",
+      "Medication is not always needed, and it is never the whole plan. When it is the right fit, our specialists prescribe evidence-based options such as Wegovy, Ozempic, Saxenda, Rybelsus and Mounjaro. The right choice, dose and titration are decided by your clinician based on your assessment, history and how you respond.",
     ],
     [
       "What does the program involve?",
-      "The Health Optimisation Protocol is a six-month, physician-led program: CGM-monitored GLP-1 therapy titrated to your response, personalised meal planning built by your doctor, and baseline and completion DEXA scans for objective before-and-after data.",
+      "The Health Optimisation Protocol is a six-month, specialist-led program: continuous monitoring with therapy titrated to your response where appropriate, personalised meal planning built by your clinician, and baseline and completion DEXA scans for objective before-and-after data.",
     ],
     [
       "Do I have to come into the office?",
