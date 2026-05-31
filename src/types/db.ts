@@ -35,6 +35,16 @@ export type AiJobStatus = "queued" | "running" | "succeeded" | "failed";
 
 export type ConsentKind = "clinical_care" | "rwe" | "marketing";
 
+export type DiscoveryTimeBlock = "9-12" | "12-3" | "3-6" | "6-9";
+
+export type DiscoveryBookingStatus =
+  | "new"
+  | "contacted"
+  | "scheduled"
+  | "completed"
+  | "cancelled"
+  | "no_show";
+
 export type AuditAction =
   | "record.viewed"
   | "record.created"
@@ -175,6 +185,20 @@ export interface Tables {
     evidence_url: string | null;
     created_at: string;
   };
+  discovery_bookings: {
+    id: string;
+    first_name: string;
+    last_name: string | null;
+    email: string;
+    phone: string;
+    preferred_date: string;
+    time_block: DiscoveryTimeBlock;
+    status: DiscoveryBookingStatus;
+    source: string;
+    notes: string | null;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 export type Database = {
@@ -198,6 +222,8 @@ export type Database = {
       ai_job_status_enum: AiJobStatus;
       consent_kind_enum: ConsentKind;
       audit_action_enum: AuditAction;
+      discovery_time_block: DiscoveryTimeBlock;
+      discovery_booking_status: DiscoveryBookingStatus;
     };
   };
 };

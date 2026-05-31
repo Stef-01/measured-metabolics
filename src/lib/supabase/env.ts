@@ -12,6 +12,15 @@ export function isSupabaseConfigured(): boolean {
   return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 }
 
+/**
+ * Service-role writes (e.g. public discovery-call bookings) need the URL plus
+ * the service-role key. Falls back to a graceful no-op when unset so demo /
+ * vibe stages keep working without a backend.
+ */
+export function isSupabaseServiceConfigured(): boolean {
+  return Boolean(SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY);
+}
+
 export function assertSupabaseConfigured(): void {
   if (!isSupabaseConfigured()) {
     throw new Error(
