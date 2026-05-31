@@ -281,9 +281,9 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.59, ease: EASE }}
             >
-              A specialist-clinician-led program that turns your bloods, CGM and
-              DEXA into a plan built around your biology. Medication delivered,
-              Australia-wide.
+              The only program that reads your bloods, glucose and body
+              composition together, so you lose fat, not muscle. Specialist-led,
+              medication delivered Australia-wide.
             </motion.p>
             <motion.div
               className="mt-9 flex gap-3.5 flex-wrap"

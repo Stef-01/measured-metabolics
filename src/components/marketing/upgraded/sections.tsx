@@ -38,9 +38,9 @@ export function Difference() {
             prescribes evidence-based therapy where appropriate, and a plan that
             adapts as your body responds.
           </p>
-          <p className="text-ink font-semibold">
-            Not a fad. Not a crash diet. A genuine medical approach, built
-            around real life.
+          <p className="text-ink font-bold text-[1.3rem] leading-snug">
+            Three readings. <span className="text-lav">One clinician.</span> A
+            plan that proves it.
           </p>
         </Reveal>
       </div>
@@ -518,8 +518,8 @@ export function Program() {
     [
       "6",
       "Months",
-      "Care that adapts to you",
-      "Your plan is reviewed and adjusted continuously, never set-and-forget. As your body responds, your specialist changes course with it.",
+      "Titrated to your glucose",
+      "Therapy is tuned to your live glucose data and reviewed continuously, so every adjustment is driven by evidence, not guesswork.",
       "/landing/cgm-therapy.jpg",
     ],
     [
@@ -881,7 +881,7 @@ export function Pricing() {
               </div>
               <div className="font-semibold mt-1">per month</div>
               <div className="text-[0.8rem] text-white/80 mt-1">
-                medication included · cancel anytime
+                one all-in price · no separate pharmacy bills
               </div>
             </div>
             <button
@@ -1010,9 +1010,12 @@ export function VideoBand() {
           as="p"
           className="font-disp font-extrabold tracking-[-.03em] leading-[1.08] text-[clamp(1.9rem,4vw,3.2rem)] mt-7 text-balance"
         >
-          Weight is biology, not willpower. We pair the data with a doctor who
-          actually reads it, and a plan that{" "}
-          <span className="text-white">adapts as you do</span>.
+          Most weight programs guess with one number. CLOVE measures three: your
+          bloods, your glucose and your body composition, so you{" "}
+          <span className="text-white">
+            lose fat, keep muscle, and prove it
+          </span>
+          .
         </Reveal>
         <Reveal
           delay={170}
@@ -1310,6 +1313,7 @@ export function Footer() {
 
 /* ---------------- Trust bar ---------------- */
 const TRUST_ITEMS: [string, string][] = [
+  [II.chart, "Bloods · CGM · DEXA baseline"],
   [II.shield, "AHPRA-registered clinicians"],
   [
     "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM14 2v6h6M9 13h6M9 17h4",
