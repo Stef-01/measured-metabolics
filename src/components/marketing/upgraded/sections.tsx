@@ -5,7 +5,7 @@
 
 import { useState, type ReactNode } from "react";
 import { Reveal, Eyebrow, Btn, openFunnel } from "./shared";
-import { Tilt, Parallax, CountUp, Magnetic } from "./motion-fx";
+import { Tilt, Parallax, CountUp, Magnetic, Spotlight } from "./motion-fx";
 
 /* ---------------- The Difference ---------------- */
 export function Difference() {
@@ -1458,6 +1458,7 @@ export function CTA() {
     >
       <div className="absolute -top-[30%] -right-[5%] w-[380px] h-[380px] rounded-full bg-white/10"></div>
       <div className="absolute -bottom-[40%] -left-[5%] w-[420px] h-[420px] rounded-full bg-white/10"></div>
+      <Spotlight size={520} color="rgba(255,255,255,0.16)" />
       <div className="relative z-[1] max-w-[820px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] py-[clamp(6.5rem,12vw,11rem)]">
         <Reveal>
           <Eyebrow center>Limited availability</Eyebrow>

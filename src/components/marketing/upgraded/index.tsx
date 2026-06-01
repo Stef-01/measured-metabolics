@@ -1,7 +1,7 @@
 "use client";
 
 import { MotionConfig } from "framer-motion";
-import { ScrollProgress, MobileCtaBar } from "./motion-fx";
+import { ScrollProgress, MobileCtaBar, SectionDots } from "./motion-fx";
 import { Nav, Hero } from "./hero";
 import {
   TrustBar,
@@ -35,6 +35,18 @@ export function UpgradedLanding() {
     <MotionConfig reducedMotion="user">
       <div className="measured-upgraded bg-paper text-ink font-sans antialiased">
         <ScrollProgress />
+        <SectionDots
+          sections={[
+            { id: "top", label: "Start" },
+            { id: "journey", label: "How it works" },
+            { id: "program", label: "Programs" },
+            { id: "medication", label: "Medication" },
+            { id: "pricing", label: "Pricing" },
+            { id: "doctor", label: "Precision" },
+            { id: "faq", label: "FAQ" },
+            { id: "start", label: "Get started" },
+          ]}
+        />
         <Nav />
         <main id="main">
           <Hero />

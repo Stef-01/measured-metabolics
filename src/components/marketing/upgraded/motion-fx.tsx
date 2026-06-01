@@ -215,6 +215,124 @@ export function CountUp({
 /* ── MobileCtaBar — thumb-reachable persistent CTA on phones ──
    Slides up once the hero scrolls away; clears the home-indicator safe area
    and hides at lg where the inline CTAs are always in view. */
+/* ── Spotlight — a soft glow that tracks the cursor over a dark surface ── */
+export function Spotlight({
+  className = "",
+  size = 460,
+  color = "rgba(255,255,255,0.14)",
+}: {
+  className?: string;
+  size?: number;
+  color?: string;
+}) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(-9999);
+  const y = useMotionValue(-9999);
+  const sx = useSpring(x, { stiffness: 260, damping: 30, mass: 0.5 });
+  const sy = useSpring(y, { stiffness: 260, damping: 30, mass: 0.5 });
+  const [on, setOn] = useState(false);
+
+  function onMove(e: PointerEvent<HTMLDivElement>) {
+    // Mouse only: a touch "spotlight" would lag the finger and feel broken.
+    if (reduce || e.pointerType !== "mouse" || !ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    x.set(e.clientX - r.left);
+    y.set(e.clientY - r.top);
+    if (!on) setOn(true);
+  }
+
+  // Static surfaces (and reduced-motion users) simply see the section as-is.
+  if (reduce) return null;
+
+  return (
+    <motion.div
+      ref={ref}
+      aria-hidden
+      onPointerMove={onMove}
+      onPointerLeave={() => setOn(false)}
+      className={"pointer-events-none absolute inset-0 z-0 " + className}
+    >
+      <motion.div
+        className="absolute rounded-full blur-2xl transition-opacity duration-500"
+        style={{
+          width: size,
+          height: size,
+          x: sx,
+          y: sy,
+          translateX: "-50%",
+          translateY: "-50%",
+          background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
+          opacity: on ? 1 : 0,
+        }}
+      />
+    </motion.div>
+  );
+}
+
+/* ── SectionDots — a fixed wayfinding rail that tracks the active section ── */
+export function SectionDots({
+  sections,
+}: {
+  sections: { id: string; label: string }[];
+}) {
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    const els = sections
+      .map((s) => document.getElementById(s.id))
+      .filter((el): el is HTMLElement => Boolean(el));
+    if (!els.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = els.indexOf(entry.target as HTMLElement);
+            if (idx !== -1) setActive(idx);
+          }
+        });
+      },
+      // Trip when a section crosses the vertical middle of the viewport.
+      { rootMargin: "-45% 0px -55% 0px" },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [sections]);
+
+  return (
+    <nav
+      aria-label="Page sections"
+      className="fixed right-5 top-1/2 z-[90] hidden -translate-y-1/2 flex-col items-end gap-3 xl:flex"
+    >
+      {sections.map((s, i) => (
+        <a
+          key={s.id}
+          href={`#${s.id}`}
+          aria-label={s.label}
+          aria-current={active === i ? "true" : undefined}
+          className="group flex items-center gap-2.5"
+        >
+          <span
+            className={
+              "text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-ink2 opacity-0 transition-opacity duration-200 group-hover:opacity-100 " +
+              (active === i ? "opacity-100" : "")
+            }
+          >
+            {s.label}
+          </span>
+          <span
+            className={
+              "block rounded-full border border-ink/40 transition-all duration-300 " +
+              (active === i
+                ? "h-2.5 w-2.5 border-ink bg-ink"
+                : "h-2 w-2 bg-transparent group-hover:border-ink")
+            }
+          />
+        </a>
+      ))}
+    </nav>
+  );
+}
+
 export function MobileCtaBar() {
   const [show, setShow] = useState(false);
   useEffect(() => {
