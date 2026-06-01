@@ -297,7 +297,7 @@ export function Hero() {
                   onClick={openFunnel}
                   className="group press inline-flex items-center gap-2 rounded-full bg-white text-ink font-bold text-base px-7 py-[1.05rem] shadow-[0_18px_40px_-18px_rgba(0,0,0,.8)] hover:-translate-y-0.5"
                 >
-                  Check your eligibility{" "}
+                  Take the assessment{" "}
                   <span className="transition-transform duration-300 group-hover:translate-x-1">
                     →
                   </span>

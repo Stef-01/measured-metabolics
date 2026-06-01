@@ -602,7 +602,7 @@ a,
 :root {
   --ink: #1b1b16;
   --ink2: #52504a;
-  --u-muted: #928d83;
+  --u-muted: #6f695e;
   --u-line: #e9e3d4;
   --line2: #d8d1bf;
   --paper: #faf8f2;
@@ -686,6 +686,24 @@ a,
 }
 .measured-upgraded .press:active {
   scale: 0.975;
+}
+/* Horizontal-scroll affordance: a soft fade on the trailing edge hints there
+   is more to scroll. Masking only, so it never obscures interaction. */
+.measured-upgraded .edge-fade {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 2.5%,
+    #000 94%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 2.5%,
+    #000 94%,
+    transparent 100%
+  );
 }
 @media (prefers-reduced-motion: reduce) {
   .measured-upgraded .press:active {

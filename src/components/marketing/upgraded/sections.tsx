@@ -47,6 +47,55 @@ export function Difference() {
   );
 }
 
+/* ---------------- Proof / stats band ---------------- */
+export function ProofStats() {
+  const stats: [number, string, string, string][] = [
+    [24, "h", "", "Average time to first clinician review"],
+    [3, "", "", "Core data streams: bloods, glucose & body composition"],
+    [100, "%", "", "Online, consulting Australia-wide"],
+  ];
+  return (
+    <section className="sec-pad grad-blue relative overflow-hidden">
+      <div
+        className="absolute inset-0 opacity-[0.12]"
+        style={{
+          background:
+            "radial-gradient(620px circle at 18% 30%, #fff, transparent)",
+        }}
+      ></div>
+      <div className="relative z-[1] max-w-[1100px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
+        <Reveal className="text-center">
+          <span className="inline-flex items-center gap-2 text-[0.72rem] font-semibold tracking-[0.16em] uppercase text-white/75">
+            <span className="w-2 h-2 rounded-full bg-white"></span>The CLOVE
+            standard
+          </span>
+        </Reveal>
+        <div className="mt-[clamp(2.5rem,5vw,3.5rem)] grid grid-cols-1 sm:grid-cols-3">
+          {stats.map(([to, suffix, prefix, label], i) => (
+            <Reveal
+              key={label}
+              delay={i * 100}
+              className={
+                "flex flex-col items-center text-center px-[clamp(1rem,3vw,2.5rem)] py-6 sm:py-0 " +
+                (i > 0
+                  ? "border-t sm:border-t-0 sm:border-l border-white/15"
+                  : "")
+              }
+            >
+              <span className="font-disp font-extrabold tracking-[-.03em] text-white text-[clamp(2.6rem,6vw,4.2rem)] leading-none tabular-nums">
+                <CountUp to={to} prefix={prefix} suffix={suffix} />
+              </span>
+              <span className="mt-4 max-w-[15rem] text-[0.9rem] leading-snug text-white/70">
+                {label}
+              </span>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ---------------- Progress, Tracked ---------------- */
 export function ProgressTracked() {
   const rows: [string, string, string, string][] = [
@@ -90,7 +139,7 @@ export function ProgressTracked() {
           </p>
           <div className="mt-8">
             <Btn lg variant="white" onClick={openFunnel}>
-              Start tracking <span>→</span>
+              Take the assessment <span>→</span>
             </Btn>
           </div>
         </Reveal>
@@ -607,6 +656,7 @@ const II: Record<string, string> = {
   refresh:
     "M23 4v6h-6M1 20v-6h6M3.5 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.5 15",
   shield: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM9 12l2 2 4-4",
+  check: "M20 6 9 17l-5-5",
 };
 function Ico({ d }: { d: string }) {
   return (
@@ -662,8 +712,11 @@ export function Capabilities() {
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
             What your program <span className="text-lav">looks at</span>.
           </h2>
+          <p className="mt-4 inline-flex items-center gap-1.5 text-[0.74rem] font-semibold uppercase tracking-[0.14em] text-muted">
+            Drag to explore <span aria-hidden="true">→</span>
+          </p>
         </Reveal>
-        <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-webkit-overflow-scrolling:touch]">
+        <div className="edge-fade flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {CAPABILITIES.map(([icon, title, desc], i) => (
             <Reveal
               key={title}
@@ -1009,6 +1062,154 @@ export function Doctor() {
   );
 }
 
+/* ---------------- Triple Baseline (interactive) ---------------- */
+const BASELINE: {
+  key: string;
+  tab: string;
+  title: string;
+  body: string;
+  points: string[];
+  img: string;
+  alt: string;
+}[] = [
+  {
+    key: "bloods",
+    tab: "Bloods",
+    title: "Comprehensive bloods",
+    body: "A broad biomarker panel reads the systems a scale never shows, metabolic, hormonal and nutritional, so treatment starts from evidence, not assumptions.",
+    points: [
+      "Metabolic & hormonal markers",
+      "Repeated to track change",
+      "Reviewed by your doctor",
+    ],
+    img: "/landing/meal-planning.jpg",
+    alt: "Comprehensive blood biomarker testing",
+  },
+  {
+    key: "glucose",
+    tab: "Glucose",
+    title: "Continuous glucose",
+    body: "An ultra-thin sensor reads your glucose around the clock, revealing exactly how your body responds to food, sleep and stress in real life.",
+    points: [
+      "Real-time, 24-hour data",
+      "See your response to food",
+      "Guides dose and nutrition",
+    ],
+    img: "/landing/cgm-anatomy.jpg",
+    alt: "Continuous glucose monitor reading metabolism in real time",
+  },
+  {
+    key: "body",
+    tab: "Body composition",
+    title: "DEXA body composition",
+    body: "A clinical-grade scan separates fat mass from lean mass, so progress is measured by what actually matters: losing fat while keeping muscle.",
+    points: [
+      "Fat vs lean mass, precisely",
+      "Confirms healthy loss",
+      "Baseline you can repeat",
+    ],
+    img: "/landing/dexa.jpg",
+    alt: "DEXA scan measuring body composition",
+  },
+];
+
+export function TripleBaseline() {
+  const [active, setActive] = useState(0);
+  const current = BASELINE[active];
+  return (
+    <section className="sec-pad bg-paper">
+      <div className="max-w-[1100px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
+        <Reveal className="max-w-[640px]">
+          <Eyebrow>The triple baseline</Eyebrow>
+          <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
+            Three readings, <span className="text-lav">one clear picture</span>.
+          </h2>
+          <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
+            Most programs work from a single number. CLOVE begins with three,
+            then builds your plan on what they reveal together.
+          </p>
+        </Reveal>
+
+        <Reveal delay={120} className="mt-[clamp(2rem,4vw,3rem)]">
+          {/* Segmented control */}
+          <div
+            role="tablist"
+            aria-label="Your baseline measurements"
+            className="inline-flex flex-wrap gap-1.5 rounded-full border border-line bg-white p-1.5 shadow-soft"
+          >
+            {BASELINE.map((b, i) => (
+              <button
+                key={b.key}
+                type="button"
+                role="tab"
+                aria-selected={active === i}
+                aria-controls={`baseline-panel-${b.key}`}
+                id={`baseline-tab-${b.key}`}
+                onClick={() => setActive(i)}
+                className={
+                  "press rounded-full px-5 py-2.5 text-[0.9rem] font-semibold transition-colors " +
+                  (active === i
+                    ? "bg-ink text-white"
+                    : "text-ink2 hover:bg-lavtint")
+                }
+              >
+                {b.tab}
+              </button>
+            ))}
+          </div>
+
+          {/* Panel */}
+          <div
+            role="tabpanel"
+            id={`baseline-panel-${current.key}`}
+            aria-labelledby={`baseline-tab-${current.key}`}
+            className="mt-6 grid items-stretch gap-5 overflow-hidden rounded-xl2 border border-line bg-white shadow-card md:grid-cols-[1.05fr_0.95fr]"
+          >
+            <div className="relative min-h-[260px] overflow-hidden bg-[#0a0e0c] md:min-h-[380px]">
+              {BASELINE.map((b, i) => (
+                <img
+                  key={b.key}
+                  src={b.img}
+                  alt={b.alt}
+                  loading="lazy"
+                  className={
+                    "absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out " +
+                    (active === i ? "opacity-100" : "opacity-0")
+                  }
+                />
+              ))}
+              <div className="absolute left-4 top-4 rounded-full bg-black/55 px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur-sm">
+                {active + 1} / {BASELINE.length}
+              </div>
+            </div>
+            <div className="flex flex-col justify-center p-[clamp(1.6rem,3vw,2.6rem)]">
+              <h3 className="font-disp text-[clamp(1.4rem,2.4vw,2rem)] font-extrabold tracking-tight">
+                {current.title}
+              </h3>
+              <p className="mt-3 text-[1.02rem] leading-[1.55] text-ink2">
+                {current.body}
+              </p>
+              <ul className="mt-6 space-y-2.5">
+                {current.points.map((p) => (
+                  <li
+                    key={p}
+                    className="flex items-start gap-2.5 text-[0.96rem] text-ink"
+                  >
+                    <span className="mt-0.5 text-lav">
+                      <Ico d={II.check} />
+                    </span>
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 /* ---------------- Video Band ---------------- */
 export function VideoBand() {
   return (
@@ -1046,11 +1247,12 @@ export function VideoBand() {
         <Reveal
           delay={90}
           as="p"
-          className="font-disp font-extrabold tracking-[-.03em] leading-[1.08] text-[clamp(1.9rem,4vw,3.2rem)] mt-7 text-balance"
+          className="font-serif font-medium tracking-[-.01em] leading-[1.14] text-[clamp(2.1rem,4.6vw,3.6rem)] mt-7 text-balance"
         >
-          Most weight loss programs focus on the number on the scale. CLOVE
-          looks deeper, your health, habits, medication options and long-term
-          progress, so your plan is built around you, not just your weight.
+          Most weight loss programs focus on the number on the scale.{" "}
+          <span className="italic">CLOVE looks deeper</span>, your health,
+          habits, medication options and long-term progress, so your plan is
+          built around you, not just your weight.
         </Reveal>
         <Reveal
           delay={170}
@@ -1121,8 +1323,11 @@ export function Quotes() {
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
             Care people <span className="text-lav">actually feel</span>.
           </h2>
+          <p className="mt-4 inline-flex items-center gap-1.5 text-[0.74rem] font-semibold uppercase tracking-[0.14em] text-muted">
+            Drag to explore <span aria-hidden="true">→</span>
+          </p>
         </Reveal>
-        <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-webkit-overflow-scrolling:touch]">
+        <div className="edge-fade flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {qs.map(([quote, ini, name, role], i) => (
             <Tilt
               key={i}
@@ -1165,7 +1370,7 @@ export function Quotes() {
                 <span
                   key={i}
                   aria-hidden={i >= AFFILIATIONS.length}
-                  className="whitespace-nowrap px-6 text-[0.95rem] font-semibold uppercase tracking-[0.12em] text-muted/70 grayscale"
+                  className="whitespace-nowrap px-6 text-[0.95rem] font-semibold uppercase tracking-[0.12em] text-muted"
                 >
                   {name}
                 </span>

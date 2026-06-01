@@ -6,6 +6,7 @@ import { Nav, Hero } from "./hero";
 import {
   TrustBar,
   Difference,
+  ProofStats,
   Capabilities,
   ProgressTracked,
   Journey,
@@ -14,6 +15,7 @@ import {
   Medications,
   Pricing,
   Doctor,
+  TripleBaseline,
   VideoBand,
   Quotes,
   FAQ,
@@ -34,10 +36,11 @@ export function UpgradedLanding() {
       <div className="measured-upgraded bg-paper text-ink font-sans antialiased">
         <ScrollProgress />
         <Nav />
-        <main>
+        <main id="main">
           <Hero />
           <TrustBar />
           <Difference />
+          <ProofStats />
           <Capabilities />
           <Journey />
           <ProgressTracked />
@@ -46,6 +49,7 @@ export function UpgradedLanding() {
           <Medications />
           <Pricing />
           <Doctor />
+          <TripleBaseline />
           <VideoBand />
           <Quotes />
           <FAQ />
