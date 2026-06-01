@@ -15,10 +15,9 @@ import { Magnetic } from "./motion-fx";
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 const NAV_LINKS: [string, string][] = [
-  ["About Us", "#doctor"],
   ["How It Works", "#journey"],
   ["Programs", "#program"],
-  ["Medication", "#medication"],
+  ["Precision", "#doctor"],
   ["Pricing", "#pricing"],
   ["FAQ", "#faq"],
 ];

@@ -51,8 +51,8 @@ export function Difference() {
 export function ProofStats() {
   const stats: [number, string, string, string][] = [
     [24, "h", "", "Average time to first clinician review"],
-    [3, "", "", "Core data streams: bloods, glucose & body composition"],
-    [100, "%", "", "Online, consulting Australia-wide"],
+    [3, "", "", "Core data streams: bloods, CGM & body composition"],
+    [7, "", "", "States and territories we consult across, Australia-wide"],
   ];
   return (
     <section className="sec-pad grad-blue relative overflow-hidden">
@@ -845,71 +845,6 @@ export function EverythingIncluded() {
   );
 }
 
-/* ---------------- Medications ---------------- */
-export function Medications() {
-  const meds: [string, string, string][] = [
-    [
-      "GLP-1 therapy",
-      "Reduces appetite and slows gastric emptying",
-      "Weekly or daily",
-    ],
-    ["GIP + GLP-1 therapy", "Dual-incretin action, the newest class", "Weekly"],
-    ["Oral options", "For those who would rather not inject", "Daily tablet"],
-    [
-      "Supportive adjuncts",
-      "Other prescription support where suitable",
-      "As indicated",
-    ],
-  ];
-  return (
-    <section id="medication" className="sec-pad bg-bgsoft">
-      <div className="max-w-[1100px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
-        <Reveal className="max-w-[700px]">
-          <Eyebrow>Medication, used wisely</Eyebrow>
-          <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
-            The right tool, <span className="text-lav">not the only tool</span>.
-          </h2>
-          <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            Medication is not always the best option, and on its own it is never
-            the answer. But for the right person, modern weight medicines can be
-            genuinely effective. If your specialist decides it is appropriate,
-            your prescription is provided and managed as one part of a complete
-            plan.
-          </p>
-        </Reveal>
-        <Reveal delay={120} className="mt-[clamp(2rem,4vw,3rem)]">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {meds.map(([name, desc, freq]) => (
-              <div
-                key={name}
-                className="rounded-2xl border border-line bg-white p-5 shadow-soft transition-shadow duration-300 hover:shadow-card"
-              >
-                <div className="font-disp text-[1.15rem] font-bold tracking-tight">
-                  {name}
-                </div>
-                <div className="mt-1 text-[0.85rem] leading-snug text-muted">
-                  {desc}
-                </div>
-                <span className="mt-3 inline-block rounded-full bg-lavtint px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-wider text-lav">
-                  {freq}
-                </span>
-              </div>
-            ))}
-          </div>
-          <p className="mt-6 max-w-[72ch] text-[0.8rem] leading-relaxed text-muted">
-            <span className="text-muted">✦</span> We don&apos;t advertise
-            specific prescription medicines here, the right option is a clinical
-            decision made with your doctor, not a product you pick off a page.
-            Where a medicine is appropriate, your clinician decides the option,
-            dose and titration, and discusses the risks and side effects with
-            you.
-          </p>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 /* ---------------- Pricing ---------------- */
 export function Pricing() {
   const notes = [
@@ -943,7 +878,7 @@ export function Pricing() {
               CLOVE Weight Care Plan
             </div>
             <div className="text-muted mt-1 text-[0.95rem]">
-              Clinician-led · medication included · 100% online · cancel anytime
+              Clinician-led · medication included · cancel anytime
             </div>
             <ul className="mt-6 space-y-3">
               {[
@@ -1008,60 +943,6 @@ export function Pricing() {
   );
 }
 
-/* ---------------- Precision (CGM-led) ---------------- */
-export function Doctor() {
-  return (
-    <section id="doctor" className="sec-pad bg-bgsoft">
-      <div className="max-w-[1200px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] grid lg:grid-cols-[1.1fr_0.9fr] gap-[clamp(2rem,5vw,4.5rem)] items-center">
-        <Reveal className="relative">
-          <div className="rounded-xl2 overflow-hidden aspect-[3/2] shadow-card bg-[#0a0e0c]">
-            <img
-              src="/landing/cgm-anatomy.jpg"
-              alt="How a continuous glucose monitor reads your metabolism in real time"
-              loading="lazy"
-              className="h-full w-full object-cover"
-            />
-          </div>
-        </Reveal>
-        <Reveal delay={120}>
-          <Eyebrow>Precision metabolic medicine</Eyebrow>
-          <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
-            Medicine that actually <span className="text-lav">knows you</span>.
-          </h2>
-          <div className="flex gap-2 flex-wrap mt-5">
-            {["CGM-guided", "Biomarker-led", "Personalised"].map((c) => (
-              <span
-                key={c}
-                className="text-[0.68rem] font-semibold tracking-wide uppercase text-ink2 bg-lavsoft rounded-full px-3.5 py-1.5"
-              >
-                {c}
-              </span>
-            ))}
-          </div>
-          <p className="mt-5 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            Most care guesses. We measure. An ultra-thin continuous glucose
-            monitor reads your metabolism in real time, around the clock, while
-            advanced biomarker testing and DEXA map the full picture. Your
-            therapy and nutrition are tuned to how your body actually responds,
-            not to population averages.
-          </p>
-          <p className="mt-4 text-ink2 leading-[1.6]">
-            That is precision medicine: every dose, every meal and every
-            adjustment driven by your own data. As your glucose trends and labs
-            change, your plan changes with them, so nothing is left to chance
-            between visits.
-          </p>
-          <div className="mt-8">
-            <Btn lg onClick={openFunnel}>
-              Take the assessment <span>→</span>
-            </Btn>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 /* ---------------- Triple Baseline (interactive) ---------------- */
 const BASELINE: {
   key: string;
@@ -1086,17 +967,17 @@ const BASELINE: {
     alt: "Comprehensive blood biomarker testing",
   },
   {
-    key: "glucose",
-    tab: "Glucose",
-    title: "Continuous glucose",
-    body: "An ultra-thin sensor reads your glucose around the clock, revealing exactly how your body responds to food, sleep and stress in real life.",
+    key: "cgm",
+    tab: "CGM",
+    title: "Continuous glucose monitoring",
+    body: "An ultra-thin sensor reads your metabolism in real time, around the clock, revealing exactly how your body responds to food, sleep and stress. Your therapy and nutrition are tuned to how you actually respond, not to population averages.",
     points: [
-      "Real-time, 24-hour data",
+      "Real-time data, around the clock",
       "See your response to food",
       "Guides dose and nutrition",
     ],
-    img: "/landing/cgm-anatomy.jpg",
-    alt: "Continuous glucose monitor reading metabolism in real time",
+    img: "/landing/cgm-device.jpg",
+    alt: "CLOVE continuous glucose monitor applied to skin",
   },
   {
     key: "body",
@@ -1117,16 +998,18 @@ export function TripleBaseline() {
   const [active, setActive] = useState(0);
   const current = BASELINE[active];
   return (
-    <section className="sec-pad bg-paper">
+    <section id="doctor" className="sec-pad bg-paper">
       <div className="max-w-[1100px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
-        <Reveal className="max-w-[640px]">
-          <Eyebrow>The triple baseline</Eyebrow>
+        <Reveal className="max-w-[680px]">
+          <Eyebrow>Precision metabolic medicine</Eyebrow>
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
-            Three readings, <span className="text-lav">one clear picture</span>.
+            Medicine that actually <span className="text-lav">knows you</span>.
           </h2>
           <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            Most programs work from a single number. CLOVE begins with three,
-            then builds your plan on what they reveal together.
+            Most care guesses. We measure. CLOVE begins with three readings,
+            bloods, continuous glucose and body composition, then builds your
+            plan on what they reveal together. Every dose, every meal and every
+            adjustment is driven by your own data, not population averages.
           </p>
         </Reveal>
 
@@ -1204,6 +1087,11 @@ export function TripleBaseline() {
               </ul>
             </div>
           </div>
+        </Reveal>
+        <Reveal delay={180} className="mt-9">
+          <Btn lg onClick={openFunnel}>
+            Take the assessment <span>→</span>
+          </Btn>
         </Reveal>
       </div>
     </section>
@@ -1509,8 +1397,7 @@ export function Footer() {
       [
         ["How it works", "#journey"],
         ["Programs", "#program"],
-        ["Medication", "#medication"],
-        ["About us", "#doctor"],
+        ["Precision medicine", "#doctor"],
       ],
     ],
     [
