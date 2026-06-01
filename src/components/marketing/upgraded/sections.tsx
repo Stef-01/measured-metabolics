@@ -1268,12 +1268,14 @@ export function VideoBand() {
 }
 
 /* ---------------- Quotes ---------------- */
-const AFFILIATIONS = [
-  "Monash University",
-  "University of Sydney",
-  "RACGP",
-  "University of Melbourne",
-  "AHPRA",
+// Placeholder greyscale wordmarks. Replace each with an official, approved logo
+// asset before launch, and only display institutions CLOVE is genuinely aligned with.
+const AFFILIATIONS: [string, string][] = [
+  ["/landing/logos/monash.svg", "Monash University"],
+  ["/landing/logos/sydney.svg", "The University of Sydney"],
+  ["/landing/logos/racgp.svg", "RACGP"],
+  ["/landing/logos/melbourne.svg", "University of Melbourne"],
+  ["/landing/logos/ahpra.svg", "AHPRA"],
 ];
 
 export function Quotes() {
@@ -1359,21 +1361,19 @@ export function Quotes() {
           ))}
         </div>
 
-        {/* Affiliations marquee */}
+        {/* Affiliations logo marquee */}
         <Reveal className="mt-[clamp(3rem,6vw,4.5rem)]">
-          <div className="text-center text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-muted">
-            Aligned with
-          </div>
-          <div className="marquee-mask mt-5 overflow-hidden">
-            <div className="mq-row">
-              {[...AFFILIATIONS, ...AFFILIATIONS].map((name, i) => (
-                <span
+          <div className="marquee-mask overflow-hidden">
+            <div className="mq-row items-center">
+              {[...AFFILIATIONS, ...AFFILIATIONS].map(([src, name], i) => (
+                <img
                   key={i}
+                  src={src}
+                  alt={i < AFFILIATIONS.length ? name : ""}
                   aria-hidden={i >= AFFILIATIONS.length}
-                  className="whitespace-nowrap px-6 text-[0.95rem] font-semibold uppercase tracking-[0.12em] text-muted"
-                >
-                  {name}
-                </span>
+                  loading="lazy"
+                  className="mx-9 h-7 w-auto shrink-0 opacity-55 grayscale transition-opacity duration-300 hover:opacity-90"
+                />
               ))}
             </div>
           </div>
