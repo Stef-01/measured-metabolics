@@ -280,9 +280,9 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.59, ease: EASE }}
             >
-              The complete approach, designed to give you real, sustainable
-              results. We find out all the unknowns, then optimise, refine,
-              support and deliver a weight solution that lasts.
+              A specialist doctor, your bloods, glucose and body composition
+              read together, and a plan that adapts as you do. Precision care
+              built to make results last, not just begin.
             </motion.p>
             <motion.div
               className="mt-9 flex gap-3.5 flex-wrap"
