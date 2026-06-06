@@ -9,39 +9,64 @@ import { Tilt, Parallax, CountUp, Magnetic, Spotlight } from "./motion-fx";
 
 /* ---------------- The Difference ---------------- */
 export function Difference() {
+  const steps: [string, string, string][] = [
+    [
+      "01",
+      "Understand",
+      "Your specialist doctor starts with an in-depth consult to understand what's really driving your weight, then arranges the right investigations, including a DEXA scan and CGM where appropriate.",
+    ],
+    [
+      "02",
+      "Treat",
+      "You begin effective, evidence-based treatment, supported by a complete food diary and an exercise plan tailored to your goals. Monthly reviews keep you progressing.",
+    ],
+    [
+      "03",
+      "Sustain",
+      "Once your results are stable, we guide you through a clear plan to step down treatment. For as long as you're a member, your team is here whenever you need us.",
+    ],
+  ];
   return (
     <section className="sec-pad-xl bg-paper relative overflow-hidden">
-      <div className="max-w-[820px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] text-center">
-        <Reveal
-          as="h2"
-          className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02]"
-        >
-          The CLOVE difference
-        </Reveal>
-        <Reveal
-          delay={140}
-          className="mt-7 space-y-5 text-[1.05rem] leading-[1.7] text-ink2"
-        >
-          <p>
-            Most weight loss programs skip the steps that make results last. You
-            get a prescription, you're out the door, and that's rarely enough.
-            CLOVE was built to do the opposite.
-          </p>
-          <p>
-            Your Specialist Doctor starts with an in-depth consult to understand
-            what's really driving your weight, then arranges the right
-            investigations, including a DEXA scan and CGM where appropriate.
-            From there, you'll start effective, evidence-based treatment,
-            supported by a complete food diary and an exercise plan tailored to
-            your goals. Monthly reviews keep you progressing, and once your
-            results are stable, we'll guide you through a clear plan to step
-            down treatment.
-          </p>
-          <p>
-            And we don't disappear once you're set up. For as long as you're a
-            member of CLOVE, your team is here whenever you need us.
+      <div className="max-w-[1180px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] grid lg:grid-cols-[0.95fr_1.05fr] gap-[clamp(2.5rem,6vw,6rem)] lg:items-start">
+        <Reveal>
+          <Eyebrow>The CLOVE difference</Eyebrow>
+          <h2 className="mt-6 font-disp font-extrabold tracking-[-.03em] text-[clamp(2.1rem,4.4vw,3.5rem)] leading-[1.04]">
+            Most programs stop at a prescription.{" "}
+            <span className="font-serif italic font-medium">
+              We start where they stop.
+            </span>
+          </h2>
+          <p className="mt-7 text-[clamp(1.05rem,1.25vw,1.25rem)] leading-[1.6] text-ink2 max-w-[34ch]">
+            You get a script, you're out the door, and that's rarely enough.
+            CLOVE was built to do the opposite: a complete method that makes
+            results actually last.
           </p>
         </Reveal>
+        <div className="lg:pt-3">
+          {steps.map(([num, title, body], i) => (
+            <Reveal
+              key={num}
+              delay={i * 110}
+              className={
+                "grid grid-cols-[auto_1fr] gap-x-5 gap-y-1 py-7 " +
+                (i > 0 ? "border-t border-line" : "")
+              }
+            >
+              <span className="font-disp text-[0.9rem] font-bold tabular-nums text-lav pt-1.5">
+                {num}
+              </span>
+              <div>
+                <h3 className="font-disp text-[1.35rem] font-bold tracking-tight">
+                  {title}
+                </h3>
+                <p className="mt-2 text-[1.02rem] leading-[1.6] text-ink2">
+                  {body}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -50,9 +75,9 @@ export function Difference() {
 /* ---------------- Proof / stats band ---------------- */
 export function ProofStats() {
   const stats: [number, string, string, string][] = [
-    [24, "h", "", "Average time to first clinician review"],
-    [3, "", "", "Core data streams: bloods, CGM & body composition"],
-    [7, "", "", "States and territories we consult across, Australia-wide"],
+    [3, "", "", "Data streams read together: bloods, CGM and body composition"],
+    [24, "h", "", "Typical time to your first specialist review"],
+    [1, "", "", "Specialist doctor who owns your plan, end to end"],
   ];
   return (
     <section className="sec-pad grad-blue relative overflow-hidden">
@@ -64,11 +89,14 @@ export function ProofStats() {
         }}
       ></div>
       <div className="relative z-[1] max-w-[1100px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
-        <Reveal className="text-center">
+        <Reveal className="text-center max-w-[640px] mx-auto">
           <span className="inline-flex items-center gap-2 text-[0.72rem] font-semibold tracking-[0.16em] uppercase text-white/75">
             <span className="w-2 h-2 rounded-full bg-white"></span>The CLOVE
             standard
           </span>
+          <h2 className="mt-5 font-disp font-extrabold tracking-[-.03em] text-white text-[clamp(1.7rem,3.4vw,2.6rem)] leading-[1.08]">
+            Precision you can measure from day one.
+          </h2>
         </Reveal>
         <div className="mt-[clamp(2.5rem,5vw,3.5rem)] grid grid-cols-1 sm:grid-cols-3">
           {stats.map(([to, suffix, prefix, label], i) => (
