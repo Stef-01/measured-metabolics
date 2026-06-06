@@ -529,6 +529,10 @@ export function Journey() {
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
             Your journey with <span className="text-lav">CLOVE</span>.
           </h2>
+          <p className="mt-5 text-[clamp(1.05rem,1.2vw,1.2rem)] text-ink2 leading-[1.6] max-w-[46ch]">
+            Five considered steps, from first assessment to lasting results.
+            Select any step to see what happens.
+          </p>
         </Reveal>
         <div className="grid lg:grid-cols-[0.82fr_1.18fr] gap-[clamp(2rem,4vw,3.5rem)] items-start">
           <Reveal className="flex flex-col">
@@ -908,18 +912,27 @@ export function Pricing() {
             <div className="text-muted mt-1 text-[0.95rem]">
               Clinician-led · medication included · cancel anytime
             </div>
-            <ul className="mt-6 space-y-3">
+            <div className="mt-6 text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-muted">
+              Everything included
+            </div>
+            <ul className="mt-4 grid gap-x-6 gap-y-3.5 sm:grid-cols-2">
               {[
-                "Prescription medication included, if appropriate",
-                "Online clinician assessment & ongoing reviews",
-                "Advanced biomarker, CGM & DEXA baseline testing",
+                "Prescription medication, if appropriate",
+                "Clinician assessment & ongoing reviews",
+                "Bloods, CGM & DEXA baseline testing",
                 "Personalised dose plan, adjusted over time",
                 "1:1 care coaching & nutrition support",
-                "Complete food diary & tailored exercise plan",
-                "Convenient home delivery & refills, Australia-wide",
+                "Food diary & tailored exercise plan",
+                "Home delivery & refills, Australia-wide",
+                "Specialist team, a message away",
               ].map((t) => (
-                <li key={t} className="flex items-start gap-2.5 text-[0.98rem]">
-                  <span className="text-muted font-bold">✦</span>
+                <li
+                  key={t}
+                  className="flex items-start gap-2.5 text-[0.95rem] leading-snug"
+                >
+                  <span className="mt-0.5 shrink-0 text-lav">
+                    <Ico d={II.check} />
+                  </span>
                   <span>{t}</span>
                 </li>
               ))}
@@ -1194,43 +1207,72 @@ const AFFILIATIONS: [string, string][] = [
   ["/landing/logos/ahpra.svg", "AHPRA"],
 ];
 
+/** Patient avatar: shows a photo when available, falls back to initials.
+ *  Drop photos at /landing/patients/<slug>.jpg to upgrade automatically. */
+function PatientAvatar({ slug, initials }: { slug: string; initials: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full grad-dot text-[0.76rem] font-bold text-white">
+        {initials}
+      </span>
+    );
+  }
+  return (
+    <img
+      src={`/landing/patients/${slug}.jpg`}
+      alt=""
+      loading="lazy"
+      onError={() => setFailed(true)}
+      className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-line"
+    />
+  );
+}
+
 export function Quotes() {
-  const qs: [string, string, string, string][] = [
+  // [quote, initials, name, role, slug]
+  const qs: [string, string, string, string, string][] = [
     [
       "For the first time, my labs and how I actually feel were finally connected. I understand my own body now, and exactly what to do with it.",
       "SM",
       "Sarah M.",
       "Brisbane · 6-month program",
+      "sarah",
     ],
     [
       "Genuinely personable, and measured in every sense. The most practical way I've ever worked with a doctor.",
       "DT",
       "Daniel T.",
       "Melbourne · Patient since 2024",
+      "daniel",
     ],
     [
       "From the very first visit, they already knew my history. Knowledgeable, calm, and always reachable over telehealth.",
       "AW",
       "Aisha W.",
       "Perth · Protocol patient",
+      "aisha",
     ],
     [
       "The food diary and exercise plan made the medication actually stick. Down 11kg and it finally feels sustainable.",
       "JR",
       "James R.",
       "Sydney",
+      "james",
     ],
     [
       "Everything was clear from day one, no surprises on cost, just steady, measurable progress every month.",
       "PN",
       "Priya N.",
       "Adelaide",
+      "priya",
     ],
     [
       "Having a specialist a message away made the whole thing feel safe. I never felt rushed or like just another number.",
       "TH",
       "Tom H.",
       "Gold Coast",
+      "tom",
     ],
   ];
   return (
@@ -1246,7 +1288,7 @@ export function Quotes() {
           </p>
         </Reveal>
         <div className="edge-fade flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {qs.map(([quote, ini, name, role], i) => (
+          {qs.map(([quote, ini, name, role, slug], i) => (
             <Tilt
               key={i}
               max={6}
@@ -1264,9 +1306,7 @@ export function Quotes() {
                   {quote}
                 </blockquote>
                 <figcaption className="mt-6 flex items-center gap-3">
-                  <span className="w-9 h-9 rounded-full grad-dot text-white font-bold text-[0.76rem] grid place-items-center">
-                    {ini}
-                  </span>
+                  <PatientAvatar slug={slug} initials={ini} />
                   <span>
                     <b className="block text-[0.88rem] font-bold">{name}</b>
                     <span className="text-[0.8rem] text-muted">{role}</span>

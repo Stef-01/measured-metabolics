@@ -32,25 +32,49 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+const SITE_DESCRIPTION =
+  "Specialist-led precision weight loss. CLOVE reads your bloods, glucose and body composition together, so you lose fat, not muscle. Medication delivered Australia-wide.";
+
 export const metadata: Metadata = {
-  title: "CLOVE: Patient + Dietitian + GP, one care loop",
-  description:
-    "A metabolic chronic care platform. Patients capture meals and symptoms; dietitians review and plan; GPs see a 30-second sidebar, all on one Supabase data model.",
+  title: {
+    default: "CLOVE: Specialist-Led Precision Weight Loss, Australia",
+    template: "%s · CLOVE",
+  },
+  description: SITE_DESCRIPTION,
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://measured.vercel.app",
   ),
+  applicationName: "CLOVE",
+  keywords: [
+    "weight loss",
+    "precision medicine",
+    "GLP-1",
+    "telehealth",
+    "metabolic health",
+    "DEXA",
+    "CGM",
+    "Australia",
+  ],
   openGraph: {
-    title: "CLOVE",
-    description:
-      "Metabolic chronic care made easier to deliver, easier to follow, and easier to coordinate.",
+    title: "CLOVE: Specialist-Led Precision Weight Loss",
+    description: SITE_DESCRIPTION,
     siteName: "CLOVE",
+    locale: "en_AU",
     type: "website",
+    images: [
+      {
+        url: "/landing/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "CLOVE: specialist-led precision weight loss, Australia-wide",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CLOVE",
-    description:
-      "Metabolic chronic care made easier to deliver, easier to follow, and easier to coordinate.",
+    title: "CLOVE: Specialist-Led Precision Weight Loss",
+    description: SITE_DESCRIPTION,
+    images: ["/landing/og-image.jpg"],
   },
 };
 
