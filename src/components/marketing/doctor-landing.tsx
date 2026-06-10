@@ -1170,7 +1170,7 @@ function Doctor() {
         <Reveal className="relative">
           <div className="rounded-[22px] overflow-hidden aspect-[0.84] shadow-lav-card">
             <Image
-              src="/images/dr-saxena.jpeg"
+              src="/images/dr-saxena.png"
               alt="Dr Anubhav Saxena"
               fill
               className="object-cover"

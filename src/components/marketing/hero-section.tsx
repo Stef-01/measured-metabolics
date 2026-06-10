@@ -279,7 +279,7 @@ export function HeroSection({ bookingUrl }: { bookingUrl: string }) {
               className="relative h-[420px] overflow-hidden rounded-[28px] lg:h-[480px]"
             >
               <Image
-                src="/images/dr-saxena.jpeg"
+                src="/images/dr-saxena.png"
                 alt="Dr Anubhav Saxena"
                 fill
                 className="object-cover"

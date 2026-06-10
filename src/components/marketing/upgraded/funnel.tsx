@@ -35,7 +35,7 @@ const DOCTORS: Doctor[] = [
     blurb:
       "Fellow of the RACGP with a research background in metabolic medicine, leading CLOVE's medically supervised weight program.",
     location: "Beecroft, NSW",
-    img: "/images/dr-saxena.jpeg",
+    img: "/images/dr-saxena.png",
     url: "https://healthengine.com.au/doctor/nsw/beecroft/dr-anubhav-saxena/p123180",
   },
   {
@@ -46,7 +46,7 @@ const DOCTORS: Doctor[] = [
     blurb:
       "Works alongside the CLOVE program providing doctor-led, evidence-based weight and metabolic care.",
     location: "Beecroft, NSW",
-    img: "/images/dr-yadav.jpeg",
+    img: "/images/dr-yadav.png",
     url: "https://healthengine.com.au/doctor/nsw/beecroft/dr-tushar-yadav/p157754",
   },
 ];
