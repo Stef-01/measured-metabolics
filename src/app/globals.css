@@ -269,7 +269,12 @@ html {
   touch-action: manipulation;
   -webkit-text-size-adjust: 100%;
   scrollbar-gutter: stable;
-  scroll-behavior: smooth;
+}
+/* Smooth anchor scrolling only for visitors who haven't asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -686,6 +691,49 @@ a,
 }
 .measured-upgraded .press:active {
   scale: 0.975;
+}
+/* Hover sheen for primary CTAs: a single slow light sweep. `.sheen` is a soft
+   white pass for dark buttons; `.sheen-ink` a faint shadow pass for white
+   buttons. Purely decorative, so it is removed under reduced motion. */
+.measured-upgraded .sheen,
+.measured-upgraded .sheen-ink {
+  position: relative;
+  overflow: hidden;
+}
+.measured-upgraded .sheen::after,
+.measured-upgraded .sheen-ink::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  transform: translateX(-130%) skewX(-14deg);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+.measured-upgraded .sheen::after {
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.26) 50%,
+    transparent 62%
+  );
+}
+.measured-upgraded .sheen-ink::after {
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(27, 27, 22, 0.07) 50%,
+    transparent 62%
+  );
+}
+.measured-upgraded .sheen:hover::after,
+.measured-upgraded .sheen-ink:hover::after {
+  transform: translateX(130%) skewX(-14deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .measured-upgraded .sheen::after,
+  .measured-upgraded .sheen-ink::after {
+    display: none;
+  }
 }
 /* Horizontal-scroll affordance: a soft fade on the trailing edge hints there
    is more to scroll. Masking only, so it never obscures interaction. */

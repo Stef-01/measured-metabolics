@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   motion,
   AnimatePresence,
@@ -27,11 +27,31 @@ export function Nav() {
   // scrolls past the hero fold.
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [section, setSection] = useState("");
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (v) => {
     setScrolled(v > 32);
     if (v > 80) setMenuOpen(false); // tuck the mobile menu away on scroll
+    if (v < 240) setSection(""); // back in the hero: no section underline
   });
+
+  // Scrollspy: glide the nav underline to whichever section is in view.
+  useEffect(() => {
+    const els = NAV_LINKS.map(([, href]) =>
+      document.getElementById(href.slice(1)),
+    ).filter((el): el is HTMLElement => Boolean(el));
+    if (!els.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setSection(entry.target.id);
+        });
+      },
+      { rootMargin: "-38% 0px -58% 0px" },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
   return (
     <header className="fixed top-3.5 inset-x-0 z-[100] flex flex-col items-center px-3.5">
       <div
@@ -49,15 +69,30 @@ export function Nav() {
           CLOVE
         </a>
         <nav className="hidden lg:flex items-center gap-7">
-          {NAV_LINKS.map(([label, href]) => (
-            <a
-              key={label}
-              href={href}
-              className="text-[0.85rem] font-medium text-white/80 hover:text-white transition-colors"
-            >
-              {label}
-            </a>
-          ))}
+          {NAV_LINKS.map(([label, href]) => {
+            const current = section === href.slice(1);
+            return (
+              <a
+                key={label}
+                href={href}
+                aria-current={current ? "true" : undefined}
+                className={
+                  "relative py-1 text-[0.85rem] font-medium transition-colors " +
+                  (current ? "text-white" : "text-white/80 hover:text-white")
+                }
+              >
+                {label}
+                {current && (
+                  <motion.span
+                    layoutId="nav-underline"
+                    aria-hidden="true"
+                    className="absolute inset-x-0 -bottom-0.5 h-px bg-white/90"
+                    transition={{ type: "spring", stiffness: 460, damping: 42 }}
+                  />
+                )}
+              </a>
+            );
+          })}
         </nav>
         <div className="flex items-center gap-1.5">
           <Magnetic strength={0.4}>
@@ -294,7 +329,7 @@ export function Hero() {
                 <button
                   type="button"
                   onClick={openFunnel}
-                  className="group press inline-flex items-center gap-2 rounded-full bg-white text-ink font-bold text-base px-7 py-[1.05rem] shadow-[0_18px_40px_-18px_rgba(0,0,0,.8)] hover:-translate-y-0.5"
+                  className="group press sheen-ink inline-flex items-center gap-2 rounded-full bg-white text-ink font-bold text-base px-7 py-[1.05rem] shadow-[0_18px_40px_-18px_rgba(0,0,0,.8)] hover:-translate-y-0.5"
                 >
                   Take the assessment{" "}
                   <span className="transition-transform duration-300 group-hover:translate-x-1">
@@ -316,13 +351,27 @@ export function Hero() {
       {/* slim trust line */}
       <motion.div
         className="relative z-[2] px-[clamp(1.25rem,4vw,2.75rem)] pb-[clamp(1.75rem,3.5vw,2.75rem)]"
-        initial={{ opacity: 0, y: 22 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.77, ease: EASE }}
+        initial="hidden"
+        animate="show"
+        variants={{
+          hidden: {},
+          show: { transition: { delayChildren: 0.72, staggerChildren: 0.09 } },
+        }}
       >
         <div className="max-w-[1320px] mx-auto flex flex-wrap items-center gap-x-5 gap-y-2.5">
           {TRUST.map(([icon, label], i) => (
-            <span key={label} className="flex items-center gap-x-5">
+            <motion.span
+              key={label}
+              variants={{
+                hidden: { opacity: 0, y: 16 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.6, ease: EASE },
+                },
+              }}
+              className="flex items-center gap-x-5"
+            >
               {i > 0 && (
                 <span className="hidden sm:block w-px h-3.5 bg-white/20"></span>
               )}
@@ -332,7 +381,7 @@ export function Hero() {
                 </span>
                 {label}
               </span>
-            </span>
+            </motion.span>
           ))}
         </div>
       </motion.div>

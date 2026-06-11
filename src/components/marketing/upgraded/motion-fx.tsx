@@ -24,6 +24,7 @@ import {
   useRef,
   useEffect,
   useState,
+  useSyncExternalStore,
   type ReactNode,
   type PointerEvent,
 } from "react";
@@ -31,16 +32,31 @@ import { openFunnel } from "./shared";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
+/* Hydration-safe "on the client yet?" check: false during SSR and the first
+   client paint, true right after. Lets progressive-enhancement layers return
+   null without ever disagreeing with the server-rendered markup. */
+const noopSubscribe = () => () => {};
+function useMounted() {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
+}
+
 /* ── Scroll progress rail — fixed hairline that fills as you read ── */
 export function ScrollProgress() {
   const reduce = useReducedMotion();
+  const mounted = useMounted();
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 140,
     damping: 30,
     mass: 0.4,
   });
-  if (reduce) return null;
+  // Render nothing until mounted so SSR and the first client paint always
+  // match; a reduce-user's `null` would otherwise be a hydration mismatch.
+  if (!mounted || reduce) return null;
   return (
     <motion.div
       aria-hidden
@@ -189,24 +205,24 @@ export function CountUp({
   const [val, setVal] = useState(from);
 
   useEffect(() => {
-    if (!inView || reduce) return;
+    if (!inView) return;
+    // Reduce users get the final figure immediately (zero-duration tween),
+    // keeping SSR markup identical for every visitor.
     const controls = animate(from, to, {
-      duration,
+      duration: reduce ? 0 : duration,
       ease: EASE,
       onUpdate: (v) => setVal(v),
     });
     return () => controls.stop();
   }, [inView, reduce, from, to, duration]);
 
-  // Reduced-motion shows the final figure outright (no synchronous setState).
-  const shown = reduce ? to : val;
   return (
     <span
       ref={ref}
       className={"tabular-nums" + (className ? " " + className : "")}
     >
       {prefix}
-      {shown.toFixed(decimals)}
+      {val.toFixed(decimals)}
       {suffix}
     </span>
   );
@@ -232,6 +248,7 @@ export function Spotlight({
   const sx = useSpring(x, { stiffness: 260, damping: 30, mass: 0.5 });
   const sy = useSpring(y, { stiffness: 260, damping: 30, mass: 0.5 });
   const [on, setOn] = useState(false);
+  const mounted = useMounted();
 
   function onMove(e: PointerEvent<HTMLDivElement>) {
     // Mouse only: a touch "spotlight" would lag the finger and feel broken.
@@ -243,7 +260,8 @@ export function Spotlight({
   }
 
   // Static surfaces (and reduced-motion users) simply see the section as-is.
-  if (reduce) return null;
+  // Mount-gated so SSR and the first client paint always match.
+  if (!mounted || reduce) return null;
 
   return (
     <motion.div
@@ -291,7 +309,7 @@ export function MobileCtaBar() {
           <button
             type="button"
             onClick={openFunnel}
-            className="press flex w-full items-center justify-center gap-2 rounded-full bg-lav py-4 text-[0.95rem] font-bold text-white"
+            className="press sheen flex w-full items-center justify-center gap-2 rounded-full bg-lav py-4 text-[0.95rem] font-bold text-white"
           >
             Take the assessment <span aria-hidden>→</span>
           </button>

@@ -4,6 +4,7 @@
 /* eslint-disable react/no-unescaped-entities */
 
 import { useState, type ReactNode } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Reveal, Eyebrow, Btn, openFunnel } from "./shared";
 import { Tilt, Parallax, CountUp, Magnetic, Spotlight } from "./motion-fx";
 
@@ -582,8 +583,15 @@ export function Journey() {
             ))}
           </Reveal>
           <Reveal delay={120} className="lg:sticky lg:top-24">
-            <div className="bg-white border border-line rounded-xl2 shadow-card p-5 min-h-[520px]">
-              <JourneyPanel idx={active} key={active} />
+            <div className="bg-white border border-line rounded-xl2 shadow-card p-5 min-h-[520px] overflow-hidden">
+              <motion.div
+                key={active}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <JourneyPanel idx={active} />
+              </motion.div>
             </div>
           </Reveal>
         </div>
@@ -954,7 +962,7 @@ export function Pricing() {
             <button
               type="button"
               onClick={openFunnel}
-              className="press mt-7 w-full justify-center inline-flex items-center gap-2 bg-white text-ink font-bold text-base rounded-full py-[1.05rem] hover:-translate-y-0.5"
+              className="press sheen-ink mt-7 w-full justify-center inline-flex items-center gap-2 bg-white text-ink font-bold text-base rounded-full py-[1.05rem] hover:-translate-y-0.5"
             >
               Take the assessment →
             </button>
@@ -1071,13 +1079,19 @@ export function TripleBaseline() {
                 id={`baseline-tab-${b.key}`}
                 onClick={() => setActive(i)}
                 className={
-                  "press rounded-full px-5 py-2.5 text-[0.9rem] font-semibold transition-colors " +
-                  (active === i
-                    ? "bg-ink text-white"
-                    : "text-ink2 hover:bg-lavtint")
+                  "press relative rounded-full px-5 py-2.5 text-[0.9rem] font-semibold transition-colors duration-300 " +
+                  (active === i ? "text-white" : "text-ink2 hover:bg-lavtint")
                 }
               >
-                {b.tab}
+                {active === i && (
+                  <motion.span
+                    layoutId="baseline-pill"
+                    aria-hidden="true"
+                    className="absolute inset-0 rounded-full bg-ink"
+                    transition={{ type: "spring", stiffness: 420, damping: 36 }}
+                  />
+                )}
+                <span className="relative z-[1]">{b.tab}</span>
               </button>
             ))}
           </div>
@@ -1097,8 +1111,10 @@ export function TripleBaseline() {
                   alt={b.alt}
                   loading="lazy"
                   className={
-                    "absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out " +
-                    (active === i ? "opacity-100" : "opacity-0")
+                    "absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-700 ease-out " +
+                    (active === i
+                      ? "scale-100 opacity-100"
+                      : "scale-[1.045] opacity-0")
                   }
                 />
               ))}
@@ -1107,25 +1123,42 @@ export function TripleBaseline() {
               </div>
             </div>
             <div className="flex flex-col justify-center p-[clamp(1.6rem,3vw,2.6rem)]">
-              <h3 className="font-disp text-[clamp(1.4rem,2.4vw,2rem)] font-extrabold tracking-tight">
-                {current.title}
-              </h3>
-              <p className="mt-3 text-[1.02rem] leading-[1.55] text-ink2">
-                {current.body}
-              </p>
-              <ul className="mt-6 space-y-2.5">
-                {current.points.map((p) => (
-                  <li
-                    key={p}
-                    className="flex items-start gap-2.5 text-[0.96rem] text-ink"
-                  >
-                    <span className="mt-0.5 text-lav">
-                      <Ico d={II.check} />
-                    </span>
-                    {p}
-                  </li>
-                ))}
-              </ul>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={current.key}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <h3 className="font-disp text-[clamp(1.4rem,2.4vw,2rem)] font-extrabold tracking-tight">
+                    {current.title}
+                  </h3>
+                  <p className="mt-3 text-[1.02rem] leading-[1.55] text-ink2">
+                    {current.body}
+                  </p>
+                  <ul className="mt-6 space-y-2.5">
+                    {current.points.map((p, j) => (
+                      <motion.li
+                        key={p}
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          duration: 0.35,
+                          delay: 0.08 + j * 0.06,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
+                        className="flex items-start gap-2.5 text-[0.96rem] text-ink"
+                      >
+                        <span className="mt-0.5 text-lav">
+                          <Ico d={II.check} />
+                        </span>
+                        {p}
+                      </motion.li>
+                    ))}
+                  </ul>
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
         </Reveal>
@@ -1386,7 +1419,7 @@ export function FAQ() {
             <details key={i} className="border-b border-line2 group">
               <summary className="flex items-center justify-between gap-6 py-6 font-disp text-[clamp(1.1rem,1.5vw,1.35rem)] font-bold tracking-tight hover:text-lav transition-colors">
                 {q}
-                <span className="shrink-0 w-7 h-7 rounded-full border border-line2 grid place-items-center text-lav group-open:bg-lav group-open:text-white group-open:border-lav transition-colors text-lg leading-none">
+                <span className="shrink-0 w-7 h-7 rounded-full border border-line2 grid place-items-center text-lav group-open:bg-lav group-open:text-white group-open:border-lav group-open:rotate-[135deg] transition-all duration-300 text-lg leading-none">
                   +
                 </span>
               </summary>
@@ -1443,7 +1476,7 @@ export function CTA() {
             <button
               type="button"
               onClick={openFunnel}
-              className="press inline-flex items-center gap-2 bg-white text-ink font-semibold rounded-full text-base px-7 py-[1.05rem] hover:-translate-y-0.5"
+              className="press sheen-ink inline-flex items-center gap-2 bg-white text-ink font-semibold rounded-full text-base px-7 py-[1.05rem] hover:-translate-y-0.5"
             >
               Take the assessment <span>→</span>
             </button>
