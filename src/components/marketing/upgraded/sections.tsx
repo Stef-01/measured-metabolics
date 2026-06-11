@@ -260,7 +260,7 @@ const JOURNEY_STEPS: [string, string][] = [
   ],
   [
     "Personalised Care Plan",
-    "Biomarker tracking, platform access, and enrolment in the Health Optimisation Protocol, with therapy and meals adapted to you.",
+    "Biomarker tracking, platform access, and your place in the Calibration Program, with therapy and meals adapted to you.",
   ],
   [
     "Ongoing Review",
@@ -650,7 +650,7 @@ export function Program() {
       "∞",
       "Throughout",
       "Built around your real life",
-      "Food you enjoy and a routine you can keep. We shape everything around how you actually live, so the results outlast the program.",
+      "Food you enjoy and a routine you can keep. We shape everything around how you actually live, so the results outlast the Program.",
       "/landing/meal-planning.jpg",
     ],
     [
@@ -664,15 +664,15 @@ export function Program() {
   return (
     <section id="program" className="sec-pad bg-paper">
       <div className="max-w-[1200px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
-        <Reveal className="max-w-[680px] mb-[clamp(2.5rem,4vw,3.4rem)]">
-          <Eyebrow>The Health Optimisation Protocol</Eyebrow>
-          <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
-            Your six months, <span className="text-lav">step by step</span>.
+        <Reveal className="max-w-[720px] mb-[clamp(2.5rem,4vw,3.4rem)]">
+          <Eyebrow>The one program we offer</Eyebrow>
+          <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2.2rem,4.6vw,3.8rem)] leading-[1.02] mt-4">
+            The <span className="text-lav">Calibration Program</span>.
           </h2>
-          <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            Six months of genuinely personal care. Every decision is led by a
-            specialist clinician and shaped by your own data, never a fixed
-            template.
+          <p className="mt-5 text-[clamp(1.1rem,1.3vw,1.35rem)] text-ink2 leading-[1.55]">
+            One flagship program, built to do one thing exceptionally well. Six
+            months of specialist-led care that calibrates your treatment,
+            nutrition and training to your own biology, then proves it worked.
           </p>
         </Reveal>
         <div className="grid gap-4">
@@ -873,9 +873,9 @@ export function EverythingIncluded() {
             Every step covered.
           </h2>
           <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            Every plan combines medication, clinical oversight and real human
-            support, so you're guided from your first dose to your goal, and
-            beyond.
+            The Calibration Program combines medication, clinical oversight and
+            real human support, so you're guided from your first dose to your
+            goal, and beyond.
           </p>
         </Reveal>
         <div className="border-t border-line2/70">
@@ -935,14 +935,14 @@ export function Pricing() {
         <Reveal className="text-center max-w-[680px] mx-auto mb-[clamp(2.5rem,5vw,3.5rem)]">
           <Eyebrow center>Pricing</Eyebrow>
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
-            No hidden costs. <span className="text-lav">Real care.</span>
+            One program. <span className="text-lav">One simple price.</span>
           </h2>
           <p className="mt-5 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            Everything is priced upfront and clearly displayed: CGM, DEXA,
-            biomarker testing, clinician consults and medication. You'll always
-            know exactly what you're paying for. And the care itself is never
-            rushed. Need more time in your consult? Want extra support along the
-            way? That's part of your care, not an added cost.
+            No tiers, no add-ons to decode. The Calibration Program is one
+            upfront price covering CGM, DEXA, biomarker testing, clinician
+            consults and medication. And the care itself is never rushed. Need
+            more time in your consult? Want extra support along the way? That's
+            part of your care, not an added cost.
           </p>
         </Reveal>
         <Reveal
@@ -951,10 +951,10 @@ export function Pricing() {
         >
           <div className="p-[clamp(1.8rem,3vw,2.6rem)]">
             <div className="font-disp text-[1.4rem] font-bold">
-              CLOVE Weight Care Plan
+              The Calibration Program
             </div>
             <div className="text-muted mt-1 text-[0.95rem]">
-              Clinician-led · medication included · cancel anytime
+              Six months · clinician-led · medication included · cancel anytime
             </div>
             <div className="mt-6 text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-muted">
               Everything included
@@ -1500,9 +1500,9 @@ export function CTA() {
           as="p"
           className="text-white/90 mt-6 mx-auto max-w-[34rem] text-[clamp(1.05rem,1.25vw,1.3rem)] leading-[1.55]"
         >
-          We take on a limited number of patients so every plan gets the
-          attention it deserves. Start with a short online assessment, no
-          commitment required.
+          We take a limited number of patients into the Calibration Program each
+          intake, so every one gets the attention it deserves. Start with a
+          short online assessment, no commitment required.
         </Reveal>
         <Reveal
           delay={200}
@@ -1533,7 +1533,7 @@ export function Footer() {
       "Practice",
       [
         ["How it works", "#journey"],
-        ["Programs", "#program"],
+        ["The Calibration Program", "#program"],
         ["Precision medicine", "#doctor"],
       ],
     ],
