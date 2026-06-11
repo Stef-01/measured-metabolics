@@ -89,6 +89,42 @@ export function ProofStats() {
             "radial-gradient(620px circle at 18% 30%, #fff, transparent)",
         }}
       ></div>
+      {/* Faint node constellation: the body's systems as a calm, static map. */}
+      <svg
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.15]"
+        viewBox="0 0 1200 420"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+      >
+        <g stroke="#fff" strokeWidth="0.5">
+          <path
+            d="M90 96 L300 150 L505 84 L745 168 L965 104 L1130 158"
+            opacity="0.32"
+          />
+          <path
+            d="M170 330 L420 268 L660 342 L885 272 L1085 336"
+            opacity="0.26"
+          />
+          <path
+            d="M300 150 L420 268 M745 168 L660 342 M965 104 L885 272"
+            opacity="0.2"
+          />
+        </g>
+        <g fill="#fff">
+          <circle cx="90" cy="96" r="2.4" />
+          <circle cx="300" cy="150" r="3.2" />
+          <circle cx="505" cy="84" r="2" />
+          <circle cx="745" cy="168" r="3.6" />
+          <circle cx="965" cy="104" r="2.4" />
+          <circle cx="1130" cy="158" r="1.8" />
+          <circle cx="170" cy="330" r="2" />
+          <circle cx="420" cy="268" r="3" />
+          <circle cx="660" cy="342" r="2.4" />
+          <circle cx="885" cy="272" r="3.4" />
+          <circle cx="1085" cy="336" r="1.8" />
+        </g>
+      </svg>
       <div className="relative z-[1] max-w-[1100px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
         <Reveal className="text-center max-w-[640px] mx-auto">
           <span className="inline-flex items-center gap-2 text-[0.72rem] font-semibold tracking-[0.16em] uppercase text-white/75">
@@ -745,7 +781,7 @@ const CAPABILITIES: [string, string, string][] = [
 
 export function Capabilities() {
   return (
-    <section className="sec-pad bg-paper">
+    <section className="sec-pad relative z-[2] -mt-8 rounded-t-[2.5rem] bg-paper">
       <div className="max-w-[1200px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
         <Reveal className="max-w-[680px] mb-[clamp(2.5rem,4vw,3.4rem)]">
           <Eyebrow>Inside your program</Eyebrow>
@@ -1309,7 +1345,7 @@ export function Quotes() {
     ],
   ];
   return (
-    <section className="sec-pad bg-paper">
+    <section className="sec-pad relative z-[2] -mt-8 rounded-t-[2.5rem] bg-paper">
       <div className="max-w-[1200px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
         <Reveal className="text-center max-w-[640px] mx-auto mb-[clamp(2.5rem,5vw,3.4rem)]">
           <Eyebrow center>Patient stories</Eyebrow>
@@ -1513,6 +1549,13 @@ export function Footer() {
   return (
     <footer className="bg-[#0e130f] text-white/60 py-[clamp(3.5rem,6vw,5rem)]">
       <div className="max-w-[1200px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
+        {/* Ghost wordmark: the brand as a quiet monument above the columns. */}
+        <div
+          aria-hidden="true"
+          className="font-disp select-none text-[clamp(4rem,14vw,11rem)] font-extrabold leading-[0.82] tracking-[-0.045em] text-white/[0.06] mb-[clamp(1.5rem,3vw,2.5rem)]"
+        >
+          CLOVE
+        </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-[1.7fr_1fr_1fr_1.1fr] gap-8 pb-10 border-b border-white/10">
           <div>
             <span className="font-disp text-[1.35rem] font-extrabold text-white">
@@ -1612,6 +1655,69 @@ export function TrustBar() {
             {label}
           </div>
         ))}
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Biomarker ticker ---------------- */
+// A slow, lab-index strip of the markers a comprehensive panel covers. Pure
+// texture in the Everlab/Function register: quiet, uppercase, evidence-dense.
+const MARKERS = [
+  "ApoB",
+  "LDL-C",
+  "HDL-C",
+  "Triglycerides",
+  "Lp(a)",
+  "HbA1c",
+  "Fasting glucose",
+  "Fasting insulin",
+  "hs-CRP",
+  "ALT",
+  "GGT",
+  "eGFR",
+  "Uric acid",
+  "TSH",
+  "Free T4",
+  "Testosterone",
+  "Ferritin",
+  "Vitamin D",
+  "B12",
+  "Cortisol",
+];
+
+export function BiomarkerTicker() {
+  return (
+    <section
+      aria-label="Biomarkers a comprehensive panel can cover"
+      className="border-b border-line bg-paper py-3.5"
+    >
+      <div className="marquee-mask overflow-hidden">
+        <div
+          className="mq-row items-center"
+          style={{ animationDuration: "72s" }}
+        >
+          {[0, 1].map((copy) => (
+            <span
+              key={copy}
+              aria-hidden={copy === 1}
+              className="flex shrink-0 items-center"
+            >
+              {MARKERS.map((m) => (
+                <span
+                  key={m}
+                  className="flex shrink-0 items-center whitespace-nowrap px-5 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-muted"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="mr-5 inline-block h-1 w-1 rounded-full bg-line2"
+                  ></span>
+                  {m}
+                </span>
+              ))}
+            </span>
+          ))}
+        </div>
       </div>
     </section>
   );

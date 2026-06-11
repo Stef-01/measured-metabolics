@@ -5,6 +5,7 @@ import { ScrollProgress, MobileCtaBar } from "./motion-fx";
 import { Nav, Hero } from "./hero";
 import {
   TrustBar,
+  BiomarkerTicker,
   Difference,
   ProofStats,
   Capabilities,
@@ -37,6 +38,7 @@ export function UpgradedLanding() {
         <main id="main">
           <Hero />
           <TrustBar />
+          <BiomarkerTicker />
           <Difference />
           <ProofStats />
           <Capabilities />
