@@ -284,11 +284,9 @@ export function Pricing() {
             One program. <span className="text-lav">One simple price.</span>
           </h2>
           <p className="mt-5 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            No tiers, no add-ons to decode. Calibrate by CLOVE is one upfront
-            price covering CGM, DEXA, biomarker testing, clinician consults and
-            medication. And the care itself is never rushed. Need more time in
-            your consult? Want extra support along the way? That's part of your
-            care, not an added cost.
+            No tiers, no add-ons to decode. And the care itself is never rushed.
+            Need more time in your consult? Want extra support along the way?
+            That's part of your care, not an added cost.
           </p>
         </Reveal>
         <Reveal
@@ -300,7 +298,7 @@ export function Pricing() {
               Calibrate by CLOVE
             </div>
             <div className="text-muted mt-1 text-[0.95rem]">
-              Six months · clinician-led · medication included · cancel anytime
+              Clinician-led · medication included · cancel anytime
             </div>
             <div className="mt-6 text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-muted">
               Everything included
@@ -576,7 +574,7 @@ export function Quotes() {
       "For the first time, my labs and how I actually feel were finally connected. I understand my own body now, and exactly what to do with it.",
       "SM",
       "Sarah M.",
-      "Brisbane · 6-month program",
+      "Brisbane",
       "sarah",
     ],
     [
