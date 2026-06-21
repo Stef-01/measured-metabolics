@@ -260,7 +260,7 @@ const JOURNEY_STEPS: [string, string][] = [
   ],
   [
     "Personalised Care Plan",
-    "Biomarker tracking, platform access, and your place in the Calibration Program, with therapy and meals adapted to you.",
+    "Biomarker tracking, platform access, and your place in Calibrate by CLOVE, with therapy and meals adapted to you.",
   ],
   [
     "Ongoing Review",
@@ -667,7 +667,7 @@ export function Program() {
         <Reveal className="max-w-[720px] mb-[clamp(2.5rem,4vw,3.4rem)]">
           <Eyebrow>The one program we offer</Eyebrow>
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2.2rem,4.6vw,3.8rem)] leading-[1.02] mt-4">
-            The <span className="text-lav">Calibration Program</span>.
+            <span className="text-lav">Calibrate</span> by CLOVE.
           </h2>
           <p className="mt-5 text-[clamp(1.1rem,1.3vw,1.35rem)] text-ink2 leading-[1.55]">
             One flagship program, built to do one thing exceptionally well. Six
@@ -873,9 +873,9 @@ export function EverythingIncluded() {
             Every step covered.
           </h2>
           <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            The Calibration Program combines medication, clinical oversight and
-            real human support, so you're guided from your first dose to your
-            goal, and beyond.
+            Calibrate by CLOVE combines medication, clinical oversight and real
+            human support, so you're guided from your first dose to your goal,
+            and beyond.
           </p>
         </Reveal>
         <div className="border-t border-line2/70">
@@ -938,11 +938,11 @@ export function Pricing() {
             One program. <span className="text-lav">One simple price.</span>
           </h2>
           <p className="mt-5 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            No tiers, no add-ons to decode. The Calibration Program is one
-            upfront price covering CGM, DEXA, biomarker testing, clinician
-            consults and medication. And the care itself is never rushed. Need
-            more time in your consult? Want extra support along the way? That's
-            part of your care, not an added cost.
+            No tiers, no add-ons to decode. Calibrate by CLOVE is one upfront
+            price covering CGM, DEXA, biomarker testing, clinician consults and
+            medication. And the care itself is never rushed. Need more time in
+            your consult? Want extra support along the way? That's part of your
+            care, not an added cost.
           </p>
         </Reveal>
         <Reveal
@@ -951,7 +951,7 @@ export function Pricing() {
         >
           <div className="p-[clamp(1.8rem,3vw,2.6rem)]">
             <div className="font-disp text-[1.4rem] font-bold">
-              The Calibration Program
+              Calibrate by CLOVE
             </div>
             <div className="text-muted mt-1 text-[0.95rem]">
               Six months · clinician-led · medication included · cancel anytime
@@ -1023,186 +1023,6 @@ export function Pricing() {
             </p>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------------- Triple Baseline (interactive) ---------------- */
-const BASELINE: {
-  key: string;
-  tab: string;
-  title: string;
-  body: string;
-  points: string[];
-  img: string;
-  alt: string;
-}[] = [
-  {
-    key: "bloods",
-    tab: "Bloods",
-    title: "Comprehensive bloods",
-    body: "A broad biomarker panel reads the systems a scale never shows, metabolic, hormonal and nutritional, so treatment starts from evidence, not assumptions.",
-    points: [
-      "Metabolic & hormonal markers",
-      "Repeated to track change",
-      "Reviewed by your doctor",
-    ],
-    img: "/landing/meal-planning.jpg",
-    alt: "Comprehensive blood biomarker testing",
-  },
-  {
-    key: "cgm",
-    tab: "CGM",
-    title: "Continuous glucose monitoring",
-    body: "An ultra-thin sensor reads your metabolism in real time, around the clock, revealing exactly how your body responds to food, sleep and stress. Your therapy and nutrition are tuned to how you actually respond, not to population averages.",
-    points: [
-      "Real-time data, around the clock",
-      "See your response to food",
-      "Guides dose and nutrition",
-    ],
-    img: "/landing/cgm-device.jpg",
-    alt: "CLOVE continuous glucose monitor applied to skin",
-  },
-  {
-    key: "body",
-    tab: "Body composition",
-    title: "DEXA body composition",
-    body: "A clinical-grade scan separates fat mass from lean mass, so progress is measured by what actually matters: losing fat while keeping muscle.",
-    points: [
-      "Fat vs lean mass, precisely",
-      "Confirms healthy loss",
-      "Baseline you can repeat",
-    ],
-    img: "/landing/dexa.jpg",
-    alt: "DEXA scan measuring body composition",
-  },
-];
-
-export function TripleBaseline() {
-  const [active, setActive] = useState(0);
-  const current = BASELINE[active];
-  return (
-    <section id="doctor" className="sec-pad bg-paper">
-      <div className="max-w-[1100px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
-        <Reveal className="max-w-[680px]">
-          <Eyebrow>Precision metabolic medicine</Eyebrow>
-          <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02] mt-4">
-            Medicine that actually <span className="text-lav">knows you</span>.
-          </h2>
-          <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
-            Most care guesses. We measure. CLOVE begins with three readings,
-            bloods, continuous glucose and body composition, then builds your
-            plan on what they reveal together. Every dose, every meal and every
-            adjustment is driven by your own data, not population averages.
-          </p>
-        </Reveal>
-
-        <Reveal delay={120} className="mt-[clamp(2rem,4vw,3rem)]">
-          {/* Segmented control */}
-          <div
-            role="tablist"
-            aria-label="Your baseline measurements"
-            className="inline-flex flex-wrap gap-1.5 rounded-full border border-line bg-white p-1.5 shadow-soft"
-          >
-            {BASELINE.map((b, i) => (
-              <button
-                key={b.key}
-                type="button"
-                role="tab"
-                aria-selected={active === i}
-                aria-controls={`baseline-panel-${b.key}`}
-                id={`baseline-tab-${b.key}`}
-                onClick={() => setActive(i)}
-                className={
-                  "press relative rounded-full px-5 py-2.5 text-[0.9rem] font-semibold transition-colors duration-300 " +
-                  (active === i ? "text-white" : "text-ink2 hover:bg-lavtint")
-                }
-              >
-                {active === i && (
-                  <motion.span
-                    layoutId="baseline-pill"
-                    aria-hidden="true"
-                    className="absolute inset-0 rounded-full bg-ink"
-                    transition={{ type: "spring", stiffness: 420, damping: 36 }}
-                  />
-                )}
-                <span className="relative z-[1]">{b.tab}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Panel */}
-          <div
-            role="tabpanel"
-            id={`baseline-panel-${current.key}`}
-            aria-labelledby={`baseline-tab-${current.key}`}
-            className="mt-6 grid items-stretch gap-5 overflow-hidden rounded-xl2 border border-line bg-white shadow-card md:grid-cols-[1.05fr_0.95fr]"
-          >
-            <div className="relative min-h-[260px] overflow-hidden bg-[#0a0e0c] md:min-h-[380px]">
-              {BASELINE.map((b, i) => (
-                <img
-                  key={b.key}
-                  src={b.img}
-                  alt={b.alt}
-                  loading="lazy"
-                  className={
-                    "absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-700 ease-out " +
-                    (active === i
-                      ? "scale-100 opacity-100"
-                      : "scale-[1.045] opacity-0")
-                  }
-                />
-              ))}
-              <div className="absolute left-4 top-4 rounded-full bg-black/55 px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur-sm">
-                {active + 1} / {BASELINE.length}
-              </div>
-            </div>
-            <div className="flex flex-col justify-center p-[clamp(1.6rem,3vw,2.6rem)]">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={current.key}
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <h3 className="font-disp text-[clamp(1.4rem,2.4vw,2rem)] font-extrabold tracking-tight">
-                    {current.title}
-                  </h3>
-                  <p className="mt-3 text-[1.02rem] leading-[1.55] text-ink2">
-                    {current.body}
-                  </p>
-                  <ul className="mt-6 space-y-2.5">
-                    {current.points.map((p, j) => (
-                      <motion.li
-                        key={p}
-                        initial={{ opacity: 0, x: 10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{
-                          duration: 0.35,
-                          delay: 0.08 + j * 0.06,
-                          ease: [0.16, 1, 0.3, 1],
-                        }}
-                        className="flex items-start gap-2.5 text-[0.96rem] text-ink"
-                      >
-                        <span className="mt-0.5 text-lav">
-                          <Ico d={II.check} />
-                        </span>
-                        {p}
-                      </motion.li>
-                    ))}
-                  </ul>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-        </Reveal>
-        <Reveal delay={180} className="mt-9">
-          <Btn lg onClick={openFunnel}>
-            Take the assessment <span>→</span>
-          </Btn>
-        </Reveal>
       </div>
     </section>
   );
@@ -1500,7 +1320,7 @@ export function CTA() {
           as="p"
           className="text-white/90 mt-6 mx-auto max-w-[34rem] text-[clamp(1.05rem,1.25vw,1.3rem)] leading-[1.55]"
         >
-          We take a limited number of patients into the Calibration Program each
+          We take a limited number of patients into Calibrate by CLOVE each
           intake, so every one gets the attention it deserves. Start with a
           short online assessment, no commitment required.
         </Reveal>
@@ -1533,8 +1353,8 @@ export function Footer() {
       "Practice",
       [
         ["How it works", "#journey"],
-        ["The Calibration Program", "#program"],
-        ["Precision medicine", "#doctor"],
+        ["Calibrate by CLOVE", "#program"],
+        ["Pricing", "#pricing"],
       ],
     ],
     [

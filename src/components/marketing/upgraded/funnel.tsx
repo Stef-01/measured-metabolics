@@ -75,7 +75,7 @@ const DOCTORS: Doctor[] = [
     title: "Specialist GP, metabolic medicine",
     credentials: "MBBS · FRACGP · MPhil",
     blurb:
-      "Fellow of the RACGP with a research background in metabolic medicine, leading the Calibration Program.",
+      "Fellow of the RACGP with a research background in metabolic medicine, leading Calibrate by CLOVE.",
     location: "Beecroft, NSW",
     img: "/images/dr-saxena.png",
     url: "https://healthengine.com.au/doctor/nsw/beecroft/dr-anubhav-saxena/p123180",
@@ -86,7 +86,7 @@ const DOCTORS: Doctor[] = [
     title: "Specialist GP, weight & metabolic care",
     credentials: "MBBS · FRACGP",
     blurb:
-      "Works alongside the Calibration Program providing doctor-led, evidence-based weight and metabolic care.",
+      "Works alongside Calibrate by CLOVE providing doctor-led, evidence-based weight and metabolic care.",
     location: "Beecroft, NSW",
     img: "/images/dr-yadav.png",
     url: "https://healthengine.com.au/doctor/nsw/beecroft/dr-tushar-yadav/p157754",
@@ -367,7 +367,7 @@ export function Funnel() {
             {/* Left rail */}
             <div className="grad-lav hidden min-h-0 flex-col overflow-y-auto p-8 text-white md:flex">
               <span className="font-disp text-[1.3rem] font-extrabold">
-                The Calibration Program
+                Calibrate by CLOVE
               </span>
               <div className="mt-10 flex flex-col gap-1">
                 {FUNNEL_STEPS.map((s, i) => (
@@ -434,11 +434,10 @@ export function Funnel() {
                       Thank you{data.first ? ", " + data.first : ""}.
                     </h2>
                     <p className="text-ink2 max-w-[44ch] mx-auto leading-relaxed">
-                      Based on what you've shared, the Calibration Program isn't
-                      the right fit for you just now. It's clinically designed
-                      for specific metabolic profiles, and we'd rather be
-                      upfront than point you toward something that won't serve
-                      you.
+                      Based on what you've shared, Calibrate by CLOVE isn't the
+                      right fit for you just now. It's clinically designed for
+                      specific metabolic profiles, and we'd rather be upfront
+                      than point you toward something that won't serve you.
                     </p>
                     <p className="text-ink2 mt-3 text-[0.92rem] max-w-[44ch] mx-auto leading-relaxed">
                       If your circumstances change, we'd love to hear from you,
@@ -472,8 +471,8 @@ export function Funnel() {
                       qualify.
                     </h2>
                     <p className="text-ink2 mt-2 max-w-[52ch] leading-relaxed">
-                      Based on your answers, the Calibration Program looks like
-                      a strong fit. Choose your specialist doctor to book your
+                      Based on your answers, Calibrate by CLOVE looks like a
+                      strong fit. Choose your specialist doctor to book your
                       first consultation, confirmed directly on HealthEngine.
                     </p>
                     <div className="mt-6 flex flex-col gap-4">

@@ -17,7 +17,6 @@ const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const NAV_LINKS: [string, string][] = [
   ["How It Works", "#journey"],
   ["The Program", "#program"],
-  ["Precision", "#doctor"],
   ["Pricing", "#pricing"],
   ["FAQ", "#faq"],
 ];
@@ -298,7 +297,7 @@ export function Hero() {
               transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-white"></span>
-              The Calibration Program
+              Calibrate by CLOVE
               <span className="text-white/50">· our one flagship</span>
             </motion.div>
             <h1 className="font-disp tracking-[-.04em] leading-[.98] text-[clamp(2.2rem,4.8vw,4rem)]">

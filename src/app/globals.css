@@ -129,7 +129,7 @@
   --color-brand-line: var(--brand-line);
   --color-brand-line2: var(--brand-line2);
   --color-brand-bgsoft: var(--brand-bgsoft);
-  --font-disp: "Hanken Grotesk", "Inter", system-ui, sans-serif;
+  --font-disp: var(--font-display), "Fraunces", Georgia, serif;
   --shadow-lav-card: var(--shadow-lav-card);
   --shadow-lav-soft: var(--shadow-lav-soft);
 
@@ -151,7 +151,7 @@
   --color-measured-clinical-blue: var(--measured-clinical-blue);
   --color-measured-clinical-amber: var(--measured-clinical-amber);
   --font-sans: "Inter", sans-serif;
-  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-serif: var(--font-display), "Fraunces", Georgia, serif;
   --color-measured-sand: var(--measured-sand);
   --color-measured-sand-deep: var(--measured-sand-deep);
   --color-measured-green-deep: var(--measured-green-deep);
@@ -762,17 +762,23 @@ a,
 .measured-upgraded .sec-pad {
   padding-block: clamp(5rem, 9vw, 9.5rem);
 }
+/* Fraunces optical-serif display: higher weight than a grotesk reads as
+   editorial rather than heavy, with looser tracking and a slightly dramatic
+   optical size on the largest headings. */
+.measured-upgraded .font-disp {
+  font-optical-sizing: auto;
+}
 .measured-upgraded h1.font-disp {
-  font-weight: 500;
-  letter-spacing: -0.018em;
+  font-weight: 600;
+  letter-spacing: -0.022em;
 }
 .measured-upgraded h2.font-disp {
-  font-weight: 400;
-  letter-spacing: -0.012em;
+  font-weight: 600;
+  letter-spacing: -0.018em;
 }
 .measured-upgraded h3.font-disp {
-  font-weight: 500;
-  letter-spacing: -0.006em;
+  font-weight: 600;
+  letter-spacing: -0.011em;
 }
 .measured-upgraded .grad-dot {
   background: linear-gradient(135deg, #3a3a33, #5e5d53);

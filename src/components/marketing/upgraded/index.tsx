@@ -14,7 +14,6 @@ import {
   EverythingIncluded,
   Program,
   Pricing,
-  TripleBaseline,
   VideoBand,
   Quotes,
   FAQ,
@@ -47,7 +46,6 @@ export function UpgradedLanding() {
           <EverythingIncluded />
           <Program />
           <Pricing />
-          <TripleBaseline />
           <VideoBand />
           <Quotes />
           <FAQ />

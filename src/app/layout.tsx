@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Cormorant_Garamond, Hanken_Grotesk } from "next/font/google";
+import { Inter, Fraunces } from "next/font/google";
 import { DeviceFrame } from "@/components/shared/device-frame";
 import { ErrorBoundary } from "@/components/shared/error-boundary";
 import { ToastHost } from "@/components/shared/toast-host";
@@ -11,18 +11,17 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const hanken = Hanken_Grotesk({
-  variable: "--font-hanken",
+// Fraunces — a warm, high-contrast optical serif. Drives both the display
+// headings and the italic editorial accents for one cohesive, characterful
+// voice. Loaded as a variable font (weight "variable" + opsz/SOFT axes) so
+// large headings pick up the dramatic high-contrast cut while small text stays
+// calm; Inter remains the body face.
+const fraunces = Fraunces({
+  variable: "--font-display",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-});
-
-const cormorant = Cormorant_Garamond({
-  variable: "--font-serif",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: "variable",
   style: ["normal", "italic"],
+  axes: ["opsz", "SOFT"],
   display: "swap",
 });
 
@@ -86,7 +85,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${hanken.variable} ${cormorant.variable} antialiased font-sans min-h-dvh`}
+        className={`${inter.variable} ${fraunces.variable} antialiased font-sans min-h-dvh`}
       >
         <a
           href="#main"
