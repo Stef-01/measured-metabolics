@@ -682,9 +682,9 @@ a,
    composes cleanly with hover translate utilities instead of fighting them. */
 .measured-upgraded .press {
   transition:
-    scale 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    scale 0.32s cubic-bezier(0.16, 1, 0.3, 1),
     translate 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.32s cubic-bezier(0.16, 1, 0.3, 1),
     background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
     color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -692,47 +692,63 @@ a,
 .measured-upgraded .press:active {
   scale: 0.975;
 }
-/* Hover sheen for primary CTAs: a single slow light sweep. `.sheen` is a soft
-   white pass for dark buttons; `.sheen-ink` a faint shadow pass for white
-   buttons. Purely decorative, so it is removed under reduced motion. */
-.measured-upgraded .sheen,
-.measured-upgraded .sheen-ink {
-  position: relative;
-  overflow: hidden;
+/* Subtle CTA grow: the button eases up ~3% on hover and settles back, a calmer
+   signal than a light sweep. Pairs with a soft shadow lift for depth. Honours
+   reduced motion. */
+.measured-upgraded .grow {
+  transition:
+    scale 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.24s ease,
+    border-color 0.24s ease,
+    color 0.24s ease;
+  will-change: scale;
 }
-.measured-upgraded .sheen::after,
-.measured-upgraded .sheen-ink::after {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  transform: translateX(-130%) skewX(-14deg);
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: none;
+@media (prefers-reduced-motion: no-preference) {
+  .measured-upgraded .grow:hover {
+    scale: 1.03;
+  }
 }
-.measured-upgraded .sheen::after {
-  background: linear-gradient(
-    105deg,
-    transparent 38%,
-    rgba(255, 255, 255, 0.26) 50%,
-    transparent 62%
-  );
+.measured-upgraded .grow:active {
+  scale: 0.985;
 }
-.measured-upgraded .sheen-ink::after {
-  background: linear-gradient(
-    105deg,
-    transparent 38%,
-    rgba(27, 27, 22, 0.07) 50%,
-    transparent 62%
-  );
+/* Arrow nudge: any `.cta-arrow` glyph drifts right when its group is hovered. */
+.measured-upgraded .cta-arrow {
+  transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.measured-upgraded .sheen:hover::after,
-.measured-upgraded .sheen-ink:hover::after {
-  transform: translateX(130%) skewX(-14deg);
+@media (prefers-reduced-motion: no-preference) {
+  .measured-upgraded .group:hover .cta-arrow {
+    transform: translateX(4px);
+  }
+}
+/* Link underline wipe: in-from-left on hover, used on text links. */
+.measured-upgraded .ul-wipe {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1.5px;
+  transition: background-size 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.measured-upgraded .ul-wipe:hover {
+  background-size: 100% 1.5px;
+}
+/* Card lift: shared hover for content cards, a small rise + shadow bloom. */
+.measured-upgraded .lift {
+  transition:
+    transform 0.36s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.36s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .measured-upgraded .lift:hover {
+    transform: translateY(-4px);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .measured-upgraded .sheen::after,
-  .measured-upgraded .sheen-ink::after {
-    display: none;
+  .measured-upgraded .grow,
+  .measured-upgraded .cta-arrow,
+  .measured-upgraded .lift,
+  .measured-upgraded .ul-wipe {
+    transition: none;
   }
 }
 /* Horizontal-scroll affordance: a soft fade on the trailing edge hints there

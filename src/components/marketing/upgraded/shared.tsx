@@ -77,11 +77,10 @@ type BtnVariant = "primary" | "ghost" | "white" | "dark";
 
 const BTN_VARIANTS: Record<BtnVariant, string> = {
   primary:
-    "sheen bg-lav text-white border-transparent shadow-[0_10px_26px_-12px_rgba(20,18,12,.45)] hover:-translate-y-0.5",
-  ghost: "bg-transparent text-ink border-line2 hover:bg-bgsoft",
-  white:
-    "sheen-ink bg-white text-ink border-line2 hover:border-ink hover:-translate-y-0.5",
-  dark: "sheen bg-ink text-white border-transparent hover:-translate-y-0.5",
+    "grow bg-lav text-white border-transparent shadow-[0_10px_26px_-12px_rgba(20,18,12,.45)] hover:shadow-[0_16px_34px_-14px_rgba(20,18,12,.55)]",
+  ghost: "grow bg-transparent text-ink border-line2 hover:bg-bgsoft",
+  white: "grow bg-white text-ink border-line2 hover:border-ink",
+  dark: "grow bg-ink text-white border-transparent",
 };
 
 export function Btn({

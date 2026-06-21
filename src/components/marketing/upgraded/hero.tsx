@@ -15,8 +15,7 @@ import { Magnetic } from "./motion-fx";
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 const NAV_LINKS: [string, string][] = [
-  ["How It Works", "#journey"],
-  ["The Program", "#program"],
+  ["What's Included", "#included"],
   ["Pricing", "#pricing"],
   ["FAQ", "#faq"],
 ];
@@ -216,6 +215,21 @@ const ICONS: Record<string, ReactNode> = {
       <path d="M16 10l5-3v10l-5-3" />
     </svg>
   ),
+  lock: (
+    <svg
+      width="19"
+      height="19"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="4.5" y="10.5" width="15" height="10" rx="2.5" />
+      <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" />
+    </svg>
+  ),
 };
 
 const TRUST: [string, string][] = [
@@ -223,6 +237,7 @@ const TRUST: [string, string][] = [
   ["clock", "Consult within 24 hours"],
   ["pulse", "Advanced diagnostic options"],
   ["video", "Australia-wide"],
+  ["lock", "Private & encrypted"],
 ];
 
 export function Hero() {
@@ -339,19 +354,16 @@ export function Hero() {
                 <button
                   type="button"
                   onClick={openFunnel}
-                  className="group press sheen-ink inline-flex items-center gap-2 rounded-full bg-white text-ink font-bold text-base px-7 py-[1.05rem] shadow-[0_18px_40px_-18px_rgba(0,0,0,.8)] hover:-translate-y-0.5"
+                  className="group grow press inline-flex items-center gap-2 rounded-full bg-white text-ink font-bold text-base px-7 py-[1.05rem] shadow-[0_18px_40px_-18px_rgba(0,0,0,.8)] hover:shadow-[0_22px_46px_-18px_rgba(0,0,0,.9)]"
                 >
-                  Take the assessment{" "}
-                  <span className="transition-transform duration-300 group-hover:translate-x-1">
-                    →
-                  </span>
+                  Take the assessment <span className="cta-arrow">→</span>
                 </button>
               </Magnetic>
               <a
-                href="#journey"
+                href="#included"
                 className="press inline-flex items-center gap-2 rounded-full font-semibold text-base px-7 py-[1.05rem] text-white bg-white/10 border border-white/25 backdrop-blur-md hover:bg-white/[0.18]"
               >
-                How it works
+                What&apos;s included
               </a>
             </motion.div>
           </div>

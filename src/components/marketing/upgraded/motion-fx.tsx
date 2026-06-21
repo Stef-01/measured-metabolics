@@ -309,9 +309,12 @@ export function MobileCtaBar() {
           <button
             type="button"
             onClick={openFunnel}
-            className="press sheen flex w-full items-center justify-center gap-2 rounded-full bg-lav py-4 text-[0.95rem] font-bold text-white"
+            className="group grow press flex w-full items-center justify-center gap-2 rounded-full bg-lav py-4 text-[0.95rem] font-bold text-white"
           >
-            Take the assessment <span aria-hidden>→</span>
+            Take the assessment{" "}
+            <span aria-hidden className="cta-arrow">
+              →
+            </span>
           </button>
         </motion.div>
       )}

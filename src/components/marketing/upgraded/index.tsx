@@ -4,14 +4,10 @@ import { MotionConfig } from "framer-motion";
 import { ScrollProgress, MobileCtaBar } from "./motion-fx";
 import { Nav, Hero } from "./hero";
 import {
-  TrustBar,
   Difference,
   ProofStats,
-  Capabilities,
   ProgressTracked,
-  Journey,
   EverythingIncluded,
-  Program,
   Pricing,
   VideoBand,
   Quotes,
@@ -35,14 +31,10 @@ export function UpgradedLanding() {
         <Nav />
         <main id="main">
           <Hero />
-          <TrustBar />
           <Difference />
           <ProofStats />
-          <Capabilities />
-          <Journey />
           <ProgressTracked />
           <EverythingIncluded />
-          <Program />
           <Pricing />
           <VideoBand />
           <Quotes />
