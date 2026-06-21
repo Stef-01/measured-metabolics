@@ -324,9 +324,10 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.59, ease: EASE }}
             >
-              A specialist doctor, your bloods, glucose and body composition
-              read together, and a plan that adapts as you do. Precision care
-              built to make results last, not just begin.
+              Specialist doctor led, end to end. A program designed around
+              in-depth diagnostics, including bloods, glucose and body
+              composition scanning, then a plan that adapts as you do. Precision
+              care built so the weight stays off.
             </motion.p>
             <motion.div
               className="mt-9 flex gap-3.5 flex-wrap"
