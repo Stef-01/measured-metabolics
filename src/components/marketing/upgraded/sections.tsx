@@ -5,7 +5,7 @@
 
 import { useState } from "react";
 import { Reveal, Eyebrow, Btn, openFunnel } from "./shared";
-import { Tilt, CountUp, Magnetic, Spotlight } from "./motion-fx";
+import { CountUp, Magnetic, Spotlight } from "./motion-fx";
 
 /* Inline icon path map + renderer, shared by the included list and check marks. */
 const II: Record<string, string> = {
@@ -271,10 +271,8 @@ export function ProgressTracked() {
 /* ---------------- Pricing ---------------- */
 export function Pricing() {
   const notes = [
-    "Medication, if prescribed, is dispensed and delivered by a partner pharmacy.",
-    "No lock-in contracts. Pause or cancel your plan anytime.",
     "Prices in AUD. GST included where applicable.",
-    "Discovery call is obligation-free and covered by CLOVE.",
+    "Your initial assessment is obligation-free and covered by CLOVE.",
   ];
   return (
     <section id="pricing" className="sec-pad-xl bg-paper border-t border-line">
@@ -283,7 +281,10 @@ export function Pricing() {
           <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02]">
             One program. <span className="text-lav">One simple price.</span>
           </h2>
-          <p className="mt-5 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
+          <p className="mt-4 font-disp text-[clamp(1.3rem,2.2vw,1.9rem)] font-bold tracking-tight text-lav">
+            No lock-in contracts.
+          </p>
+          <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.3rem)] text-ink2 leading-[1.55]">
             No tiers, no add-ons to decode. And the care itself is never rushed.
             Need more time in your consult? Want extra support along the way?
             That's part of your care, not an added cost.
@@ -307,7 +308,6 @@ export function Pricing() {
               {[
                 "Prescription medication, if appropriate",
                 "Clinician assessment & ongoing reviews",
-                "Bloods, CGM & DEXA baseline testing",
                 "Personalised dose plan, adjusted over time",
                 "1:1 care coaching & nutrition support",
                 "Food diary & tailored exercise plan",
@@ -505,16 +505,9 @@ export function VideoBand() {
         ></div>
       </div>
       <div className="relative z-[2] max-w-[960px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)] py-[clamp(6rem,13vw,11rem)] text-center text-white">
-        <Reveal>
-          <span className="inline-flex items-center gap-2.5 text-[0.72rem] font-semibold tracking-[0.2em] uppercase text-white/65">
-            <span className="w-2 h-2 rounded-full grad-dot"></span>Why CLOVE
-            exists
-          </span>
-        </Reveal>
         <Reveal
-          delay={90}
           as="p"
-          className="font-serif font-medium tracking-[-.01em] leading-[1.14] text-[clamp(2.1rem,4.6vw,3.6rem)] mt-7 text-balance"
+          className="font-serif font-medium tracking-[-.01em] leading-[1.14] text-[clamp(2.1rem,4.6vw,3.6rem)] text-balance"
         >
           Most weight loss programs focus on the number on the scale.{" "}
           <span className="italic">CLOVE looks deeper</span>, your health,
@@ -545,129 +538,25 @@ const AFFILIATIONS: [string, string][] = [
   ["/landing/logos/ahpra.svg", "AHPRA"],
 ];
 
-/** Patient avatar: shows a photo when available, falls back to initials.
- *  Drop photos at /landing/patients/<slug>.jpg to upgrade automatically. */
-function PatientAvatar({ slug, initials }: { slug: string; initials: string }) {
-  const [failed, setFailed] = useState(false);
-  if (failed) {
-    return (
-      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full grad-dot text-[0.76rem] font-bold text-white">
-        {initials}
-      </span>
-    );
-  }
+/* Rotating affiliation logos, sits directly under the hero. */
+export function Affiliations() {
   return (
-    <img
-      src={`/landing/patients/${slug}.jpg`}
-      alt=""
-      loading="lazy"
-      onError={() => setFailed(true)}
-      className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-line"
-    />
-  );
-}
-
-export function Quotes() {
-  // [quote, initials, name, role, slug]
-  const qs: [string, string, string, string, string][] = [
-    [
-      "For the first time, my labs and how I actually feel were finally connected. I understand my own body now, and exactly what to do with it.",
-      "SM",
-      "Sarah M.",
-      "Brisbane",
-      "sarah",
-    ],
-    [
-      "Genuinely personable, and measured in every sense. The most practical way I've ever worked with a doctor.",
-      "DT",
-      "Daniel T.",
-      "Melbourne · Patient since 2024",
-      "daniel",
-    ],
-    [
-      "From the very first visit, they already knew my history. Knowledgeable, calm, and always reachable over telehealth.",
-      "AW",
-      "Aisha W.",
-      "Perth · Protocol patient",
-      "aisha",
-    ],
-    [
-      "The food diary and exercise plan made the medication actually stick. Down 11kg and it finally feels sustainable.",
-      "JR",
-      "James R.",
-      "Sydney",
-      "james",
-    ],
-    [
-      "Everything was clear from day one, no surprises on cost, just steady, measurable progress every month.",
-      "PN",
-      "Priya N.",
-      "Adelaide",
-      "priya",
-    ],
-    [
-      "Having a specialist a message away made the whole thing feel safe. I never felt rushed or like just another number.",
-      "TH",
-      "Tom H.",
-      "Gold Coast",
-      "tom",
-    ],
-  ];
-  return (
-    <section className="sec-pad relative z-[2] -mt-8 rounded-t-[2.5rem] bg-paper">
+    <section className="border-b border-line bg-paper py-[clamp(1.5rem,3vw,2.25rem)]">
       <div className="max-w-[1200px] mx-auto px-[clamp(1.25rem,4vw,2.5rem)]">
-        <Reveal className="text-center max-w-[640px] mx-auto mb-[clamp(2.5rem,5vw,3.4rem)]">
-          <h2 className="font-disp font-extrabold tracking-[-.03em] text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.02]">
-            Care people <span className="text-lav">actually feel</span>.
-          </h2>
-        </Reveal>
-        <div className="edge-fade flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {qs.map(([quote, ini, name, role, slug], i) => (
-            <Tilt
-              key={i}
-              max={6}
-              className="min-w-[300px] max-w-[340px] shrink-0 snap-start"
-            >
-              <Reveal
-                delay={(i % 3) * 90}
-                className="h-full bg-white rounded-[20px] p-8 flex flex-col shadow-soft hover:shadow-card hover:-translate-y-1 transition-all duration-300"
-              >
-                <div className="inline-flex items-center gap-1.5 text-[0.64rem] font-semibold tracking-[0.16em] uppercase text-lav mb-5">
-                  <span className="w-1.5 h-1.5 rounded-full grad-dot"></span>
-                  Verified patient
-                </div>
-                <blockquote className="text-[1.08rem] leading-relaxed text-ink font-medium flex-1 tracking-[-.01em]">
-                  {quote}
-                </blockquote>
-                <figcaption className="mt-6 flex items-center gap-3">
-                  <PatientAvatar slug={slug} initials={ini} />
-                  <span>
-                    <b className="block text-[0.88rem] font-bold">{name}</b>
-                    <span className="text-[0.8rem] text-muted">{role}</span>
-                  </span>
-                </figcaption>
-              </Reveal>
-            </Tilt>
-          ))}
-        </div>
-
-        {/* Affiliations logo marquee */}
-        <Reveal className="mt-[clamp(3rem,6vw,4.5rem)]">
-          <div className="marquee-mask overflow-hidden">
-            <div className="mq-row items-center">
-              {[...AFFILIATIONS, ...AFFILIATIONS].map(([src, name], i) => (
-                <img
-                  key={i}
-                  src={src}
-                  alt={i < AFFILIATIONS.length ? name : ""}
-                  aria-hidden={i >= AFFILIATIONS.length}
-                  loading="lazy"
-                  className="mx-9 h-7 w-auto shrink-0 opacity-55 grayscale transition-opacity duration-300 hover:opacity-90"
-                />
-              ))}
-            </div>
+        <div className="marquee-mask overflow-hidden">
+          <div className="mq-row items-center">
+            {[...AFFILIATIONS, ...AFFILIATIONS].map(([src, name], i) => (
+              <img
+                key={i}
+                src={src}
+                alt={i < AFFILIATIONS.length ? name : ""}
+                aria-hidden={i >= AFFILIATIONS.length}
+                loading="lazy"
+                className="mx-9 h-7 w-auto shrink-0 opacity-55 grayscale transition-opacity duration-300 hover:opacity-90"
+              />
+            ))}
           </div>
-        </Reveal>
+        </div>
       </div>
     </section>
   );
@@ -758,7 +647,7 @@ export function CTA() {
           as="h2"
           className="font-disp font-extrabold tracking-[-.03em] text-white text-[clamp(2.4rem,5vw,4rem)] leading-[1.02] mt-4"
         >
-          The wait is over. The best way to lose weight is here.
+          The weight is over.
         </Reveal>
         <Reveal
           delay={140}

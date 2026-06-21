@@ -305,16 +305,6 @@ export function Hero() {
       >
         <div className="w-full max-w-[1320px] mx-auto px-[clamp(1.25rem,4vw,2.75rem)] pt-[clamp(8.5rem,18vh,10.5rem)] pb-8">
           <div className="max-w-[47rem]">
-            <motion.div
-              className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-white/90 backdrop-blur-md"
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-white"></span>
-              Calibrate by CLOVE
-              <span className="text-white/50">· our one flagship</span>
-            </motion.div>
             <h1 className="font-disp tracking-[-.04em] leading-[.98] text-[clamp(2.2rem,4.8vw,4rem)]">
               {lines.map((line, i) => (
                 <span key={line} className="hero-mask">

@@ -323,7 +323,15 @@ export function Funnel() {
   // Silent eligibility routing. Runs when leaving the priorities step so the
   // outcome reads as a holistic assessment rather than a reaction to one answer.
   const reviewAndContinue = () => {
-    if (isEligible(data.heightCm, data.weightKg)) {
+    const eligible = isEligible(data.heightCm, data.weightKg);
+    // Email the completed assessment to the clinic regardless of outcome.
+    // Fire-and-forget so routing is never blocked by the network.
+    void fetch("/api/assessment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...data, eligible }),
+    }).catch(() => {});
+    if (eligible) {
       setQualified(true);
       setStep(5);
     } else {
